@@ -1,0 +1,9 @@
+.vertical-slider {
+	.swiper-slide {
+		opacity: 0.4;
+	}
+
+	.swiper-slide-active {
+		opacity: 1;
+	}
+}

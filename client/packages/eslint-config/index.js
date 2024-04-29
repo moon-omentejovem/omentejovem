@@ -1,0 +1,78 @@
+module.exports = {
+	extends: [
+		"eslint:recommended",
+		"eslint:all",
+		"plugin:@typescript-eslint/recommended",
+		"airbnb-base",
+		"plugin:unicorn/recommended",
+		"plugin:prettier/recommended",
+		"prettier",
+	],
+	parser: "@typescript-eslint/parser",
+	plugins: [
+		"@typescript-eslint",
+		"unicorn",
+		"eslint-plugin-import-helpers",
+		"prettier",
+	],
+	root: true,
+	ignorePatterns: ["**/*.js", "**/node_modules/**"],
+	rules: {
+		"import/prefer-default-export": "off",
+		"no-continue": "off",
+		"no-param-reassign": ["error", { props: false }],
+		"import/extensions": "off",
+		"import/no-unresolved": "off",
+		"prettier/prettier": "error",
+		"unicorn/filename-case": "off",
+		"prettier/prettier": ["error"],
+		"no-restricted-syntax": "off",
+		"@typescript-eslint/no-unused-vars": [
+			"error",
+			{
+				argsIgnorePattern: "^_",
+				varsIgnorePattern: "^_",
+				ignoreRestSiblings: true,
+			},
+		],
+		"import-helpers/order-imports": [
+			"warn",
+			{
+				newlinesBetween: "always",
+				groups: ["module", "/^@/", ["parent", "sibling", "index"]],
+				alphabetize: {
+					order: "asc",
+					ignoreCase: true,
+				},
+			},
+		],
+		"@typescript-eslint/consistent-type-imports": [
+			"error",
+			{
+				prefer: "type-imports",
+				fixStyle: "separate-type-imports",
+			},
+		],
+		"no-unused-vars": "off",
+		"import/no-extraneous-dependencies": "off",
+		"unicorn/no-static-only-class": "off",
+		"lines-between-class-members": "off",
+		"no-useless-constructor": "off",
+		"no-empty-function": "off",
+		"class-methods-use-this": "off",
+		"no-shadow": "off",
+		"@typescript-eslint/no-shadow": "error",
+		"no-underscore-dangle": "off",
+		"@typescript-eslint/no-empty-function": "off",
+		"@typescript-eslint/no-empty-interface": "off",
+		"unicorn/no-null": "off",
+		"consistent-return": "off",
+		"unicorn/template-indent": [
+			"warn",
+			{
+				indent: "\t",
+			},
+		],
+		"unicorn/no-useless-undefined": "off",
+	},
+};

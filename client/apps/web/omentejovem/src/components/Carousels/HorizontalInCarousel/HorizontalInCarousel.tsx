@@ -1,0 +1,74 @@
+'use client'
+
+import 'swiper/css'
+import 'swiper/css/pagination'
+
+import Image from 'next/image'
+import { Mousewheel } from 'swiper/modules'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Swiper as SwiperType } from 'swiper/types'
+import { useEffect } from 'react'
+import { horizontalCarouselAnimation } from '@/animations'
+import { ArtImage, NftArt } from '@/api/resolver/types'
+
+interface HorizontalInCarouselProperties {
+	slideIndex?: number
+	onChangeSlideIndex: (index: number) => void
+	slides: (ArtImage | NftArt)[]
+	getMoreSlides?: () => void
+}
+
+export function HorizontalInCarousel({
+	slideIndex,
+	onChangeSlideIndex,
+	slides,
+	getMoreSlides,
+}: HorizontalInCarouselProperties) {
+	useEffect(() => {
+		horizontalCarouselAnimation()
+	}, [])
+
+	function handleGetMoreslides(swiperInstance: SwiperType) {
+		const currentIndex = swiperInstance.activeIndex
+		const totalSlides = swiperInstance.slides.length
+
+		if (currentIndex >= totalSlides / 2) {
+			getMoreSlides?.()
+		}
+	}
+
+	return (
+		<section className="animated-section">
+			<Swiper
+				className="horizontal-in-carousel"
+				grabCursor={true}
+				modules={[Mousewheel]}
+				mousewheel={true}
+				slidesPerView={'auto'}
+				slideToClickedSlide={true}
+				initialSlide={slideIndex}
+				centeredSlides={true}
+				onSlideChange={(e) => {
+					onChangeSlideIndex(e.realIndex)
+				}}
+				onSlideChangeTransitionEnd={(swiperInstance) => {
+					handleGetMoreslides(swiperInstance)
+				}}
+			>
+				{slides.map((art, index) => (
+					<SwiperSlide key={index} className="h-24 w-24 max-w-fit xl:h-[120px] xl:w-[120px]">
+						<div aria-label={art.name} className="flex h-24 w-24 xl:h-[120px] xl:w-[120px]">
+							<Image
+								src={art.url}
+								alt={art.name}
+								width={0}
+								height={0}
+								className="h-full w-full object-cover"
+							/>
+						</div>
+					</SwiperSlide>
+				))}
+			</Swiper>
+		</section>
+	)
+}

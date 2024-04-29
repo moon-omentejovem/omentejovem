@@ -1,0 +1,22 @@
+{
+	"name": "visor",
+	"version": "0.1.0",
+	"license": "MIT",
+	"scripts": {
+		"start:server": "cd apps/server && make up",
+		"down:server": "cd apps/server && make down",
+		"tofu:deploy": "bash ./apps/server/aws/scripts/deploy.sh",
+		"build": "pnpm exec nx run-many -t build",
+		"lint": "pnpm exec nx run-many -t lint",
+		"prepare": "husky install"
+	},
+	"private": true,
+	"devDependencies": {
+		"husky": "8.0.0",
+		"lint-staged": "13.2.3",
+		"nx": "16.5.0"
+	},
+	"workspaces": [
+		"apps/*"
+	]
+}

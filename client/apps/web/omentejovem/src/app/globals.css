@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+	cursor: none;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+body {
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+}
+
+html,
+body {
+	font-family: var(--font-fraktion);
+	color: theme('colors.secondary.200');
+	font-feature-settings: 'liga' off;
+}
+
+h1,
+h2 {
+	font-family: var(--font-neuemachina);
+	color: theme('colors.secondary.200');
+}
+
+::selection {
+	background: theme('colors.primary.50');
+	color: white;
+}
+
+.body-variant {
+	font-feature-settings:
+		'ss05' on,
+		'ss04' on,
+		'ss03' on,
+		'liga' off;
+}
+
+div.line:has(.bio-link) {
+	position: relative;
+	z-index: 1;
+}
+
+.bio-link {
+	color: theme('colors.primary.50');
+	display: inline-block;
+}
+
+.bio-link:hover .char,
+.bio-link:hover .word,
+.bio-link:hover {
+	text-decoration: underline;
+}
+
+.overlay-image {
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	pointer-events: none;
+	z-index: 1;
+}
+
+::-webkit-scrollbar {
+	width: 10px;
+}
+
+::-webkit-scrollbar-track {
+	background: #f1f1f1;
+	position: absolute;
+}
+
+::-webkit-scrollbar-thumb {
+	background: #888;
+	border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: #555;
+}
+
+@media (max-width: 768px) {
+	#header-tabs {
+		display: flex;
+	}
+}
+
+@media (min-width: 768px) {
+	#header-tabs {
+		display: hidden;
+	}
+}

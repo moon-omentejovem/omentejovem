@@ -1,0 +1,199 @@
+'use client'
+
+import Image from 'next/image'
+import type { ReactElement } from 'react'
+import { AboutData, PressTalk } from './@types/wordpress'
+
+import { aboutAnimations } from '@/animations'
+import { AboutArt } from '@/assets/images'
+import { Footer, FooterProperties } from '@/components/Footer'
+import { decodeRenderedString } from '@/utils/decodeRenderedString'
+import { useCallback, useEffect, useMemo } from 'react'
+
+import parse from 'html-react-parser'
+import './style.css'
+
+interface AboutContentProperties {
+	data: AboutData | undefined
+	talks: PressTalk[]
+	press: PressTalk[]
+	exhibitions: PressTalk[]
+}
+
+function AboutBio({ text }: { text: string }): ReactElement {
+	return (
+		<>
+			<div id="bio-content" className="bio">
+				{parse(text)}
+			</div>
+			<br />
+		</>
+	)
+}
+
+export function AboutContent({
+	data,
+	talks,
+	press,
+	exhibitions,
+}: AboutContentProperties): ReactElement {
+	useEffect(() => {
+		aboutAnimations()
+	}, [])
+
+	const parsedTalks = useMemo<FooterProperties['talks']>(
+		() =>
+			talks.map((talk) => ({
+				talkName: decodeRenderedString(talk.title.rendered),
+				talkUrl: talk.acf.link,
+			})),
+		[],
+	)
+
+	const parsedPress = useMemo<FooterProperties['interviews']>(
+		() =>
+			press.map((interview) => ({
+				interviewName: decodeRenderedString(interview.title.rendered),
+				interviewUrl: interview.acf.link,
+			})),
+		[],
+	)
+
+	const parsedExhibitions = useMemo<FooterProperties['exhibitions']>(
+		() =>
+			exhibitions.map((exhibition) => ({
+				exhibitionName: decodeRenderedString(exhibition.title.rendered),
+				exhibitionUrl: exhibition.acf.link,
+			})),
+		[],
+	)
+
+	const renderAboutInfo = useCallback((aboutString: string): ReactElement => {
+		return <AboutBio key={`about-bio`} text={aboutString} />
+	}, [])
+
+	useEffect(() => {
+		const anchorElements = document.getElementsByTagName('a') as HTMLCollectionOf<HTMLAnchorElement>
+		const parsedElements = [...anchorElements]
+
+		const filtered = parsedElements.filter(
+			(element) => element.className === '' || element.id === 'image-reference',
+		)
+
+		for (const element of filtered) {
+			element.id = `image-reference-${element.innerText}`
+			element.className = 'bio-link'
+			element.setAttribute('target', '_blank')
+
+			const overlayImage = document.createElement('img')
+			overlayImage.classList.add('overlay-image')
+			overlayImage.src = element.href
+			overlayImage.alt = ''
+			overlayImage.style.minWidth = '500px'
+			overlayImage.style.maxWidth = '500px'
+			overlayImage.style.position = 'absolute'
+
+			document.getElementById('about-page')?.appendChild(overlayImage)
+
+			element.addEventListener('mouseover', () => {
+				overlayImage.style.display = 'block'
+			})
+
+			element.addEventListener('mouseout', () => {
+				overlayImage.style.display = 'none'
+			})
+
+			element.addEventListener('mousemove', (event) => {
+				const parentRect = document.getElementById('about-page')?.getBoundingClientRect()
+
+				if (parentRect) {
+					const headerHeight = 104
+
+					const x = event.clientX - parentRect.left - overlayImage.width / 2
+					const y = event.clientY - parentRect.top + headerHeight - overlayImage.height / 2
+					overlayImage.style.transform = `translate(${x}px, ${y}px)`
+				}
+			})
+		}
+	}, [])
+
+	return (
+		<main id="about-page" className="flex flex-col px-6 font-heading xl:px-20 xl:pt-6">
+			<h1 id="about-title" className="mb-1 text-[7vw] leading-none overflow-hidden xl:mb-8">
+				<span className="block invisible">THALES MACHADO</span>
+				<span className="block invisible">
+					{'’omentejovem‘'}
+					<p id="about-spans" className="inline font-heading text-[7vw] invisible xl:hidden">
+						↘
+					</p>
+				</span>
+			</h1>
+
+			<div className="mb-14 flex flex-row justify-end gap-2 overflow-hidden xl:gap-12 xl:mb-40">
+				<h2
+					id="about-subtitle"
+					className="block text-xs min-w-[10rem] text-secondary-100 invisible sm:text-base xl:text-lg"
+				>
+					<span id="about-subtitle">{data?.subtitle}</span>
+				</h2>
+
+				<p id="about-spans" className="hidden -mt-[30px] font-heading text-9xl invisible xl:block">
+					↘
+				</p>
+
+				<div className="flex">
+					<Image
+						id="about-spans"
+						src={AboutArt}
+						alt={'omentejovem'}
+						layout="responsive"
+						objectFit="contain"
+						className="flex w-full h-auto invisible"
+					/>
+				</div>
+			</div>
+
+			<hr className="bg-secondary-100" />
+
+			<section className="relative flex flex-col justify-between px-4 py-10 gap-8 overflow-hidden xl:flex-row xl:px-20 xl:py-32 xl:gap-24">
+				<div className="flex flex-row gap-6 xl:gap-24">
+					<p className="bio font-heading text-xs min-w-[4.5rem] text-secondary-100 sm:text-base sm:min-w-[6rem] xl:text-lg xl:min-w-[7rem]">
+						Bio
+					</p>
+					<div className="text-xs max-w-[65ch] sm:text-base xl:text-xl">
+						{renderAboutInfo(data?.bio ?? '')}
+					</div>
+				</div>
+
+				<div className="flex flex-row gap-6 w-full max-w-sm xl:gap-24">
+					<p className="socials font-heading text-xs min-w-[4.5rem] text-secondary-100 sm:text-base sm:min-w-[6rem] xl:text-lg xl:min-w-[7rem]">
+						Socials
+					</p>
+					<div className="flex flex-col gap-2">
+						{data &&
+							Object.entries(data.social_media).map(([key, value]) => (
+								<a
+									key={key}
+									target="_blank"
+									rel="noreferrer"
+									href={value}
+									className="socials font-heading text-xs text-secondary-100 hover:text-primary-50 sm:text-base xl:text-lg"
+								>
+									{key}
+								</a>
+							))}
+					</div>
+				</div>
+			</section>
+
+			<hr className="bg-secondary-100" />
+
+			<Footer
+				interviews={parsedPress}
+				talks={parsedTalks}
+				exhibitions={parsedExhibitions}
+				email={data?.contact['e-mail']}
+			/>
+		</main>
+	)
+}

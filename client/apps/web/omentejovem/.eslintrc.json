@@ -1,0 +1,40 @@
+{
+	"env": {
+		"browser": true,
+		"es2021": true
+	},
+	"extends": [
+		"@visor/eslint-config",
+		"next/core-web-vitals",
+		"eslint-config-next",
+		"plugin:react/recommended",
+		"plugin:jsx-a11y/recommended",
+		"plugin:react-hooks/recommended"
+	],
+	"plugins": ["react"],
+	"overrides": [
+		{
+			"files": ["**/*.spec.{ts,tsx}"],
+			"rules": {
+				"no-undef": "off"
+			}
+		}
+	],
+	"parser": "@typescript-eslint/parser",
+	"parserOptions": {
+		"ecmaFeatures": {
+			"jsx": true
+		},
+		"ecmaVersion": "latest",
+		"sourceType": "module"
+	},
+	"ignorePatterns": ["vite-env.d.ts"],
+	"rules": {
+		"unicorn/filename-case": "off",
+		"react/jsx-indent": "off",
+		"linebreak-style": ["error", "unix"],
+		"quotes": ["error", "single", { "avoidEscape": true }],
+		"react/react-in-jsx-scope": "off",
+		"react/display-name": "off"
+	}
+}
