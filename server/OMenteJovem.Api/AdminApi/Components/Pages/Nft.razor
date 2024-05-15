@@ -1,0 +1,19 @@
+﻿@page "/nfts/{id}"
+@using AdminApi.Models
+@using AdminApi.Services
+@using MongoDB.Bson
+@inject ListNftsService NftsService
+
+<h3>Nft @Id</h3>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    private NftArtResponse? NftDetails { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        NftDetails = await NftsService.GetNft(ObjectId.Parse(Id));
+    }
+}

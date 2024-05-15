@@ -1,5 +1,5 @@
 import { ReactElement } from 'react'
-import { ArtTransaction } from './types'
+import { type ArtTransaction } from './types'
 import { addHours, format } from 'date-fns'
 import { CustomIcons } from '@/assets/icons'
 import { cn } from '@/lib/utils'
@@ -13,7 +13,7 @@ export const omentejovemAddress: Record<string, string> = {
 	'0x116723a14c7ee8ac3647d37bb5e9f193c29b3489': 'omentejovem.eth',
 	'0x3a3548e060be10c2614d0a4cb0c03cc9093fd799': 'Manifold: Marketplace',
 	'0xcda72070e455bb31c7690a170224ce43623d0b6f': 'Foundation: Market',
-}
+} 
 
 function formattedDate(date: string): string {
 	return format(addHours(date, 3), 'LLL d, yyyy hh:mmaaa')

@@ -14,6 +14,8 @@ interface GetObjktNftVariables {
 export async function getObjktNft(
 	variables: GetObjktNftVariables,
 ): Promise<GetObjktNftQueryResult> {
+
+	
 	const data = await fetch('https://data.objkt.com/v3/graphql', {
 		method: 'POST',
 		body: JSON.stringify({
@@ -29,6 +31,7 @@ export async function getObjktNft(
 	})
 
 	const jsonData = await data.json()
+
 	const response = jsonData.data as GetObjktNftQueryResult
 
 	const dataEvents = await fetch('https://data.objkt.com/v3/graphql', {
@@ -82,6 +85,8 @@ export async function getObjktNft(
 	})
 
 	const jsonEventsData = await dataEvents.json()
+	
+	console.log(jsonEventsData)
 
 	const transactions = jsonEventsData as { data: FetchObjktNftTransfersQueryResult }
 

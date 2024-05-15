@@ -8,13 +8,6 @@ interface CollectionsInProperties {
 	}
 }
 
-export async function generateStaticParams() {
-	const response = await fetchCollections()
-	const allCollections = response.data[0].acf
-
-	return Object.values(allCollections).map((collection) => ({ slug: collection.slug }))
-}
-
 export default async function CollectionsIn({ params }: CollectionsInProperties) {
 	const { email, images } = await requestNftsByCollection(params.slug)
 

@@ -14,18 +14,30 @@ export function isNftArt(value: unknown): value is NftArt {
 	return typeof value === 'object' && !!value && 'mintedDate' in value && 'nftChain' in value
 }
 
-export interface NftArt extends ArtImage {
+export interface NftArt {
+	name: string
+	url: string
+	description: string
+	createdAt: string
+	availablePurchase?: NftData['available_purchase']
+	contracts?: NftData['contracts']
+	videoProcess?: string
 	nftChain: 'ethereum' | 'tezos' | 'unknown'
 	etherscan: boolean
 	id: string
 	address: string
 	mintedDate: string
-	nft_url: string
-	contracts: NftData['contracts']
+	nftUrl: string
 	makeOffer: NftData['make_offer']
 	owner?: {
 		address: string
 		url: string
 	}
-	transactions?: NftTransferEvent[]
+	transactions?: NftTransferEvent[],
+	externalLinks: ExternalLink[]
+}
+
+export interface ExternalLink {
+	name: string,
+	url: string
 }

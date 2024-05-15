@@ -8,11 +8,11 @@ import { useEffect, useState } from 'react'
 interface ArtFilterProperties {
 	filters: Filter[]
 	currentPage: number
-	unfilteredImages: (ArtImage | NftArt)[]
-	artImages: ArtImage[]
+	unfilteredImages: (NftArt)[]
+	artImages: NftArt[]
 	onChangeLoading: (loadingState: boolean) => void
 	onChangeCurrentPage: (newPage: number) => void
-	onChangeArtImages: (images: ArtImage[]) => void
+	onChangeArtImages: (images: NftArt[]) => void
 	onChangeTotalPages: (newTotal: number) => void
 }
 

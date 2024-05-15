@@ -8,7 +8,6 @@ import { Mousewheel } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Swiper as SwiperType } from 'swiper/types'
 import { useEffect } from 'react'
-import { horizontalCarouselAnimation } from '@/animations'
 import { ArtImage, NftArt } from '@/api/resolver/types'
 
 interface HorizontalInCarouselProperties {
@@ -25,8 +24,10 @@ export function HorizontalInCarousel({
 	getMoreSlides,
 }: HorizontalInCarouselProperties) {
 	useEffect(() => {
-		horizontalCarouselAnimation()
+		// horizontalCarouselAnimation()
 	}, [])
+
+	console.log(slides)
 
 	function handleGetMoreslides(swiperInstance: SwiperType) {
 		const currentIndex = swiperInstance.activeIndex
@@ -61,8 +62,8 @@ export function HorizontalInCarousel({
 							<Image
 								src={art.url}
 								alt={art.name}
-								width={0}
-								height={0}
+								width={100}
+								height={100}
 								className="h-full w-full object-cover"
 							/>
 						</div>

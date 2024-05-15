@@ -11,7 +11,6 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { useEffect } from 'react'
 import {
 	carouselFigcaptionAnimation,
-	horizontalCarouselAnimation,
 	carouselActiveSlideAnimation,
 } from '@/animations'
 import { cn } from '@/lib/utils'
@@ -38,7 +37,7 @@ export function HorizontalCarousel({
 	getMoreSlides,
 }: HorizontalCarouselProperties) {
 	useEffect(() => {
-		horizontalCarouselAnimation()
+		// horizontalCarouselAnimation()
 	}, [])
 
 	function figcaptionAnimationHandler(element: HTMLElement, open: boolean) {

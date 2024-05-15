@@ -15,9 +15,9 @@ interface ArtMainContentProperties {
 	email: string
 	source: 'portfolio' | '1-1' | 'editions'
 	filters: Filter[]
-	unfilteredImages: (ArtImage | NftArt)[]
-	onChangeArtImages: (images: (ArtImage | NftArt)[]) => void
-	artImages: (ArtImage | NftArt)[]
+	unfilteredImages: (NftArt)[]
+	onChangeArtImages: (images: (NftArt)[]) => void
+	artImages: (NftArt)[]
 	selectedArtIndex: number
 	onChangeSelectedArtIndex: (index: number) => void
 	totalPages: number

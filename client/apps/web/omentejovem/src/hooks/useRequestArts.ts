@@ -1,5 +1,5 @@
 import { requestNfts } from '@/api/resolver/requestNfts'
-import { ArtImage } from '@/api/resolver/types'
+import { ArtImage, NftArt } from '@/api/resolver/types'
 import { CmsFilter } from '@/components/ArtFilter/ArtFilter'
 import { lastDayOfYear } from 'date-fns'
 import { usePathname } from 'next/navigation'
@@ -25,7 +25,7 @@ export function useRequestArts({
 	const [queryString, setQueryString] = useState('')
 
 	const getFilteredArts = useCallback(
-		async (filterParams: string, onlyArts: boolean): Promise<ArtImage[]> => {
+		async (filterParams: string, onlyArts: boolean): Promise<NftArt[]> => {
 			onChangeLoading(true)
 			const { images, totalPages } = await requestNfts({
 				page: pathname.replace('/', ''),

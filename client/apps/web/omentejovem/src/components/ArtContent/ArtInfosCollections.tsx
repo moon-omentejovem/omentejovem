@@ -24,8 +24,8 @@ import { getNftLinks } from './utils'
 
 interface ArtInfosCollectionsProperties {
 	email: string
-	selectedArt: NftArt | ArtImage
-	slides: (ArtImage | NftArt)[]
+	selectedArt: NftArt
+	slides: NftArt[]
 	onChangeSlideIndex: (index: number) => void
 }
 
@@ -54,7 +54,7 @@ export function ArtInfosCollections({
 			setIsOpenVideo(false)
 			setIsOpenInfos(false)
 			setIsAnimating(false)
-			resetArtInfo()
+			// resetArtInfo()
 			resetButtonInfo()
 		}
 	}, [onChangeSlideIndex])
@@ -64,25 +64,27 @@ export function ArtInfosCollections({
 	}
 
 	return (
-		<section
-			className={cn(
-				'flex flex-col h-full max-h-[calc(100%-168px)] gap-x-10 gap-y-8 2xl:gap-x-20',
-				'xl:grid-cols-[minmax(200px,max-content)_minmax(12rem,25rem)_25rem]',
+		<section className={cn(
+			'h-full max-h-[calc(100%-168px)]'
+		)}>
+			<div id='art-up-container' className={cn(
+				'h-full',
+				'flex flex-col gap-x-10 gap-y-8 2xl:gap-x-20',
+				'xl:grid-cols-[minmax(200px,auto)_minmax(12rem,25rem)_25rem]',
 				'xl:grid-rows-[minmax(0,100%)_1.5rem]',
 				'xl:grid xl:items-end',
-			)}
-		>
-			{!!selectedArt.video_process && (
+			)}>
+			{!!selectedArt.videoProcess && (
 				<VideoProcessModal
 					open={isOpenVideo}
 					setOpen={setIsOpenVideo}
-					videoUrl={selectedArt.video_process}
+					videoUrl={selectedArt.videoProcess}
 				/>
 			)}
 
-			<div className="flex flex-col w-full h-full justify-end *:h-full">
+			<div className="flex flex-col w-full h-full justify-end items-center *:h-full">
 				<ImageModal
-					detailedImage={isNftArt(selectedArt) ? selectedArt.nft_url : selectedArt.url}
+					detailedImage={selectedArt.nftUrl}
 					collectionsMode
 				>
 					<Image
@@ -96,7 +98,7 @@ export function ArtInfosCollections({
 				</ImageModal>
 			</div>
 
-			{!!selectedArt.video_process && (
+			{!!selectedArt.videoProcess && (
 				<button
 					aria-label="Open video process modal"
 					onClick={() => setIsOpenVideo(true)}
@@ -114,110 +116,108 @@ export function ArtInfosCollections({
 				/>
 			</div>
 
-			{isNftArt(selectedArt) ? (
-				<>
-					<div
-						id="art-container"
-						className="flex flex-col gap-12 transition-all overflow-y-scroll max-h-full h-full"
-					>
-						<div
-							id="art-description"
-							className={cn(
-								'h-fit flex flex-col-reverse gap-4 w-full text-sm text-secondary-100',
-								'xl:flex-col xl:max-w-sm xl:mt-auto',
-							)}
+			<div
+				id="art-container"
+				className="flex flex-col gap-12 transition-all overflow-y-scroll max-h-full h-full"
+			>
+				<div
+					id="art-description"
+					className={cn(
+						'h-fit flex flex-col-reverse gap-4 w-full text-sm text-secondary-100',
+						'xl:flex-col xl:max-w-sm xl:mt-auto',
+					)}
+				>
+					<p id="art-description-text" className="break-words">
+						{selectedArt.description}
+					</p>
+
+					<div>
+						<a
+							target="_blank"
+							rel="noreferrer"
+							href={selectedArt.url}
+							className="text-primary-50 underline mt-4"
 						>
-							<p id="art-description-text" className="break-words">
-								{selectedArt.description}
-							</p>
-
-							<div>
-								<a
-									target="_blank"
-									rel="noreferrer"
-									href={selectedArt.url}
-									className="text-primary-50 underline mt-4"
-								>
-									{selectedArt.name}
-								</a>
-								<p>minted on {format(addHours(selectedArt.mintedDate, 3), 'd LLLL, yyyy')}</p>
-							</div>
-						</div>
-
-						<div id="art-info-wrapper" className={'flex flex-col xl:hidden'}>
-							<div id="art-links">
-								<ArtLinks
-									email={email}
-									availableOn={selectedArt.contracts}
-									makeOffer={selectedArt.makeOffer}
-									availableForPurchase={selectedArt.available_purchase}
-									views={{
-										...(selectedArt.etherscan && {
-											Etherscan: `https://etherscan.io/token/${selectedArt.address}?a=${selectedArt.id}`,
-										}),
-									}}
-								/>
-							</div>
-						</div>
+							{selectedArt.name}
+						</a>
+						<p>minted on {format(addHours(selectedArt.mintedDate, 3), 'd LLLL, yyyy')}</p>
 					</div>
+				</div>
 
-					<div id="art-ownership-collections" className="flex w-full overflow-y-scroll max-h-full">
-						<ArtOwnership
-							collectionsMode
-							nftChain={selectedArt.nftChain}
-							artAddress={getNftLinks(
-								selectedArt.address,
-								selectedArt.nftChain,
-								selectedArt.id,
-								'token',
-							)}
-							owner={
-								selectedArt.owner ||
-								!omentejovemAddress[selectedArt.transactions?.[0]?.to_address ?? '']
-									? {
-											name: selectedArt.transactions?.[0]?.to_address ?? '',
-											profileUrl: getNftLinks(
-												selectedArt.transactions?.[0]?.to_address ?? '',
-												selectedArt.nftChain,
-												selectedArt.id,
-												'address',
-											),
-									  }
-									: undefined
-							}
-							transactions={
-								selectedArt.transactions?.map((transaction) => ({
-									date: fromUnixTime(transaction.event_timestamp).toISOString(),
-									nextOwner: {
-										name: transaction.to_address,
-										profileUrl: getNftLinks(
-											transaction.to_address,
-											selectedArt.nftChain,
-											selectedArt.id,
-											'address',
-										),
-									},
-									previousOwner: {
-										name: transaction.from_address,
-										profileUrl: getNftLinks(
-											transaction.from_address,
-											selectedArt.nftChain,
-											selectedArt.id,
-											'address',
-										),
-									},
-									transactionUrl: getNftLinks(
-										transaction.transaction,
-										selectedArt.nftChain,
-										selectedArt.id,
-										'transaction',
-									),
-								})) ?? []
-							}
+				<div id="art-info-wrapper" className={'flex flex-col'}>
+					<div id="art-links">
+						<ArtLinks
+							email={email}
+							externalLinks={selectedArt.externalLinks}
+							makeOffer={selectedArt.makeOffer}
+							availableForPurchase={selectedArt.availablePurchase}
+							views={{
+								...(selectedArt.etherscan && {
+									Etherscan: `https://etherscan.io/token/${selectedArt.address}?a=${selectedArt.id}`,
+								}),
+							}}
 						/>
 					</div>
-				</>
-			) : (
+				</div>
+			</div>
+
+			<div id="art-ownership-collections" className="flex w-full overflow-y-scroll max-h-full">
+				<ArtOwnership
+					collectionsMode
+					nftChain={selectedArt.nftChain}
+					artAddress={getNftLinks(
+						selectedArt.address,
+						selectedArt.nftChain,
+						selectedArt.id,
+						'token',
+					)}
+					owner={
+						selectedArt.owner ||
+						!omentejovemAddress[selectedArt.transactions?.[0]?.toAddress ?? '']
+							? {
+									name: selectedArt.transactions?.[0]?.toAddress ?? '',
+									profileUrl: getNftLinks(
+										selectedArt.transactions?.[0]?.toAddress ?? '',
+										selectedArt.nftChain,
+										selectedArt.id,
+										'address',
+									),
+								}
+							: undefined
+					}
+					transactions={
+						selectedArt.transactions?.map((transaction) => ({
+							date: fromUnixTime(transaction.eventTimestamp).toISOString(),
+							nextOwner: {
+								name: transaction.toAddress,
+								profileUrl: getNftLinks(
+									transaction.toAddress,
+									selectedArt.nftChain,
+									selectedArt.id,
+									'address',
+								),
+							},
+							previousOwner: {
+								name: transaction.fromAddress,
+								profileUrl: getNftLinks(
+									transaction.fromAddress,
+									selectedArt.nftChain,
+									selectedArt.id,
+									'address',
+								),
+							},
+							transactionUrl: getNftLinks(
+								transaction.transaction,
+								selectedArt.nftChain,
+								selectedArt.id,
+								'transaction',
+							),
+						})) ?? []
+					}
+				/>
+			</div>
+			
+			{/* (
 				<div className="flex flex-col w-full max-w-sm justify-end text-sm text-secondary-100">
 					<div className="flex flex-col-reverse mt-4 mb-10 gap-4 xl:flex-col">
 						<p>{selectedArt.description}</p>
@@ -231,10 +231,10 @@ export function ArtInfosCollections({
 						</p>
 					)}
 				</div>
-			)}
+			) */}
 
 			<div className="hidden place-content-center xl:grid">
-				{!!selectedArt.video_process ? (
+				{!!selectedArt.videoProcess ? (
 					<button
 						aria-label="Open video process modal"
 						onClick={() => setIsOpenVideo(true)}
@@ -247,7 +247,7 @@ export function ArtInfosCollections({
 				)}
 			</div>
 
-			{isNftArt(selectedArt) && (
+			{/* {isNftArt(selectedArt) && ( */}
 				<button
 					aria-label="Open art infos"
 					className="group hidden relative place-items-center w-6 h-6 xl:grid"
@@ -264,7 +264,17 @@ export function ArtInfosCollections({
 						)}
 					/>
 				</button>
-			)}
+			{/* )} */}
+
+			</div>
+
+			<div className="block w-[100vw] self-center xl:block">
+				<HorizontalInCarousel
+					onChangeSlideIndex={onChangeSlideIndex}
+					slides={slides}
+					getMoreSlides={() => handleMoreSlides()}
+				/>
+			</div>
 		</section>
 	)
 }

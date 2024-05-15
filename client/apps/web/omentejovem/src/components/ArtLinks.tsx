@@ -1,12 +1,13 @@
 import { CustomIcons } from '@/assets/icons'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { OfferModal } from './Modals/OfferModal'
 import { cn } from '@/lib/utils'
-import { NftContractButton, NftData } from '@/api/@types'
+import { NftData } from '@/api/@types'
+import { ExternalLink } from '@/api/resolver/types'
 
 interface ArtLinkProperties {
 	email: string
-	availableOn?: NftData['contracts']
+	externalLinks?: ExternalLink[]
 	availableForPurchase?: NftData['available_purchase']
 	makeOffer: NftData['make_offer']
 	views: Record<string, string>
@@ -14,78 +15,41 @@ interface ArtLinkProperties {
 
 export function ArtLinks({
 	email,
-	availableOn,
+	externalLinks,
 	availableForPurchase,
 	makeOffer,
 	views,
 }: ArtLinkProperties) {
 	const [isOpenOffer, setIsOpenOffer] = useState(false)
 
-	const allAvailableOn = useMemo(() => {
-		const available = []
-
-		if (availableOn?.eth) {
-			const allKeys = Object.keys(availableOn.eth).filter((key) => key.includes('_button'))
-
-			for (const key of allKeys) {
-				const typedKey = key as keyof (typeof availableOn)['eth']
-				const [contractKey] = typedKey.split('_button')
-
-				const cmsButton = availableOn.eth[typedKey] as unknown as NftContractButton
-
-				if (cmsButton?.status) {
-					available.push({
-						label: cmsButton.label,
-						url: availableOn.eth[`${contractKey}_url`],
-					})
-				}
-			}
-		}
-
-		if (availableOn?.xtz) {
-			const allKeys = Object.keys(availableOn.xtz).filter((key) => key.includes('_button'))
-
-			for (const key of allKeys) {
-				const typedKey = key as keyof (typeof availableOn)['xtz']
-				const [contractKey] = typedKey.split('_button')
-				const cmsButton = availableOn.xtz[typedKey] as unknown as NftContractButton
-
-				if (cmsButton?.status) {
-					available.push({
-						label: cmsButton.label,
-						url: availableOn.xtz[`${contractKey}_url`],
-					})
-				}
-			}
-		}
-
-		return available
-	}, [availableOn])
-
 	return (
 		<div className="flex w-full flex-col justify-end max-w-sm sm:max-w-xl">
-			{allAvailableOn.map((contract, index) => (
+			{/* {[0, 0, 0, 0].map((contract, index) => (
 				<a
 					target="_blank"
 					rel="noreferrer"
 					key={index}
-					href={(contract.url as string) ?? '#'}
+					href='#'
 					className={cn(
 						'grid content-center border-t-[1px] border-secondary-100 text-sm h-16 px-4 font-bold text-secondary-100 hover:text-primary-50',
 						'sm:px-8 last:border-b-[1px]',
 					)}
 				>
-					{contract.label.toUpperCase()}
+					AVAILABLE FOR 
 				</a>
-			))}
+			))} */}
 
-			{availableForPurchase?.active &&
-				((!availableForPurchase.status && !!availableForPurchase.text) ||
-					(availableForPurchase.status && !!availableForPurchase.text_available)) && (
+			{
+				availableForPurchase?.active &&
+				(
+					(!availableForPurchase.status && !!availableForPurchase.text) ||
+					(availableForPurchase.status && !!availableForPurchase.textAvailable)
+				) && 
+				(
 					<p
 						className={cn(
 							'mt-2 grid content-center justify-start border-y-[1px] border-secondary-100 text-sm h-16 px-8 font-bold text-secondary-100',
-							!!makeOffer?.active && 'border-b-0',
+							!!makeOffer?.active  && 'border-b-0',
 						)}
 					>
 						{!availableForPurchase.status ? (
@@ -97,11 +61,12 @@ export function ArtLinks({
 								href={(availableForPurchase.url as string) ?? '#'}
 								className={cn('text-secondary-100 hover:text-primary-50')}
 							>
-								{availableForPurchase.text_available?.toUpperCase()}
+								AVAILABLE FOR PURCHASE
 							</a>
 						)}
 					</p>
-				)}
+				)
+			}
 
 			{!!makeOffer?.active && (
 				<OfferModal email={email} open={isOpenOffer} setOpen={setIsOpenOffer}>
@@ -112,23 +77,23 @@ export function ArtLinks({
 							'sm:px-8 last:border-b-[1px]',
 						)}
 					>
-						{makeOffer.button_text ? makeOffer.button_text.toUpperCase() : 'MAKE OFFER'}
+						{makeOffer.buttonText ? makeOffer.buttonText.toUpperCase() : 'MAKE OFFER'}
 					</p>
 				</OfferModal>
 			)}
 
-			{Object.entries(views).map(([key, value]) => (
+			{externalLinks?.map((externalLink, index) => (
 				<a
-					key={key}
+					key={index}
 					target="_blank"
 					rel="noreferrer"
-					href={value}
+					href={externalLink.url}
 					className={cn(
 						'flex justify-between items-center border-t-[1px] border-secondary-100 text-sm h-16 px-4 font-bold text-secondary-100 hover:text-primary-50',
 						'sm:px-8 last:border-b-[1px]',
 					)}
 				>
-					VIEW ON {key.toUpperCase()} <CustomIcons.ArrowUpRight />
+					VIEW ON {externalLink.name.toUpperCase()} <CustomIcons.ArrowUpRight />
 				</a>
 			))}
 		</div>

@@ -12,7 +12,6 @@ import { CustomIcons } from '@/assets/icons'
 import { VideoProcessModal } from '../Modals/VideoProcessModal'
 import {
 	artInfoButtonAnimation,
-	artInfosAnimation,
 	resetArtInfo,
 	resetButtonInfo,
 } from '@/animations'
@@ -22,7 +21,7 @@ import { omentejovemAddress } from '../ArtOwnership/ArtTransaction'
 import { getNftLinks } from './utils'
 interface ArtInfosProperties {
 	email: string
-	selectedArt: NftArt | ArtImage
+	selectedArt: NftArt
 	slides: (ArtImage | NftArt)[]
 	onChangeSlideIndex: (index: number) => void
 }
@@ -37,11 +36,11 @@ export function ArtInfos({
 	const [isOpenInfos, setIsOpenInfos] = useState(false)
 	const [isAnimating, setIsAnimating] = useState(false)
 
-	function animateInfos(isOpen: boolean) {
-		if (window.screen.width >= 1280) {
-			artInfosAnimation(isOpen, setIsAnimating)
-		}
-	}
+	// function animateInfos(isOpen: boolean) {
+	// 	if (window.screen.width >= 1280) {
+	// 		artInfosAnimation(true, setIsAnimating)
+	// 	}
+	// }
 
 	function handleMoreSlides() {
 		// Busca mais slides
@@ -72,21 +71,21 @@ export function ArtInfos({
 				'2xl:gap-x-20 2xl:mr-[15%] 3xl:mr-0',
 			)}
 		>
-			{!!selectedArt.video_process && (
+			{!!selectedArt.videoProcess && (
 				<VideoProcessModal
 					open={isOpenVideo}
 					setOpen={setIsOpenVideo}
-					videoUrl={selectedArt.video_process}
+					videoUrl={selectedArt.videoProcess}
 				/>
 			)}
 
 			<ArtDetails
-				detailedImage={isNftArt(selectedArt) ? selectedArt.nft_url : undefined}
+				detailedImage={isNftArt(selectedArt) ? selectedArt.nftUrl : undefined}
 				image={selectedArt.url}
 				name={selectedArt.name}
 			/>
 
-			{!!selectedArt.video_process && (
+			{!!selectedArt.videoProcess && (
 				<button
 					aria-label="Open video process modal"
 					onClick={() => setIsOpenVideo(true)}
@@ -126,12 +125,12 @@ export function ArtInfos({
 						</div>
 					</div>
 
-					<div id="art-info-wrapper" className={cn('flex flex-col gap-12 xl:hidden')}>
+					<div id="art-info-wrapper" className={cn('flex flex-col gap-12')}>
 						<div id="art-links" className="mt-12">
 							<ArtLinks
 								email={email}
 								availableOn={selectedArt.contracts}
-								availableForPurchase={selectedArt.available_purchase}
+								availableForPurchase={selectedArt.availablePurchase}
 								makeOffer={selectedArt.makeOffer}
 								views={{
 									...(selectedArt.etherscan && {
@@ -151,11 +150,11 @@ export function ArtInfos({
 							)}
 							owner={
 								selectedArt.owner ||
-								!omentejovemAddress[selectedArt.transactions?.[0]?.to_address ?? '']
+								!omentejovemAddress[selectedArt.transactions?.[0]?.toAddress ?? '']
 									? {
-											name: selectedArt.transactions?.[0]?.to_address ?? '',
+											name: selectedArt.transactions?.[0]?.toAddress ?? '',
 											profileUrl: getNftLinks(
-												selectedArt.transactions?.[0]?.to_address ?? '',
+												selectedArt.transactions?.[0]?.toAddress ?? '',
 												selectedArt.nftChain,
 												selectedArt.id,
 												'address',
@@ -165,20 +164,20 @@ export function ArtInfos({
 							}
 							transactions={
 								selectedArt.transactions?.map((transaction) => ({
-									date: fromUnixTime(transaction.event_timestamp).toISOString(),
+									date: fromUnixTime(transaction.eventTimestamp).toISOString(),
 									nextOwner: {
-										name: transaction.to_address,
+										name: transaction.toAddress,
 										profileUrl: getNftLinks(
-											transaction.to_address,
+											transaction.toAddress,
 											selectedArt.nftChain,
 											selectedArt.id,
 											'address',
 										),
 									},
 									previousOwner: {
-										name: transaction.from_address,
+										name: transaction.fromAddress,
 										profileUrl: getNftLinks(
-											transaction.from_address,
+											transaction.fromAddress,
 											selectedArt.nftChain,
 											selectedArt.id,
 											'address',
@@ -198,12 +197,12 @@ export function ArtInfos({
 			) : (
 				<div className="flex flex-col w-full max-w-sm justify-end text-sm text-secondary-100">
 					<div className="flex flex-col-reverse mt-4 mb-10 gap-4 xl:flex-col">
-						<p className="break-words">{selectedArt.description}</p>
+						<p className="break-words">{selectedArt['description']}</p>
 
-						<p className="text-primary-50 underline">{selectedArt.name}</p>
+						<p className="text-primary-50 underline">{selectedArt['name']}</p>
 					</div>
 
-					{selectedArt.available_purchase?.active && !selectedArt.available_purchase.status && (
+					{selectedArt['availablePurchase']['active'] && !selectedArt['availablePurchase']['status'] && (
 						<p className="mt-2 grid content-center justify-start border-y-[1px] border-secondary-100 text-sm h-16 px-8 font-bold text-secondary-100">
 							NOT AVAILABLE FOR PURCHASE
 						</p>
@@ -212,7 +211,7 @@ export function ArtInfos({
 			)}
 
 			<div className="hidden place-content-center xl:grid">
-				{!!selectedArt.video_process ? (
+				{!!selectedArt.videoProcess ? (
 					<button
 						aria-label="Open video process modal"
 						onClick={() => setIsOpenVideo(true)}
@@ -229,11 +228,11 @@ export function ArtInfos({
 				<button
 					aria-label="Open art infos"
 					className="group hidden relative place-items-center w-6 h-6 xl:grid"
-					onClick={() => {
-						animateInfos(!isOpenInfos)
-						setIsOpenInfos((oldValue) => !oldValue)
-						artInfoButtonAnimation()
-					}}
+					// onClick={() => {
+					// 	animateInfos(!isOpenInfos)
+					// 	setIsOpenInfos((oldValue) => !oldValue)
+					// 	artInfoButtonAnimation()
+					// }}
 					disabled={isAnimating}
 				>
 					<CustomIcons.Plus

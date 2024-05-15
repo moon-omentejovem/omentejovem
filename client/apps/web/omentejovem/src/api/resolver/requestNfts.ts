@@ -17,7 +17,7 @@ import { formatArts } from './formatArts'
 import { formatObjktNfts } from './formatObjktNfts'
 import { formatOpenSeaNfts } from './formatOpenSeaNfts'
 import { generateFilters } from './generateFilters'
-import { ArtImage } from './types'
+import { ArtImage, NftArt } from './types'
 
 export interface RequestNftsProperties {
 	page: 'editions' | 'oneOfOne' | 'portfolio' | string
@@ -29,7 +29,7 @@ export interface RequestNftsProperties {
 
 export interface RequestPortfolioArtsResponse {
 	email: string
-	images: ArtImage[]
+	images: NftArt[]
 	filters: Filter[]
 	totalPages: number
 }

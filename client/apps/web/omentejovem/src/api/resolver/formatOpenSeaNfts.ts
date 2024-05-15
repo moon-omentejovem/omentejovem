@@ -21,7 +21,7 @@ export function formatOpenSeaNfts(
 				: parseDate(cmsData?.creation_date ?? '')
 
 			const mintedTransaction = transactions?.find((transaction) =>
-				/0x[0]{40}$/i.test(transaction.from_address),
+				/0x[0]{40}$/i.test(transaction.fromAddress),
 			)
 
 			return {
@@ -37,8 +37,8 @@ export function formatOpenSeaNfts(
 				available_purchase: cmsData?.available_purchase,
 				contracts: cmsData?.contracts,
 				makeOffer: cmsData?.make_offer,
-				mintedDate: !!mintedTransaction?.event_timestamp
-					? fromUnixTime(mintedTransaction.event_timestamp).toISOString()
+				mintedDate: !!mintedTransaction?.eventTimestamp
+					? fromUnixTime(mintedTransaction.eventTimestamp).toISOString()
 					: parsedDate,
 				created_at: nft.created_at?.trim()
 					? nft.created_at.trim()

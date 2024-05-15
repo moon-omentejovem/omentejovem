@@ -20,12 +20,12 @@ export interface GetNftResponse {
 }
 
 export interface NftTransferEvent {
-	event_type: 'transfer'
+	eventType: 'transfer'
 	chain: 'ethereum'
 	transaction: string
-	from_address: string
-	to_address: string
-	event_timestamp: number
+	fromAddress: string
+	toAddress: string
+	eventTimestamp: number
 }
 
 export interface GetNftEventsResponse {

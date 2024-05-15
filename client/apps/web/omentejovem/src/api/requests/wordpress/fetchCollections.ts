@@ -1,11 +1,11 @@
 'use server'
 
-import { CmsNft, CollectionsPage } from '../../@types'
+import { CmsNft, CollectionsResponse } from '../../@types'
 import { api } from '../../client'
 
 export async function fetchCollections() {
 	const data = await fetch(
-		`${api.baseURL}/pages?slug=collections&_fields=acf&acf_format=standard`,
+		`${api.baseURL}/collections`,
 		{
 			...api,
 			method: 'GET',
@@ -13,7 +13,7 @@ export async function fetchCollections() {
 	)
 
 	const jsonData = await data.json()
-	return { data: jsonData } as { data: CollectionsPage[] }
+	return jsonData as CollectionsResponse
 }
 
 export async function getNftUrlById(cmsNftId: number) {

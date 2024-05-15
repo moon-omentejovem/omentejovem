@@ -113,7 +113,11 @@ async function requestGetHomeInfo() {
 }
 
 export default async function Home() {
-	const data = await requestGetHomeInfo()
+	const data = {
+		title: 'Thales Machado',
+		subtitle: 'omentejovem',
+		background_images: []
+	}
 
 	return <HomeContent data={data} />
 }

@@ -61,12 +61,12 @@ export interface NftData {
 		active: boolean
 		status: boolean
 		text: string
-		text_available: string
+		textAvailable: string
 		url: string
 	}
 	make_offer: {
 		active: boolean
-		button_text: string
+		buttonText: string
 	}
 	contracts: {
 		eth: {
@@ -92,19 +92,14 @@ export interface CmsNft {
 }
 
 export interface Collection {
+	name: string
+	year: string
 	slug: string
-	title: string
-	year: number
-	background_url: string[]
-	nfts: number[]
+	nftImageUrls: string[]
 }
 
-export interface CollectionsData {
-	[x: string]: Collection
-}
-
-export interface CollectionsPage {
-	acf: CollectionsData
+export interface CollectionsResponse {
+	collections: Collection[]
 }
 
 export type CmsArt = CmsNft

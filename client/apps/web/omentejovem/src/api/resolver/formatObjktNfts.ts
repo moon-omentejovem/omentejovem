@@ -1,12 +1,12 @@
 import { parseDate } from '@/utils/parseDate'
 import { GetObjktNftQueryResult } from '../requests/objkt'
 import { ICmsNft } from './requestNfts'
-import { ArtImage } from './types'
+import { ArtImage, NftArt } from './types'
 
 export function formatObjktNfts(
 	objktNfts: GetObjktNftQueryResult[],
 	cmsNft: Map<string, ICmsNft>,
-): ArtImage[] {
+): NftArt[] {
 	return objktNfts.map((singleNft) => {
 		const { token, transactions } = singleNft
 		const nft = token[0]
@@ -27,20 +27,21 @@ export function formatObjktNfts(
 			url:
 				cmsData?._embedded?.['wp:featuredmedia'][0].source_url ??
 				`https://cloudflare-ipfs.com/ipfs/${displayUrl}`,
-			nft_url: `https://cloudflare-ipfs.com/ipfs/${nftUrl}`,
+			nftUrl: `https://cloudflare-ipfs.com/ipfs/${nftUrl}`,
 			description: cmsData?.description ? cmsData.description : nft.description,
-			video_process: cmsData?.video_process ? cmsData.video_process : undefined,
+			videoProcess: cmsData?.video_process ? cmsData.video_process : undefined,
 			mintedDate: nft.timestamp,
-			available_purchase: cmsData?.available_purchase,
+			availablePurchase: cmsData?.available_purchase,
 			contracts: cmsData?.contracts,
-			makeOffer: cmsData?.make_offer,
-			created_at: parsedDate,
+			makeOffer: null,
+			createdAt: parsedDate,
 			transactions: transactions.event.map((transaction) => ({
 				transaction: transaction.ophash,
 				from_address: transaction.creator.address,
 				to_address: transaction.recipient.address,
 				event_timestamp: new Date(transaction.timestamp).getTime(),
 			})),
+			etherscan: false
 		}
 	})
 }

@@ -1,0 +1,80 @@
+﻿@page "/nfts"
+@using AdminApi.Models
+@using AdminApi.Services
+@using Domain.Models
+@attribute [StreamRendering]
+@inject ListNftsService NftService
+
+<PageTitle>NFTs</PageTitle>
+
+<h1>NFTs</h1>
+
+<p>This component demonstrates showing data.</p>
+
+@if (nfts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Nft Chain</th>
+                <th>OpenSeaLink</th>
+                <th>ObjktOneLink</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var nft in nfts)
+            {
+                <tr>
+                    <td>@nft.Name</td>
+                    <td>@GetNftDescription(nft)</td>
+                    <td>@nft.NftChain</td>
+                    <td>
+                        <a href="@nft.ExternalLinks.OpenSeaLink" target="_blank">
+                            @nft.ExternalLinks.OpenSeaLink?.Substring(0, 30)
+                        </a>
+                    </td>
+                    <td>
+                        <a href="@nft.ExternalLinks.ObjktOneLink" target="_blank">
+                            @nft.ExternalLinks.ObjktOneLink?.Substring(0, 30)
+                        </a>
+                    </td>
+                    <td>
+                        <a class="nav-link" href="nfts/@nft.Id">
+                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IEnumerable<NftArtResponse>? nfts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        nfts = await NftService.ListNfts();
+    }
+
+    private static string GetNftDescription(NftArtResponse nftArt)
+    {
+        if (string.IsNullOrEmpty(nftArt.Description))
+        {
+            return string.Empty; 
+        }
+        if (nftArt.Description.Length <= 50)
+        {
+            return nftArt.Description;
+        }
+
+        return $"{nftArt.Description.Substring(0, 50)}...";
+    }
+}

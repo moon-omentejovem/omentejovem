@@ -11,6 +11,7 @@ interface GetNftProperties {
 export async function getNft({ addressId, nftId }: GetNftProperties) {
 	const client = await NftClient.getInstance()
 
+	// https://docs.opensea.io/reference/get_nft
 	const data = await fetch(
 		`${client.openSeaApi.baseURL}/chain/ethereum/contract/${addressId}/nfts/${nftId}`,
 		{
