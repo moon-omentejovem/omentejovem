@@ -1,4 +1,5 @@
 ﻿using Domain.Endpoints.Commands.CreateCollection;
+using Domain.Endpoints.Commands.CreateOpenSeaNft;
 using Domain.Models;
 using MediatR;
 using MongoDB.Driver;
@@ -13,7 +14,8 @@ public record CreateObjktNftRequest(
     string CollectionDescription,
     string Timestamp,
     string TokenId,
-    string ObjktUrl
+    string ObjktUrl,
+    bool Edition
 ) : IRequest;
 
 public class CreateObjktNftRequestHandler(
@@ -37,6 +39,7 @@ public class CreateObjktNftRequestHandler(
                 Address = request.ContractAddress,
                 NftChain = NftChain.Tezos,
                 Collection = request.Collection,
+                Edition = request.Edition,
                 ExternalLinks = new ExternalLinks(new() { Name = ExternalLinkEnum.ObktOneLink, Url = request.ObjktUrl }),
                 Contracts = [
                     new Contract
@@ -45,7 +48,7 @@ public class CreateObjktNftRequestHandler(
                         NftChain = NftChain.Tezos,
                         SourceId = request.TokenId
                     }
-                ]
+                ],
             };
 
             await mediator.Send(new CreateCollectionRequest(
@@ -66,16 +69,33 @@ public class CreateObjktNftRequestHandler(
         if (foundContract is not null)
             return;
 
-        existentNft.Contracts ??=
-        [
-            new Contract
-            {
-                ContractAddress = request.ContractAddress,
-                NftChain = NftChain.Tezos,
-                SourceId = request.TokenId
-            }
-        ];
+        existentNft.Name = request.Name;
+        existentNft.Description = request.Description;
+        existentNft.Address = request.ContractAddress;
+        existentNft.NftChain = NftChain.Ethereum;
+        existentNft.Collection = request.Collection;
+        existentNft.Edition = request.Edition;
+        existentNft.ExternalLinks.AddLink(new() { Name = ExternalLinkEnum.ObktOneLink, Url = request.ObjktUrl });
+        existentNft.Contracts.Add(new Contract
+        {
+            ContractAddress = request.ContractAddress,
+            NftChain = NftChain.Tezos,
+            SourceId = request.TokenId
+        });
 
         await _nftsCollection.ReplaceOneAsync(n => n.Id == existentNft.Id, existentNft, cancellationToken: cancellationToken);
+    }
+
+    private static bool HasChanges(CreateObjktNftRequest request, NftArt nftArt)
+    {
+        return
+            nftArt.Name != request.Name ||
+            nftArt.Description != request.Description ||
+            nftArt.Address != request.ContractAddress ||
+            nftArt.NftChain != NftChain.Tezos ||
+            nftArt.Collection != request.Collection ||
+            !nftArt.ExternalLinks.Links.Any(l => l.Name == ExternalLinkEnum.ObktOneLink && l.Url == request.ObjktUrl) ||
+            !nftArt.Contracts.Any(c => c.ContractAddress == request.ContractAddress && c.NftChain == NftChain.Ethereum && c.SourceId == request.TokenId) ||
+            nftArt.Edition != request.Edition;
     }
 }
