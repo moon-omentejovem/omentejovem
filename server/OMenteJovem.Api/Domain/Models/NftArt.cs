@@ -14,7 +14,7 @@ public class NftArt
     public DateTime MintedDate { get; set; }
     public List<Owner> Owners { get; set; }
     public string? Url { get; set; }
-    public List<Contract> Contracts { get; set; }
+    public List<Contract> Contracts { get; set; } = [];
     public string? NftUrl { get; set; }
     public MakeOffer? MakeOffer { get; set; }
     public string? VideoProcess { get; set; }

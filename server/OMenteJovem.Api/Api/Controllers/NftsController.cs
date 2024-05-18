@@ -1,3 +1,4 @@
+using Domain.Endpoints.Queries.ListEditionNfts;
 using Domain.Endpoints.Queries.ListNftsByCollection;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -15,5 +16,11 @@ public class NftsController(
     public async Task<ListNftsByCollectionResponse> ListCollections(string collection)
     {
         return await mediator.Send(new ListNftsByCollectionRequest(collection));
+    }
+
+    [HttpGet("/nfts/edition")]
+    public async Task<ListEditionNftsResponse> ListEditions()
+    {
+        return await mediator.Send(new ListEditionNftsRequest());
     }
 }

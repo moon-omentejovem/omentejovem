@@ -7,11 +7,6 @@ namespace Domain.Endpoints.Queries.ListNftsByCollection;
 
 public record ListNftsByCollectionRequest(string Collection) : IRequest<ListNftsByCollectionResponse>;
 
-public record ListNftsByCollectionResponse
-(
-    IEnumerable<NftArtResponse> Nfts
-);
-
 public class ListNftsByCollectionHandler(IMongoDatabase mongoDatabase) : IRequestHandler<ListNftsByCollectionRequest, ListNftsByCollectionResponse>
 {
     private readonly IMongoCollection<NftArt> _nftArtCollection = mongoDatabase.GetCollection<NftArt>("nftArts");
