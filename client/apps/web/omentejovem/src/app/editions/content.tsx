@@ -27,8 +27,8 @@ export default function EditionsContent(): ReactElement {
 			onChangeSelectedArtIndex={onChangeSelectedArtIndex}
 			selectedArtIndex={selectedArtIndex}
 			unfilteredImages={unfilteredImages}
-			totalPages={artTotalPages}
-			onChangeTotalPages={onChangeTotalPages}
+			// totalPages={artTotalPages}
+			// onChangeTotalPages={onChangeTotalPages}
 		/>
 	)
 }

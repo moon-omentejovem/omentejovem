@@ -13,8 +13,6 @@ export default function PortfolioContent(): ReactElement {
 		unfilteredImages,
 		onChangeArtImages,
 		onChangeSelectedArtIndex,
-		artTotalPages,
-		onChangeTotalPages,
 	} = usePortfolioContext()
 
 	return (
@@ -27,8 +25,6 @@ export default function PortfolioContent(): ReactElement {
 			onChangeSelectedArtIndex={onChangeSelectedArtIndex}
 			selectedArtIndex={selectedArtIndex}
 			unfilteredImages={unfilteredImages}
-			totalPages={artTotalPages}
-			onChangeTotalPages={onChangeTotalPages}
 		/>
 	)
 }

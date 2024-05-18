@@ -129,7 +129,7 @@ export function ArtInfos({
 						<div id="art-links" className="mt-12">
 							<ArtLinks
 								email={email}
-								availableOn={selectedArt.contracts}
+								externalLinks={selectedArt.externalLinks}
 								availableForPurchase={selectedArt.availablePurchase}
 								makeOffer={selectedArt.makeOffer}
 								views={{

@@ -4,6 +4,7 @@ import { ReactElement, useEffect, useMemo, useState } from 'react'
 import { Icons } from './Icons'
 import { filterAnimations } from '@/animations'
 import { cn } from '@/lib/utils'
+import { ChainedFilter } from './ArtFilter/filters'
 
 export interface Filter {
 	name: string
@@ -13,15 +14,15 @@ export interface Filter {
 }
 
 interface FilterProperties {
-	filter: Filter[]
-	onChangeFilter?: (filter: string) => void
+	filter: ChainedFilter[]
+	onChangeFilter: (filterHistory: ChainedFilter[]) => void
 }
 
 export function Filter({ filter, onChangeFilter }: FilterProperties): ReactElement {
 	const initialFilter = useMemo(() => filter, [filter])
 	const [open, setOpen] = useState(false)
-	const [filters, setFilters] = useState<Filter[]>(initialFilter)
-	const [filterHistory, setFilterHistory] = useState<Filter[][]>([])
+	const [filters, setFilters] = useState<ChainedFilter[]>(initialFilter)
+	const [filterHistory, setFilterHistory] = useState<ChainedFilter[]>([])
 	const [filterStep, setFilterStep] = useState(1)
 	const [selected, setSelected] = useState<string>('latest')
 
@@ -31,33 +32,37 @@ export function Filter({ filter, onChangeFilter }: FilterProperties): ReactEleme
 		}
 	}, [filters])
 
-	function updateFilters(content: Filter[]) {
-		setFilterHistory([...filterHistory, filters])
-		setFilters(
-			content
-				.filter((filter) => !filter.name.includes('_url') && !filter.name.includes('_button'))
-				.map((filter) => ({ ...filter, name: filter.name.replace(/_/g, ' ') })),
-		)
+	function updateFilters(content: ChainedFilter) {
+		setFilterHistory([...filterHistory, content])
+		if (content.children)
+			setFilters(content.children)
+
+		onChangeFilter(filterHistory);
 	}
 
 	function leaveFilter() {
-		const previousFilters = filterHistory.pop()
-		setFilterHistory(filterHistory.slice())
-		if (previousFilters) {
-			setFilters(previousFilters)
+		const historyCopy = [...filterHistory]
+		historyCopy.pop()
+		setFilterHistory(historyCopy)
+		if (historyCopy.length) {
+			setFilters(historyCopy[historyCopy.length - 1].children!)
 		}
-		setFilterStep(filterStep - 1)
+		else {
+			setFilters(initialFilter)
+		}
+
+		onChangeFilter(filterHistory);
 	}
 
 	return (
 		<div className="flex flex-col gap-2 mt-8 items-center">
 			<button
 				onClick={() => {
-					if (filterStep === 1) {
+					if (filterHistory.length)
+						leaveFilter()
+					else {
 						filterAnimations(open)
 						setOpen(!open)
-					} else {
-						leaveFilter()
 					}
 				}}
 				aria-label="Filter Menu"
@@ -87,25 +92,16 @@ export function Filter({ filter, onChangeFilter }: FilterProperties): ReactEleme
 				{filters.map((filter, index) => (
 					<button
 						key={index}
-						onClick={(event) => {
-							const filterName = event.currentTarget.ariaLabel as string
-
-							if (filter?.subfilters) {
-								updateFilters(filter.subfilters)
-								setFilterStep(filterStep + 1)
-							} else {
-								setSelected(filterName)
-							}
-
-							onChangeFilter?.(filterName)
+						onClick={(_) => {
+							updateFilters(filter)
 						}}
 						className={cn(
 							'filter-option text-secondary-100 text-sm uppercase body-variant overflow-y-hidden md:text-base',
-							selected === filter.name && 'text-secondary-200 underline',
+							selected === filter.label && 'text-secondary-200 underline',
 						)}
-						aria-label={filter.name}
+						aria-label={filter.label}
 					>
-						<p className="translate-y-12">{filter.name}</p>
+						<p className="translate-y-12">{filter.label}</p>
 					</button>
 				))}
 			</div>

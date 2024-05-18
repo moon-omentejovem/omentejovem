@@ -2,12 +2,12 @@ import type { ReactElement, ReactNode } from 'react'
 import { useEffect, useMemo, useState } from 'react'
 
 import { Filter } from '@/components/Filter'
-import { ArtImage } from '@/api/resolver/types'
+import { NftArt } from '@/api/resolver/types'
 import { EditionsContext, type EditionsContextProperties } from './EditionsContext'
 
 interface EditionsProviderProperties {
 	email: string
-	images: ArtImage[]
+	images: NftArt[]
 	filters: Filter[]
 	totalPages: number
 	children: ReactNode
@@ -20,7 +20,7 @@ export function EditionsProvider({
 	totalPages,
 	children,
 }: EditionsProviderProperties): ReactElement {
-	const [artImages, setArtImages] = useState<ArtImage[]>(images)
+	const [artImages, setArtImages] = useState<NftArt[]>(images)
 	const [artTotalPages, setArtTotalPages] = useState(totalPages)
 	const [selectedArtIndex, setSelectedArtIndex] = useState(-1)
 
@@ -28,7 +28,7 @@ export function EditionsProvider({
 		setSelectedArtIndex(index)
 	}
 
-	function onChangeArtImages(images: ArtImage[]): void {
+	function onChangeArtImages(images: NftArt[]): void {
 		setArtImages(images)
 	}
 
