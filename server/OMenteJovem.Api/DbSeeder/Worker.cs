@@ -80,9 +80,10 @@ public class Worker : BackgroundService
                 Description: singleNftResponse.Nft.Description,
                 ContractAddress: singleNftResponse.Nft.Contract,
                 Collection: singleNftResponse.Nft.Collection ?? collectionSlug,
-                TokenId:    singleNftResponse.Nft.Identifier,
+                TokenId: singleNftResponse.Nft.Identifier,
                 OpenSeaUrl: nft.OpenseaUrl,
-                NftUrl: singleNftResponse.Nft.ImageUrl
+                NftUrl: singleNftResponse.Nft.ImageUrl,
+                Edition: singleNftResponse.Nft.TokenStandard == "erc721"
             ));
         }
     }
@@ -112,7 +113,8 @@ public class Worker : BackgroundService
                 Collection: nft.Collection,
                 TokenId: nft.Identifier,
                 OpenSeaUrl: nft.OpenseaUrl,
-                NftUrl: singleNftResponse.Nft.ImageUrl
+                NftUrl: singleNftResponse.Nft.ImageUrl,
+                Edition: domainNft.Edition
             ));
 
             upsertedNfts.Add(domainNft);
@@ -147,7 +149,8 @@ public class Worker : BackgroundService
                 CollectionDescription: nft.Fa.Description,
                 Timestamp: nft.Timestamp,
                 TokenId: nft.TokenId,
-                ObjktUrl: $"https://objkt.com/tokens/{nft.Fa.Path}/{nft.TokenId}"
+                ObjktUrl: $"https://objkt.com/tokens/{nft.Fa.Path}/{nft.TokenId}",
+                Edition: false
             ));
         }
     }
