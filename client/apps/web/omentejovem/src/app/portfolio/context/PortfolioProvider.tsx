@@ -1,40 +1,35 @@
 import type { ReactElement, ReactNode } from 'react'
 import { useMemo, useState } from 'react'
 
-import { ArtImage } from '@/api/resolver/types'
+import { ArtImage, NftArt } from '@/api/resolver/types'
 import { Filter } from '@/components/Filter'
 import { PortfolioContext, type PortfolioContextProperties } from './PortfolioContext'
 
 interface PortfolioProviderProperties {
 	email: string
-	images: ArtImage[]
-	filters: Filter[]
-	totalPages: number
+	images: NftArt[]
 	children: ReactNode
 }
 
 export function PortfolioProvider({
 	email,
 	images,
-	filters,
-	totalPages,
 	children,
 }: PortfolioProviderProperties): ReactElement {
-	const [artImages, setArtImages] = useState<ArtImage[]>(images)
-	const [artTotalPages, setArtTotalPages] = useState(totalPages)
+	const [artImages, setArtImages] = useState<NftArt[]>(images)
 	const [selectedArtIndex, setSelectedArtIndex] = useState(-1)
 
 	function onChangeSelectedArtIndex(index: number): void {
 		setSelectedArtIndex(index)
 	}
 
-	function onChangeArtImages(images: ArtImage[]): void {
+	function onChangeArtImages(images: NftArt[]): void {
 		setArtImages(images)
 	}
 
-	function onChangeTotalPages(newTotal: number): void {
-		setArtTotalPages(newTotal)
-	}
+	// function onChangeTotalPages(newTotal: number): void {
+	// 	setArtTotalPages(newTotal)
+	// }
 
 	const values = useMemo<PortfolioContextProperties>(
 		() => ({
@@ -42,14 +37,10 @@ export function PortfolioProvider({
 			unfilteredImages: images,
 			artImages,
 			onChangeArtImages,
-			filters,
 			selectedArtIndex,
-			onChangeSelectedArtIndex,
-			totalPages,
-			artTotalPages,
-			onChangeTotalPages,
+			onChangeSelectedArtIndex
 		}),
-		[images, filters, selectedArtIndex, artImages, totalPages, artTotalPages],
+		[images, selectedArtIndex, artImages],
 	)
 
 	return <PortfolioContext.Provider value={values}>{children}</PortfolioContext.Provider>

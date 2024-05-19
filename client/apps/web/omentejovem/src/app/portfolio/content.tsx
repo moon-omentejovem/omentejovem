@@ -9,7 +9,6 @@ export default function PortfolioContent(): ReactElement {
 		email,
 		artImages,
 		selectedArtIndex,
-		filters,
 		unfilteredImages,
 		onChangeArtImages,
 		onChangeSelectedArtIndex,
@@ -20,11 +19,11 @@ export default function PortfolioContent(): ReactElement {
 			email={email}
 			source="portfolio"
 			artImages={artImages}
-			filters={filters}
 			onChangeArtImages={onChangeArtImages}
 			onChangeSelectedArtIndex={onChangeSelectedArtIndex}
 			selectedArtIndex={selectedArtIndex}
 			unfilteredImages={unfilteredImages}
+			filters={[]}
 		/>
 	)
 }

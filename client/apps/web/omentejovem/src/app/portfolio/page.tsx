@@ -1,16 +1,14 @@
-import { requestNfts } from '@/api/resolver/requestNfts'
 import { PortfolioContentProvider } from './provider'
 import { NftClient } from '@/api/nftClient'
+import { fetchPortfolioNfts } from '@/api/requests/fetchPortfolioNfts'
 
 export default async function Portfolio() {
-	const { filters, images, totalPages } = await requestNfts({ page: 'portfolio' })
-
+	const { nfts } = await fetchPortfolioNfts()
+	
 	return (
 		<PortfolioContentProvider
 			email={NftClient.email}
-			filters={filters}
-			images={images}
-			totalPages={totalPages}
+			images={nfts}
 		/>
 	)
 }

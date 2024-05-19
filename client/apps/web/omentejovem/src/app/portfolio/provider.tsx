@@ -3,24 +3,20 @@
 import { ReactElement } from 'react'
 import { PortfolioProvider } from './context/PortfolioProvider'
 import PortfolioContent from './content'
-import { ArtImage } from '@/components/ArtContent/types'
+import { NftArt } from '@/components/ArtContent/types'
 import { Filter } from '@/components/Filter'
 
 interface PortfolioContentProviderProperties {
 	email: string
-	images: ArtImage[]
-	filters: Filter[]
-	totalPages: number
+	images: NftArt[]
 }
 
 export function PortfolioContentProvider({
 	email,
-	filters,
-	images,
-	totalPages,
+	images
 }: PortfolioContentProviderProperties): ReactElement {
 	return (
-		<PortfolioProvider email={email} images={images} filters={filters} totalPages={totalPages}>
+		<PortfolioProvider email={email} images={images}>
 			<PortfolioContent />
 		</PortfolioProvider>
 	)

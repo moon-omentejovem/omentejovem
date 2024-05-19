@@ -1,4 +1,3 @@
-import { requestNfts } from '@/api/resolver/requestNfts'
 import { EditionsContentProvider } from './provider'
 import { generateFilters } from '@/api/resolver/generateFilters'
 import { fetchEditionNfts } from '@/api/requests';
