@@ -5,16 +5,16 @@ using MongoDB.Driver;
 
 namespace Domain.Endpoints.Queries.ListEditionNfts;
 
-public record ListEditionNftsRequest() : IRequest<ListEditionNftsResponse>;
+public record ListEditionNftsRequest() : IRequest<ListNftsResponse>;
 
-public class ListEditionNftsHandler(IMongoDatabase mongoDatabase) : IRequestHandler<ListEditionNftsRequest, ListEditionNftsResponse>
+public class ListEditionNftsHandler(IMongoDatabase mongoDatabase) : IRequestHandler<ListEditionNftsRequest, ListNftsResponse>
 {
     private readonly IMongoCollection<NftArt> _nftArtCollection = mongoDatabase.GetCollection<NftArt>("nftArts");
 
-    public async Task<ListEditionNftsResponse> Handle(ListEditionNftsRequest request, CancellationToken cancellationToken)
+    public async Task<ListNftsResponse> Handle(ListEditionNftsRequest request, CancellationToken cancellationToken)
     {
         var nfts = await _nftArtCollection.Find(n => n.Edition).ToListAsync(cancellationToken: cancellationToken);
 
-        return new ListEditionNftsResponse(nfts.Select(NftArtResponse.FromDomain));
+        return new ListNftsResponse(nfts.Select(NftArtResponse.FromDomain));
     }
 }
