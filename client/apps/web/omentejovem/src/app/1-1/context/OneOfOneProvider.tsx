@@ -1,13 +1,13 @@
 import type { ReactElement, ReactNode } from 'react'
 import { useMemo, useState } from 'react'
 
-import { ArtImage } from '@/api/resolver/types'
+import { NftArt } from '@/api/resolver/types'
 import { Filter } from '@/components/Filter'
 import { OneOfOneContext, type OneOfOneContextProperties } from './OneOfOneContext'
 
 interface OneOfOneProviderProperties {
 	email: string
-	images: ArtImage[]
+	images: NftArt[]
 	filters: Filter[]
 	totalPages: number
 	children: ReactNode
@@ -20,7 +20,7 @@ export function OneOfOneProvider({
 	totalPages,
 	children,
 }: OneOfOneProviderProperties): ReactElement {
-	const [artImages, setArtImages] = useState<ArtImage[]>(images)
+	const [artImages, setArtImages] = useState<NftArt[]>(images)
 	const [artTotalPages, setArtTotalPages] = useState(totalPages)
 	const [selectedArtIndex, setSelectedArtIndex] = useState(-1)
 
@@ -28,7 +28,7 @@ export function OneOfOneProvider({
 		setSelectedArtIndex(index)
 	}
 
-	function onChangeArtImages(images: ArtImage[]): void {
+	function onChangeArtImages(images: NftArt[]): void {
 		setArtImages(images)
 	}
 

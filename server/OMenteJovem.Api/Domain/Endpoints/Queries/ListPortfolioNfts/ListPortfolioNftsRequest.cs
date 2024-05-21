@@ -1,4 +1,5 @@
-﻿using Domain.Endpoints.Models;
+﻿using Domain.Database;
+using Domain.Endpoints.Models;
 using Domain.Models;
 using MediatR;
 using MongoDB.Driver;
@@ -9,7 +10,7 @@ public record ListPortfolioNftsRequest() : IRequest<ListNftsResponse>;
 
 public class ListPortfolioNftsHandler(IMongoDatabase mongoDatabase) : IRequestHandler<ListPortfolioNftsRequest, ListNftsResponse>
 {
-    private readonly IMongoCollection<NftArt> _nftsCollection = mongoDatabase.GetCollection<NftArt>("nftArts");
+    private readonly IMongoCollection<NftArt> _nftsCollection = mongoDatabase.GetCollection<NftArt>(MongoDbConfig.NftArtsCollectionName);
 
     public async Task<ListNftsResponse> Handle(ListPortfolioNftsRequest request, CancellationToken cancellationToken)
     {

@@ -10,7 +10,6 @@ export interface UseRequestNftsProperties {
 	currentPage: number
 	selectedFilters: CmsFilter[]
 	minted: boolean
-	// onChangeTotalPages: (newTotal: number) => void
 	onChangeLoading: (loadingState: boolean) => void
 }
 

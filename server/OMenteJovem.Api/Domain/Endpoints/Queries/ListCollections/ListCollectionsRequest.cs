@@ -1,17 +1,16 @@
-﻿using Domain.Models;
+﻿using Domain.Database;
+using Domain.Models;
 using MediatR;
 using MongoDB.Driver;
 
 namespace Domain.Endpoints.Queries.ListCollections;
 
-public record ListCollectionsRequest : IRequest<ListCollectionsResponse>
-{
-}
+public record ListCollectionsRequest : IRequest<ListCollectionsResponse>;
 
 public class ListCollectionsHandler(IMongoDatabase mongoDatabase) : IRequestHandler<ListCollectionsRequest, ListCollectionsResponse>
 {
-    private readonly IMongoCollection<Collection> _collections = mongoDatabase.GetCollection<Collection>("collections");
-    private readonly IMongoCollection<NftArt> _nftCollections = mongoDatabase.GetCollection<NftArt>("nftArts");
+    private readonly IMongoCollection<Collection> _collections = mongoDatabase.GetCollection<Collection>(MongoDbConfig.CollectionsCollectionName);
+    private readonly IMongoCollection<NftArt> _nftCollections = mongoDatabase.GetCollection<NftArt>(MongoDbConfig.NftArtsCollectionName);
 
     public async Task<ListCollectionsResponse> Handle(ListCollectionsRequest request, CancellationToken cancellationToken)
     {

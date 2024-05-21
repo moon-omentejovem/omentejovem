@@ -1,15 +1,16 @@
 import { requestNfts } from '@/api/resolver/requestNfts'
 import { OneOfOneContentProvider } from './provider'
+import { fetchOneOfOneNfts } from '@/api/requests/fetchOneOfOneNfts'
 
 export default async function OneOfOne() {
-	const { email, filters, images, totalPages } = await requestNfts({ page: 'oneOfOne' })
+	const { nfts } = await fetchOneOfOneNfts();
 
 	return (
 		<OneOfOneContentProvider
-			email={email}
-			filters={filters}
-			images={images}
-			totalPages={totalPages}
+			email={'email'}
+			filters={[]}
+			images={nfts}
+			totalPages={1}
 		/>
 	)
 }

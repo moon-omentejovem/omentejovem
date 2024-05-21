@@ -3,12 +3,12 @@
 import { ReactElement } from 'react'
 import { OneOfOneProvider } from './context/OneOfOneProvider'
 import OneOfOneContent from './content'
-import { ArtImage } from '@/components/ArtContent/types'
+import { NftArt } from '@/components/ArtContent/types'
 import { Filter } from '@/components/Filter'
 
 interface OneOfOneContentProviderProperties {
 	email: string
-	images: ArtImage[]
+	images: NftArt[]
 	filters: Filter[]
 	totalPages: number
 }

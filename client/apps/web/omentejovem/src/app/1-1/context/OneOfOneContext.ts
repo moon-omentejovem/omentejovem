@@ -4,9 +4,9 @@ import { ArtImage, NftArt } from '@/api/resolver/types'
 
 export interface OneOfOneContextProperties {
 	email: string
-	unfilteredImages: ArtImage[]
-	artImages: (ArtImage | NftArt)[]
-	onChangeArtImages: (images: (ArtImage | NftArt)[]) => void
+	unfilteredImages: NftArt[]
+	artImages: (NftArt)[]
+	onChangeArtImages: (images: (NftArt)[]) => void
 	filters: Filter[]
 	selectedArtIndex: number
 	onChangeSelectedArtIndex: (index: number) => void

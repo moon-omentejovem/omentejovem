@@ -1,4 +1,5 @@
-﻿using Domain.Endpoints.Commands.CreateCollection;
+﻿using Domain.Database;
+using Domain.Endpoints.Commands.CreateCollection;
 using Domain.Endpoints.Commands.CreateOpenSeaNft;
 using Domain.Models;
 using MediatR;
@@ -23,7 +24,7 @@ public class CreateObjktNftRequestHandler(
     IMediator mediator
 ) : IRequestHandler<CreateObjktNftRequest>
 {
-    private readonly IMongoCollection<NftArt> _nftsCollection = mongoDatabase.GetCollection<NftArt>("nftArts");
+    private readonly IMongoCollection<NftArt> _nftsCollection = mongoDatabase.GetCollection<NftArt>(MongoDbConfig.NftArtsCollectionName);
 
     public async Task Handle(CreateObjktNftRequest request, CancellationToken cancellationToken)
     {

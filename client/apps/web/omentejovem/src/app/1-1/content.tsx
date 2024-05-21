@@ -27,8 +27,6 @@ export default function OneOfOneContent(): ReactElement {
 			onChangeSelectedArtIndex={onChangeSelectedArtIndex}
 			selectedArtIndex={selectedArtIndex}
 			unfilteredImages={unfilteredImages}
-			totalPages={artTotalPages}
-			onChangeTotalPages={onChangeTotalPages}
 		/>
 	)
 }

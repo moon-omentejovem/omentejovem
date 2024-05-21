@@ -1,4 +1,5 @@
-﻿using Domain.Models;
+﻿using Domain.Database;
+using Domain.Models;
 using MediatR;
 using MongoDB.Driver;
 
@@ -16,7 +17,7 @@ public record CreateCollectionRequest
 
 public class CreateCollectionRequestHandler(IMongoDatabase mongoDatabase) : IRequestHandler<CreateCollectionRequest>
 {
-    private readonly IMongoCollection<Collection> _collections = mongoDatabase.GetCollection<Collection>("collections");
+    private readonly IMongoCollection<Collection> _collections = mongoDatabase.GetCollection<Collection>(MongoDbConfig.CollectionsCollectionName);
 
     public async Task Handle(CreateCollectionRequest request, CancellationToken cancellationToken)
     {

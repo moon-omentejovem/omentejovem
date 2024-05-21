@@ -1,4 +1,5 @@
-﻿using Domain.Models;
+﻿using Domain.Database;
+using Domain.Models;
 using MediatR;
 using MongoDB.Driver;
 
@@ -19,7 +20,7 @@ public class CreateOpenSeaNftRequestHandler(
     IMongoDatabase mongoDatabase
 ) : IRequestHandler<CreateOpenSeaNftRequest, NftArt>
 {
-    private readonly IMongoCollection<NftArt> _nftsCollection = mongoDatabase.GetCollection<NftArt>("nftArts");
+    private readonly IMongoCollection<NftArt> _nftsCollection = mongoDatabase.GetCollection<NftArt>(MongoDbConfig.NftArtsCollectionName);
 
     public async Task<NftArt> Handle(CreateOpenSeaNftRequest request, CancellationToken cancellationToken)
     {

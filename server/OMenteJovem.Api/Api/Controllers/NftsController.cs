@@ -1,6 +1,7 @@
 using Domain.Endpoints.Models;
 using Domain.Endpoints.Queries.ListEditionNfts;
 using Domain.Endpoints.Queries.ListNftsByCollection;
+using Domain.Endpoints.Queries.ListOneOfOneNfts;
 using Domain.Endpoints.Queries.ListPortfolioNfts;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -30,5 +31,11 @@ public class NftsController(
     public async Task<ListNftsResponse> ListPortfolioNfts()
     {
         return await mediator.Send(new ListPortfolioNftsRequest());
+    }
+
+    [HttpGet("/nfts/one-of-one")]
+    public async Task<ListNftsResponse> ListOneOfOneNfts()
+    {
+        return await mediator.Send(new ListOneOfOneNftsRequest());
     }
 }
