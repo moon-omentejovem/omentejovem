@@ -12,6 +12,7 @@ import { useCallback, useEffect, useMemo } from 'react'
 
 import parse from 'html-react-parser'
 import './style.css'
+import HardCodedBio from './hardcoded-bio'
 
 interface AboutContentProperties {
 	data: AboutData | undefined
@@ -134,7 +135,9 @@ export function AboutContent({
 					id="about-subtitle"
 					className="block text-xs min-w-[10rem] text-secondary-100 invisible sm:text-base xl:text-lg"
 				>
-					<span id="about-subtitle">{data?.subtitle}</span>
+					<span id="about-subtitle">
+						"Late Night Love" is an artwork created by him in late 2021, in which he strongly identified with the moon and decided to make it part of his identity.
+					</span>
 				</h2>
 
 				<p id="about-spans" className="hidden -mt-[30px] font-heading text-9xl invisible xl:block">
@@ -160,9 +163,7 @@ export function AboutContent({
 					<p className="bio font-heading text-xs min-w-[4.5rem] text-secondary-100 sm:text-base sm:min-w-[6rem] xl:text-lg xl:min-w-[7rem]">
 						Bio
 					</p>
-					<div className="text-xs max-w-[65ch] sm:text-base xl:text-xl">
-						{renderAboutInfo(data?.bio ?? '')}
-					</div>
+					<HardCodedBio />
 				</div>
 
 				<div className="flex flex-row gap-6 w-full max-w-sm xl:gap-24">

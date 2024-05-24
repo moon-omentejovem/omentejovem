@@ -1,30 +1,32 @@
-import {
-	fetchAboutExhibitions,
-	fetchAboutPress,
-	fetchAboutTalks,
-	getAboutInfo,
-} from '@/api/requests/wordpress/getAboutInfo'
 import { AboutContent } from './content'
+import { AboutData } from './@types/wordpress'
 
 async function requestGetAboutInfo() {
 	try {
-		const response = await getAboutInfo()
-		const data = response.data[0].acf
-
-		const talksRequest = await fetchAboutTalks()
-		const talks = talksRequest.data.slice(0, 3)
-
-		const pressRequest = await fetchAboutPress()
-		const press = pressRequest.data.slice(0, 3)
-
-		const exhibitionsRequest = await fetchAboutExhibitions()
-		const exhibitions = exhibitionsRequest.data.slice(0, 3)
+		const data = {
+			title: '',
+			subtitle: '',
+			subtitle_art: '',
+			bio: '',
+			social_media: {
+				twitter: 'string',
+				instagram: 'string',
+				aotm: 'string',
+				superrare: 'string',
+				foundation: 'string',
+				opensea: 'string',
+				objkt: 'string',
+			},
+			contact: {
+				"e-mail": ""
+			}
+		} as AboutData
 
 		return {
 			...data,
-			talks,
-			press,
-			exhibitions,
+			talks: [],
+			press: [],
+			exhibitions: [],
 		}
 	} catch (error) {
 		console.log('#ERROR:', error)
