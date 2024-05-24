@@ -23,8 +23,7 @@ else
                 <th>Name</th>
                 <th>Description</th>
                 <th>Nft Chain</th>
-                <th>OpenSeaLink</th>
-                <th>ObjktOneLink</th>
+                <th>Ready</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -36,18 +35,20 @@ else
                     <td>@GetNftDescription(nft)</td>
                     <td>@nft.NftChain</td>
                     <td>
-                        <a href="@nft.ExternalLinks.OpenSeaLink" target="_blank">
-                            @nft.ExternalLinks.OpenSeaLink?.Substring(0, 30)
-                        </a>
-                    </td>
-                    <td>
-                        <a href="@nft.ExternalLinks.ObjktOneLink" target="_blank">
-                            @nft.ExternalLinks.ObjktOneLink?.Substring(0, 30)
-                        </a>
+                        @if (nft.IsReady())
+                        {
+                            <span>yes</span>
+                            <span class="bi bi-check-circle-nav-menu" aria-hidden="true"></span>
+                        }
+                        else
+                        {
+                            <span>no</span>
+                            <span class="bi bi-file-x-fill-nav-menu" aria-hidden="true"></span>
+                        }
                     </td>
                     <td>
                         <a class="nav-link" href="nfts/@nft.Id">
-                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span>
+                            Go to
                         </a>
                     </td>
                 </tr>

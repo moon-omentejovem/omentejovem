@@ -4,6 +4,7 @@ using Amazon.Runtime;
 using Amazon.S3;
 using Domain;
 using Domain.Utils;
+using Moq;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,15 +12,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services
     .AddDomain()
     .AddConfiguration<AWSConfig>("AWS")
-    .AddScoped<IAmazonS3>(resolver =>
+    .AddScoped<IAmazonS3>(_ =>
     {
-        var config = resolver.GetRequiredService<AWSConfig>();
-
-        return new AmazonS3Client(new BasicAWSCredentials(config.AccessKey, config.SecretKey));
+        return new Mock<IAmazonS3>().Object;
     })
+    .AddScoped<S3UploadService>()
     .AddSingleton<ListNftsService>()
     .AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddBlazorBootstrap();
 
 var app = builder.Build();
 

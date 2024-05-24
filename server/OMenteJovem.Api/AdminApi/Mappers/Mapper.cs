@@ -74,14 +74,7 @@ public static class MappingMethods
 
     public static ExternalLinksResponse MapToResponse(ExternalLinks original)
     {
-        return new ExternalLinksResponse
-        {
-            RaribleLink = original.RaribleLink,
-            ManifoldLink = original.ManifoldLink,
-            OpenSeaLink = original.OpenSeaLink,
-            SuperRareLink = original.SuperRareLink,
-            ObjktOneLink = original.ObjktOneLink
-        };
+        return new ExternalLinksResponse(original.Links.Select(l => new ExternalLinkResponse(l.Name.ToString(), l.Url)).ToList());
     }
 }
 

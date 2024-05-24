@@ -1,27 +1,20 @@
-﻿using MongoDB.Bson;
+﻿using Domain.Models;
 
-namespace Domain.Models;
+namespace AdminApi.Models.Forms;
 
-public class NftArt
+public class NftArtForm
 {
-    public ObjectId Id { get; set; }
     public string SourceId { get; set; }
     public string Name { get; set; }
     public string? Description { get; set; }
     public DateTime? CreatedAt { get; set; }
-    public AvailablePurchase AvailablePurchase { get; set; } = new();
     public string Address { get; set; }
     public DateTime? MintedDate { get; set; }
-    public List<Owner> Owners { get; set; } = [];
     public string? Url { get; set; }
-    public List<Contract> Contracts { get; set; } = [];
     public string? NftUrl { get; set; }
-    public MakeOffer? MakeOffer { get; set; } = new();
     public string? VideoProcess { get; set; }
     public NftChain NftChain { get; set; } = NftChain.Unknown;
-    public bool Etherscan { get; set; } = false;
     public string? Collection { get; set; }
     public bool OneOfOne { get; set; }
     public bool Edition { get; set; }
-    public ExternalLinks ExternalLinks { get; set; } = new();
 }

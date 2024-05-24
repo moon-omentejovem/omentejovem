@@ -1,19 +1,77 @@
 ﻿@page "/nfts/{id}"
-@using AdminApi.Models
-@using AdminApi.Services
-@using MongoDB.Bson
-@inject ListNftsService NftsService
+@page "/nftartform"
+@inject ListNftsService NftService
 
-<h3>Nft @Id</h3>
+@using System.ComponentModel.DataAnnotations
+@using AdminApi.Components.Pages.Forms
+@using AdminApi.Mappers
+@using AdminApi.Models
+@using AdminApi.Models.Forms
+@using AdminApi.Services
+@using Domain.Models
+@using Microsoft.AspNetCore.Components.Forms
+@using MongoDB.Bson
+
+<Tabs>
+    <Tab Title="NFT Details" IsActive="true">
+        <Content>
+            <NftDetailsForm NftArtModel="@NftArtModel" NftArtModelChanged="HandleValidSubmit" />
+        </Content>
+    </Tab>
+    <Tab Title="Media">
+        <Content>
+            <NftMediaForm NftName="@NftArtModel.Name" NftImageUrlChanged="HandleMediaSubmit" />
+        </Content>
+    </Tab>
+    <Tab Title="External Links">
+        <Content>
+            <ExternalLinksForm ExternalLinks="LinksForm" ExternalLinksChanged="HandleExternalLinksSubmit" />
+        </Content>
+    </Tab>
+</Tabs>
 
 @code {
     [Parameter]
     public string Id { get; set; }
 
-    private NftArtResponse? NftDetails { get; set; }
+    private NftArtForm NftArtModel = new();
+    private LinksForm LinksForm = new();
+
+    private NftArt? DomainNft;
 
     protected override async Task OnInitializedAsync()
     {
-        NftDetails = await NftsService.GetNft(ObjectId.Parse(Id));
+        DomainNft = await NftService.GetNft(ObjectId.Parse(Id));
+
+        NftArtModel = FormMapper.FromDomain(DomainNft);
+        LinksForm = FormMapper.FromDomain(DomainNft.ExternalLinks);
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        Console.WriteLine("changed");
+        await NftService.UpdateNft(new UpdateNftBuilder(DomainNft!.Id)
+            .Set(n => n.Name, NftArtModel.Name)
+            .Set(n => n.Description, NftArtModel.Description)
+            .Set(n => n.CreatedAt, NftArtModel.CreatedAt)
+            .Set(n => n.MintedDate, NftArtModel.MintedDate)
+            .Set(n => n.OneOfOne, NftArtModel.OneOfOne)
+            .Set(n => n.Edition, NftArtModel.Edition)
+        );
+    }
+
+    private async Task HandleMediaSubmit(string nftUrl)
+    {
+        Console.WriteLine("changed");
+        await NftService.UpdateNft(new UpdateNftBuilder(DomainNft!.Id)
+            .Set(n => n.NftUrl, nftUrl)
+        );
+    }
+
+    private async Task HandleExternalLinksSubmit(LinksForm links)
+    {
+        await NftService.UpdateNft(new UpdateNftBuilder(DomainNft!.Id)
+            .Set(n => n.ExternalLinks, FormMapper.ToDomain(links))
+        );
     }
 }

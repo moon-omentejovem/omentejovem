@@ -11,4 +11,6 @@ public class AWSConfig
     public string SecretKey { get; set; }
 
     public string BucketName { get; set; }
+
+    public string CloudFrontBaseUrl { get; set; }
 }

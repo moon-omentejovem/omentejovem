@@ -1,0 +1,114 @@
+﻿@using AdminApi.Models.Forms
+@using Domain.Models
+@using Microsoft.AspNetCore.Components.Forms
+@using System.ComponentModel.DataAnnotations
+
+@if (NftArtModel == null)
+{
+    <Spinner />
+}
+else
+{
+    <EditForm Model="@NftArtModel" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="mb-3">
+            <label for="sourceId" class="form-label">Source ID</label>
+            <InputText id="sourceId" class="form-control" @bind-Value="NftArtModel.SourceId" readonly/>
+            <ValidationMessage For="@(() => NftArtModel.SourceId)" />
+        </div>
+
+        <div class="mb-3">
+            <label for="address" class="form-label">Address</label>
+            <InputText id="address" class="form-control" @bind-Value="NftArtModel.Address" readonly />
+            <ValidationMessage For="@(() => NftArtModel.Address)" />
+        </div>
+
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <InputText id="name" class="form-control" @bind-Value="NftArtModel.Name" />
+            <ValidationMessage For="@(() => NftArtModel.Name)" />
+        </div>
+
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <InputTextArea id="description" class="form-control" @bind-Value="NftArtModel.Description" />
+            <ValidationMessage For="@(() => NftArtModel.Description)" />
+        </div>
+
+        <div class="mb-3">
+            <label for="createdAt" class="form-label">Created At</label>
+            <InputDate id="createdAt" class="form-control" @bind-Value="NftArtModel.CreatedAt" />
+            <ValidationMessage For="@(() => NftArtModel.CreatedAt)" />
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Minted</label>
+            <InputCheckbox class="form-check-input" @bind-Value="Minted" />
+            <ValidationMessage For="@(() => NftArtModel.Edition)" />
+        </div>
+
+        @if (Minted) {
+            <div class="mb-3">
+                <label for="mintedDate" class="form-label disabled">Minted Date</label>
+                <InputDate id="mintedDate" class="form-control"  @bind-Value="NftArtModel.MintedDate" readonly="@Minted"/>
+                <ValidationMessage For="@(() => NftArtModel.MintedDate)" />
+            </div>
+        }
+
+        <div class="mb-3">
+            <label for="videoProcess" class="form-label">Video Process</label>
+            <InputText id="videoProcess" class="form-control" @bind-Value="NftArtModel.VideoProcess" />
+            <ValidationMessage For="@(() => NftArtModel.VideoProcess)" />
+        </div>
+
+        <div class="mb-3">
+            <label for="nftChain" class="form-label">NFT Chain</label>
+            <InputText id="nftChain" class="form-select" @bind-Value="NftChain" readonly />
+            <ValidationMessage For="@(() => NftArtModel.NftChain)" />
+        </div>
+
+        <div class="mb-3">
+            <label for="collection" class="form-label">Collection</label>
+            <InputText id="collection" class="form-control" @bind-Value="NftArtModel.Collection" />
+            <ValidationMessage For="@(() => NftArtModel.Collection)" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">One Of One</label>
+            <InputCheckbox class="form-check-input" @bind-Value="NftArtModel.OneOfOne" />
+            <ValidationMessage For="@(() => NftArtModel.OneOfOne)" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Edition</label>
+            <InputCheckbox class="form-check-input" @bind-Value="NftArtModel.Edition" />
+            <ValidationMessage For="@(() => NftArtModel.Edition)" />
+        </div>
+
+        <button type="submit" class="btn btn-success">Submit</button>
+    </EditForm>
+}
+
+
+@code {
+    [Parameter]
+    public NftArtForm NftArtModel { get; set; } = new();
+
+    [Parameter]
+    public EventCallback<NftArtForm> NftArtModelChanged { get; set; }
+
+    private bool Minted { get; set; }
+
+    private string NftChain { get => NftArtModel?.NftChain.ToString(); set { } }
+
+    public NftDetailsForm()
+    {
+        Console.WriteLine(NftArtModel.Name);
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        await NftArtModelChanged.InvokeAsync(NftArtModel);
+    }
+}

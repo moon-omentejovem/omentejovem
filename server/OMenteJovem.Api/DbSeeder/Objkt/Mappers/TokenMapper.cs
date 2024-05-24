@@ -23,6 +23,6 @@ public static class TokenMapper
 
     public static Owner ToDomain(this HolderResponse holderResponse)
     {
-        return new Owner(holderResponse.Address, holderResponse.Alias);
+        return new Owner { Address = holderResponse.Address, Alias = holderResponse.Alias };
     }
 }

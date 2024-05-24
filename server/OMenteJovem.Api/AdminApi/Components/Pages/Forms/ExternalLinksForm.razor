@@ -1,0 +1,110 @@
+﻿@using AdminApi.Models.Forms
+@using Domain.Models
+@using Microsoft.AspNetCore.Components.Forms
+@using System.ComponentModel.DataAnnotations
+
+<EditForm Model="@ExternalLinks" OnValidSubmit="SubmitLink">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    @if (ExternalLinks?.ExternalLinks == null || loading)
+    {
+        <Spinner />
+    }
+    else
+    {
+        @foreach (var externalLink in ExternalLinks.ExternalLinks)
+        {
+            <div>
+                <div class="mb-3">
+                    <label for="sourceId" class="form-label">Name</label>
+                    <InputSelect id="sourceId" class="form-control" @bind-Value="externalLink.Name">
+                        <option checked="@(externalLink.Name is null)" value="">
+                            Select
+                        </option>
+                        @foreach (var externalName in Enum.GetValues<ExternalLinkEnum>())
+                        {
+                            <option checked="@(externalLink.Name == externalName.ToString())" value="@externalName">
+                                @externalName.ToString()
+                            </option>
+                        }
+                    </InputSelect>
+                </div>
+                <div class="mb-3">
+                    <label for="sourceId" class="form-label">Url</label>
+                    <InputText id="sourceId" class="form-control" @bind-Value="externalLink.Url" />
+                </div>
+                
+            </div>
+        }
+        @foreach (var externalLink in UnsubmittedLinks)
+        {
+            <div>
+                <div class="mb-3">
+                    <label for="sourceId" class="form-label">Name</label>
+                    <InputSelect id="sourceId" class="form-control" @bind-Value="externalLink.Name">
+                        <option checked="@(externalLink.Name is null)" value="">
+                            Select
+                        </option>
+                        @foreach (var externalName in Enum.GetValues<ExternalLinkEnum>())
+                        {
+                            <option checked="@(externalLink.Name == externalName.ToString())" value="@externalName">
+                                @externalName.ToString()
+                            </option>
+                        }
+                    </InputSelect>
+                </div>
+                <div class="mb-3">
+                    <label for="sourceId" class="form-label">Url</label>
+                    <InputText id="sourceId" class="form-control" @bind-Value="externalLink.Url" />
+                </div>
+
+            </div>
+        }
+        @if (UnsubmittedLinks.Count == 0 || UnsubmittedLinks.All(l => l.Ready()))
+        {
+            <button class="btn btn-primary" @onclick="AddLink">Add Link</button>
+        }
+        <button type="submit" class="btn btn-success" disabled="@DisableSubmit">Submit</button>
+    }
+
+</EditForm>
+
+@code {
+    [Parameter]
+    public LinksForm? ExternalLinks { get; set; }
+
+    [Parameter]
+    public EventCallback<LinksForm> ExternalLinksChanged { get; set; }
+
+    private List<LinkForm> UnsubmittedLinks = [];
+
+    private bool DisableSubmit { get => !UnsubmittedLinks.All(l => l.Ready()); }
+
+    private IEnumerable<ExternalLinkEnum> AvailableNames 
+    { 
+        get 
+        {
+            var allValues = Enum.GetValues<ExternalLinkEnum>();
+            IEnumerable<LinkForm> allLinks = [..ExternalLinks!.ExternalLinks, ..UnsubmittedLinks];
+            var existingNames = allLinks.Select(l => l.Name);
+
+            return allValues.Where(e => !existingNames.Contains(e.ToString()));
+        }
+    }
+
+    private bool loading = false;
+
+    private void AddLink()
+    {
+        UnsubmittedLinks.Add(new());
+    }
+
+    private async Task SubmitLink()
+    {
+        var externalLinks = new LinksForm { ExternalLinks = [.. ExternalLinks!.ExternalLinks, .. UnsubmittedLinks] };
+        loading = true;
+        await ExternalLinksChanged.InvokeAsync(externalLinks);
+        loading = false;
+    }
+}

@@ -14,7 +14,7 @@ public record NftArtResponse(
     bool Etherscan,
     string Id,
     string Address,
-    DateTime MintedDate,
+    DateTime? MintedDate,
     string? NftUrl,
     MakeOffer? MakeOffer,
     NftOwnerResponse? Owner,
@@ -43,7 +43,7 @@ public record NftArtResponse(
             Address: nftArt.Address,
             MintedDate: nftArt.MintedDate,
             NftUrl: nftArt.NftUrl,
-            MakeOffer: new MakeOffer(Active: true, ButtonText: null),
+            MakeOffer: new MakeOffer { Active = true, ButtonText = null },
             Owner: NftOwnerResponse.FromDomain(nftArt),
             Transactions: [],
             ExternalLinks: FromDomain(nftArt.ExternalLinks)

@@ -12,7 +12,7 @@ public class NftArtResponse
     public DateTime? CreatedAt { get; set; }
     public AvailablePurchaseResponse? AvailablePurchase { get; set; }
     public string Address { get; set; }
-    public DateTime MintedDate { get; set; }
+    public DateTime? MintedDate { get; set; }
     public List<OwnerResponse>? Owners { get; set; }
     public string? Url { get; set; }
     public List<ContractResponse>? Contracts { get; set; }
@@ -24,7 +24,7 @@ public class NftArtResponse
     public string? Collection { get; set; }
     public bool OneOfOne { get; set; }
     public bool Edition { get; set; }
-    public ExternalLinksResponse ExternalLinks { get; set; }
+    public ExternalLinksResponse ExternalLinks { get; set; } = new([]);
     
     public bool IsReady()
     {
@@ -32,12 +32,6 @@ public class NftArtResponse
             !string.IsNullOrWhiteSpace(Name) &&
             !string.IsNullOrWhiteSpace(Description) &&
             !string.IsNullOrWhiteSpace(Address) &&
-            (
-                !string.IsNullOrWhiteSpace(ExternalLinks.ObjktOneLink) ||
-                !string.IsNullOrWhiteSpace(ExternalLinks.OpenSeaLink) ||
-                !string.IsNullOrWhiteSpace(ExternalLinks.RaribleLink) ||
-                !string.IsNullOrWhiteSpace(ExternalLinks.ManifoldLink) ||
-                !string.IsNullOrWhiteSpace(ExternalLinks.SuperRareLink)
-            );
+            !ExternalLinks.ExternalLinks.Any();
     }
 }

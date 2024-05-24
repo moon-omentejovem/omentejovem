@@ -1,7 +1,7 @@
 ﻿namespace Domain.Models;
 
-public record Owner
-(
-    string Address,
-    string? Alias
-);
+public class Owner
+{
+    public string Address { get; set; }
+    public string? Alias { get; set; }
+}

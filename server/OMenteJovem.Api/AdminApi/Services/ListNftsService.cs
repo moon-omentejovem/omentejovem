@@ -2,6 +2,7 @@
 using Domain.Models;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using System.Linq.Expressions;
 
 namespace AdminApi.Services;
 
@@ -18,12 +19,35 @@ public class ListNftsService(IMongoDatabase mongoDatabase)
         return responses;
     }
 
-    public async Task<NftArtResponse> GetNft(ObjectId Id)
+    public async Task<NftArt> GetNft(ObjectId Id)
     {
         var nft = await _nftsCollection.Find(n => n.Id == Id).FirstOrDefaultAsync();
 
-        var response = Mappers.MappingMethods.MapToResponse(nft);
+        return nft;
+    }
 
-        return response;
+    public async Task UpdateNft(UpdateNftBuilder updateBuilder)
+    {
+        await _nftsCollection.UpdateOneAsync(updateBuilder.IdFilter, updateBuilder.Update);
+    }
+}
+
+public class UpdateNftBuilder(ObjectId Id)
+{
+    public readonly FilterDefinition<NftArt> IdFilter = new ExpressionFilterDefinition<NftArt>((NftArt art) => art.Id == Id);
+    public UpdateDefinition<NftArt>? Update = null;
+
+    public UpdateNftBuilder Set<TField>(Expression<Func<NftArt, TField>> expressionField, TField value)
+    {
+        if (Update is null)
+        {
+            Update = Builders<NftArt>.Update.Set(expressionField, value);
+        }
+        else
+        {
+            Update = Update.Set(expressionField, value);
+        }
+
+        return this;
     }
 }

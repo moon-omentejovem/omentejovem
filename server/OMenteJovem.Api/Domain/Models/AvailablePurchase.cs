@@ -1,9 +1,10 @@
 ﻿namespace Domain.Models;
 
-public record AvailablePurchase(
-    bool Active,
-    bool Status,
-    string Text,
-    string TextAvailable,
-    string Url
-);
+public class AvailablePurchase 
+{
+    public bool Active { get; set; }
+    public bool Status { get; set; }
+    public string Text { get; set; }
+    public string TextAvailable { get; set; }
+    public string Url { get; set; }
+}

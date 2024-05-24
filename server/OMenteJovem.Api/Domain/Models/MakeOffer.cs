@@ -1,6 +1,7 @@
 ﻿namespace Domain.Models;
 
-public record MakeOffer(
-    bool Active,
-    string ButtonText
-);
+public class MakeOffer
+{
+    public bool Active { get; set; }
+    public string ButtonText { get; set; }
+}

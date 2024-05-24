@@ -1,0 +1,54 @@
+﻿@using AdminApi.Services
+
+@inject S3UploadService UploadService;
+
+<div class="mb-3">
+    <label>NFT Image:
+        <InputFile OnChange="LoadNftFile" />
+    </label>
+</div>
+<div class="mb-3">
+    <label>
+        Video Process:
+        <InputFile OnChange="LoadNftFile" />
+    </label>
+</div>
+
+@code {
+    [Parameter]
+    public string NftName { get; set; }
+
+    [Parameter]
+    public EventCallback<string> NftImageUrlChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<string> NftVideoProcessChanged { get; set; }
+
+    private async Task LoadNftFile(InputFileChangeEventArgs eventArgs)
+    {
+        var reader = await new StreamReader(eventArgs.File.OpenReadStream()).ReadToEndAsync();
+
+        var nftUrl = await UploadService.UploadAsync(GetNftKeyName(), reader);
+
+        await NftImageUrlChanged.InvokeAsync(nftUrl);
+    }
+
+    private async Task LoadVideoProcessFile(InputFileChangeEventArgs eventArgs)
+    {
+        var reader = await new StreamReader(eventArgs.File.OpenReadStream()).ReadToEndAsync();
+
+        var nftUrl = await UploadService.UploadAsync(GetNftVideoProcess(), reader);
+
+        await NftVideoProcessChanged.InvokeAsync(nftUrl);
+    }
+
+    private string GetNftKeyName()
+    {
+        return NftName.ToLower().Replace(' ', '-');
+    }
+
+    private string GetNftVideoProcess()
+    {
+        return NftName.ToLower().Replace(' ', '-') + "_video";
+    }
+}
