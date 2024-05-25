@@ -63,7 +63,7 @@ public class OpenSeaClient
                 results.AddRange(deserializedContent.Nfts);
             });
         }
-        while (next is not null);
+        while (!string.IsNullOrEmpty(next));
 
         return new ListNftsResponse(results, null);
     }
@@ -82,14 +82,25 @@ public class OpenSeaClient
 
     public async Task<GetNftEventsResponse> GetNftEvents(string addressId, string nftId)
     {
-        return await _resiliencePipeline.ExecuteAsync(async (_) =>
+        string? next = null;
+        var results = new List<NftEventResponse>();
+
+        do
         {
-            var response = await _httpClient.GetAsync($"{API_BASE_URL}/events/chain/ethereum/contract/{addressId}/nfts/{nftId}");
+            await _resiliencePipeline.ExecuteAsync(async (_) =>
+            {
+                var response = await _httpClient.GetAsync($"{API_BASE_URL}/events/chain/ethereum/contract/{addressId}/nfts/{nftId}?next={next}&event_type=transfer&event_type=sale");
 
-            var deserializedContent = await HttpUtils.DeserializeContent<GetNftEventsResponse>(response);
+                var deserializedContent = await HttpUtils.DeserializeContent<GetNftEventsResponse>(response);
 
-            return deserializedContent is null ? throw new Exception() : deserializedContent;
-        });
+                next = deserializedContent!.Next;
+
+                results.AddRange(deserializedContent.AssetEvents);
+            });
+        }
+        while (!string.IsNullOrEmpty(next));
+
+        return new GetNftEventsResponse { AssetEvents = results.ToArray() };
     }
 
     public async Task<GetCollectionsResponse> GetCollections()

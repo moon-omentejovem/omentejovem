@@ -3,6 +3,7 @@ using DbSeeder.Objkt.Mappers;
 using DbSeeder.OpenSea;
 using DbSeeder.OpenSea.Mappers;
 using Domain.Endpoints.Commands.CreateCollection;
+using Domain.Endpoints.Commands.CreateNftEvents;
 using Domain.Endpoints.Commands.CreateObjktNft;
 using Domain.Endpoints.Commands.CreateOpenSeaNft;
 using Domain.Models;
@@ -83,8 +84,10 @@ public class Worker : BackgroundService
                 TokenId: singleNftResponse.Nft.Identifier,
                 OpenSeaUrl: nft.OpenseaUrl,
                 NftUrl: singleNftResponse.Nft.ImageUrl,
-                Edition: singleNftResponse.Nft.TokenStandard == "erc721"
+                Edition: singleNftResponse.Nft.TokenStandard == "erc1155"
             ));
+
+            await SeedOpenSeaNftEvents(singleNftResponse.Nft.Contract, singleNftResponse.Nft.Identifier);
         }
     }
 
@@ -119,21 +122,32 @@ public class Worker : BackgroundService
 
             upsertedNfts.Add(domainNft);
 
-            //await SeedOpenSeaNftEvents(domainNft);
+            await SeedOpenSeaNftEvents(nft.Contract, nft.Identifier);
         }
     }
 
-    //private async Task SeedOpenSeaNftEvents(NftArt nft)
-    //{
-    //    var nftEventsResponse = await _openSeaClient.GetNftEvents(nft.Address, nft.SourceId);
+    private async Task SeedOpenSeaNftEvents(string nftAddress, string nftIdentifier)
+    {
+        var nftEventsResponse = await _openSeaClient.GetNftEvents(nftAddress, nftIdentifier);
 
-    //    foreach (var @event in nftEventsResponse.AssetEvents)
-    //    {
-    //        var domainNftTransfer = @event.ToDomain();
-
-    //        await _nftEventsService.UpsertAsync(domainNftTransfer, nft.Id);
-    //    }
-    //}
+        await _mediator.Send(new CreateNftEventsRequest(nftEventsResponse.AssetEvents.Select(e =>
+        {
+            var (fromAddress, toAddress) = e.EventType == "sale"
+                ? (e.Seller, e.Buyer)
+                : (e.FromAddress, e.ToAddress);
+            return new CreateNftEventRequest(
+                TransactionId: e.Transaction,
+                FromAddress: fromAddress,
+                ToAddress: toAddress,
+                EventTimestamp: e.EventTimestamp,
+                EventType: e.EventType,
+                NftChain: NftChain.Ethereum,
+                NftIdentifier: e.NFT.Identifier,
+                NftContract: e.NFT.Contract,
+                Quantity: e.Quantity
+            );
+        })));
+    }
 
     private async Task SeedObjktNfts()
     {

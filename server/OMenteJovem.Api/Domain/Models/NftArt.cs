@@ -23,5 +23,9 @@ public class NftArt
     public string? Collection { get; set; }
     public bool OneOfOne { get; set; }
     public bool Edition { get; set; }
+    public int? TotalTokens { get; set; }
+    public int? AvailableTokens { get; set; }
     public ExternalLinks ExternalLinks { get; set; } = new();
+    public NftTransferEvent? MintedEvent { get; set; }
+    public NftTransferEvent? LastTransferEvent { get; set; }
 }

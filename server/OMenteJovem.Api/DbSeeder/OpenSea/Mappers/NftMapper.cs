@@ -23,7 +23,7 @@ public static class NftMapper
     public static NftArt FillSingleNft(this NftArt nftArt, NftResponse nftResponse)
     {
         nftArt.CreatedAt = DateTime.Parse(nftResponse.UpdatedAt);
-        nftArt.Edition = nftResponse.TokenStandard == "erc721" || nftResponse.Collection.Contains("edition", StringComparison.InvariantCultureIgnoreCase);
+        nftArt.Edition = nftResponse.TokenStandard == "erc1155" || nftResponse.Collection.Contains("edition", StringComparison.InvariantCultureIgnoreCase);
 
         return nftArt;
     }

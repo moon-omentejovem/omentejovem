@@ -67,12 +67,16 @@ public class CreateOpenSeaNftRequestHandler(
         existentNft.NftUrl = request.NftUrl;
         existentNft.Edition = request.Edition;
         existentNft.ExternalLinks.AddLink(new() { Name = ExternalLinkEnum.OpenSea, Url = request.OpenSeaUrl });
-        existentNft.Contracts.Add(new Contract
+
+        if (!existentNft.Contracts.Any(c => c.ContractAddress == request.ContractAddress))
         {
-            ContractAddress = request.ContractAddress,
-            NftChain = NftChain.Ethereum,
-            SourceId = request.TokenId
-        });
+            existentNft.Contracts.Add(new Contract
+            {
+                ContractAddress = request.ContractAddress.ToLower(),
+                NftChain = NftChain.Ethereum,
+                SourceId = request.TokenId
+            });
+        }
 
         await _nftsCollection.ReplaceOneAsync(n => n.Id == existentNft.Id, existentNft, cancellationToken: cancellationToken);
 

@@ -1,5 +1,6 @@
 ﻿using DbSeeder.OpenSea.Models.GetNftEvents;
 using Domain.Models;
+using System.Net;
 
 namespace DbSeeder.OpenSea.Mappers;
 
@@ -7,9 +8,9 @@ public static class NftEventMapper
 {
     public static NftTransferEvent ToDomain(this NftEventResponse nftEvent)
     {
-        var nft = nftEvent.NFT ?? nftEvent.Asset;
-        var fromAddress = nftEvent.Maker ?? nftEvent.FromAddress;
-        var toAddress = nftEvent.Taker ?? nftEvent.ToAddress;
+        var (fromAddress, toAddress) = nftEvent.EventType == "sale" 
+            ? (nftEvent.Seller, nftEvent.Buyer) 
+            : (nftEvent.FromAddress, nftEvent.ToAddress);
 
         return new NftTransferEvent
         {
@@ -18,7 +19,13 @@ public static class NftEventMapper
             ToAddress = toAddress,
             EventTimestamp = nftEvent.EventTimestamp,
             EventType = nftEvent.EventType,
-            NftIdentifier = nft.Identifier
+            NftIdentifier = nftEvent.NFT.Identifier,
+            Quantity = nftEvent.Quantity
         };
+    }
+
+    public static (string, string) GetSaleFromAndToAddresses(NftEventResponse nftEvent)
+    {
+        return (nftEvent.Seller, nftEvent.Buyer);
     }
 }
