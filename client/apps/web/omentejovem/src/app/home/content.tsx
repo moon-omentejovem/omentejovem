@@ -1,8 +1,8 @@
-import { HomeData } from '@/api/@types'
 import { CalloutParallax } from '@/components/CalloutParallax'
 import { ReactElement } from 'react'
 import { isEmptyStringOrUndefined } from '@/utils/emptyStringOrUndefined'
 import { HomeImage } from '@/types/home'
+import { HomeData } from '@/api/resolver/types'
 
 export type HomePageData = HomeData & { background_images: HomeImage[] }
 

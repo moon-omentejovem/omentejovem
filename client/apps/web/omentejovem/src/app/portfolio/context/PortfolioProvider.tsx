@@ -1,8 +1,7 @@
 import type { ReactElement, ReactNode } from 'react'
 import { useMemo, useState } from 'react'
 
-import { ArtImage, NftArt } from '@/api/resolver/types'
-import { Filter } from '@/components/Filter'
+import { NftArt } from '@/api/resolver/types'
 import { PortfolioContext, type PortfolioContextProperties } from './PortfolioContext'
 
 interface PortfolioProviderProperties {

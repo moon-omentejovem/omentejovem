@@ -1,4 +1,5 @@
-import { CollectionsResponse } from '@/api/@types'
+
+import { CollectionsResponse } from '@/api/resolver/types'
 import { CollectionLink } from '@/components/CollectionLink'
 
 export default function CollectionsContent(data: CollectionsResponse) {

@@ -5,14 +5,13 @@ import { ReactElement, useEffect, useState } from 'react'
 import { ArtLinks } from '@/components/ArtLinks'
 import { ArtOwnership } from '@/components/ArtOwnership/ArtOwnership'
 import { addHours, format, fromUnixTime } from 'date-fns'
-import { ArtImage, NftArt, isNftArt } from './types'
+import { NftArt } from './types'
 import { cn } from '@/lib/utils'
 import { CustomIcons } from '@/assets/icons'
 import { VideoProcessModal } from '../Modals/VideoProcessModal'
 import {
 	artInfoButtonAnimation,
 	artInfosCollectionsAnimation,
-	resetArtInfo,
 	resetButtonInfo,
 } from '@/animations'
 import { HorizontalInCarousel } from '../Carousels/HorizontalInCarousel/HorizontalInCarousel'

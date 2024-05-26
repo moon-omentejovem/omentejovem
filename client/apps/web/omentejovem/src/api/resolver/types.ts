@@ -1,26 +1,34 @@
-import { NftData, NftTransferEvent } from '@/api/@types'
-
-export interface ArtImage {
-	name: string
-	url: string
-	description: string
-	created_at: string
-	available_purchase?: NftData['available_purchase']
-	contracts?: NftData['contracts']
-	video_process?: string
-}
-
 export function isNftArt(value: unknown): value is NftArt {
 	return typeof value === 'object' && !!value && 'mintedDate' in value && 'nftChain' in value
 }
+
+export interface NftContractButton {
+	label: string
+	status: boolean
+}
+
+type EthKey = string | `${string}_button` | `${string}_url`
 
 export interface NftArt {
 	name: string
 	url: string
 	description: string
 	createdAt: string
-	availablePurchase?: NftData['available_purchase']
-	contracts?: NftData['contracts']
+	availablePurchase?: {
+		active: boolean
+		status: boolean
+		text: string
+		textAvailable: string
+		url: string
+	}
+	contracts?: {
+		eth: {
+			[x in EthKey]: boolean | string | NftContractButton
+		}
+		xtz: {
+			[x in EthKey]: boolean | string | NftContractButton
+		}
+	}[]
 	videoProcess?: string
 	nftChain: 'ethereum' | 'tezos' | 'unknown'
 	etherscan: boolean
@@ -28,7 +36,10 @@ export interface NftArt {
 	address: string
 	mintedDate: string
 	nftUrl: string
-	makeOffer: NftData['make_offer']
+	makeOffer: {
+		active: boolean
+		buttonText: string
+	}
 	owner?: {
 		address: string
 		url: string
@@ -37,7 +48,30 @@ export interface NftArt {
 	externalLinks: ExternalLink[]
 }
 
+export interface NftTransferEvent {
+	fromAddress: string
+	toAddress: string,
+	eventDate: Date,
+	eventType: string
+}
+
 export interface ExternalLink {
 	name: string,
 	url: string
+}
+
+export interface Collection {
+	name: string
+	year: string
+	slug: string
+	nftImageUrls: string[]
+}
+
+export interface CollectionsResponse {
+	collections: Collection[]
+}
+
+export interface HomeData {
+	title: string
+	subtitle: string
 }

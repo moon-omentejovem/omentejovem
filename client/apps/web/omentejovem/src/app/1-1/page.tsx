@@ -1,4 +1,3 @@
-import { requestNfts } from '@/api/resolver/requestNfts'
 import { OneOfOneContentProvider } from './provider'
 import { fetchOneOfOneNfts } from '@/api/requests/fetchOneOfOneNfts'
 

@@ -2,14 +2,13 @@ import { CustomIcons } from '@/assets/icons'
 import { useState } from 'react'
 import { OfferModal } from './Modals/OfferModal'
 import { cn } from '@/lib/utils'
-import { NftData } from '@/api/@types'
-import { ExternalLink } from '@/api/resolver/types'
+import { ExternalLink, NftArt } from '@/api/resolver/types'
 
 interface ArtLinkProperties {
 	email: string
 	externalLinks?: ExternalLink[]
-	availableForPurchase?: NftData['available_purchase']
-	makeOffer: NftData['make_offer']
+	availableForPurchase?: NftArt['availablePurchase']
+	makeOffer: NftArt['makeOffer']
 	views: Record<string, string>
 }
 

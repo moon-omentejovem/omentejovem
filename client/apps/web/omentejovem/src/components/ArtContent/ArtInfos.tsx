@@ -6,7 +6,7 @@ import { ArtDetails } from '@/components/ArtDetails'
 import { ArtLinks } from '@/components/ArtLinks'
 import { ArtOwnership } from '@/components/ArtOwnership/ArtOwnership'
 import { addHours, format, fromUnixTime } from 'date-fns'
-import { ArtImage, NftArt, isNftArt } from './types'
+import { NftArt, isNftArt } from './types'
 import { cn } from '@/lib/utils'
 import { CustomIcons } from '@/assets/icons'
 import { VideoProcessModal } from '../Modals/VideoProcessModal'
@@ -22,7 +22,7 @@ import { getNftLinks } from './utils'
 interface ArtInfosProperties {
 	email: string
 	selectedArt: NftArt
-	slides: (ArtImage | NftArt)[]
+	slides: (NftArt)[]
 	onChangeSlideIndex: (index: number) => void
 }
 
@@ -80,7 +80,7 @@ export function ArtInfos({
 			)}
 
 			<ArtDetails
-				detailedImage={isNftArt(selectedArt) ? selectedArt.nftUrl : undefined}
+				detailedImage={selectedArt.nftUrl}
 				image={selectedArt.url}
 				name={selectedArt.name}
 			/>
@@ -164,7 +164,7 @@ export function ArtInfos({
 							}
 							transactions={
 								selectedArt.transactions?.map((transaction) => ({
-									date: fromUnixTime(transaction.eventTimestamp).toISOString(),
+									date: transaction.eventDate.toISOString(),
 									nextOwner: {
 										name: transaction.toAddress,
 										profileUrl: getNftLinks(
@@ -184,7 +184,7 @@ export function ArtInfos({
 										),
 									},
 									transactionUrl: getNftLinks(
-										transaction.transaction,
+										"",
 										selectedArt.nftChain,
 										selectedArt.id,
 										'transaction',

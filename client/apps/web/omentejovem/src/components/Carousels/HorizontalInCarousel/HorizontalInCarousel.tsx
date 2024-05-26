@@ -8,12 +8,12 @@ import { Mousewheel } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Swiper as SwiperType } from 'swiper/types'
 import { useEffect } from 'react'
-import { ArtImage, NftArt } from '@/api/resolver/types'
+import { NftArt } from '@/api/resolver/types'
 
 interface HorizontalInCarouselProperties {
 	slideIndex?: number
 	onChangeSlideIndex: (index: number) => void
-	slides: (ArtImage | NftArt)[]
+	slides: (NftArt)[]
 	getMoreSlides?: () => void
 }
 

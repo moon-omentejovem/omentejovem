@@ -1,6 +1,5 @@
 import { requestNftsByCollection } from '@/api/resolver/requestNftsByCollection'
 import { InnerCollectionContent } from './content'
-import { fetchCollections } from '@/api/requests'
 
 interface CollectionsInProperties {
 	params: {

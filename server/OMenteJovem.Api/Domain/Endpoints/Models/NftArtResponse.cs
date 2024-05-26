@@ -18,13 +18,9 @@ public record NftArtResponse(
     string? NftUrl,
     MakeOffer? MakeOffer,
     NftOwnerResponse? Owner,
-    IEnumerable<NftTransactionResponse> Transactions,
-    IEnumerable<NftExternalLinkResponse> ExternalLinks
-
-//string? Collection,
-//bool OneOfOne,
-//bool Edition,
-//ExternalLinks ExternalLinks,
+    IEnumerable<NftExternalLinkResponse> ExternalLinks,
+    NftTransferEventResponse? MintedEvent,
+    NftTransferEventResponse? LastEvent
 )
 {
     public static NftArtResponse FromDomain(NftArt nftArt)
@@ -45,13 +41,10 @@ public record NftArtResponse(
             NftUrl: nftArt.NftUrl,
             MakeOffer: new MakeOffer { Active = true, ButtonText = null },
             Owner: NftOwnerResponse.FromDomain(nftArt),
-            Transactions: [],
-            ExternalLinks: FromDomain(nftArt.ExternalLinks)
-        //Collection: nftArt.Collection,
-        //OneOfOne: nftArt.OneOfOne,
-        //Edition: nftArt.Edition,
-        //ExternalLinks: nftArt.ExternalLinks,
-        ); ;
+            ExternalLinks: FromDomain(nftArt.ExternalLinks),
+            MintedEvent: NftTransferEventResponse.FromDomain(nftArt.MintedEvent),
+            LastEvent: NftTransferEventResponse.FromDomain(nftArt.LastTransferEvent)
+        );
     }
 
     private static IEnumerable<NftExternalLinkResponse> FromDomain(ExternalLinks externalLinks)

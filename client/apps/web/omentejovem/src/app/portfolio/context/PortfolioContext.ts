@@ -1,6 +1,5 @@
-import { Filter } from '@/components/Filter'
 import { createContext } from 'react'
-import { ArtImage, NftArt } from '@/api/resolver/types'
+import { NftArt } from '@/api/resolver/types'
 
 export interface PortfolioContextProperties {
 	email: string
