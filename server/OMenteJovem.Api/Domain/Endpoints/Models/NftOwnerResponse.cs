@@ -4,16 +4,12 @@ namespace Domain.Endpoints.Models;
 
 public record NftOwnerResponse(
     string Address,
-    string? Url
+    string? Alias,
+    int? Quantity
 )
 {
-    public static NftOwnerResponse? FromDomain(NftArt nftArt)
+    public static IEnumerable<NftOwnerResponse> FromDomain(NftArt nftArt)
     {
-        var owner = nftArt.Owners?.FirstOrDefault();
-
-        if (owner is null)
-            return null;
-
-        return new NftOwnerResponse(Address: owner.Address, Url: owner.Alias);
+        return nftArt.Owners.Select(o => new NftOwnerResponse(Address: o.Address, Alias: o.Alias, Quantity: o.Quantity));
     }
 }

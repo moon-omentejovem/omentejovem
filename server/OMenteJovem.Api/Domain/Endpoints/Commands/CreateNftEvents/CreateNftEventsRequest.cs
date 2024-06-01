@@ -7,7 +7,8 @@ using MongoDB.Driver;
 namespace Domain.Endpoints.Commands.CreateNftEvents;
 
 public record CreateNftEventsRequest(
-    IEnumerable<CreateNftEventRequest> Events
+    IEnumerable<CreateNftEventRequest> Events,
+    bool CalculateOwners
 ) : IRequest;
 
 public record CreateNftEventRequest(
@@ -51,22 +52,29 @@ public class CreateNftEventsRequestHandler(IMongoDatabase mongoDatabase) : IRequ
 
         var lastEvent = request.Events.OrderByDescending(e => e.EventTimestamp).FirstOrDefault();
 
+        var updateBuilder = Builders<NftArt>.Update
+                .Set(n => n.MintedDate, mintDate)
+                .Set(n => n.MintedEvent, ToDomain(mintEvent))
+                .Set(n => n.LastTransferEvent, ToDomain(lastEvent));
+
         if (existingNft.Edition)
         {
             var (totalNfts, availableNfts) = CalculateAvailableTokens(mintEvent, request.Events);
 
-            await _nftsCollection.UpdateOneAsync(n => n.Id == existingNft.Id, Builders<NftArt>.Update
-                .Set(n => n.MintedDate, mintDate)
+            updateBuilder = updateBuilder
                 .Set(n => n.TotalTokens, totalNfts)
                 .Set(n => n.AvailableTokens, availableNfts)
-                .Set(n => n.MintedEvent, ToDomain(mintEvent))
-                .Set(n => n.LastTransferEvent, ToDomain(lastEvent)), cancellationToken: cancellationToken);
+                ;
+
+            if (request.CalculateOwners)
+            {
+                var owners = GetOwnersFromTransactions(request.Events);
+
+                updateBuilder = updateBuilder.Set(n => n.Owners, owners);
+            }
         }
-        else
-        {
-            await _nftsCollection.UpdateOneAsync(n => n.Id == existingNft.Id, Builders<NftArt>.Update
-                .Set(n => n.MintedDate, mintDate), cancellationToken: cancellationToken);
-        }
+
+        await _nftsCollection.UpdateOneAsync(n => n.Id == existingNft.Id, updateBuilder, cancellationToken: cancellationToken);
 
         foreach (var nftEvent in request.Events)
         {
@@ -79,8 +87,43 @@ public class CreateNftEventsRequestHandler(IMongoDatabase mongoDatabase) : IRequ
                 .Set(e => e.NftIdentifier, nftEvent.NftIdentifier)
                 .Set(e => e.NftId, existingNft.Id)
                 .Set(e => e.Quantity, nftEvent.Quantity)
+
             , new UpdateOptions { IsUpsert = true }, cancellationToken: cancellationToken);
         }
+    }
+
+    private static List<Owner> GetOwnersFromTransactions(IEnumerable<CreateNftEventRequest> events)
+    {
+        var transferEvents = events.Where(e => e.EventType == "transfer");
+
+        var allFrom = transferEvents.Select(e => e.FromAddress).ToList();
+        var allTo = transferEvents.Select(e => e.ToAddress).ToList();
+
+        IEnumerable<string> allInvolved = [..allFrom, ..allTo];
+
+        allInvolved = allInvolved.Distinct();
+
+        List<Owner> allOwners = [];
+
+        foreach (var involved in allInvolved)
+        {
+            var parsedEvents = transferEvents
+                .Where(e => e.FromAddress == involved || e.ToAddress == involved)
+                .Select(e => new
+                {
+                    Quantity = e.FromAddress == involved ? e.Quantity * -1 : e.Quantity
+                });
+
+            allOwners.Add(new Owner
+            {
+                Address = involved,
+                Quantity = parsedEvents.Sum(e => e.Quantity)
+            });
+        }
+
+        var currentOwners = allOwners.Where(o => o.Quantity > 0);
+
+        return currentOwners.ToList();
     }
 
     private static NftTransferEvent? ToDomain(CreateNftEventRequest? request)

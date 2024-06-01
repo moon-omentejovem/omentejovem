@@ -8,6 +8,7 @@ using Domain.Endpoints.Commands.CreateObjktNft;
 using Domain.Endpoints.Commands.CreateOpenSeaNft;
 using Domain.Models;
 using MediatR;
+using ThirdParty.Ionic.Zlib;
 
 namespace DbSeeder;
 
@@ -84,10 +85,15 @@ public class Worker : BackgroundService
                 TokenId: singleNftResponse.Nft.Identifier,
                 OpenSeaUrl: nft.OpenseaUrl,
                 NftUrl: singleNftResponse.Nft.ImageUrl,
-                Edition: singleNftResponse.Nft.TokenStandard == "erc1155"
+                Edition: singleNftResponse.Nft.TokenStandard == "erc1155",
+                Owners: singleNftResponse.Nft.Owners?.Select(o => new Owner
+                {
+                    Address = o.Address,
+                    Quantity = o.Quantity
+                }).ToList()
             ));
 
-            await SeedOpenSeaNftEvents(singleNftResponse.Nft.Contract, singleNftResponse.Nft.Identifier);
+            await SeedOpenSeaNftEvents(singleNftResponse.Nft.Contract, singleNftResponse.Nft.Identifier, singleNftResponse.Nft.Owners is null);
         }
     }
 
@@ -117,16 +123,21 @@ public class Worker : BackgroundService
                 TokenId: nft.Identifier,
                 OpenSeaUrl: nft.OpenseaUrl,
                 NftUrl: singleNftResponse.Nft.ImageUrl,
-                Edition: domainNft.Edition
+                Edition: domainNft.Edition,
+                Owners: singleNftResponse.Nft.Owners?.Select(o => new Owner
+                {
+                    Address = o.Address,
+                    Quantity = o.Quantity
+                }).ToList()
             ));
 
             upsertedNfts.Add(domainNft);
 
-            await SeedOpenSeaNftEvents(nft.Contract, nft.Identifier);
+            await SeedOpenSeaNftEvents(nft.Contract, nft.Identifier, singleNftResponse.Nft.Owners is null);
         }
     }
 
-    private async Task SeedOpenSeaNftEvents(string nftAddress, string nftIdentifier)
+    private async Task SeedOpenSeaNftEvents(string nftAddress, string nftIdentifier, bool calculateOwners)
     {
         var nftEventsResponse = await _openSeaClient.GetNftEvents(nftAddress, nftIdentifier);
 
@@ -146,7 +157,7 @@ public class Worker : BackgroundService
                 NftContract: e.NFT.Contract,
                 Quantity: e.Quantity
             );
-        })));
+        }), CalculateOwners: calculateOwners));
     }
 
     private async Task SeedObjktNfts()

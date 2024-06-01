@@ -53,7 +53,7 @@ public record NftResponse
     public List<NftTraitResponse> Traits { get; init; }
 
     [JsonProperty("owners")]
-    public List<NftOwnerResponse> Owners { get; init; }
+    public List<NftOwnerResponse>? Owners { get; init; }
 
     [JsonProperty("rarity")]
     public NftRarityResponse Rarity { get; init; }

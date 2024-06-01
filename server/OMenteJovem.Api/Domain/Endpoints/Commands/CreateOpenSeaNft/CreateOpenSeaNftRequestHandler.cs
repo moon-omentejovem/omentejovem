@@ -13,7 +13,8 @@ public record CreateOpenSeaNftRequest(
     string TokenId,
     string OpenSeaUrl,
     string NftUrl,
-    bool Edition
+    bool Edition,
+    List<Owner>? Owners
 ) : IRequest<NftArt>;
 
 public class CreateOpenSeaNftRequestHandler(
@@ -46,7 +47,8 @@ public class CreateOpenSeaNftRequestHandler(
                         NftChain = NftChain.Ethereum,
                         SourceId = request.TokenId
                     }
-                ]
+                ],
+                Owners = request.Owners ?? []
             };
 
             await _nftsCollection.InsertOneAsync(newNft, cancellationToken: cancellationToken);
@@ -78,6 +80,11 @@ public class CreateOpenSeaNftRequestHandler(
             });
         }
 
+        if (existentNft.Owners.Count == 0 && request.Owners.Count > 0)
+        {
+            existentNft.Owners = request.Owners;
+        }
+
         await _nftsCollection.ReplaceOneAsync(n => n.Id == existentNft.Id, existentNft, cancellationToken: cancellationToken);
 
         return existentNft;
@@ -92,7 +99,6 @@ public class CreateOpenSeaNftRequestHandler(
             nftArt.Collection != request.Collection ||
             nftArt.NftUrl != request.NftUrl ||
             !nftArt.ExternalLinks.Links.Any(l => l.Name == ExternalLinkEnum.OpenSea && l.Url == request.OpenSeaUrl) ||
-            !nftArt.Contracts.Any(c => c.ContractAddress == request.ContractAddress && c.NftChain == NftChain.Ethereum && c.SourceId == request.TokenId) ||
             nftArt.Edition != request.Edition;
     }
 }

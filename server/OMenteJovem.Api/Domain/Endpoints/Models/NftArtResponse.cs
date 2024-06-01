@@ -17,7 +17,7 @@ public record NftArtResponse(
     DateTime? MintedDate,
     string? NftUrl,
     MakeOffer? MakeOffer,
-    NftOwnerResponse? Owner,
+    IEnumerable<NftOwnerResponse> Owners,
     IEnumerable<NftExternalLinkResponse> ExternalLinks,
     NftTransferEventResponse? MintedEvent,
     NftTransferEventResponse? LastEvent
@@ -40,7 +40,7 @@ public record NftArtResponse(
             MintedDate: nftArt.MintedDate,
             NftUrl: nftArt.NftUrl,
             MakeOffer: new MakeOffer { Active = true, ButtonText = null },
-            Owner: NftOwnerResponse.FromDomain(nftArt),
+            Owners: NftOwnerResponse.FromDomain(nftArt),
             ExternalLinks: FromDomain(nftArt.ExternalLinks),
             MintedEvent: NftTransferEventResponse.FromDomain(nftArt.MintedEvent),
             LastEvent: NftTransferEventResponse.FromDomain(nftArt.LastTransferEvent)
