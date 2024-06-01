@@ -170,49 +170,9 @@ export function ArtInfosCollections({
 						selectedArt.id,
 						'token',
 					)}
-					owner={
-						selectedArt.owner ||
-						!omentejovemAddress[selectedArt.transactions?.[0]?.toAddress ?? '']
-							? {
-									name: selectedArt.transactions?.[0]?.toAddress ?? '',
-									profileUrl: getNftLinks(
-										selectedArt.transactions?.[0]?.toAddress ?? '',
-										selectedArt.nftChain,
-										selectedArt.id,
-										'address',
-									),
-								}
-							: undefined
-					}
-					transactions={
-						selectedArt.transactions?.map((transaction) => ({
-							date: fromUnixTime(transaction.eventTimestamp).toISOString(),
-							nextOwner: {
-								name: transaction.toAddress,
-								profileUrl: getNftLinks(
-									transaction.toAddress,
-									selectedArt.nftChain,
-									selectedArt.id,
-									'address',
-								),
-							},
-							previousOwner: {
-								name: transaction.fromAddress,
-								profileUrl: getNftLinks(
-									transaction.fromAddress,
-									selectedArt.nftChain,
-									selectedArt.id,
-									'address',
-								),
-							},
-							transactionUrl: getNftLinks(
-								transaction.transaction,
-								selectedArt.nftChain,
-								selectedArt.id,
-								'transaction',
-							),
-						})) ?? []
-					}
+					owners={selectedArt.owners}
+					firstEvent={selectedArt.mintedEvent}
+					lastEvent={selectedArt.lastEvent}
 				/>
 			</div>
 			

@@ -3,23 +3,26 @@ import { type ArtTransaction } from './types'
 import { addHours, format } from 'date-fns'
 import { CustomIcons } from '@/assets/icons'
 import { cn } from '@/lib/utils'
+import { NftTransferEvent } from '../ArtContent/types'
 
 interface ArtTransactionProperties {
-	transaction: ArtTransaction
+	transaction?: NftTransferEvent
 	collectionsMode?: boolean
 }
 
 export const omentejovemAddress: Record<string, string> = {
 	'0x116723a14c7ee8ac3647d37bb5e9f193c29b3489': 'omentejovem.eth',
 	'0x3a3548e060be10c2614d0a4cb0c03cc9093fd799': 'Manifold: Marketplace',
-	'0xcda72070e455bb31c7690a170224ce43623d0b6f': 'Foundation: Market',
+	'0xcda72070e455bb31c7690a170224ce43623d0b6f': 'Foundation: Market'
 } 
+
+const nullAddress = '0x0000000000000000000000000000000000000000';
 
 function formattedDate(date: string): string {
 	return format(addHours(date, 3), 'LLL d, yyyy hh:mmaaa')
 }
 
-export function formatOwnerAddress(ownerName: string): string {
+export function formatOwnerAddress(ownerName?: string): string {
 	return `${ownerName?.slice(0, 6) ?? ''}...${ownerName?.slice(-4) ?? ''}`
 }
 
@@ -27,7 +30,7 @@ export function ArtTransaction({
 	transaction,
 	collectionsMode,
 }: ArtTransactionProperties): ReactElement {
-	if (/0x[0]{40}/gm.test(transaction.previousOwner.name)) {
+	if (transaction?.fromAddress === nullAddress) {
 		return (
 			<li
 				className={cn(
@@ -41,15 +44,14 @@ export function ArtTransaction({
 						<a
 							target="_blank"
 							rel="noreferrer"
-							href={transaction.nextOwner.profileUrl}
+							href={transaction.toAddress}
 							className="text-primary-50 hover:underline"
-							aria-label={`${transaction.nextOwner.name} seller profile`}
+							aria-label={`${transaction.toAddress} seller profile`}
 						>
-							{omentejovemAddress[transaction.nextOwner.name] ??
-								formatOwnerAddress(transaction.nextOwner.name)}
+							{formatOwnerAddress(transaction.toAddress)}
 						</a>
 					</p>
-					<p>{formattedDate(transaction.date)}</p>
+					<p>{formattedDate(transaction.eventDate)}</p>
 				</div>
 
 				<a
@@ -78,32 +80,32 @@ export function ArtTransaction({
 					<a
 						target="_blank"
 						rel="noreferrer"
-						href={transaction.previousOwner.profileUrl}
+						href={transaction?.fromAddress}
 						className="text-primary-50 hover:underline"
-						aria-label={`${transaction.previousOwner.name} seller profile`}
+						aria-label={`${transaction?.fromAddress} seller profile`}
 					>
-						{omentejovemAddress[transaction.previousOwner.name] ??
-							formatOwnerAddress(transaction.previousOwner.name)}
+						{formatOwnerAddress(transaction?.fromAddress)}
 					</a>{' '}
 					to{' '}
 					<a
 						target="_blank"
 						rel="noreferrer"
-						href={transaction.nextOwner.profileUrl}
+						href={transaction?.toAddress}
 						className="text-primary-50 hover:underline"
-						aria-label={`${transaction.nextOwner.name} seller profile`}
+						aria-label={`${transaction?.toAddress} seller profile`}
 					>
-						{omentejovemAddress[transaction.nextOwner.name] ??
-							formatOwnerAddress(transaction.nextOwner.name)}
+						{formatOwnerAddress(transaction?.toAddress)}
 					</a>
 				</p>
-				<p>{formattedDate(transaction.date)}</p>
+				{transaction?.eventDate && (
+					<p>{formattedDate(transaction?.eventDate)}</p>
+				)}
 			</div>
 
 			<a
 				target="_blank"
 				rel="noreferrer"
-				href={transaction.transactionUrl}
+				href={transaction?.transactionUrl}
 				className="hover:fill-primary-50"
 				aria-label="Transaction page"
 			>

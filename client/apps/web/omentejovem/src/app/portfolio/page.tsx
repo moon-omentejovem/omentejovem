@@ -1,5 +1,4 @@
 import { PortfolioContentProvider } from './provider'
-import { NftClient } from '@/api/nftClient'
 import { fetchPortfolioNfts } from '@/api/requests/fetchPortfolioNfts'
 
 export default async function Portfolio() {
@@ -7,7 +6,7 @@ export default async function Portfolio() {
 	
 	return (
 		<PortfolioContentProvider
-			email={NftClient.email}
+			email={''}
 			images={nfts}
 		/>
 	)

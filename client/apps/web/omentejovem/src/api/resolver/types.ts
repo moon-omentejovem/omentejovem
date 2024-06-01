@@ -40,19 +40,23 @@ export interface NftArt {
 		active: boolean
 		buttonText: string
 	}
-	owner?: {
-		address: string
-		url: string
-	}
-	transactions?: NftTransferEvent[],
-	externalLinks: ExternalLink[]
+	owners: NftOwner[]
+	externalLinks: ExternalLink[],
+	mintedEvent?: NftTransferEvent,
+	lastEvent?: NftTransferEvent
+}
+
+export interface NftOwner {
+	address: string
+	url: string
 }
 
 export interface NftTransferEvent {
 	fromAddress: string
 	toAddress: string,
-	eventDate: Date,
-	eventType: string
+	eventDate: string,
+	eventType: string,
+	transactionUrl?: string,
 }
 
 export interface ExternalLink {
