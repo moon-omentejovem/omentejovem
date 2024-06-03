@@ -1,0 +1,23 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      dotnet: 8.0
+    commands:
+      - echo Installing dependencies...
+      - apt-get update -y
+      - apt-get install -y awscli  # Ensure AWS CLI is available
+      - dotnet --version  # Verify the .NET Core SDK version
+
+  pre_build:
+    commands:
+      - echo Nothing to do...
+
+  build:
+    commands:
+      - echo Building the .NET Core project...
+
+  post_build:
+    commands:
+      - echo Build completed successfully!
