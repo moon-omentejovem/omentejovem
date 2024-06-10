@@ -10,3 +10,4 @@
 *.pdb
 **.deps.**
 **.runtimeconfig.**
+**.terraform.**
