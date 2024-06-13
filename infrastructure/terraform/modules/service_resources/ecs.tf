@@ -27,7 +27,7 @@ resource "aws_ecs_service" "api" {
 resource "aws_ecs_task_definition" "api_task_definition" {
   family = "service"
   network_mode = "awsvpc"
-  requires_compatibilities = [ "FARGATE" ]
+  requires_compatibilities = [ "EC2" ]
   cpu = 1024
   memory = 2048
   execution_role_arn = "arn:aws:iam::732075124266:role/ecsTaskExecutionRole"
@@ -73,4 +73,5 @@ resource "aws_ecs_task_definition" "api_task_definition" {
       }
     }
   ])
+  depends_on = [ aws_cloudwatch_log_group.ecs_log_group ]
 }
