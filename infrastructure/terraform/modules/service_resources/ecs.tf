@@ -27,7 +27,7 @@ resource "aws_ecs_service" "api" {
 resource "aws_ecs_task_definition" "api_task_definition" {
   family = "service"
   network_mode = "awsvpc"
-  requires_compatibilities = [ "EC2" ]
+  requires_compatibilities = [ "FARGATE" ]
   cpu = 1024
   memory = 2048
   execution_role_arn = "arn:aws:iam::732075124266:role/ecsTaskExecutionRole"
@@ -74,4 +74,16 @@ resource "aws_ecs_task_definition" "api_task_definition" {
     }
   ])
   depends_on = [ aws_cloudwatch_log_group.ecs_log_group ]
+}
+
+resource "aws_ecs_cluster_capacity_providers" "example" {
+  cluster_name = aws_ecs_cluster.omentejovem.name
+
+  capacity_providers = ["FARGATE"]
+
+  default_capacity_provider_strategy {
+    base              = 1
+    weight            = 100
+    capacity_provider = "FARGATE"
+  }
 }
