@@ -4,11 +4,12 @@ import { useMemo, useState } from 'react'
 import { NftArt } from '@/api/resolver/types'
 import { Filter } from '@/components/Filter'
 import { OneOfOneContext, type OneOfOneContextProperties } from './OneOfOneContext'
+import { ChainedFilter } from '@/components/ArtFilter/filters'
 
 interface OneOfOneProviderProperties {
 	email: string
 	images: NftArt[]
-	filters: Filter[]
+	filters: ChainedFilter[]
 	totalPages: number
 	children: ReactNode
 }

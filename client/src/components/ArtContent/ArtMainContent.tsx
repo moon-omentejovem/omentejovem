@@ -7,11 +7,12 @@ import { VerticalCarousel } from '../Carousels/VerticalCarousel/VerticalCarousel
 import { Filter } from '../Filter'
 import { ArtInfos } from './ArtInfos'
 import { NftArt } from './types'
+import { ChainedFilter } from '../ArtFilter/filters'
 
 interface ArtMainContentProperties {
 	email: string
 	source: 'portfolio' | '1-1' | 'editions'
-	filters: Filter[]
+	filters: ChainedFilter[]
 	unfilteredImages: (NftArt)[]
 	onChangeArtImages: (images: (NftArt)[]) => void
 	artImages: (NftArt)[]

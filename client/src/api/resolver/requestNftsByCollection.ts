@@ -21,7 +21,7 @@ export async function requestNftsByCollection(
 	const jsonData = await data.json()
 
 	return {
-		email: "fake",
+		email: 'fake',
 		images: jsonData.nfts
 	};
 }

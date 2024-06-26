@@ -5,11 +5,12 @@ import { OneOfOneProvider } from './context/OneOfOneProvider'
 import OneOfOneContent from './content'
 import { NftArt } from '@/components/ArtContent/types'
 import { Filter } from '@/components/Filter'
+import { ChainedFilter } from '@/components/ArtFilter/filters'
 
 interface OneOfOneContentProviderProperties {
 	email: string
 	images: NftArt[]
-	filters: Filter[]
+	filters: ChainedFilter[]
 	totalPages: number
 }
 

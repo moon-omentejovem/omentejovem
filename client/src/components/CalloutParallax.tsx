@@ -40,6 +40,12 @@ export function CalloutParallax({ title, subtitle, calloutImages }: CalloutParal
 	const [currentImageIndex, setCurrentImageIndex] = useState(0)
 	const imageObjects = useRef<(HTMLImageElement | null)[]>([])
 
+	if (calloutReference.current) {
+		calloutReference.current.onclick = () => {
+			setCurrentImageIndex((prevIndex) => (prevIndex + 1) % calloutImages.length)
+		};
+	}
+
 	const shiftBackground = useCallback((event: MouseEvent): void => {
 		if (calloutReference.current) {
 			const rect = calloutReference.current.getBoundingClientRect()
@@ -82,9 +88,7 @@ export function CalloutParallax({ title, subtitle, calloutImages }: CalloutParal
 			className="relative grid h-screenMinusHeader w-full select-none place-items-center overflow-hidden"
 			id="logo"
 			ref={calloutReference}
-			onClick={() => {
-				setCurrentImageIndex((prevIndex) => (prevIndex + 1) % calloutImages.length)
-			}}
+			
 		>
 			<div className="relative flex flex-col items-center px-12">
 				<div id="callout-element" className="parallax-text absolute -top-[17.5%]">

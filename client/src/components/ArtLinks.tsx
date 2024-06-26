@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import { CustomIcons } from '@/assets/icons'
 import { useState } from 'react'
 import { OfferModal } from './Modals/OfferModal'
@@ -69,7 +70,7 @@ export function ArtLinks({
 
 			{!!makeOffer?.active && (
 				<OfferModal email={email} open={isOpenOffer} setOpen={setIsOpenOffer}>
-					<p
+					<button
 						onClick={() => setIsOpenOffer(true)}
 						className={cn(
 							'grid content-center border-t-[1px] border-secondary-100 text-sm h-16 px-4 font-bold text-secondary-100 hover:text-primary-50',
@@ -77,7 +78,7 @@ export function ArtLinks({
 						)}
 					>
 						{makeOffer.buttonText ? makeOffer.buttonText.toUpperCase() : 'MAKE OFFER'}
-					</p>
+					</button>
 				</OfferModal>
 			)}
 

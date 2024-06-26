@@ -70,7 +70,7 @@ export function AboutContent({
 	)
 
 	const renderAboutInfo = useCallback((aboutString: string): ReactElement => {
-		return <AboutBio key={`about-bio`} text={aboutString} />
+		return <AboutBio key={'about-bio'} text={aboutString} />
 	}, [])
 
 	useEffect(() => {
@@ -136,7 +136,7 @@ export function AboutContent({
 					className="block text-xs min-w-[10rem] text-secondary-100 invisible sm:text-base xl:text-lg"
 				>
 					<span id="about-subtitle">
-						"Late Night Love" is an artwork created by him in late 2021, in which he strongly identified with the moon and decided to make it part of his identity.
+						&quot;Late Night Love&quot; is an artwork created by him in late 2021, in which he strongly identified with the moon and decided to make it part of his identity.
 					</span>
 				</h2>
 

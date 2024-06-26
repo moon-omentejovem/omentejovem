@@ -4,12 +4,12 @@ import { ReactElement } from 'react'
 import { EditionsProvider } from './context/EditionsProvider'
 import EditionsContent from './content'
 import { NftArt } from '@/components/ArtContent/types'
-import { Filter } from '@/components/Filter'
+import { ChainedFilter } from '@/components/ArtFilter/filters'
 
 interface EditionsContentProviderProperties {
 	email: string
 	images: NftArt[]
-	filters: Filter[]
+	filters: ChainedFilter[]
 	totalPages: number
 }
 

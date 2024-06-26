@@ -91,7 +91,7 @@ const HardCodedBio = () => (
 				<a
 					href="https://media.omentejovem.com/wordpress/wp-content/uploads/2024/03/7_ThedayIfoundoutIcandoeverything_11zon-Personalizado.jpeg"
 					target="_blank"
-					rel="noopener"
+					rel="noopener noreferrer"
 				>
 					The Day I Found out I Can Do Anything
 				</a>
@@ -106,7 +106,7 @@ const HardCodedBio = () => (
 				<a
 					href="https://media.omentejovem.com/wordpress/wp-content/uploads/2024/03/9_the_day_i_felt_god_11zon-Personalizado.jpg"
 					target="_blank"
-					rel="noopener"
+					rel="noopener noreferrer"
 				>
 					The Day I Felt God
 				</a>
@@ -125,7 +125,7 @@ const HardCodedBio = () => (
 			<a
 				href="https://media.omentejovem.com/wordpress/wp-content/uploads/2024/03/19_the_day_i_met_you_11zon-Personalizado.jpg"
 				target="_blank"
-				rel="noopener"
+				rel="noopener noreferrer"
 			>
 				vibrant use of colors
 			</a>
@@ -157,7 +157,7 @@ const HardCodedBio = () => (
 			<a
 				href="https://media.omentejovem.com/wordpress/wp-content/uploads/2024/03/4_creative_workaholic_11zon-Personalizado.jpeg"
 				target="_blank"
-				rel="noopener"
+				rel="noopener noreferrer"
 			>
 				<em>Creative Workaholic</em>
 			</a>
@@ -214,7 +214,7 @@ const HardCodedBio = () => (
 			<a
 				href="https://media.omentejovem.com/wordpress/wp-content/uploads/2024/03/13_late-night-love_11zon-Personalizado.jpeg"
 				target="_blank"
-				rel="noopener"
+				rel="noopener noreferrer"
 			>
 				<em>Late Night Love</em>
 			</a>

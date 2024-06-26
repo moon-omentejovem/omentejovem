@@ -4,11 +4,12 @@ import { useEffect, useMemo, useState } from 'react'
 import { Filter } from '@/components/Filter'
 import { NftArt } from '@/api/resolver/types'
 import { EditionsContext, type EditionsContextProperties } from './EditionsContext'
+import { ChainedFilter } from '@/components/ArtFilter/filters'
 
 interface EditionsProviderProperties {
 	email: string
 	images: NftArt[]
-	filters: Filter[]
+	filters: ChainedFilter[]
 	totalPages: number
 	children: ReactNode
 }

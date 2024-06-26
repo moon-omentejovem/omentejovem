@@ -4,7 +4,6 @@
 		"es2021": true
 	},
 	"extends": [
-		"@visor/eslint-config",
 		"next/core-web-vitals",
 		"eslint-config-next",
 		"plugin:react/recommended",

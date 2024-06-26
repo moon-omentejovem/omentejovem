@@ -1,4 +1,4 @@
-import { NftArt } from "@/api/resolver/types"
+import { NftArt } from '@/api/resolver/types'
 
 export interface ChainedFilter {
 	label: string

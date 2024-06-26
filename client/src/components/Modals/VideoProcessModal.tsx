@@ -28,6 +28,7 @@ export function VideoProcessModal({ open, setOpen, videoUrl }: VideoProcessModal
 				>
 					<div className="flex w-[100vw] h-auto sm:w-full sm:h-full">
 						<video autoPlay loop width={640}>
+							<track src='' kind='captions' srcLang='en' label='english_captions'/>
 							<source src={videoUrl} />
 							Your browser does not support HTML5 video.
 						</video>

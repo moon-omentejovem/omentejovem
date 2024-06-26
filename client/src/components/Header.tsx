@@ -103,7 +103,7 @@ export function Header() {
 			</button>
 
 			{showMobileMenu && (
-				<div
+				<button
 					className="fixed inset-0 top-[4.5rem] z-10 bg-black/[40%] max-w-[100vw]"
 					onClick={() => setShowMobileMenu(false)}
 				>
@@ -131,7 +131,7 @@ export function Header() {
 							</p>
 						</Link>
 					</div>
-				</div>
+				</button>
 			)}
 		</header>
 	)

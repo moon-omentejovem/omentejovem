@@ -18,7 +18,7 @@ async function requestGetAboutInfo() {
 				objkt: 'string',
 			},
 			contact: {
-				"e-mail": ""
+				'e-mail': ''
 			}
 		} as AboutData
 
