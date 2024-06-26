@@ -22,11 +22,11 @@ if (app.Environment.IsDevelopment())
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
-app.UseAuthorization();
+//app.UseAuthorization();
 
 app.UseRouting();
 app.MapControllers();
 
-app.Run("http://0.0.0.0:80");
+app.Run();
