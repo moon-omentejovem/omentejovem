@@ -14,6 +14,7 @@ namespace DbSeeder;
 
 public class Worker : BackgroundService
 {
+    private const int MillisecondsDelay = 60 * 60 * 1000;
     private readonly ILogger<Worker> _logger;
     private readonly OpenSeaClient _openSeaClient;
     private readonly ObjktClient _objktClient;
@@ -44,7 +45,7 @@ public class Worker : BackgroundService
 
             await SeedObjktNfts();
 
-            await Task.Delay(1000, stoppingToken);
+            await Task.Delay(MillisecondsDelay, stoppingToken);
         }
     }
 
