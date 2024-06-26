@@ -11,6 +11,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDomain();
 builder.Services.AddLogging();
 
+builder.Configuration
+    .AddJsonFile("appsettings.json")
+    .AddJsonFile($"appsettings.Development.json", optional: true)
+    .AddEnvironmentVariables("OMJ_API_");
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
