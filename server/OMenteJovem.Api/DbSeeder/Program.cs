@@ -12,7 +12,7 @@ var builder = Host.CreateApplicationBuilder(args);
 
 builder.Configuration
     .AddJsonFile("appsettings.json")
-    .AddEnvironmentVariables("OMJ_API_");
+    .AddEnvironmentVariables("OMJ_DB_SEEDER_");
 
 builder.Services
     .AddConfiguration<OpenSeaConfig>("OpenSea")
