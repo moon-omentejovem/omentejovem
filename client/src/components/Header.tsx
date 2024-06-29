@@ -72,7 +72,7 @@ export function Header() {
 				))}
 			</div>
 
-			<Link href="/about" className="header-tab min-w-fit overflow-hidden hidden md:flex">
+			<Link href="/about" className="header-tab min-w-fit overflow-hidden md:flex" id='about-link'>
 				<p
 					className={cn(
 						'font-heading  text-secondary-100 hover:text-secondary-200 hover:underline',
@@ -107,7 +107,7 @@ export function Header() {
 					className="fixed inset-0 top-[4.5rem] z-10 bg-black/[40%] max-w-[100vw]"
 					onClick={() => setShowMobileMenu(false)}
 				>
-					<div className="h-fit z-20 flex w-full flex-col px-6 pb-6 gap-2 bg-background">
+					<div className="h-fit z-20 flex w-full flex-col px-6 py-6 gap-2 bg-background">
 						{tabs.map((tab, index) => (
 							<Link key={index} href={tab.link} className="header-tab flex justify-end">
 								<p

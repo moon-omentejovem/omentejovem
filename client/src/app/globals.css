@@ -85,13 +85,19 @@ div.line:has(.bio-link) {
 }
 
 @media (max-width: 768px) {
-	#header-tabs {
-		display: flex;
+	#header-tabs, #about-link {
+		display: none;
 	}
 }
 
-@media (min-width: 768px) {
+@media (max-width: 1200px) {
 	#header-tabs {
-		display: hidden;
+		padding: 0 80px;
 	}
 }
+
+/* @media (min-width: 768px) {
+	#header-tabs {
+		display: none;
+	}
+} */
