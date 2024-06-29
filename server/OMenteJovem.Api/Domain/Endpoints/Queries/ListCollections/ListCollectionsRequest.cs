@@ -1,30 +1,43 @@
 ﻿using Domain.Database;
 using Domain.Models;
+using Domain.Utils;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 
 namespace Domain.Endpoints.Queries.ListCollections;
 
 public record ListCollectionsRequest : IRequest<ListCollectionsResponse>;
 
-public class ListCollectionsHandler(IMongoDatabase mongoDatabase) : IRequestHandler<ListCollectionsRequest, ListCollectionsResponse>
+public class ListCollectionsHandler(ILogger<ListCollectionsHandler> logger, IMongoDatabase mongoDatabase) : IRequestHandler<ListCollectionsRequest, ListCollectionsResponse>
 {
     private readonly IMongoCollection<Collection> _collections = mongoDatabase.GetCollection<Collection>(MongoDbConfig.CollectionsCollectionName);
-    private readonly IMongoCollection<NftArt> _nftCollections = mongoDatabase.GetCollection<NftArt>(MongoDbConfig.NftArtsCollectionName);
+    private readonly IMongoCollection<NftArt> _nfts = mongoDatabase.GetCollection<NftArt>(MongoDbConfig.NftArtsCollectionName);
+
+    private const string FetchCollectionsQueryName = "fetchAllCollections";
+    private const string FetchCollectionNftsQueryName = "fetchNftsByCollection";
 
     public async Task<ListCollectionsResponse> Handle(ListCollectionsRequest request, CancellationToken cancellationToken)
     {
-        var collections = await _collections.Find(_ => true).ToListAsync(cancellationToken: cancellationToken);
+        var collections = await LogTimer.LogTimestampAsync(
+            logger,
+            () => _collections.Find(_ => true).ToListAsync(cancellationToken: cancellationToken),
+            FetchCollectionsQueryName
+        );
         collections = collections.Where(c => !c.Name.Contains("Edition", StringComparison.InvariantCultureIgnoreCase)).ToList();
 
         var responseList = new List<CollectionResponse>();
 
         foreach (var collection in collections)
         {
-            var collectionNfts = await _nftCollections.Find(n =>
-                n.Collection == collection.SourceId &&
-                n.NftUrl != null
-            ).ToListAsync();
+            var collectionNfts = await LogTimer.LogTimestampAsync(
+                logger,
+                () => _nfts.Find(n =>
+                        n.Collection == collection.SourceId &&
+                        n.NftUrl != null
+                    ).ToListAsync(),
+                FetchCollectionNftsQueryName
+            );
 
             var response = MapToCollection(collection, collectionNfts);
 
