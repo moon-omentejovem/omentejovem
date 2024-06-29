@@ -1,3 +1,5 @@
+'use client';
+
 import { NftArt } from '@/api/resolver/types'
 
 export interface ChainedFilter {

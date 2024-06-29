@@ -36,7 +36,7 @@ export function ArtFilter({
 				onChangeArtImages(filteredImages)
 			}
 		}
-	}, [filteredImages])
+	}, [artImages, currentPage, filteredImages, onChangeArtImages])
 
 	function onChangeFilter(filterHistory: ChainedFilter[]): void {
 		const filtered = [...artImages].filter(n => filterHistory.every(f => f.filterApply ? f.filterApply!(n) : true))
