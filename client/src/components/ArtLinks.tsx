@@ -48,9 +48,12 @@ export function ArtLinks({
 				(
 					<p
 						className={cn(
-							'mt-2 grid content-center justify-start border-y-[1px] border-secondary-100 text-sm h-16 px-8 font-bold text-secondary-100',
+							'mt-2 grid content-center justify-start border-y-[1px] border-secondary-100 text-sm h-16 sm:px-8 px-4 font-bold text-secondary-100',
 							!!makeOffer?.active  && 'border-b-0',
 						)}
+						style={{
+							textAlign: 'left'
+						}}
 					>
 						{!availableForPurchase.status ? (
 							availableForPurchase.text
@@ -72,6 +75,9 @@ export function ArtLinks({
 				<OfferModal email={email} open={isOpenOffer} setOpen={setIsOpenOffer}>
 					<button
 						onClick={() => setIsOpenOffer(true)}
+						style={{
+							textAlign: 'left'
+						}}
 						className={cn(
 							'grid content-center border-t-[1px] border-secondary-100 text-sm h-16 px-4 font-bold text-secondary-100 hover:text-primary-50',
 							'sm:px-8 last:border-b-[1px]',
