@@ -1,54 +1,144 @@
-﻿@using AdminApi.Services
+﻿@using AdminApi.Models
+@using AdminApi.Models.Forms
+@using AdminApi.Services
+@using Domain.Models
+@using Domain.Services
+@using TinifyAPI
 
 @inject S3UploadService UploadService;
 
-<div class="mb-3">
-    <label>NFT Image:
-        <InputFile OnChange="LoadNftFile" />
-    </label>
-</div>
-<div class="mb-3">
-    <label>
-        Video Process:
-        <InputFile OnChange="LoadNftFile" />
-    </label>
+<div class="container pt-3">
+
+    @if (loading)
+    {
+        <Spinner Color="SpinnerColor.Secondary" />
+    }
+    <div class="d-flex justify-content-between">
+        <Modal @ref="modal" />
+        <Button 
+            Color="string.IsNullOrEmpty(NftArtModel.NftUrl) 
+                ? ButtonColor.Danger
+                : ButtonColor.Primary"
+            @onclick="() => ShowModal(NftArtModel.NftUrl)"
+        >
+            Original
+        </Button>
+
+        @if (!string.IsNullOrEmpty(NftArtModel.OptimizedImages?.OriginalCompression))
+        {
+            <Button 
+                Color="ButtonColor.Success"
+                @onclick="() => ShowModal(NftArtModel.OptimizedImages.OriginalCompression)"
+            >
+                Compressão (sem redimensão)
+            </Button>
+
+            @foreach (var resizedImage in NftArtModel.OptimizedImages.ResizedImages)
+            {
+                <Button Color="ButtonColor.Success"
+                    @onclick="() => ShowModal(resizedImage.Source)">
+                    Redimensionado (@resizedImage.Height)
+                </Button>
+            }
+        }
+    </div>
+    <div class="mb-3">
+        <label>Replace Image:
+            <InputFile @ref="inputFile" OnChange="LoadNftFile" class="form-control"/>
+        </label>
+    </div>
+    
 </div>
 
 @code {
     [Parameter]
-    public string NftName { get; set; }
+    public string NftArtImageSource { get; set; } = string.Empty;
 
     [Parameter]
-    public EventCallback<string> NftImageUrlChanged { get; set; }
+    public NftArtForm NftArtModel { get; set; } = new();
 
     [Parameter]
-    public EventCallback<string> NftVideoProcessChanged { get; set; }
+    public string NftArtId { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback<NftMediaImages> NftImageUrlChanged { get; set; }
+
+    private Modal modal = default!;
+    private InputFile inputFile = default!;
+
+    private bool loading = false;
+
+    private async Task ShowModal(string imageSource)
+    {
+        var parameters = new Dictionary<string, object>();
+        parameters.Add("ImageSource", imageSource);
+        await modal.ShowAsync<ImageModalContent>(title: "Image Preview", parameters: parameters);
+    }
+
+    private void TriggerFileInput()
+    {
+    }
 
     private async Task LoadNftFile(InputFileChangeEventArgs eventArgs)
     {
-        var reader = await new StreamReader(eventArgs.File.OpenReadStream()).ReadToEndAsync();
+        NftMediaImages optimizedImages = new();
 
-        var nftUrl = await UploadService.UploadAsync(GetNftKeyName(), reader);
+        loading = true;
 
-        await NftImageUrlChanged.InvokeAsync(nftUrl);
+        using (var stream = eventArgs.File.OpenReadStream(maxAllowedSize: 25 * 1024 * 1024))
+        {
+            optimizedImages.NftUrl = await UploadService.UploadAsync($"{NftArtId}/{eventArgs.File.Name}", stream, eventArgs.File.ContentType);
+        }
+        using (var stream = eventArgs.File.OpenReadStream(maxAllowedSize: 25 * 1024 * 1024))
+        {
+            var byteArray = await GetByteArrayContent(stream);
+
+            optimizedImages.OptimizedImages.OriginalCompression = await UploadService.UploadAsync($"{NftArtId}/compressed_{eventArgs.File.Name}", await CompressImage(byteArray), eventArgs.File.ContentType);
+
+            optimizedImages.OptimizedImages.ResizedImages.Add(new()
+            {
+                Height = 1080,
+                Source = await UploadService.UploadAsync($"{NftArtId}/resized_1920_{eventArgs.File.Name}", await ResizeImage(byteArray, 1080), eventArgs.File.ContentType)
+            });
+
+            optimizedImages.OptimizedImages.ResizedImages.Add(new()
+            {
+                Height = 720,
+                Source = await UploadService.UploadAsync($"{NftArtId}/resized_1280_{eventArgs.File.Name}", await ResizeImage(byteArray, 720), eventArgs.File.ContentType)
+            });
+        }
+
+        await NftImageUrlChanged.InvokeAsync(optimizedImages);
+
+        loading = false;
     }
 
-    private async Task LoadVideoProcessFile(InputFileChangeEventArgs eventArgs)
+    private static async Task<byte[]> GetByteArrayContent(Stream stream)
     {
-        var reader = await new StreamReader(eventArgs.File.OpenReadStream()).ReadToEndAsync();
+        using var memoryStream = new MemoryStream((int)stream.Length);
+        await stream.CopyToAsync(memoryStream);
+        var byteArray = memoryStream.ToArray();
 
-        var nftUrl = await UploadService.UploadAsync(GetNftVideoProcess(), reader);
-
-        await NftVideoProcessChanged.InvokeAsync(nftUrl);
+        return byteArray;
     }
 
-    private string GetNftKeyName()
+    private async Task<Stream> CompressImage(byte[] byteArray)
     {
-        return NftName.ToLower().Replace(' ', '-');
+        var compressedBuffer = await Tinify.FromBuffer(byteArray).ToBuffer();
+
+        return new MemoryStream(compressedBuffer);
     }
 
-    private string GetNftVideoProcess()
+    private async Task<Stream> ResizeImage(byte[] byteArray, int height)
     {
-        return NftName.ToLower().Replace(' ', '-') + "_video";
+        var resizedBuffer = await Tinify.FromBuffer(byteArray)
+            .Resize(new
+            {
+                method = "scale",
+                height
+            })
+            .ToBuffer();
+
+        return new MemoryStream(resizedBuffer);
     }
 }

@@ -36,6 +36,9 @@ export interface NftArt {
 	address: string
 	mintedDate: string
 	nftUrl: string
+	nftCompressedUrl: string
+	nftCompressedFullHdUrl: string
+	nftCompressedHdUrl: string
 	makeOffer: {
 		active: boolean
 		buttonText: string

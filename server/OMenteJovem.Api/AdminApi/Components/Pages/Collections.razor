@@ -1,0 +1,63 @@
+﻿@page "/collections"
+@using AdminApi.Models
+@using AdminApi.Services
+@inject ListCollectionsService CollectionService
+@inject NavigationManager Navigation
+
+<PageTitle>Collections</PageTitle>
+
+<h1>Collections</h1>
+
+@if (collections == null)
+{
+    <Spinner Color="SpinnerColor.Primary"/>
+}
+else
+{
+    <Grid
+        TItem="CollectionResponse"
+        Class="table table-hover table-bordered table-striped"
+        DataProvider="CollectionsDataProvider"
+        AllowFiltering="true"
+        AllowPaging="true"
+        AllowSorting="true"
+        AllowRowClick="true"
+        Responsive="true"
+        OnRowClick="OnRowClick"
+    >
+        <GridColumn TItem="CollectionResponse" HeaderText="Name" PropertyName="Name">
+            @context.Name
+        </GridColumn>
+        <GridColumn TItem="CollectionResponse" HeaderText="Year" PropertyName="Year">
+            @context.Year
+        </GridColumn>
+        <GridColumn TItem="CollectionResponse" HeaderText="Visible" PropertyName="Visible">
+            <Switch @bind-Value="context.Visible" Disabled="true"/>
+        </GridColumn>
+    </Grid>
+}
+
+@code {
+    private IEnumerable<CollectionResponse>? collections = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        collections = await CollectionService.ListCollections();
+    }
+
+    private async Task<GridDataProviderResult<CollectionResponse>> CollectionsDataProvider(GridDataProviderRequest<CollectionResponse> request)
+    {
+        if (collections is null)
+        {
+            collections = await CollectionService.ListCollections();
+        }
+        return request.ApplyTo(collections);
+    }
+
+    private Task OnRowClick(GridRowEventArgs<CollectionResponse> args)
+    {
+        Navigation.NavigateTo($"/collections/{args.Item.Id}");
+
+        return Task.CompletedTask;
+    }
+}

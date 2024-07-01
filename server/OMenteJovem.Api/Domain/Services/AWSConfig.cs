@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AdminApi.Services;
+namespace Domain.Services;
 
 public class AWSConfig
 {

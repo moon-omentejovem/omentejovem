@@ -12,6 +12,7 @@ var builder = Host.CreateApplicationBuilder(args);
 
 builder.Configuration
     .AddJsonFile("appsettings.json")
+    .AddJsonFile("appsettings.Development.json")
     .AddEnvironmentVariables("OMJ_DB_SEEDER_");
 
 builder.Services
@@ -34,6 +35,7 @@ builder.Services
     })
     .AddSingleton<ObjktClient>()
     .AddSingleton<OpenSeaClient>()
+    .AddS3Service(builder.Configuration)
     .AddDomain();
 
 builder.Services.AddHostedService<Worker>();

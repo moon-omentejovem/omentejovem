@@ -16,6 +16,7 @@ public class NftArt
     public string? Url { get; set; }
     public List<Contract> Contracts { get; set; } = [];
     public string? NftUrl { get; set; }
+    public OptimizedImages OptimizedImages { get; set; }
     public MakeOffer? MakeOffer { get; set; } = new();
     public string? VideoProcess { get; set; }
     public NftChain NftChain { get; set; } = NftChain.Unknown;
@@ -28,4 +29,16 @@ public class NftArt
     public ExternalLinks ExternalLinks { get; set; } = new();
     public NftTransferEvent? MintedEvent { get; set; }
     public NftTransferEvent? LastTransferEvent { get; set; }
+}
+
+public class OptimizedImages
+{
+    public string OriginalCompression { get; set; } = string.Empty;
+    public List<ResizedImage> ResizedImages { get; set; } = [];
+}
+
+public class ResizedImage
+{
+    public int Height { get; set; }
+    public string Source { get; set; }
 }

@@ -1,5 +1,4 @@
 ﻿@page "/nfts/{id}"
-@page "/nftartform"
 @inject ListNftsService NftService
 
 @using System.ComponentModel.DataAnnotations
@@ -20,7 +19,7 @@
     </Tab>
     <Tab Title="Media">
         <Content>
-            <NftMediaForm NftName="@NftArtModel.Name" NftImageUrlChanged="HandleMediaSubmit" />
+            <NftMediaForm NftArtModel="@NftArtModel" NftArtId="@Id" NftArtImageSource="@NftArtModel.NftUrl" NftImageUrlChanged="HandleMediaSubmit" />
         </Content>
     </Tab>
     <Tab Title="External Links">
@@ -60,12 +59,16 @@
         );
     }
 
-    private async Task HandleMediaSubmit(string nftUrl)
+    private async Task HandleMediaSubmit(NftMediaImages nftMediaImages)
     {
         Console.WriteLine("changed");
         await NftService.UpdateNft(new UpdateNftBuilder(DomainNft!.Id)
-            .Set(n => n.NftUrl, nftUrl)
+            .Set(n => n.NftUrl, nftMediaImages.NftUrl)
+            .Set(n => n.OptimizedImages, nftMediaImages.OptimizedImages)
         );
+
+        NftArtModel.NftUrl = nftMediaImages.NftUrl;
+        NftArtModel.OptimizedImages = nftMediaImages.OptimizedImages;
     }
 
     private async Task HandleExternalLinksSubmit(LinksForm links)

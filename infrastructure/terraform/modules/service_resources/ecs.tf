@@ -29,7 +29,7 @@ resource "aws_ecs_task_definition" "api_task_definition" {
   network_mode = "awsvpc"
   requires_compatibilities = [ "FARGATE" ]
   cpu = 1024
-  memory = 2048
+  memory = 1024
   execution_role_arn = "arn:aws:iam::732075124266:role/ecsTaskExecutionRole"
   container_definitions = jsonencode([
     {

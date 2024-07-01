@@ -53,7 +53,29 @@ public class ListCollectionsHandler(ILogger<ListCollectionsHandler> logger, IMon
             Name: collection.Name,
             Year: collection.Year,
             Slug: collection.SourceId,
-            NftImageUrls: collectionNfts.Take(5).Select(n => n.NftUrl!)
+            NftImageUrls: collectionNfts.Take(5).Select(GetBestCollectionImage)
         );
+    }
+
+    private static string GetBestCollectionImage(NftArt nftArt)
+    {
+        if (nftArt.OptimizedImages is null)
+        {
+            return nftArt.NftUrl;
+        }
+
+        var hdResizedImage = nftArt.OptimizedImages.ResizedImages.FirstOrDefault(i => i.Height == 720);
+        if (hdResizedImage != null)
+        {
+            return hdResizedImage.Source;
+        }
+
+        var fullHdResizedImage = nftArt.OptimizedImages.ResizedImages.FirstOrDefault(i => i.Height == 1080);
+        if (fullHdResizedImage != null)
+        {
+            return fullHdResizedImage.Source;
+        }
+
+        return nftArt.OptimizedImages.OriginalCompression;
     }
 }

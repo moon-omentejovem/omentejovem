@@ -1,25 +1,31 @@
 using AdminApi.Components;
 using AdminApi.Services;
+using Amazon;
 using Amazon.Runtime;
 using Amazon.S3;
 using Domain;
+using Domain.Services;
 using Domain.Utils;
 using Moq;
+using TinifyAPI;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration
+    .AddJsonFile("appsettings.json")
+    .AddJsonFile("appsettings.Development.json", optional: true)
+    .AddEnvironmentVariables();
 
 // Add services to the container.
 builder.Services
     .AddDomain()
-    .AddConfiguration<AWSConfig>("AWS")
-    .AddScoped<IAmazonS3>(_ =>
-    {
-        return new Mock<IAmazonS3>().Object;
-    })
-    .AddScoped<S3UploadService>()
+    .AddS3Service(builder.Configuration)
     .AddSingleton<ListNftsService>()
+    .AddSingleton<ListCollectionsService>()
     .AddRazorComponents()
     .AddInteractiveServerComponents();
+
+Tinify.Key = builder.Configuration.GetValue<string>("TinifyKey");
 
 builder.Services.AddBlazorBootstrap();
 

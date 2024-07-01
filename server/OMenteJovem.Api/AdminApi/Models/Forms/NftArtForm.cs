@@ -17,4 +17,5 @@ public class NftArtForm
     public string? Collection { get; set; }
     public bool OneOfOne { get; set; }
     public bool Edition { get; set; }
+    public OptimizedImages OptimizedImages { get; set; }
 }

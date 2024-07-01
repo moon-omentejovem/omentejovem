@@ -76,5 +76,16 @@ public static class MappingMethods
     {
         return new ExternalLinksResponse(original.Links.Select(l => new ExternalLinkResponse(l.Name.ToString(), l.Url)).ToList());
     }
+
+    public static CollectionResponse MapToResponse(Collection collection)
+    {
+        return new CollectionResponse
+        {
+            Id = collection.Id.ToString(),
+            Name = collection.Name,
+            Year = collection.Year,
+            Visible = collection.Visible,
+        };
+    }
 }
 

@@ -14,4 +14,5 @@ public class Collection
     public List<string> BackgroundUrls { get; set; }
     public List<string> NftIds { get; set; }
     public bool Edition { get; set; }
+    public bool Visible { get; set; }
 }

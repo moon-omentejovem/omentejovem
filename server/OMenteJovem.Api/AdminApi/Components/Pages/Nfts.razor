@@ -1,0 +1,97 @@
+﻿@page "/nfts"
+@using AdminApi.Models
+@using AdminApi.Services
+@using Domain.Models
+@attribute [StreamRendering]
+@inject ListNftsService NftService
+@inject NavigationManager Navigation
+
+<PageTitle>NFTs</PageTitle>
+
+<h1>NFTs</h1>
+
+<p>This component demonstrates showing data.</p>
+
+@if (nfts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <Grid 
+        TItem="NftArtResponse"
+        Class="table table-hover table-bordered table-striped"
+        DataProvider="NftsDataProvider"
+        AllowFiltering="true"
+        AllowPaging="true"
+        AllowSorting="true"
+        AllowRowClick="true"
+        Responsive="true"
+        OnRowClick="OnRowClick"
+    >
+        <GridColumn TItem="NftArtResponse" HeaderText="Name" PropertyName="Name">
+            @context.Name
+        </GridColumn>
+        <GridColumn TItem="NftArtResponse" HeaderText="Description" PropertyName="Description">
+            @context.Description
+        </GridColumn>
+        <GridColumn TItem="NftArtResponse" HeaderText="Collection" PropertyName="Collection" Filterable="false">
+            @context.Collection
+        </GridColumn>
+        <GridColumn TItem="NftArtResponse" HeaderText="1-1" PropertyName="OneOfOne">
+            @if(context.OneOfOne)
+            {
+                <Icon Name="IconName.CheckAll" Size="IconSize.x2" Color="IconColor.Success" />
+            }
+            else
+            {
+                <Icon Name="IconName.X" Size="IconSize.x2" Color="IconColor.Danger" />
+            }
+        </GridColumn>
+        <GridColumn TItem="NftArtResponse" HeaderText="Edition" PropertyName="Edition">
+            @if (context.Edition)
+            {
+                <Icon Name="IconName.CheckAll" Size="IconSize.x2" Color="IconColor.Success" />
+            }
+            else
+            {
+                <Icon Name="IconName.X" Size="IconSize.x2" Color="IconColor.Danger" />
+            }
+        </GridColumn>
+    </Grid>
+}
+
+@code {
+    private IEnumerable<NftArtResponse>? nfts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        nfts = await NftService.ListNfts();
+    }
+
+    private async Task<GridDataProviderResult<NftArtResponse>> NftsDataProvider(GridDataProviderRequest<NftArtResponse> request)
+    {
+        return request.ApplyTo(await NftService.ListNfts());
+    }
+
+    private Task OnRowClick(GridRowEventArgs<NftArtResponse> args)
+    {
+        Navigation.NavigateTo($"/nfts/{args.Item.Id}");
+
+        return Task.CompletedTask;
+    }
+
+    private static string GetNftDescription(NftArtResponse nftArt)
+    {
+        if (string.IsNullOrEmpty(nftArt.Description))
+        {
+            return string.Empty; 
+        }
+        if (nftArt.Description.Length <= 50)
+        {
+            return nftArt.Description;
+        }
+
+        return $"{nftArt.Description.Substring(0, 50)}...";
+    }
+}

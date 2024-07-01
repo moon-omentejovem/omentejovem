@@ -2,6 +2,7 @@
 @using Domain.Models
 @using Microsoft.AspNetCore.Components.Forms
 @using System.ComponentModel.DataAnnotations
+@using BlazorBootstrap
 
 @if (NftArtModel == null)
 {
@@ -14,21 +15,21 @@ else
         <ValidationSummary />
 
         <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <InputText id="name" class="form-control" @bind-Value="NftArtModel.Name" />
+            <ValidationMessage For="@(() => NftArtModel.Name)" />
+        </div>
+
+        <div class="mb-3">
             <label for="sourceId" class="form-label">Source ID</label>
-            <InputText id="sourceId" class="form-control" @bind-Value="NftArtModel.SourceId" readonly/>
+            <InputText id="sourceId" class="form-control disabled" @bind-Value="NftArtModel.SourceId" Disabled="true"/>
             <ValidationMessage For="@(() => NftArtModel.SourceId)" />
         </div>
 
         <div class="mb-3">
             <label for="address" class="form-label">Address</label>
-            <InputText id="address" class="form-control" @bind-Value="NftArtModel.Address" readonly />
+            <InputText id="address" class="form-control" @bind-Value="NftArtModel.Address" Disabled="true" />
             <ValidationMessage For="@(() => NftArtModel.Address)" />
-        </div>
-
-        <div class="mb-3">
-            <label for="name" class="form-label">Name</label>
-            <InputText id="name" class="form-control" @bind-Value="NftArtModel.Name" />
-            <ValidationMessage For="@(() => NftArtModel.Name)" />
         </div>
 
         <div class="mb-3">
@@ -43,7 +44,7 @@ else
             <ValidationMessage For="@(() => NftArtModel.CreatedAt)" />
         </div>
         
-        <div class="mb-3">
+        @* <div class="mb-3">
             <label class="form-label">Minted</label>
             <InputCheckbox class="form-check-input" @bind-Value="Minted" />
             <ValidationMessage For="@(() => NftArtModel.Edition)" />
@@ -55,17 +56,11 @@ else
                 <InputDate id="mintedDate" class="form-control"  @bind-Value="NftArtModel.MintedDate" readonly="@Minted"/>
                 <ValidationMessage For="@(() => NftArtModel.MintedDate)" />
             </div>
-        }
-
-        <div class="mb-3">
-            <label for="videoProcess" class="form-label">Video Process</label>
-            <InputText id="videoProcess" class="form-control" @bind-Value="NftArtModel.VideoProcess" />
-            <ValidationMessage For="@(() => NftArtModel.VideoProcess)" />
-        </div>
+        } *@
 
         <div class="mb-3">
             <label for="nftChain" class="form-label">NFT Chain</label>
-            <InputText id="nftChain" class="form-select" @bind-Value="NftChain" readonly />
+            <InputText id="nftChain" class="form-select" @bind-Value="NftChain" readonly Disabled="true" />
             <ValidationMessage For="@(() => NftArtModel.NftChain)" />
         </div>
 
@@ -75,15 +70,11 @@ else
             <ValidationMessage For="@(() => NftArtModel.Collection)" />
         </div>
         <div class="mb-3">
-            <label class="form-label">One Of One</label>
-            <InputCheckbox class="form-check-input" @bind-Value="NftArtModel.OneOfOne" />
-            <ValidationMessage For="@(() => NftArtModel.OneOfOne)" />
+            <Switch @bind-Value="NftArtModel.OneOfOne" Label="One Of One" />
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Edition</label>
-            <InputCheckbox class="form-check-input" @bind-Value="NftArtModel.Edition" />
-            <ValidationMessage For="@(() => NftArtModel.Edition)" />
+            <Switch @bind-Value="NftArtModel.Edition" Label="Edition" />
         </div>
 
         <button type="submit" class="btn btn-success">Submit</button>
