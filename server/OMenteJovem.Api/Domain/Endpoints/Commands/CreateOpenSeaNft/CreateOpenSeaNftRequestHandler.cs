@@ -63,18 +63,9 @@ public class CreateOpenSeaNftRequestHandler(
             return newNft;
         }
 
-        if (!HasChanges(request, existentNft))
-        {
-            return existentNft;
-        }
-
-        existentNft.Name = request.Name;
-        existentNft.Description = request.Description;
         existentNft.Address = request.ContractAddress;
         existentNft.NftChain = NftChain.Ethereum;
         existentNft.Collection = request.Collection;
-        existentNft.NftUrl = request.NftUrl;
-        existentNft.Edition = request.Edition;
         existentNft.ExternalLinks.AddLink(new() { Name = ExternalLinkEnum.OpenSea, Url = request.OpenSeaUrl });
 
         if (!existentNft.Contracts.Any(c => c.ContractAddress == request.ContractAddress))
@@ -94,19 +85,18 @@ public class CreateOpenSeaNftRequestHandler(
 
         await _nftsCollection.ReplaceOneAsync(n => n.Id == existentNft.Id, existentNft, cancellationToken: cancellationToken);
 
-        return existentNft;
-    }
+        if (
+            existentNft.OptimizedImages == null 
+            || 
+                (existentNft.OptimizedImages != null && 
+                string.IsNullOrEmpty(existentNft.OptimizedImages.OriginalCompression) &&
+                existentNft.OptimizedImages.ResizedImages.Any())
+        )
+        {
+            await OptimizeImages(existentNft);
+        }
 
-    private static bool HasChanges(CreateOpenSeaNftRequest request, NftArt nftArt)
-    {
-        return
-            nftArt.Name != request.Name ||
-            nftArt.Description != request.Description ||
-            nftArt.Address != request.ContractAddress ||
-            nftArt.Collection != request.Collection ||
-            nftArt.NftUrl != request.NftUrl ||
-            !nftArt.ExternalLinks.Links.Any(l => l.Name == ExternalLinkEnum.OpenSea && l.Url == request.OpenSeaUrl) ||
-            nftArt.Edition != request.Edition;
+        return existentNft;
     }
 
     private async Task OptimizeImages(NftArt nft)
@@ -123,7 +113,7 @@ public class CreateOpenSeaNftRequestHandler(
             return;
         }
 
-        var contentType = await GetContentType(nft.NftUrl);
+        var (contentType, responseContent) = await GetContentType(nft.NftUrl);
 
         var fileExtension = contentType.Split('/')[1];
 
@@ -131,7 +121,9 @@ public class CreateOpenSeaNftRequestHandler(
 
         var nftName = nft.Name.ToLower().Replace('/', ' ').Replace(' ', '-');
 
-        var originalCompression = await s3UploadService.UploadAsync($"{nft.Id}/{nftName}.{fileExtension}", new MemoryStream(await source.ToBuffer()), contentType);
+        var newNftUrl = await s3UploadService.UploadAsync($"{nft.Id}/{nftName}.{fileExtension}", new MemoryStream(await source.ToBuffer()), contentType);
+
+        var originalCompression = await s3UploadService.UploadAsync($"{nft.Id}/compressed_{nftName}.{fileExtension}", new MemoryStream(await source.ToBuffer()), contentType);
 
         var resizedFullHd = await s3UploadService.UploadAsync(
             $"{nft.Id}/resized_1920_{nftName}.{fileExtension}",
@@ -172,22 +164,24 @@ public class CreateOpenSeaNftRequestHandler(
         };
 
         await _nftsCollection.UpdateOneAsync(n => n.Id == nft.Id, Builders<NftArt>.Update
-            .Set(n => n.OptimizedImages, optimizedImages));
+            .Set(n => n.NftUrl, newNftUrl)
+            .Set(n => n.OptimizedImages, optimizedImages)
+        );
     }
 
-    private async Task<string> GetContentType(string sourceUrl)
+    private async Task<(string, HttpContent)> GetContentType(string sourceUrl)
     {
         var httpClient = new HttpClient();
 
+        var response = await httpClient.GetAsync(sourceUrl);
+
         try
         {
-            var response = await httpClient.GetAsync(sourceUrl);
-
             var contentType = response.Headers.FirstOrDefault(k => k.Key == "ContentType");
 
-            if (contentType.Value.Any(v => v != null))
+            if (contentType.Key is not null && contentType.Value is not null)
             {
-                return contentType.Value.First();
+                return (contentType.Value.First(), response.Content);
             }
         }
         catch
@@ -195,6 +189,6 @@ public class CreateOpenSeaNftRequestHandler(
             logger.LogWarning("Failed to determine content type for nft url {SourceUrl}", sourceUrl);
         }
 
-        return "image/jpeg";
+        return ("image/jpeg", response.Content);
     }
 }

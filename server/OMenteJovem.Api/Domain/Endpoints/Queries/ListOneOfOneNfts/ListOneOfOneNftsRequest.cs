@@ -5,6 +5,7 @@ using MediatR;
 using MongoDB.Driver;
 
 namespace Domain.Endpoints.Queries.ListOneOfOneNfts;
+
 public record ListOneOfOneNftsRequest() : IRequest<ListNftsResponse>;
 
 public class ListOndeOfOneNftsHandler(IMongoDatabase mongoDatabase) : IRequestHandler<ListOneOfOneNftsRequest, ListNftsResponse>
