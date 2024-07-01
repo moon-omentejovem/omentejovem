@@ -10,6 +10,7 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { Swiper as SwiperType } from 'swiper/types'
 import { NftArt } from '@/components/ArtContent/types'
 import { cn } from '@/lib/utils'
+import { addLoadedClass } from '@/utils/lazyLoading'
 
 interface VerticalCarouselProperties {
 	slideIndex?: number
@@ -53,6 +54,7 @@ export function VerticalCarousel({
 				slideToClickedSlide={true}
 				initialSlide={slideIndex}
 				className="vertical-slider"
+        centeredSlides={true}
 				onSlideChange={(e) => {
 					onChangeSlideIndex(e.realIndex % slides.length)
 				}}
@@ -62,14 +64,15 @@ export function VerticalCarousel({
 			>
 				{[...slides].map((art, index) => (
 					<SwiperSlide key={`${art.name}.${index}`} className="h-[150px] max-h-[150px]">
-						<div aria-label={art.name} className="flex h-[150px] w-[150px]">
+						<div aria-label={art.name} className="flex h-[150px] w-[150px] lazy-load-img-wrapper">
 							<Image
-								src={art.url}
+								src={art.nftCompressedHdUrl}
 								alt={art.name}
 								width={0}
 								height={0}
-								className="h-full w-full object-cover"
+								className="h-full w-full object-cover lazy-load-img"
 								loading="lazy"
+                onLoad={addLoadedClass}
 							/>
 						</div>
 					</SwiperSlide>
