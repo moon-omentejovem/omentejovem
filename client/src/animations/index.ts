@@ -407,7 +407,7 @@ export function artInfosAnimation(
 				opacity: 1,
 				duration: 0.4,
 			})
-			.to(
+			/*.to(
 				'#art-info-wrapper',
 				{
 					display: 'flex',
@@ -418,7 +418,7 @@ export function artInfosAnimation(
 					},
 				},
 				'<',
-			)
+			)*/
 			.to(
 				'#art-ownership-collections',
 				{
@@ -432,7 +432,7 @@ export function artInfosAnimation(
 				'<',
 			)
 	} else {
-		tl.to('#art-info-wrapper', {
+		tl/*.to('#art-info-wrapper', {
 			opacity: 0,
 			duration: 0.4,
 			onComplete: () => {
@@ -440,7 +440,7 @@ export function artInfosAnimation(
 					display: 'none',
 				})
 			},
-		})
+		})*/
 			.to(
 				'#art-ownership-collections',
 				{
@@ -491,7 +491,7 @@ export function artInfosCollectionsAnimation(
 				opacity: 1,
 				duration: 0.4,
 			})
-			.to(
+			/*.to(
 				'#art-info-wrapper',
 				{
 					display: 'flex',
@@ -502,7 +502,7 @@ export function artInfosCollectionsAnimation(
 					},
 				},
 				'<',
-			)
+			)*/
 			.to(
 				'#art-ownership-collections',
 				{
@@ -516,7 +516,7 @@ export function artInfosCollectionsAnimation(
 				'<',
 			)
 	} else {
-		tl.to('#art-info-wrapper', {
+		tl/*.to('#art-info-wrapper', {
 			opacity: 0,
 			duration: 0.4,
 			onComplete: () => {
@@ -524,7 +524,7 @@ export function artInfosCollectionsAnimation(
 					display: 'none',
 				})
 			},
-		})
+		})*/
 			.to(
 				'#art-ownership-collections',
 				{
@@ -557,10 +557,10 @@ export function artInfosCollectionsAnimation(
 export function resetArtInfo(): void {
 	const tl = gsap.timeline()
 
-	tl.set('#art-info-wrapper', {
+	tl/*.set('#art-info-wrapper', {
 		opacity: 0,
 		display: 'none',
-	})
+	})*/
 		.set('#art-ownership-collections', {
 			opacity: 0,
 		})
