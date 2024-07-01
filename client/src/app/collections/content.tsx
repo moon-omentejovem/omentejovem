@@ -22,11 +22,10 @@ export default function CollectionsContent(data: CollectionsResponse) {
 				let newIndex = before + 1;
 				if (newIndex > currentImages.length - 1)
 					newIndex = 0;
-				
-				console.log(`${currentImages.length}:${newIndex}`);
+
 				return newIndex;
 			})
-		}, 3000);
+		}, 1500);
 
 		return () => clearInterval(intervalId)
 
@@ -62,8 +61,8 @@ export default function CollectionsContent(data: CollectionsResponse) {
 			{(currentCollection && images[currentImageIndex]) && 
 				<div
 					style={{
-						top: 0,
-						left: 0,
+            left: '50%',
+            top: '50%',
 						transform: 'translate(-50%, -50%)'
 					}}
 					className="pointer-events-none absolute flex items-center justify-center sm:group-hover/collection:z-[1000]"

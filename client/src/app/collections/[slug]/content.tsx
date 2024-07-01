@@ -34,14 +34,14 @@ export function InnerCollectionContent({
 				onChangeSlideIndex={onChangeSelectedArtIndex}
 			/>
 
-			<div className="hidden w-[100vw] self-center xl:block">
+			{/* <div className="hidden w-[100vw] self-center xl:block">
 				<HorizontalInCarousel
 					onChangeSlideIndex={onChangeSelectedArtIndex}
 					slides={images}
 					slideIndex={activeIndex}
 					getMoreSlides={() => handleMoreSlides()}
 				/>
-			</div>
+			</div> */}
 		</main>
 	)
 }

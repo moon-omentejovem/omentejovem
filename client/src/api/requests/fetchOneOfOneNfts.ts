@@ -11,7 +11,7 @@ export async function fetchOneOfOneNfts() {
 			method: 'GET',
 		},
 	)
-
+  
 	const jsonData = await data.json()
 	return jsonData as { nfts: NftArt[] }
 }

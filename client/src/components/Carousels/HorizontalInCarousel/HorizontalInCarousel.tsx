@@ -27,8 +27,6 @@ export function HorizontalInCarousel({
 		// horizontalCarouselAnimation()
 	}, [])
 
-	console.log(slides)
-
 	function handleGetMoreslides(swiperInstance: SwiperType) {
 		const currentIndex = swiperInstance.activeIndex
 		const totalSlides = swiperInstance.slides.length

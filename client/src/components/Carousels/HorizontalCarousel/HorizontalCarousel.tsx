@@ -15,13 +15,14 @@ import {
 } from '@/animations'
 import { cn } from '@/lib/utils'
 import { Swiper as SwiperType } from 'swiper/types'
+import { addLoadedClass } from '@/utils/lazyLoading'
 
 interface HorizontalCarouselProperties {
 	currentPage: number
 	loading?: boolean
 	slides: {
 		name: string
-		url: string
+		nftCompressedHdUrl: string
 	}[]
 	redirectSource?: string
 	onRedirect: (index: number) => void
@@ -95,7 +96,7 @@ export function HorizontalCarousel({
 								>
 									<div
 										id="art-wrapper"
-										className="relative flex flex-col justify-center"
+										className="relative flex flex-col justify-center lazy-load-img-wrapper"
 										onMouseEnter={(e) => {
 											figcaptionAnimationHandler(e.currentTarget, true)
 										}}
@@ -113,12 +114,13 @@ export function HorizontalCarousel({
 										</figcaption>
 
 										<Image
-											src={slide.url}
+											src={slide.nftCompressedHdUrl}
 											alt={slide.name}
 											width={0}
 											height={0}
-											className="h-full w-48 object-cover sm:w-64 2xl:w-[22rem]"
+											className="h-full w-48 object-cover sm:w-64 2xl:w-[22rem] lazy-load-img"
 											loading="lazy"
+                      onLoad={addLoadedClass}
 										/>
 									</div>
 

@@ -46,6 +46,10 @@ export function ArtInfos({
 		// Busca mais slides
 	}
 
+  function wasMinted(nft: NftArt) {
+    return !!nft.mintedEvent;
+  }
+
 	useEffect(() => {
 		if (selectedArt && window.screen.width >= 1280) {
 			setIsOpenVideo(false)
@@ -67,21 +71,21 @@ export function ArtInfos({
 				'grid-cols-[minmax(400px,max-content)_minmax(65ch,max-content)]',
 				'3xl:grid-cols-[minmax(400px,max-content)_minmax(40ch,max-content)]',
 				'xl:grid-rows-[minmax(100px,100%)_minmax(min-content,max-content)]',
-				'xl:grid xl:items-end',
+				'xl:grid xl:items-center',
 				'2xl:gap-x-20 2xl:mr-[15%] 3xl:mr-0',
 			)}
 		>
-			{!!selectedArt.videoProcess && (
+			{/* {!!selectedArt.videoProcess && (
 				<VideoProcessModal
 					open={isOpenVideo}
 					setOpen={setIsOpenVideo}
 					videoUrl={selectedArt.videoProcess}
 				/>
-			)}
+			)} */}
 
 			<ArtDetails
-				detailedImage={selectedArt.nftUrl}
-				image={selectedArt.url}
+				detailedImage={selectedArt.nftCompressedUrl}
+				image={selectedArt.nftCompressedHdUrl}
 				name={selectedArt.name}
 			/>
 
@@ -103,7 +107,7 @@ export function ArtInfos({
 				/>
 			</div>
 
-			{isNftArt(selectedArt) ? (
+			{wasMinted(selectedArt) ? (
 				<div
 					id="art-container"
 					className="flex flex-col w-fit gap-8 transition-all overflow-y-scroll max-h-full h-full xl:gap-0"
@@ -154,21 +158,19 @@ export function ArtInfos({
 						/>
 					</div>
 				</div>
-			) : (
-				<div className="flex flex-col w-full max-w-sm justify-end text-sm text-secondary-100">
-					<div className="flex flex-col-reverse mt-4 mb-10 gap-4 xl:flex-col">
+			) : <div className="flex flex-col w-full max-w-sm justify-end text-sm text-secondary-100">
+          <div className="flex flex-col-reverse mt-4 mb-10 gap-4 xl:flex-col">
 						<p className="break-words">{selectedArt['description']}</p>
 
 						<p className="text-primary-50 underline">{selectedArt['name']}</p>
 					</div>
-
-					{selectedArt['availablePurchase']['active'] && !selectedArt['availablePurchase']['status'] && (
-						<p className="mt-2 grid content-center justify-start border-y-[1px] border-secondary-100 text-sm h-16 px-8 font-bold text-secondary-100">
-							NOT AVAILABLE FOR PURCHASE
-						</p>
-					)}
-				</div>
-			)}
+          {((selectedArt as NftArt).availablePurchase?.active && (selectedArt as NftArt).availablePurchase?.status) && (
+            <p className="mt-2 grid content-center justify-start border-y-[1px] border-secondary-100 text-sm h-16 px-8 font-bold text-secondary-100">
+              NOT AVAILABLE FOR PURCHASE
+            </p>
+          )}
+        </div>}
+			
 
 			<div className="hidden place-content-center xl:grid">
 				{!!selectedArt.videoProcess ? (
@@ -184,7 +186,7 @@ export function ArtInfos({
 				)}
 			</div>
 
-			{isNftArt(selectedArt) && (
+			{/* {isNftArt(selectedArt) && (
 				<button
 					aria-label="Open art infos"
 					className="group hidden relative place-items-center w-6 h-6 xl:grid"
@@ -201,7 +203,7 @@ export function ArtInfos({
 						)}
 					/>
 				</button>
-			)}
+			)} */}
 		</section>
 	)
 }
