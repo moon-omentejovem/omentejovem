@@ -107,7 +107,7 @@ export function Header() {
 					className="fixed inset-0 top-[4.5rem] z-10 bg-black/[40%] max-w-[100vw]"
 					onClick={() => setShowMobileMenu(false)}
 				>
-					<div className="h-fit z-20 flex w-full flex-col px-6 py-6 gap-2 bg-background">
+					<div className="h-fit z-20 flex w-full flex-col px-6 py-6 gap-2 bg-background absolute" style={({top: 0})}>
 						{tabs.map((tab, index) => (
 							<Link key={index} href={tab.link} className="header-tab flex justify-end">
 								<p

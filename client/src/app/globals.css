@@ -96,6 +96,18 @@ div.line:has(.bio-link) {
 	}
 }
 
+.lazy-load-img-wrapper {
+  background-color: theme('colors.secondary.200');
+}
+
+.lazy-load-img {
+  opacity: 0;
+}
+
+.lazy-load-img.loaded {
+  opacity: 1;
+}
+
 /* @media (min-width: 768px) {
 	#header-tabs {
 		display: none;
