@@ -14,7 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Configuration
     .AddJsonFile("appsettings.json")
     .AddJsonFile("appsettings.Development.json", optional: true)
-    .AddEnvironmentVariables();
+    .AddEnvironmentVariables("OMJ_ADMIN_");
 
 // Add services to the container.
 builder.Services
