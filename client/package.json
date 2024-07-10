@@ -7,6 +7,7 @@
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
+    "lintfix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
 		"build:staging": "env-cmd -f .env.staging npx build && npx start"
 	},
 	"dependencies": {
