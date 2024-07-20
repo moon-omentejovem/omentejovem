@@ -68,7 +68,7 @@ export function CalloutParallax({ title, subtitle, calloutImages }: CalloutParal
 	useEffect(() => {
 		calloutImages.forEach((image, index) => {
 			const img = document.createElement('img')
-			img.src = image.image_url
+			img.src = image.imageUrl
 			img.onload = () => {
 				imageObjects.current[index] = img
 			}
@@ -105,14 +105,15 @@ export function CalloutParallax({ title, subtitle, calloutImages }: CalloutParal
 
 				{calloutImages[currentImageIndex] && <div id="callout-element" className="flex flex-col items-center">
 					<Image
-						src={calloutImages[currentImageIndex].image_url}
+						src={calloutImages[currentImageIndex].imageUrl}
 						width={0}
 						height={0}
 						alt={'omentejovem'}
 						className="w-auto max-h-96 invisible 2xl:max-h-[600px]"
+            onClick={() => setCurrentImageIndex(currentImageIndex >= calloutImages.length - 1 ? 0 : currentImageIndex + 1)}
 					/>
 					<p className="text-sm text-secondary-100 self-start invisible">
-						{new Date(calloutImages[currentImageIndex].created_at).getFullYear()},{' '}
+						{new Date(calloutImages[currentImageIndex].createdAt).getFullYear()},{' '}
 						{calloutImages[currentImageIndex].title}
 					</p>
 				</div>}
