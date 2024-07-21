@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using Domain.Models.Enums;
+using MongoDB.Bson;
 
 namespace Domain.Models;
 

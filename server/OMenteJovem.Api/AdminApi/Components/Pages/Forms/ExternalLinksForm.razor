@@ -1,110 +1,69 @@
 ﻿@using AdminApi.Models.Forms
 @using Domain.Models
+@using Domain.Utils
 @using Microsoft.AspNetCore.Components.Forms
 @using System.ComponentModel.DataAnnotations
+@using BlazorBootstrap
 
-<EditForm Model="@ExternalLinks" OnValidSubmit="SubmitLink">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-
-    @if (ExternalLinks?.ExternalLinks == null || loading)
-    {
-        <Spinner />
-    }
-    else
-    {
-        @foreach (var externalLink in ExternalLinks.ExternalLinks)
-        {
+@if (NftArtForm?.AvailablePurchase == null || loading)
+{
+    <Spinner />
+}
+else
+{
+    <EditForm Model="@NftArtForm.AvailablePurchase" OnValidSubmit="SubmitLink">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
             <div>
                 <div class="mb-3">
-                    <label for="sourceId" class="form-label">Name</label>
-                    <InputSelect id="sourceId" class="form-control" @bind-Value="externalLink.Name">
-                        <option checked="@(externalLink.Name is null)" value="">
-                            Select
-                        </option>
-                        @foreach (var externalName in Enum.GetValues<ExternalLinkEnum>())
-                        {
-                            <option checked="@(externalLink.Name == externalName.ToString())" value="@externalName">
-                                @externalName.ToString()
-                            </option>
-                        }
-                    </InputSelect>
+                    <label for="sourceId" class="form-label">Nft Chain</label>
+                    <input type="text" id="sourceId" class="form-control disabled" value="@NftChain" disabled="disabled"/>
                 </div>
+                @if (NftArtForm.NftChain != Domain.Models.Enums.NftChain.Unknown)
+                {
+                    <div class="mb-3">
+                        <label for="sourceId" class="form-label">Name</label>
+                        <InputSelect id="sourceId" class="form-control" @bind-Value="NftArtForm.AvailablePurchase.Text">
+                            <option checked="@(NftArtForm.AvailablePurchase.Text is null)" value="">
+                                Select
+                            </option>
+                            @foreach (var externalName in NftConstants.AvailablePurchaseMapping[NftArtForm.NftChain])
+                            {
+                            <option checked="@(NftArtForm.AvailablePurchase.Text == externalName)" value="@externalName">
+                                    @externalName.ToString()
+                                </option>
+                            }
+                        </InputSelect>
+                    </div>
+                }
                 <div class="mb-3">
                     <label for="sourceId" class="form-label">Url</label>
-                    <InputText id="sourceId" class="form-control" @bind-Value="externalLink.Url" />
-                </div>
-                
-            </div>
-        }
-        @foreach (var externalLink in UnsubmittedLinks)
-        {
-            <div>
-                <div class="mb-3">
-                    <label for="sourceId" class="form-label">Name</label>
-                    <InputSelect id="sourceId" class="form-control" @bind-Value="externalLink.Name">
-                        <option checked="@(externalLink.Name is null)" value="">
-                            Select
-                        </option>
-                        @foreach (var externalName in Enum.GetValues<ExternalLinkEnum>())
-                        {
-                            <option checked="@(externalLink.Name == externalName.ToString())" value="@externalName">
-                                @externalName.ToString()
-                            </option>
-                        }
-                    </InputSelect>
+                <InputText id="sourceId" class="form-control" @bind-Value="NftArtForm.AvailablePurchase.Url" />
                 </div>
                 <div class="mb-3">
-                    <label for="sourceId" class="form-label">Url</label>
-                    <InputText id="sourceId" class="form-control" @bind-Value="externalLink.Url" />
+                <Switch @bind-Value="NftArtForm.AvailablePurchase.Active" Label="Active" />
                 </div>
-
             </div>
-        }
-        @if (UnsubmittedLinks.Count == 0 || UnsubmittedLinks.All(l => l.Ready()))
-        {
-            <button class="btn btn-primary" @onclick="AddLink">Add Link</button>
-        }
-        <button type="submit" class="btn btn-success" disabled="@DisableSubmit">Submit</button>
-    }
+            <button type="submit" class="btn btn-success">Submit</button>
 
-</EditForm>
+    </EditForm>
+}
 
 @code {
     [Parameter]
-    public LinksForm? ExternalLinks { get; set; }
+    public NftArtForm? NftArtForm { get; set; }
 
     [Parameter]
-    public EventCallback<LinksForm> ExternalLinksChanged { get; set; }
+    public EventCallback<AvailablePurchase> ExternalLinksChanged { get; set; }
 
-    private List<LinkForm> UnsubmittedLinks = [];
-
-    private bool DisableSubmit { get => !UnsubmittedLinks.All(l => l.Ready()); }
-
-    private IEnumerable<ExternalLinkEnum> AvailableNames 
-    { 
-        get 
-        {
-            var allValues = Enum.GetValues<ExternalLinkEnum>();
-            IEnumerable<LinkForm> allLinks = [..ExternalLinks!.ExternalLinks, ..UnsubmittedLinks];
-            var existingNames = allLinks.Select(l => l.Name);
-
-            return allValues.Where(e => !existingNames.Contains(e.ToString()));
-        }
-    }
+    private string? NftChain => NftArtForm?.NftChain.ToString();
 
     private bool loading = false;
 
-    private void AddLink()
-    {
-        UnsubmittedLinks.Add(new());
-    }
-
     private async Task SubmitLink()
     {
-        var externalLinks = new LinksForm { ExternalLinks = [.. ExternalLinks!.ExternalLinks, .. UnsubmittedLinks] };
         loading = true;
-        await ExternalLinksChanged.InvokeAsync(externalLinks);
+        await ExternalLinksChanged.InvokeAsync(NftArtForm!.AvailablePurchase);
         loading = false;
     }
 }

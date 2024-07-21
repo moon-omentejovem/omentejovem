@@ -1,4 +1,5 @@
 ﻿using Domain.Models;
+using Domain.Models.Enums;
 
 namespace AdminApi.Models.Forms;
 
@@ -18,4 +19,5 @@ public class NftArtForm
     public bool OneOfOne { get; set; }
     public bool Edition { get; set; }
     public OptimizedImages OptimizedImages { get; set; }
+    public AvailablePurchase? AvailablePurchase { get; set; }
 }

@@ -22,6 +22,7 @@ builder.Services
     .AddS3Service(builder.Configuration)
     .AddSingleton<ListNftsService>()
     .AddSingleton<ListCollectionsService>()
+    .AddSingleton<HomeCollectionService>()
     .AddRazorComponents()
     .AddInteractiveServerComponents();
 

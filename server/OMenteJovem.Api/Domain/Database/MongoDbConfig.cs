@@ -8,4 +8,5 @@ public class MongoDbConfig
     public static readonly string NftArtsCollectionName = "nftArts";
     public static readonly string CollectionsCollectionName = "collections";
     public static readonly string NftEventsCollectionName = "nftEvents";
+    public static readonly string HomeSettingsCollectionName = "homeSettings";
 }

@@ -13,6 +13,9 @@
     {
         <Spinner Color="SpinnerColor.Secondary" />
     }
+    <div>
+        <img src="@CurrentNftImage" alt="" class="img-fluid"/>
+    </div>
     <div class="d-flex justify-content-between">
         <Modal @ref="modal" />
         <Button 
@@ -20,7 +23,7 @@
                 ? ButtonColor.Danger
                 : ButtonColor.Primary"
             @onclick="() => ShowModal(NftArtModel.NftUrl)"
-        >
+                Active="CurrentNftImage == NftArtModel.NftUrl">
             Original
         </Button>
 
@@ -28,6 +31,7 @@
         {
             <Button 
                 Color="ButtonColor.Success"
+                    Active="CurrentNftImage == NftArtModel.OptimizedImages.OriginalCompression"
                 @onclick="() => ShowModal(NftArtModel.OptimizedImages.OriginalCompression)"
             >
                 Compressão (sem redimensão)
@@ -36,7 +40,8 @@
             @foreach (var resizedImage in NftArtModel.OptimizedImages.ResizedImages)
             {
                 <Button Color="ButtonColor.Success"
-                    @onclick="() => ShowModal(resizedImage.Source)">
+                    @onclick="() => ShowModal(resizedImage.Source)"
+                    Active="CurrentNftImage == resizedImage.Source">
                     Redimensionado (@resizedImage.Height)
                 </Button>
             }
@@ -66,13 +71,23 @@
     private Modal modal = default!;
     private InputFile inputFile = default!;
 
+    private string? CurrentNftImage = null;
+
     private bool loading = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(1000);
+
+        CurrentNftImage = NftArtModel.NftUrl;
+    }
 
     private async Task ShowModal(string imageSource)
     {
-        var parameters = new Dictionary<string, object>();
-        parameters.Add("ImageSource", imageSource);
-        await modal.ShowAsync<ImageModalContent>(title: "Image Preview", parameters: parameters);
+        CurrentNftImage = imageSource;
+        // var parameters = new Dictionary<string, object>();
+        // parameters.Add("ImageSource", imageSource);
+        // await modal.ShowAsync<ImageModalContent>(title: "Image Preview", parameters: parameters);
     }
 
     private void TriggerFileInput()

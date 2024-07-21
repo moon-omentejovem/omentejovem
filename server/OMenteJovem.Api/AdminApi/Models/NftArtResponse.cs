@@ -1,4 +1,4 @@
-﻿using Domain.Models;
+﻿using Domain.Models.Enums;
 using MongoDB.Bson;
 
 namespace AdminApi.Models;
@@ -25,6 +25,7 @@ public class NftArtResponse
     public bool OneOfOne { get; set; }
     public bool Edition { get; set; }
     public ExternalLinksResponse ExternalLinks { get; set; } = new([]);
+    public string? LowestCompressionUrl;
     
     public bool IsReady()
     {
