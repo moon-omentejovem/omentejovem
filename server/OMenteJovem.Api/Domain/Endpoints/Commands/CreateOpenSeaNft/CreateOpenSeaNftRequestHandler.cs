@@ -1,5 +1,6 @@
 ﻿using Domain.Database;
 using Domain.Models;
+using Domain.Models.Enums;
 using Domain.Services;
 using MediatR;
 using Microsoft.Extensions.Logging;

@@ -1,5 +1,6 @@
 ﻿using Domain.Database;
 using Domain.Models;
+using Domain.Models.Enums;
 using MediatR;
 using MongoDB.Driver;
 

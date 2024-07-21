@@ -1,7 +1,10 @@
-﻿using MongoDB.Bson;
+﻿using Domain.Models.Enums;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace Domain.Models;
 
+[BsonIgnoreExtraElements]
 public class NftArt
 {
     public ObjectId Id { get; set; }
