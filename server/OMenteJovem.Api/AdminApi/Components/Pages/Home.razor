@@ -104,14 +104,20 @@
 
         selectedNfts = (await NftService.ListNfts())
             .Where(n => 
-                homeSettings.NftIds.Any(x => x == n.Id)
+                homeSettings.NftIds.Any(x => x.Id == n.Id)
             ).ToList();
     }
 
     private async Task HandleValidSubmit()
     {
         loading = true;
-        homeSettings.NftIds = selectedNfts.Select(n => n.Id).ToArray();
+        homeSettings.NftIds = selectedNfts.Select(n => new HomeNft 
+        { 
+            Id = n.Id,
+            Name = n.Name,
+            Url = n.LowestCompressionUrl, 
+            CreatedAt = n.CreatedAt
+        }).ToArray();
         await HomeSettingsService.UpsertHomeSettings(homeSettings);
         loading = false;
     }
