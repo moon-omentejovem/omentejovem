@@ -1,3 +1,5 @@
+import { HomeImage } from '@/types/home'
+
 export function isNftArt(value: unknown): value is NftArt {
 	return typeof value === 'object' && !!value && 'mintedDate' in value && 'nftChain' in value
 }
@@ -80,5 +82,6 @@ export interface CollectionsResponse {
 
 export interface HomeData {
 	title: string
-	subtitle: string
+	subtitle: string,
+  nfts: HomeImage[]
 }

@@ -1,13 +1,10 @@
 import { CalloutParallax } from '@/components/CalloutParallax'
 import { ReactElement } from 'react'
 import { isEmptyStringOrUndefined } from '@/utils/emptyStringOrUndefined'
-import { HomeImage } from '@/types/home'
 import { HomeData } from '@/api/resolver/types'
 
-export type HomePageData = HomeData & { background_images: HomeImage[] }
-
 interface HomeContentProperties {
-	data: HomePageData | undefined
+	data: HomeData | undefined
 }
 
 export default function HomeContent({ data }: HomeContentProperties): ReactElement {
@@ -18,7 +15,7 @@ export default function HomeContent({ data }: HomeContentProperties): ReactEleme
 				subtitle={
 					isEmptyStringOrUndefined(data?.subtitle) ? 'omentejovem' : (data?.subtitle as string)
 				}
-				calloutImages={data?.background_images ?? []}
+				calloutImages={data?.nfts ?? []}
 			/>
 		</main>
 	)
