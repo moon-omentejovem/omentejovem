@@ -10,72 +10,72 @@ import { NftArt } from './types'
 import { ChainedFilter } from '../ArtFilter/filters'
 
 interface ArtMainContentProperties {
-	email: string
-	source: 'portfolio' | '1-1' | 'editions'
-	filters: ChainedFilter[]
-	unfilteredImages: (NftArt)[]
-	onChangeArtImages: (images: (NftArt)[]) => void
-	artImages: (NftArt)[]
-	selectedArtIndex: number
-	onChangeSelectedArtIndex: (index: number) => void
+  email: string
+  source: 'portfolio' | '1-1' | 'editions'
+  filters: ChainedFilter[]
+  unfilteredImages: NftArt[]
+  onChangeArtImages: (images: NftArt[]) => void
+  artImages: NftArt[]
+  selectedArtIndex: number
+  onChangeSelectedArtIndex: (index: number) => void
 }
 
 export function ArtMainContent({
-	email,
-	source,
-	onChangeArtImages,
-	artImages,
-	selectedArtIndex,
-	onChangeSelectedArtIndex,
+  email,
+  source,
+  onChangeArtImages,
+  artImages,
+  selectedArtIndex,
+  onChangeSelectedArtIndex
 }: ArtMainContentProperties): ReactElement {
-	const [page, setPage] = useState(1)
-	const [loading, setLoading] = useState(false)
-	const selectedArt = artImages[selectedArtIndex]
+  const [page, setPage] = useState(1)
+  const [loading, setLoading] = useState(false)
+  const selectedArt = artImages[selectedArtIndex]
 
-	function onRedirect(index: number): void {
-		onChangeSelectedArtIndex(index)
-	}
+  function onRedirect(index: number): void {
+    onChangeSelectedArtIndex(index)
+  }
 
-	const renderContent = useCallback((): ReactElement => {
-		return (
-			<ArtInfos
-				email={email}
-				selectedArt={selectedArt}
-				slides={artImages}
-				onChangeSlideIndex={onChangeSelectedArtIndex}
-			/>
-		)
-	}, [selectedArtIndex])
+  const renderContent = useCallback((): ReactElement => {
+    return (
+      <ArtInfos
+        email={email}
+        selectedArt={selectedArt}
+        slides={artImages}
+        onChangeSlideIndex={onChangeSelectedArtIndex}
+      />
+    )
+  }, [selectedArtIndex])
 
-	if (selectedArtIndex === -1) {
-		return (
-			<main className="flex flex-col pt-6 h-screenMinusHeader justify-center">
-				<HorizontalCarousel
-					currentPage={page}
-					loading={loading}
-					slides={artImages}
-					redirectSource={source}
-					onRedirect={onRedirect}
-				/>
+  if (selectedArtIndex === -1) {
+    return (
+      <main className="flex flex-col pt-6 h-screenMinusHeader justify-center">
+        <HorizontalCarousel
+          currentPage={page}
+          loading={loading}
+          slides={artImages}
+          redirectSource={source}
+          onRedirect={onRedirect}
+        />
 
-				<ArtFilter
-					currentPage={page}
-					artImages={artImages}
-					onChangeArtImages={onChangeArtImages}
-				/>
-			</main>
-		)
-	}
+        <ArtFilter
+          currentPage={page}
+          artImages={artImages}
+          onChangeArtImages={onChangeArtImages}
+        />
+      </main>
+    )
+  }
 
-	return (
-		<main className="flex flex-col px-6 pb-16 xl:px-20 xl:pt-10 xl:pb-8 xl:h-screenMinusHeader">
-			<VerticalCarousel
-				slideIndex={selectedArtIndex}
-				onChangeSlideIndex={onChangeSelectedArtIndex}
-				slides={artImages}
-			/>
+  return (
+    <main className="flex flex-col px-6 pb-16 xl:px-20 xl:pt-10 xl:pb-8 xl:h-screenMinusHeader">
+      <VerticalCarousel
+        slideIndex={selectedArtIndex}
+        onChangeSlideIndex={onChangeSelectedArtIndex}
+        slides={artImages}
+      />
 
-			{renderContent()}
-		</main>
-	)
+      {renderContent()}
+    </main>
+  )
 }

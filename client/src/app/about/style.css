@@ -1,52 +1,52 @@
 div#bio-content {
-	h2,
-	h3 {
-		font-size: 16px;
-		font-weight: bold;
-		margin-bottom: 24px;
-	}
+  h2,
+  h3 {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 24px;
+  }
 
-	h6 {
-		font-size: 10px;
-	}
+  h6 {
+    font-size: 10px;
+  }
 
-	blockquote {
-		font-size: 12px;
-		font-style: italic;
-		margin: 24px 0 24px 24px;
-	}
+  blockquote {
+    font-size: 12px;
+    font-style: italic;
+    margin: 24px 0 24px 24px;
+  }
 
-	p {
-		margin: 24px 0;
-	}
+  p {
+    margin: 24px 0;
+  }
 
-	@media (min-width: 640px) {
-		h2,
-		h3 {
-			font-size: 20px;
-		}
+  @media (min-width: 640px) {
+    h2,
+    h3 {
+      font-size: 20px;
+    }
 
-		h6 {
-			font-size: 12px;
-		}
+    h6 {
+      font-size: 12px;
+    }
 
-		blockquote {
-			font-size: 16px;
-		}
-	}
+    blockquote {
+      font-size: 16px;
+    }
+  }
 
-	@media (min-width: 1280px) {
-		h2,
-		h3 {
-			font-size: 24px;
-		}
+  @media (min-width: 1280px) {
+    h2,
+    h3 {
+      font-size: 24px;
+    }
 
-		h6 {
-			font-size: 14px;
-		}
+    h6 {
+      font-size: 14px;
+    }
 
-		blockquote {
-			font-size: 20px;
-		}
-	}
+    blockquote {
+      font-size: 20px;
+    }
+  }
 }

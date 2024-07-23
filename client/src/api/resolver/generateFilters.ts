@@ -1,15 +1,15 @@
 import { eachYearOfInterval, endOfYear, startOfYear } from 'date-fns'
 
 function getYearRange(): string[] {
-	const start = startOfYear('2020-02-01')
-	const end = endOfYear(new Date())
+  const start = startOfYear('2020-02-01')
+  const end = endOfYear(new Date())
 
-	const years = eachYearOfInterval({ start, end })
+  const years = eachYearOfInterval({ start, end })
 
-	return years
-		.map((year) => year.getFullYear())
-		.sort((a, b) => b - a)
-		.map((year) => String(year))
+  return years
+    .map((year) => year.getFullYear())
+    .sort((a, b) => b - a)
+    .map((year) => String(year))
 }
 
 // export function generateFilters() {

@@ -1,4 +1,4 @@
-import cursorClick from './cursorClick.gif';
-import cursorLoop from './cursorLoop.gif';
+import cursorClick from './cursorClick.gif'
+import cursorLoop from './cursorLoop.gif'
 
-export { cursorClick, cursorLoop };
+export { cursorClick, cursorLoop }

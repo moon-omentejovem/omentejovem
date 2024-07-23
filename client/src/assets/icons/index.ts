@@ -9,13 +9,13 @@ import OpenSea from './open-sea'
 import Objkt from './objkt'
 
 export const CustomIcons = {
-	ArrowUpRight,
-	Camera,
-	FlipHorizontal,
-	FlipVertical,
-	Info,
-	Plus,
-	RotateClockwise,
-	OpenSea,
-	Objkt,
+  ArrowUpRight,
+  Camera,
+  FlipHorizontal,
+  FlipVertical,
+  Info,
+  Plus,
+  RotateClockwise,
+  OpenSea,
+  Objkt
 }

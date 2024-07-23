@@ -6,35 +6,35 @@ import { HorizontalInCarousel } from '@/components/Carousels/HorizontalInCarouse
 import { ReactElement, useState } from 'react'
 
 interface InnerCollectionContentProperties {
-	email: string
-	images: Omit<NftArt, 'contracts'>[]
+  email: string
+  images: Omit<NftArt, 'contracts'>[]
 }
 
 export function InnerCollectionContent({
-	email,
-	images,
+  email,
+  images
 }: InnerCollectionContentProperties): ReactElement {
-	const [activeIndex, setActiveIndex] = useState(0)
-	const selectedArt = images[activeIndex]
+  const [activeIndex, setActiveIndex] = useState(0)
+  const selectedArt = images[activeIndex]
 
-	function onChangeSelectedArtIndex(index: number): void {
-		setActiveIndex(index)
-	}
+  function onChangeSelectedArtIndex(index: number): void {
+    setActiveIndex(index)
+  }
 
-	function handleMoreSlides() {
-		// Busca mais slides
-	}
+  function handleMoreSlides() {
+    // Busca mais slides
+  }
 
-	return (
-		<main className="flex flex-col gap-12 px-6 pb-16 xl:px-20 xl:pt-10 xl:pb-8 xl:h-screenMinusHeader">
-			<ArtInfosCollections
-				email={email}
-				selectedArt={selectedArt}
-				slides={images}
-				onChangeSlideIndex={onChangeSelectedArtIndex}
-			/>
+  return (
+    <main className="flex flex-col gap-12 px-6 pb-16 xl:px-20 xl:pt-10 xl:pb-8 xl:h-screenMinusHeader">
+      <ArtInfosCollections
+        email={email}
+        selectedArt={selectedArt}
+        slides={images}
+        onChangeSlideIndex={onChangeSelectedArtIndex}
+      />
 
-			{/* <div className="hidden w-[100vw] self-center xl:block">
+      {/* <div className="hidden w-[100vw] self-center xl:block">
 				<HorizontalInCarousel
 					onChangeSlideIndex={onChangeSelectedArtIndex}
 					slides={images}
@@ -42,6 +42,6 @@ export function InnerCollectionContent({
 					getMoreSlides={() => handleMoreSlides()}
 				/>
 			</div> */}
-		</main>
-	)
+    </main>
+  )
 }
