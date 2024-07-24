@@ -8,21 +8,26 @@ import { Filter } from '@/components/Filter'
 import { ChainedFilter } from '@/components/ArtFilter/filters'
 
 interface OneOfOneContentProviderProperties {
-	email: string
-	images: NftArt[]
-	filters: ChainedFilter[]
-	totalPages: number
+  email: string
+  images: NftArt[]
+  filters: ChainedFilter[]
+  totalPages: number
 }
 
 export function OneOfOneContentProvider({
-	email,
-	filters,
-	images,
-	totalPages,
+  email,
+  filters,
+  images,
+  totalPages
 }: OneOfOneContentProviderProperties): ReactElement {
-	return (
-		<OneOfOneProvider email={email} images={images} filters={filters} totalPages={totalPages}>
-			<OneOfOneContent />
-		</OneOfOneProvider>
-	)
+  return (
+    <OneOfOneProvider
+      email={email}
+      images={images}
+      filters={filters}
+      totalPages={totalPages}
+    >
+      <OneOfOneContent />
+    </OneOfOneProvider>
+  )
 }

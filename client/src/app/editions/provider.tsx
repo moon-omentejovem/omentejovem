@@ -7,21 +7,26 @@ import { NftArt } from '@/components/ArtContent/types'
 import { ChainedFilter } from '@/components/ArtFilter/filters'
 
 interface EditionsContentProviderProperties {
-	email: string
-	images: NftArt[]
-	filters: ChainedFilter[]
-	totalPages: number
+  email: string
+  images: NftArt[]
+  filters: ChainedFilter[]
+  totalPages: number
 }
 
 export function EditionsContentProvider({
-	email,
-	filters,
-	images,
-	totalPages,
+  email,
+  filters,
+  images,
+  totalPages
 }: EditionsContentProviderProperties): ReactElement {
-	return (
-		<EditionsProvider email={email} images={images} filters={filters} totalPages={totalPages}>
-			<EditionsContent />
-		</EditionsProvider>
-	)
+  return (
+    <EditionsProvider
+      email={email}
+      images={images}
+      filters={filters}
+      totalPages={totalPages}
+    >
+      <EditionsContent />
+    </EditionsProvider>
+  )
 }

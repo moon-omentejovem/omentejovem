@@ -11,63 +11,69 @@ import { useEffect } from 'react'
 import { NftArt } from '@/api/resolver/types'
 
 interface HorizontalInCarouselProperties {
-	slideIndex?: number
-	onChangeSlideIndex: (index: number) => void
-	slides: (NftArt)[]
-	getMoreSlides?: () => void
+  slideIndex?: number
+  onChangeSlideIndex: (index: number) => void
+  slides: NftArt[]
+  getMoreSlides?: () => void
 }
 
 export function HorizontalInCarousel({
-	slideIndex,
-	onChangeSlideIndex,
-	slides,
-	getMoreSlides,
+  slideIndex,
+  onChangeSlideIndex,
+  slides,
+  getMoreSlides
 }: HorizontalInCarouselProperties) {
-	useEffect(() => {
-		// horizontalCarouselAnimation()
-	}, [])
+  useEffect(() => {
+    // horizontalCarouselAnimation()
+  }, [])
 
-	function handleGetMoreslides(swiperInstance: SwiperType) {
-		const currentIndex = swiperInstance.activeIndex
-		const totalSlides = swiperInstance.slides.length
+  function handleGetMoreslides(swiperInstance: SwiperType) {
+    const currentIndex = swiperInstance.activeIndex
+    const totalSlides = swiperInstance.slides.length
 
-		if (currentIndex >= totalSlides / 2) {
-			getMoreSlides?.()
-		}
-	}
+    if (currentIndex >= totalSlides / 2) {
+      getMoreSlides?.()
+    }
+  }
 
-	return (
-		<section className="animated-section">
-			<Swiper
-				className="horizontal-in-carousel"
-				grabCursor={true}
-				modules={[Mousewheel]}
-				mousewheel={true}
-				slidesPerView={'auto'}
-				slideToClickedSlide={true}
-				initialSlide={slideIndex}
-				centeredSlides={true}
-				onSlideChange={(e) => {
-					onChangeSlideIndex(e.realIndex)
-				}}
-				onSlideChangeTransitionEnd={(swiperInstance) => {
-					handleGetMoreslides(swiperInstance)
-				}}
-			>
-				{slides.map((art, index) => (
-					<SwiperSlide key={index} className="h-24 w-24 max-w-fit xl:h-[120px] xl:w-[120px]">
-						<div aria-label={art.name} className="flex h-24 w-24 xl:h-[120px] xl:w-[120px]">
-							<Image
-								src={art.url}
-								alt={art.name}
-								width={100}
-								height={100}
-								className="h-full w-full object-cover"
-							/>
-						</div>
-					</SwiperSlide>
-				))}
-			</Swiper>
-		</section>
-	)
+  return (
+    <section className="animated-section">
+      <Swiper
+        className="horizontal-in-carousel"
+        grabCursor={true}
+        modules={[Mousewheel]}
+        mousewheel={true}
+        slidesPerView={'auto'}
+        slideToClickedSlide={true}
+        initialSlide={slideIndex}
+        centeredSlides={true}
+        onSlideChange={(e) => {
+          onChangeSlideIndex(e.realIndex)
+        }}
+        onSlideChangeTransitionEnd={(swiperInstance) => {
+          handleGetMoreslides(swiperInstance)
+        }}
+      >
+        {slides.map((art, index) => (
+          <SwiperSlide
+            key={index}
+            className="h-24 w-24 max-w-fit xl:h-[120px] xl:w-[120px]"
+          >
+            <div
+              aria-label={art.name}
+              className="flex h-24 w-24 xl:h-[120px] xl:w-[120px]"
+            >
+              <Image
+                src={art.url}
+                alt={art.name}
+                width={100}
+                height={100}
+                className="h-full w-full object-cover"
+              />
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </section>
+  )
 }

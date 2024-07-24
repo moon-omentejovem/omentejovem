@@ -6,25 +6,25 @@ import { cn } from '@/lib/utils'
 import { ExternalLink, NftArt } from '@/api/resolver/types'
 
 interface ArtLinkProperties {
-	email: string
-	externalLinks?: ExternalLink[]
-	availableForPurchase?: NftArt['availablePurchase']
-	makeOffer: NftArt['makeOffer']
-	views: Record<string, string>
+  email: string
+  externalLinks?: ExternalLink[]
+  availableForPurchase?: NftArt['availablePurchase']
+  makeOffer: NftArt['makeOffer']
+  views: Record<string, string>
 }
 
 export function ArtLinks({
-	email,
-	externalLinks,
-	availableForPurchase,
-	makeOffer,
-	views,
+  email,
+  externalLinks,
+  availableForPurchase,
+  makeOffer,
+  views
 }: ArtLinkProperties) {
-	const [isOpenOffer, setIsOpenOffer] = useState(false)
+  const [isOpenOffer, setIsOpenOffer] = useState(false)
 
-	return (
-		<div className="flex w-full flex-col justify-end max-w-sm sm:max-w-xl">
-			{/* {[0, 0, 0, 0].map((contract, index) => (
+  return (
+    <div className="flex w-full flex-col justify-end max-w-sm sm:max-w-xl">
+      {/* {[0, 0, 0, 0].map((contract, index) => (
 				<a
 					target="_blank"
 					rel="noreferrer"
@@ -39,69 +39,67 @@ export function ArtLinks({
 				</a>
 			))} */}
 
-			{
-				availableForPurchase?.active &&
-				(
-					(!availableForPurchase.status && !!availableForPurchase.text) ||
-					(availableForPurchase.status && !!availableForPurchase.textAvailable)
-				) && 
-				(
-					<p
-						className={cn(
-							'mt-2 grid content-center justify-start border-y-[1px] border-secondary-100 text-sm h-16 sm:px-8 px-4 font-bold text-secondary-100',
-							!!makeOffer?.active  && 'border-b-0',
-						)}
-						style={{
-							textAlign: 'left'
-						}}
-					>
-						{!availableForPurchase.status ? (
-							availableForPurchase.text
-						) : (
-							<a
-								target="_blank"
-								rel="noreferrer"
-								href={(availableForPurchase.url as string) ?? '#'}
-								className={cn('text-secondary-100 hover:text-primary-50')}
-							>
-								AVAILABLE FOR PURCHASE
-							</a>
-						)}
-					</p>
-				)
-			}
+      {availableForPurchase?.active &&
+        ((!availableForPurchase.status && !!availableForPurchase.text) ||
+          (availableForPurchase.status &&
+            !!availableForPurchase.textAvailable)) && (
+          <p
+            className={cn(
+              'mt-2 grid content-center justify-start border-y-[1px] border-secondary-100 text-sm h-16 sm:px-8 px-4 font-bold text-secondary-100',
+              !!makeOffer?.active && 'border-b-0'
+            )}
+            style={{
+              textAlign: 'left'
+            }}
+          >
+            {!availableForPurchase.status ? (
+              availableForPurchase.text
+            ) : (
+              <a
+                target="_blank"
+                rel="noreferrer"
+                href={(availableForPurchase.url as string) ?? '#'}
+                className={cn('text-secondary-100 hover:text-primary-50')}
+              >
+                AVAILABLE FOR PURCHASE
+              </a>
+            )}
+          </p>
+        )}
 
-			{!!makeOffer?.active && (
-				<OfferModal email={email} open={isOpenOffer} setOpen={setIsOpenOffer}>
-					<button
-						onClick={() => setIsOpenOffer(true)}
-						style={{
-							textAlign: 'left'
-						}}
-						className={cn(
-							'grid content-center border-t-[1px] border-secondary-100 text-sm h-16 px-4 font-bold text-secondary-100 hover:text-primary-50',
-							'sm:px-8 last:border-b-[1px]',
-						)}
-					>
-						{makeOffer.buttonText ? makeOffer.buttonText.toUpperCase() : 'MAKE OFFER'}
-					</button>
-				</OfferModal>
-			)}
+      {!!makeOffer?.active && (
+        <OfferModal email={email} open={isOpenOffer} setOpen={setIsOpenOffer}>
+          <button
+            onClick={() => setIsOpenOffer(true)}
+            style={{
+              textAlign: 'left'
+            }}
+            className={cn(
+              'grid content-center border-t-[1px] border-secondary-100 text-sm h-16 px-4 font-bold text-secondary-100 hover:text-primary-50',
+              'sm:px-8 last:border-b-[1px]'
+            )}
+          >
+            {makeOffer.buttonText
+              ? makeOffer.buttonText.toUpperCase()
+              : 'MAKE OFFER'}
+          </button>
+        </OfferModal>
+      )}
 
-			{externalLinks?.map((externalLink, index) => (
-				<a
-					key={index}
-					target="_blank"
-					rel="noreferrer"
-					href={externalLink.url}
-					className={cn(
-						'flex justify-between items-center border-t-[1px] border-secondary-100 text-sm h-16 px-4 font-bold text-secondary-100 hover:text-primary-50',
-						'sm:px-8 last:border-b-[1px]',
-					)}
-				>
-					VIEW ON {externalLink.name.toUpperCase()} <CustomIcons.ArrowUpRight />
-				</a>
-			))}
-		</div>
-	)
+      {externalLinks?.map((externalLink, index) => (
+        <a
+          key={index}
+          target="_blank"
+          rel="noreferrer"
+          href={externalLink.url}
+          className={cn(
+            'flex justify-between items-center border-t-[1px] border-secondary-100 text-sm h-16 px-4 font-bold text-secondary-100 hover:text-primary-50',
+            'sm:px-8 last:border-b-[1px]'
+          )}
+        >
+          VIEW ON {externalLink.name.toUpperCase()} <CustomIcons.ArrowUpRight />
+        </a>
+      ))}
+    </div>
+  )
 }

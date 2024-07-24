@@ -1,2 +1,2 @@
 export * from './fetchCollections'
-export * from './fetchEditionNfts' 
+export * from './fetchEditionNfts'

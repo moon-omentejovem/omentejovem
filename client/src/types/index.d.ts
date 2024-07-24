@@ -1,9 +1,9 @@
 export type SocialNetworks = {
-	name: string
-	link: string
+  name: string
+  link: string
 }[]
 
 export type Icons = {
-	title?: string
-	className?: string
+  title?: string
+  className?: string
 }
