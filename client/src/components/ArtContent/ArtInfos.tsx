@@ -68,11 +68,9 @@ export function ArtInfos({
     <section
       className={cn(
         'flex flex-col h-full gap-y-8 gap-x-8',
-        'grid-cols-[minmax(400px,max-content)_minmax(65ch,max-content)]',
-        '3xl:grid-cols-[minmax(400px,max-content)_minmax(40ch,max-content)]',
-        'xl:grid-rows-[minmax(100px,100%)_minmax(min-content,max-content)]',
+        'grid-cols-[minmax(400px,auto)_minmax(400px,400px)]',
         'xl:grid xl:items-center',
-        '2xl:gap-x-20 2xl:mr-[15%] 3xl:mr-0'
+        '2xl:gap-x-20 2xl:mr-[16%] 3xl:mr-0'
       )}
     >
       {/* {!!selectedArt.videoProcess && (
@@ -110,7 +108,7 @@ export function ArtInfos({
       {wasMinted(selectedArt) ? (
         <div
           id="art-container"
-          className="flex flex-col w-fit gap-8 transition-all overflow-y-scroll max-h-full h-full xl:gap-0"
+          className="flex flex-col gap-8 transition-all overflow-y-scroll max-h-full h-full xl:gap-0 w-full md:w-[400px]"
         >
           <div
             id="art-description"

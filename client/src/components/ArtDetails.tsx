@@ -11,7 +11,7 @@ interface ArtDetails {
 
 export function ArtDetails({ image, detailedImage, name }: ArtDetails) {
   return (
-    <section className="flex w-full">
+    <section className="flex w-full h-full">
       <div className="flex flex-col w-full h-full justify-end">
         <ImageModal detailedImage={detailedImage}>
           <Image
