@@ -15,3 +15,7 @@
 ::-webkit-scrollbar-thumb:hover {
   background: rgb(177 177 177);
 }
+
+.fade-up {
+  transition: all 0.8s ease-in-out;
+}
