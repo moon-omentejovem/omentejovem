@@ -57,7 +57,6 @@ export function ArtInfos({
       setIsOpenInfos(false)
       setIsAnimating(false)
       resetArtInfo()
-      resetButtonInfo()
     }
   }, [onChangeSlideIndex])
 
@@ -82,11 +81,13 @@ export function ArtInfos({
 				/>
 			)} */}
 
-      <ArtDetails
-        detailedImage={selectedArt.nftCompressedUrl}
-        image={selectedArt.nftCompressedHdUrl}
-        name={selectedArt.name}
-      />
+      <div className="xl:min-h-[708px] content-end">
+        <ArtDetails
+          detailedImage={selectedArt.nftCompressedUrl}
+          image={selectedArt.nftCompressedHdUrl}
+          name={selectedArt.name}
+        />
+      </div>
 
       {!!selectedArt.videoProcess && (
         <button
@@ -172,7 +173,7 @@ export function ArtInfos({
           </div>
         </div>
       ) : (
-        <div className="flex flex-col w-full max-w-sm justify-end text-sm text-secondary-100">
+        <div className="flex flex-col w-full max-w-sm justify-end text-sm text-secondary-100 h-full">
           <div className="flex flex-col-reverse mt-4 mb-10 gap-4 xl:flex-col">
             <p className="break-words">{selectedArt['description']}</p>
 
