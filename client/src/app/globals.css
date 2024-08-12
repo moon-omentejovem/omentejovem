@@ -97,9 +97,9 @@ div.line:has(.bio-link) {
   }
 }
 
-.lazy-load-img-wrapper {
+/* .lazy-load-img-wrapper {
   background-color: theme('colors.secondary.200');
-}
+} */
 
 .lazy-load-img {
   opacity: 0;

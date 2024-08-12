@@ -35,6 +35,7 @@ export function ArtInfos({
   const [isOpenVideo, setIsOpenVideo] = useState(false)
   const [isOpenInfos, setIsOpenInfos] = useState(false)
   const [isAnimating, setIsAnimating] = useState(false)
+  const [showDetails, setShowDetails] = useState(false)
 
   // function animateInfos(isOpen: boolean) {
   // 	if (window.screen.width >= 1280) {
@@ -56,7 +57,6 @@ export function ArtInfos({
       setIsOpenInfos(false)
       setIsAnimating(false)
       resetArtInfo()
-      resetButtonInfo()
     }
   }, [onChangeSlideIndex])
 
@@ -68,11 +68,9 @@ export function ArtInfos({
     <section
       className={cn(
         'flex flex-col h-full gap-y-8 gap-x-8',
-        'grid-cols-[minmax(400px,max-content)_minmax(65ch,max-content)]',
-        '3xl:grid-cols-[minmax(400px,max-content)_minmax(40ch,max-content)]',
-        'xl:grid-rows-[minmax(100px,100%)_minmax(min-content,max-content)]',
+        'grid-cols-[minmax(400px,auto)_minmax(400px,400px)]',
         'xl:grid xl:items-center',
-        '2xl:gap-x-20 2xl:mr-[15%] 3xl:mr-0'
+        '2xl:gap-x-20 2xl:mr-[16%] 3xl:mr-0'
       )}
     >
       {/* {!!selectedArt.videoProcess && (
@@ -83,11 +81,13 @@ export function ArtInfos({
 				/>
 			)} */}
 
-      <ArtDetails
-        detailedImage={selectedArt.nftCompressedUrl}
-        image={selectedArt.nftCompressedHdUrl}
-        name={selectedArt.name}
-      />
+      <div className="xl:min-h-[708px] content-end">
+        <ArtDetails
+          detailedImage={selectedArt.nftCompressedUrl}
+          image={selectedArt.nftCompressedHdUrl}
+          name={selectedArt.name}
+        />
+      </div>
 
       {!!selectedArt.videoProcess && (
         <button
@@ -110,7 +110,7 @@ export function ArtInfos({
       {wasMinted(selectedArt) ? (
         <div
           id="art-container"
-          className="flex flex-col w-fit gap-8 transition-all overflow-y-scroll max-h-full h-full xl:gap-0"
+          className="flex flex-col gap-8 transition-all overflow-y-scroll max-h-full h-full xl:gap-0 w-full md:w-[400px]"
         >
           <div
             id="art-description"
@@ -134,37 +134,46 @@ export function ArtInfos({
             </div>
           </div>
 
-          <div id="art-info-wrapper" className={cn('flex flex-col gap-12')}>
-            <div id="art-links" className="mt-12">
-              <ArtLinks
-                email={email}
-                externalLinks={selectedArt.externalLinks}
-                availableForPurchase={selectedArt.availablePurchase}
-                makeOffer={selectedArt.makeOffer}
-                views={{
-                  ...(selectedArt.etherscan && {
-                    Etherscan: `https://etherscan.io/token/${selectedArt.address}?a=${selectedArt.id}`
-                  })
-                }}
+          {/* Conditional rendering with fade animation */}
+          <div
+            className={cn(
+              'fade-up overflow-y-auto',
+              showDetails ? 'opacity-100 max-h-screen' : 'opacity-0 max-h-0'
+            )}
+            style={{ transitionProperty: 'opacity, max-height' }}
+          >
+            <div id="art-info-wrapper" className={cn('flex flex-col gap-12')}>
+              <div id="art-links" className="mt-12">
+                <ArtLinks
+                  email={email}
+                  externalLinks={selectedArt.externalLinks}
+                  availableForPurchase={selectedArt.availablePurchase}
+                  makeOffer={selectedArt.makeOffer}
+                  views={{
+                    ...(selectedArt.etherscan && {
+                      Etherscan: `https://etherscan.io/token/${selectedArt.address}?a=${selectedArt.id}`
+                    })
+                  }}
+                />
+              </div>
+
+              <ArtOwnership
+                nftChain={selectedArt.nftChain}
+                artAddress={getNftLinks(
+                  selectedArt.address,
+                  selectedArt.nftChain,
+                  selectedArt.id,
+                  'token'
+                )}
+                owners={selectedArt.owners}
+                firstEvent={selectedArt.mintedEvent}
+                lastEvent={selectedArt.lastEvent}
               />
             </div>
-
-            <ArtOwnership
-              nftChain={selectedArt.nftChain}
-              artAddress={getNftLinks(
-                selectedArt.address,
-                selectedArt.nftChain,
-                selectedArt.id,
-                'token'
-              )}
-              owners={selectedArt.owners}
-              firstEvent={selectedArt.mintedEvent}
-              lastEvent={selectedArt.lastEvent}
-            />
           </div>
         </div>
       ) : (
-        <div className="flex flex-col w-full max-w-sm justify-end text-sm text-secondary-100">
+        <div className="flex flex-col w-full max-w-sm justify-end text-sm text-secondary-100 h-full">
           <div className="flex flex-col-reverse mt-4 mb-10 gap-4 xl:flex-col">
             <p className="break-words">{selectedArt['description']}</p>
 
@@ -193,24 +202,21 @@ export function ArtInfos({
         )}
       </div>
 
-      {/* {isNftArt(selectedArt) && (
-				<button
-					aria-label="Open art infos"
-					className="group hidden relative place-items-center w-6 h-6 xl:grid"
-					// onClick={() => {
-					// 	animateInfos(!isOpenInfos)
-					// 	setIsOpenInfos((oldValue) => !oldValue)
-					// 	artInfoButtonAnimation()
-					// }}
-					disabled={isAnimating}
-				>
-					<CustomIcons.Plus
-						className={cn(
-							'art-info-button absolute transition-all text-secondary-100 group-hover:text-primary-50',
-						)}
-					/>
-				</button>
-			)} */}
+      <button
+        aria-label="Open art infos"
+        className="group hidden relative place-items-center w-6 h-6 xl:grid"
+        onClick={() => {
+          setShowDetails(!showDetails)
+          artInfoButtonAnimation()
+        }}
+        disabled={isAnimating}
+      >
+        <CustomIcons.Plus
+          className={cn(
+            'art-info-button absolute transition-all text-secondary-100 group-hover:text-primary-50'
+          )}
+        />
+      </button>
     </section>
   )
 }
