@@ -1,15 +1,20 @@
 const HardCodedBio = () => (
   <div className="text-xs max-w-[65ch] sm:text-base xl:text-xl">
-    <h3>The story of omentejovem (Thales Machado)</h3>
+    <h3 className="font-bold">The story of omentejovem (Thales Machado)</h3>
+    <br />
     <p>
-      Born <span>in the state of Rio de Janeiro</span>, artist Thales Machado
-      vividly recalls a period a decade ago, when his drawings garnered
-      particular attention. “My teacher and friends at school would examine my
-      sketches and animate them with their interpretations of the lines and
-      details,” he recalls. “Creating these compositions intuitively was
-      enjoyable, but it became even more fascinating when others shared their
-      perspectives, often seeing things in my work that I hadn’t noticed.”
+      Born{' '}
+      <span className="text-primary-50">in the state of Rio de Janeiro</span>,
+      artist Thales Machado vividly recalls a period a decade ago, when his
+      drawings garnered particular attention. “My teacher and friends at school
+      would examine my sketches and animate them with their interpretations of
+      the lines and details,” he recalls. “Creating these compositions
+      intuitively was enjoyable, but it became even more fascinating when others
+      shared their perspectives, often seeing things in my work that I hadn’t
+      noticed.”
     </p>
+    <br />
+
     <p>
       “I remember then contemplating a career as an artist for the first time
       and wondering if I could sustain myself through art,” Machado reflects. At
@@ -20,6 +25,8 @@ const HardCodedBio = () => (
       hung out with friends and went to music concerts a lot, uncertain about my
       true passion.”
     </p>
+    <br />
+
     <p>
       In his mid-teens, Machado began dabbling in image design in Photoshop, but
       “just for fun.” However, this led him to create visuals for his musician
@@ -27,6 +34,8 @@ const HardCodedBio = () => (
       media, and this was basically the start of a career in design since I got
       asked to do work for others more and more,” he explains.
     </p>
+    <br />
+
     <p>
       Machado discovered NFTs in late 2020, and that made a huge impact. By
       then, he had actually already grown quite disillusioned with the limited
@@ -35,6 +44,8 @@ const HardCodedBio = () => (
       understood that NFTs could provide a way for him to freely create digital
       artworks, without the constraints of commissions.
     </p>
+    <br />
+
     <p>
       His introduction to NFTs and the crypto art community came through Etienne
       Crauss. As a longtime video gamer who created his own skins for
@@ -45,6 +56,8 @@ const HardCodedBio = () => (
       if I was fortunate enough to have clients,” he recounts. “Suddenly,
       everything clicked. The process was straightforward yet groundbreaking.”
     </p>
+    <br />
+
     <p>
       Following this defining moment, Machado shifted his entire focus to the
       web3 domain, immersing himself in understanding the potential of NFTs for
@@ -53,6 +66,8 @@ const HardCodedBio = () => (
       entirely to this space,” he explains. “It was my chance to create freely
       and earn a living from my art.”
     </p>
+    <br />
+
     <p>
       Things then quickly changed for Machado. “I soon managed to get my own
       computer for creating my work through the NFTs I sold,” he says, “and that
@@ -63,6 +78,8 @@ const HardCodedBio = () => (
       could finally work whenever he wanted, during the times he felt inspired
       and didn’t have to wait to start creating.
     </p>
+    <br />
+
     <p>
       Machado’s acceptance as an artist on SuperRare was the next milestone, one
       he almost hadn’t dared to dream about. “Then it was clear to me my life
@@ -72,6 +89,8 @@ const HardCodedBio = () => (
       discipline and sense of responsibility propelled him towards a promising
       artistic career, at just 23.
     </p>
+    <br />
+
     <p>
       Not having had formal art education and much exposure to the works of
       other artists, Machado has always relied on his intuition. Initially, the
@@ -85,6 +104,8 @@ const HardCodedBio = () => (
       excitement, and art-making became a more effortless process with a lot of
       output, which is how I think it also should be.”
     </p>
+    <br />
+
     <p>
       Initially, Machado used the pseudonym Talisma, a blend of his first name,
       Thales, and ‘talisman.’ However, he soon embraced the moniker omentejovem.
@@ -96,6 +117,8 @@ const HardCodedBio = () => (
       constant reminder to remain open and fearless in my creativity, and in
       life generally.”
     </p>
+    <br />
+
     <p>
       Omentejovem crafts small narratives that reflect his perception of the
       world. “Sometimes, I appreciate an artwork just for its appearance, but
@@ -115,6 +138,8 @@ const HardCodedBio = () => (
       empowered with the belief that I could achieve anything. It’s just a
       matter of commitment, patience, and faith.”
     </p>
+    <br />
+
     <p>
       Machado’s belief extends beyond himself; to a higher power. He feels a
       divine presence that provides him with strength and resilience during
@@ -138,6 +163,8 @@ const HardCodedBio = () => (
       </span>
       ”
     </p>
+    <br />
+
     <p>
       An unmissable feature of omentejovem’s works is the{' '}
       <a
@@ -156,6 +183,8 @@ const HardCodedBio = () => (
       influenced my own creations, but my goal is to continually innovate and
       develop my own artistic language and expression.”
     </p>
+    <br />
+
     <p>
       Within that language, Machado fluidly alternates between figurative and
       abstract elements. “Some details in my works are deliberately
@@ -175,6 +204,8 @@ const HardCodedBio = () => (
       when someone sees something in my work that I hadn’t envisioned. That’s
       when the art truly comes alive.”
     </p>
+    <br />
+
     <h2>Featured works</h2>
     <h3>
       <a
@@ -193,6 +224,8 @@ const HardCodedBio = () => (
       at strange hours during that time to be able to use the computer in our
       family home.”
     </p>
+    <br />
+
     <p>
       In the upper left corner of the composition is the moon, a symbol of
       change and transition, rendered here in a contemplative state between
@@ -200,6 +233,8 @@ const HardCodedBio = () => (
       me; one with my own room, my own computer, and then later my own home –
       and (co-)creating my own furniture for that house.”
     </p>
+    <br />
+
     <p>
       The moon’s crescent form, often associated with progression and the
       cyclical nature of time, mirrors the artist’s iterative process of
@@ -207,6 +242,8 @@ const HardCodedBio = () => (
       hands; I felt I could literally shape it (read: through the lines and
       shapes on my digital creations) the way I wanted to.”
     </p>
+    <br />
+
     <p>
       On the right side, a wheel-like form seems to serve as a grounding motif,
       like an emblem of the artist’s journey. It could symbolize the tools
@@ -216,6 +253,8 @@ const HardCodedBio = () => (
       through art: a wheel in motion, charting a course towards a self-sculpted
       future.
     </p>
+    <br />
+
     <p>
       The two dots down below are evocative of eyes and introduce a sentient
       aspect to the piece, implying a watchful presence over the artist’s
@@ -226,12 +265,16 @@ const HardCodedBio = () => (
       The eyes can also function as windows to an internal world, one where
       dreams are actively being shaped and not only passively hoped for.
     </p>
+    <br />
+
     <p>
       The interplay of textures and patterns throughout the piece contributes to
       a sense of dynamism and complexity, reflecting the multifaceted nature of
       the omentejovem’s work. The image is not a static representation but a
       layered narrative of aspiration, effort, and creativity.
     </p>
+    <br />
+
     <p>
       <em>Creative Workaholic</em> resonates with the idea that art can function
       both as a mirror and a map: reflecting the artist’s state at the time, and
@@ -242,6 +285,8 @@ const HardCodedBio = () => (
       personal agency and the potent role of art in carving out one’s space in
       the world.
     </p>
+    <br />
+
     <h3>
       <a
         href="https://media.omentejovem.com/wordpress/wp-content/uploads/2024/03/13_late-night-love_11zon-Personalizado.jpeg"
@@ -264,6 +309,8 @@ const HardCodedBio = () => (
       reflection, a celestial body that is both witness and participant in the
       artist’s nocturnal dialogues with himself and his works.
     </p>
+    <br />
+
     <p>
       ‘The Dot’, as described by omentejovem, represents an individual
       singularity, a focal point of identity and personal significance amid the
@@ -280,6 +327,8 @@ const HardCodedBio = () => (
       conversation about the macro and micro, the universal and the personal,
       the external world and the internal sphere.
     </p>
+    <br />
+
     <p>
       In the context of omentejovem’s narrative, these symbols are not static;
       they are ever-evolving concepts that morph with each artistic iteration.
@@ -288,6 +337,8 @@ const HardCodedBio = () => (
       play—like the gravitational pull of the moon on the tides of human
       experience.
     </p>
+    <br />
+
     <p>
       Down below there seems to be a big visual feast, as if figures are dancing
       in the moonlight. Among them, there’s one distinct character delineated in
@@ -299,6 +350,8 @@ const HardCodedBio = () => (
       the conventional hours but can easily flourish in the liberty of the
       night, hence the title ‘Late Night Love’.
     </p>
+    <br />
+
     <p>
       <span>
         Besides one’s own thoughts and interpretations, for omentejovem the
@@ -312,6 +365,8 @@ const HardCodedBio = () => (
         a short-lived relationship.
       </span>
     </p>
+    <br />
+
     <p>
       In its entirety, this work speaks to the interconnectedness of the
       individual and the collective, the artist and the audience. It is a
@@ -319,6 +374,8 @@ const HardCodedBio = () => (
       to engage themselves in an (inner) dialogue, echoing the very nature of
       art as a medium of communication and connection.
     </p>
+    <br />
+
     <h6>Words by Nina Knaack</h6>
   </div>
 )
