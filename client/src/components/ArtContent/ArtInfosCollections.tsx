@@ -37,6 +37,7 @@ export function ArtInfosCollections({
   const [isOpenVideo, setIsOpenVideo] = useState(false)
   const [isOpenInfos, setIsOpenInfos] = useState(false)
   const [isAnimating, setIsAnimating] = useState(false)
+  const [showDetails, setShowDetails] = useState(false)
 
   function animateInfos(isOpen: boolean) {
     if (window.screen.width >= 1280) {
@@ -54,7 +55,6 @@ export function ArtInfosCollections({
       setIsOpenInfos(false)
       setIsAnimating(false)
       // resetArtInfo()
-      resetButtonInfo()
     }
   }, [onChangeSlideIndex])
 
@@ -144,7 +144,14 @@ export function ArtInfosCollections({
             </div>
           </div>
 
-          <div id="art-info-wrapper" className={'flex flex-col'}>
+          {/* Conditional rendering with fade animation */}
+          <div
+            id="art-info-wrapper"
+            className={cn(
+              'fade-up overflow-y-auto flex flex-col',
+              showDetails ? 'opacity-100 max-h-screen' : 'opacity-0 max-h-0'
+            )}
+          >
             <div id="art-links">
               <ArtLinks
                 email={email}
@@ -159,6 +166,24 @@ export function ArtInfosCollections({
               />
             </div>
           </div>
+
+          {/* {isNftArt(selectedArt) && ( */}
+          <button
+            aria-label="Open art infos"
+            className="group hidden relative place-items-center w-6 h-6 xl:grid"
+            onClick={() => {
+              setShowDetails(!showDetails)
+              artInfoButtonAnimation()
+            }}
+            disabled={isAnimating}
+          >
+            <CustomIcons.Plus
+              className={cn(
+                'art-info-button absolute transition-all text-secondary-100 group-hover:text-primary-50'
+              )}
+            />
+          </button>
+          {/* )} */}
         </div>
 
         <div
@@ -209,25 +234,6 @@ export function ArtInfosCollections({
             <span className="h-6" />
           )}
         </div>
-
-        {/* {isNftArt(selectedArt) && ( */}
-        <button
-          aria-label="Open art infos"
-          className="group hidden relative place-items-center w-6 h-6 xl:grid"
-          onClick={() => {
-            animateInfos(!isOpenInfos)
-            setIsOpenInfos((oldValue) => !oldValue)
-            artInfoButtonAnimation()
-          }}
-          disabled={isAnimating}
-        >
-          <CustomIcons.Plus
-            className={cn(
-              'art-info-button absolute transition-all text-secondary-100 group-hover:text-primary-50'
-            )}
-          />
-        </button>
-        {/* )} */}
       </div>
 
       <div className="block w-[100vw] self-center xl:block">
