@@ -38,6 +38,10 @@ export function ArtInfosCollections({
   const [isOpenInfos, setIsOpenInfos] = useState(false)
   const [isAnimating, setIsAnimating] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
+
+  const truncate = (input: string) =>
+    input?.length > 600 ? `${input.substring(0, 250)}...` : input
 
   function animateInfos(isOpen: boolean) {
     if (window.screen.width >= 1280) {
@@ -125,7 +129,21 @@ export function ArtInfosCollections({
             )}
           >
             <p id="art-description-text" className="break-words">
-              {selectedArt.description}
+              {isDescriptionExpanded
+                ? selectedArt.description
+                : truncate(selectedArt.description)}
+              {selectedArt.description.length > 600 && (
+                <span>
+                  <button
+                    onClick={() =>
+                      setIsDescriptionExpanded(!isDescriptionExpanded)
+                    }
+                    className="text-primary-50 font-extrabold"
+                  >
+                    {isDescriptionExpanded ? '-' : '+'}
+                  </button>
+                </span>
+              )}
             </p>
 
             <div>
