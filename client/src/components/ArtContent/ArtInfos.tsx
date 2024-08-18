@@ -71,9 +71,9 @@ export function ArtInfos({
   return (
     <section
       className={cn(
-        'flex flex-col h-full gap-y-8 gap-x-8',
+        'flex h-full items-end gap-y-8 gap-x-8',
         'grid-cols-[minmax(400px,auto)_minmax(400px,400px)]',
-        'xl:grid xl:items-center',
+        'xl:grid',
         '2xl:gap-x-20 2xl:mr-[16%] 3xl:mr-0'
       )}
     >
