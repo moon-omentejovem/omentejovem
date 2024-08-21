@@ -24,7 +24,7 @@
     </Tab>
     <Tab Title="External Links">
         <Content>
-            <ExternalLinksForm ExternalLinks="LinksForm" ExternalLinksChanged="HandleExternalLinksSubmit" />
+            <ExternalLinksForm NftArtForm="@NftArtModel" ExternalLinksChanged="HandleExternalLinksSubmit" />
         </Content>
     </Tab>
 </Tabs>
@@ -48,7 +48,6 @@
 
     private async Task HandleValidSubmit()
     {
-        Console.WriteLine("changed");
         await NftService.UpdateNft(new UpdateNftBuilder(DomainNft!.Id)
             .Set(n => n.Name, NftArtModel.Name)
             .Set(n => n.Description, NftArtModel.Description)
@@ -61,7 +60,6 @@
 
     private async Task HandleMediaSubmit(NftMediaImages nftMediaImages)
     {
-        Console.WriteLine("changed");
         await NftService.UpdateNft(new UpdateNftBuilder(DomainNft!.Id)
             .Set(n => n.NftUrl, nftMediaImages.NftUrl)
             .Set(n => n.OptimizedImages, nftMediaImages.OptimizedImages)
@@ -71,10 +69,12 @@
         NftArtModel.OptimizedImages = nftMediaImages.OptimizedImages;
     }
 
-    private async Task HandleExternalLinksSubmit(LinksForm links)
+    private async Task HandleExternalLinksSubmit(AvailablePurchase availablePurchase)
     {
         await NftService.UpdateNft(new UpdateNftBuilder(DomainNft!.Id)
-            .Set(n => n.ExternalLinks, FormMapper.ToDomain(links))
+            .Set(n => n.AvailablePurchase, availablePurchase)
         );
+
+        NftArtModel.AvailablePurchase = availablePurchase;
     }
 }

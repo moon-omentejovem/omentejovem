@@ -28,7 +28,8 @@ public static class MappingMethods
             Collection = original.Collection,
             OneOfOne = original.OneOfOne,
             Edition = original.Edition,
-            ExternalLinks = MapToResponse(original.ExternalLinks)
+            ExternalLinks = MapToResponse(original.ExternalLinks),
+            LowestCompressionUrl = original.OptimizedImages?.ResizedImages?.OrderByDescending(i => i.Height)?.FirstOrDefault()?.Source
         };
     }
 
@@ -37,9 +38,7 @@ public static class MappingMethods
         return new AvailablePurchaseResponse
         {
             Active = original.Active,
-            Status = original.Status,
             Text = original.Text,
-            TextAvailable = original.TextAvailable,
             Url = original.Url
         };
     }

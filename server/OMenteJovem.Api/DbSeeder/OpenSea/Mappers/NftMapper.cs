@@ -1,6 +1,7 @@
 ﻿using DbSeeder.OpenSea.Models.GetNft;
 using DbSeeder.OpenSea.Models.ListNfts;
 using Domain.Models;
+using Domain.Models.Enums;
 
 namespace DbSeeder.OpenSea.Mappers;
 

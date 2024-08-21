@@ -1,6 +1,7 @@
 ﻿using Domain.Database;
 using Domain.Endpoints.Commands.CreateCollection;
 using Domain.Models;
+using Domain.Models.Enums;
 using MediatR;
 using MongoDB.Driver;
 
