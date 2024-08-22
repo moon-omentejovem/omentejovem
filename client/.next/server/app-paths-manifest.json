@@ -1,11 +1,11 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
-  "/1-1/page": "app/1-1/page.js",
   "/collections/[slug]/page": "app/collections/[slug]/page.js",
-  "/about/page": "app/about/page.js",
-  "/page": "app/page.js",
+  "/1-1/page": "app/1-1/page.js",
   "/collections/page": "app/collections/page.js",
   "/editions/page": "app/editions/page.js",
   "/portfolio/page": "app/portfolio/page.js",
+  "/about/page": "app/about/page.js",
+  "/page": "app/page.js",
   "/favicon.ico/route": "app/favicon.ico/route.js"
 }
