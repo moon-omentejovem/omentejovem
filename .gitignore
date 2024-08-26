@@ -11,3 +11,6 @@
 **.deps.**
 **.runtimeconfig.**
 **.terraform.**
+
+**/.next/**
+**/out/**
