@@ -21,7 +21,7 @@ public class ListCollectionsHandler(ILogger<ListCollectionsHandler> logger, IMon
     {
         var collections = await LogTimer.LogTimestampAsync(
             logger,
-            () => _collections.Find(_ => true).ToListAsync(cancellationToken: cancellationToken),
+            () => _collections.Find(c => c.Visible).SortBy(c => c.Year).ToListAsync(cancellationToken: cancellationToken),
             FetchCollectionsQueryName
         );
         collections = collections.Where(c => !c.Name.Contains("Edition", StringComparison.InvariantCultureIgnoreCase)).ToList();
