@@ -21,10 +21,9 @@ public class ListCollectionsHandler(ILogger<ListCollectionsHandler> logger, IMon
     {
         var collections = await LogTimer.LogTimestampAsync(
             logger,
-            () => _collections.Find(_ => true).ToListAsync(cancellationToken: cancellationToken),
+            () => _collections.Find(c => c.Visible).SortBy(c => c.Year).ToListAsync(cancellationToken: cancellationToken),
             FetchCollectionsQueryName
         );
-        collections = collections.Where(c => !c.Name.Contains("Edition", StringComparison.InvariantCultureIgnoreCase)).ToList();
 
         var responseList = new List<CollectionResponse>();
 
@@ -35,7 +34,7 @@ public class ListCollectionsHandler(ILogger<ListCollectionsHandler> logger, IMon
                 () => _nfts.Find(n =>
                         n.Collection == collection.SourceId &&
                         n.NftUrl != null
-                    ).ToListAsync(),
+                    ).Limit(5).ToListAsync(),
                 FetchCollectionNftsQueryName
             );
 
@@ -53,7 +52,7 @@ public class ListCollectionsHandler(ILogger<ListCollectionsHandler> logger, IMon
             Name: collection.Name,
             Year: collection.Year,
             Slug: collection.SourceId,
-            NftImageUrls: collectionNfts.Take(5).Select(GetBestCollectionImage)
+            NftImageUrls: collectionNfts.Select(GetBestCollectionImage)
         );
     }
 
