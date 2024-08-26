@@ -58,7 +58,12 @@ public class CreateNftEventsRequestHandler(IMongoDatabase mongoDatabase) : IRequ
                 .Set(n => n.MintedEvent, ToDomain(mintEvent))
                 .Set(n => n.LastTransferEvent, ToDomain(lastEvent));
 
-        if (existingNft.Edition)
+        if (existingNft.CreatedAt is null && mintEvent is not null)
+        {
+            updateBuilder = updateBuilder.Set(n => n.CreatedAt, NftConstants.ParsePosixTimestamp(mintEvent.EventTimestamp));
+        }
+
+        if (existingNft.Edition && mintEvent is not null)
         {
             var (totalNfts, availableNfts) = CalculateAvailableTokens(mintEvent, request.Events);
 
@@ -174,6 +179,11 @@ public class CreateNftEventsRequestHandler(IMongoDatabase mongoDatabase) : IRequ
         int sumReturnedToCreator = returnedToCreator.Sum(e => e.Quantity);
 
         int availableNfts = totalNfts - sumSoldByCreator + sumReturnedToCreator;
+
+        if (availableNfts < 0)
+        {
+            availableNfts = 0;
+        }
 
         return (totalNfts, availableNfts);
     }
