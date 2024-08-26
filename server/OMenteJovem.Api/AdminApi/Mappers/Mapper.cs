@@ -1,5 +1,6 @@
 ﻿using AdminApi.Models;
 using Domain.Models;
+using Domain.Utils;
 
 namespace AdminApi.Mappers;
 
@@ -13,7 +14,7 @@ public static class MappingMethods
             SourceId = original.SourceId,
             Name = original.Name,
             Description = original.Description,
-            CreatedAt = original.CreatedAt,
+            CreatedAt = NftConstants.ParsePosixTimestamp(original.MintedEvent!.EventTimestamp),
             AvailablePurchase = original.AvailablePurchase != null ? MapToResponse(original.AvailablePurchase) : null,
             Address = original.Address,
             MintedDate = original.MintedDate,
