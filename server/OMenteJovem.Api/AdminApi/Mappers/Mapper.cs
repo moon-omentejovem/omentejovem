@@ -14,7 +14,7 @@ public static class MappingMethods
             SourceId = original.SourceId,
             Name = original.Name,
             Description = original.Description,
-            CreatedAt = NftConstants.ParsePosixTimestamp(original.MintedEvent!.EventTimestamp),
+            CreatedAt = original.MintedEvent is null ? null : NftConstants.ParsePosixTimestamp(original.MintedEvent!.EventTimestamp),
             AvailablePurchase = original.AvailablePurchase != null ? MapToResponse(original.AvailablePurchase) : null,
             Address = original.Address,
             MintedDate = original.MintedDate,
