@@ -23,6 +23,7 @@ interface ArtInfosProperties {
   email: string
   selectedArt: NftArt
   slides: NftArt[]
+  source: 'portfolio' | '1-1' | 'editions'
   onChangeSlideIndex: (index: number) => void
 }
 
@@ -30,6 +31,7 @@ export function ArtInfos({
   email,
   selectedArt,
   slides,
+  source,
   onChangeSlideIndex
 }: ArtInfosProperties): ReactElement {
   const [isOpenVideo, setIsOpenVideo] = useState(false)
@@ -185,6 +187,7 @@ export function ArtInfos({
                 owners={selectedArt.owners}
                 firstEvent={selectedArt.mintedEvent}
                 lastEvent={selectedArt.lastEvent}
+                source={source}
               />
             </div>
           </div>

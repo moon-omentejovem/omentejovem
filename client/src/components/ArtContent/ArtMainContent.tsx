@@ -43,6 +43,7 @@ export function ArtMainContent({
         selectedArt={selectedArt}
         slides={artImages}
         onChangeSlideIndex={onChangeSelectedArtIndex}
+        source={source}
       />
     )
   }, [selectedArtIndex])
