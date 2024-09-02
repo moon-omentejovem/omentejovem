@@ -132,7 +132,7 @@ export function ArtInfosCollections({
               {isDescriptionExpanded
                 ? selectedArt.description
                 : truncate(selectedArt.description)}
-              {selectedArt.description.length > 600 && (
+              {selectedArt?.description?.length > 600 && (
                 <span>
                   <button
                     onClick={() =>
@@ -157,7 +157,11 @@ export function ArtInfosCollections({
               </a>
               <p>
                 minted on{' '}
-                {format(addHours(selectedArt.mintedDate, 3), 'd LLLL, yyyy')}
+                {selectedArt.mintedDate &&
+                  format(
+                    addHours(new Date(selectedArt.mintedDate), 3),
+                    'd LLLL, yyyy'
+                  )}
               </p>
             </div>
           </div>

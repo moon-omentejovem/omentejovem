@@ -6,6 +6,8 @@ import { usePathname } from 'next/navigation'
 import { NftArt, NftOwner, NftTransferEvent } from '../ArtContent/types'
 import { ArtTransaction, formatOwnerAddress } from './ArtTransaction'
 import type { ArtOwner, ArtTransaction as TArtTransaction } from './types'
+import { useState } from 'react'
+import { OwnersModal } from '../Modals/OwnersModal'
 
 interface ArtOwnershipProperties {
   nftChain: NftArt['nftChain']
@@ -27,6 +29,7 @@ export function ArtOwnership({
   const pathname = usePathname()
 
   const owner = owners.length === 1 ? owners[0] : null
+  const [isOwnersModalOpen, setIsOwnersModalOpen] = useState(false)
 
   return (
     <div
@@ -66,7 +69,19 @@ export function ArtOwnership({
           )}
         </div>
       )}
-
+      {collectionsMode && owners.length && owners.length > 1 && (
+        <button
+          onClick={() => setIsOwnersModalOpen(true)}
+          className="text-primary-50 underline"
+        >
+          View All Owners
+        </button>
+      )}
+      <OwnersModal
+        owners={owners}
+        open={isOwnersModalOpen}
+        setOpen={setIsOwnersModalOpen}
+      />
       {!owner && nftChain !== 'unknown' && (
         <div
           id="art-owned-by"

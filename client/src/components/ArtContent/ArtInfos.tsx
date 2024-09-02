@@ -127,7 +127,7 @@ export function ArtInfos({
               {isDescriptionExpanded
                 ? selectedArt.description
                 : truncate(selectedArt.description)}
-              {selectedArt.description.length > 600 && (
+              {selectedArt?.description?.length > 600 && (
                 <span>
                   <button
                     onClick={() =>
