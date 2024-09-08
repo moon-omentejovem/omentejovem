@@ -37,7 +37,7 @@ export interface NftArt {
     }
   }[]
   videoProcess?: string
-  nftChain: 'ethereum' | 'tezos' | 'unknown'
+  nftChain: 'Ethereum' | 'Tezos' | 'Unknown'
   etherscan: boolean
   id: string
   address: string
