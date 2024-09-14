@@ -39,10 +39,7 @@ export function ArtLinks({
 				</a>
 			))} */}
 
-      {availableForPurchase?.active &&
-        ((!availableForPurchase.status && !!availableForPurchase.text) ||
-          (availableForPurchase.status &&
-            !!availableForPurchase.textAvailable)) && (
+      {!!availableForPurchase && (
           <p
             className={cn(
               'mt-2 grid content-center justify-start border-y-[1px] border-secondary-100 text-sm h-16 sm:px-8 px-4 font-bold text-secondary-100',
@@ -52,7 +49,7 @@ export function ArtLinks({
               textAlign: 'left'
             }}
           >
-            {!availableForPurchase.status ? (
+            {!availableForPurchase.url ? (
               availableForPurchase.text
             ) : (
               <a

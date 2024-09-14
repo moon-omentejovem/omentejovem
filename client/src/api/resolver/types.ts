@@ -22,10 +22,7 @@ export interface NftArt {
   description: string
   createdAt: string
   availablePurchase?: {
-    active: boolean
-    status: boolean
     text: string
-    textAvailable: string
     url: string
   }
   contracts?: {

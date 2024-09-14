@@ -194,8 +194,7 @@ export function ArtInfos({
 
             <p className="text-primary-50 underline">{selectedArt['name']}</p>
           </div>
-          {(selectedArt as NftArt).availablePurchase?.active &&
-            (selectedArt as NftArt).availablePurchase?.status && (
+          {!(selectedArt as NftArt).availablePurchase && (
               <p className="mt-2 grid content-center justify-start border-y-[1px] border-secondary-100 text-sm h-16 px-8 font-bold text-secondary-100">
                 NOT AVAILABLE FOR PURCHASE
               </p>
