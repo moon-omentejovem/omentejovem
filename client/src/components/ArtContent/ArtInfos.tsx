@@ -9,7 +9,6 @@ import { addHours, format, fromUnixTime } from 'date-fns'
 import { NftArt, isNftArt } from './types'
 import { cn } from '@/lib/utils'
 import { CustomIcons } from '@/assets/icons'
-import { VideoProcessModal } from '../Modals/VideoProcessModal'
 import {
   artInfoButtonAnimation,
   resetArtInfo,
@@ -17,7 +16,6 @@ import {
 } from '@/animations'
 import { HorizontalInCarousel } from '../Carousels/HorizontalInCarousel/HorizontalInCarousel'
 import './styles.css'
-import { omentejovemAddress } from '../ArtOwnership/ArtTransaction'
 import { getNftLinks } from './utils'
 interface ArtInfosProperties {
   email: string

@@ -33,10 +33,10 @@ export function ArtOwnership({
       className={cn(
         'flex flex-col gap-12',
         collectionsMode ? 'w-full' : 'max-w-xl',
-        nftChain === 'unknown' && 'hidden'
+        nftChain === 'Unknown' && 'hidden'
       )}
     >
-      {owner && nftChain !== 'unknown' && (
+      {owner && nftChain !== 'Unknown' && (
         <div
           id="art-owned-by"
           className={cn(
@@ -45,7 +45,7 @@ export function ArtOwnership({
         >
           <p>OWNED BY</p>
           {pathname.includes('editions') ? (
-            nftChain === 'ethereum' ? (
+            nftChain === 'Ethereum' ? (
               <a target="_blank" rel="noreferrer" href={artAddress}>
                 <OpenSea />
               </a>
@@ -67,7 +67,7 @@ export function ArtOwnership({
         </div>
       )}
 
-      {!owner && nftChain !== 'unknown' && (
+      {!owner && nftChain !== 'Unknown' && (
         <div
           id="art-owned-by"
           className={cn(

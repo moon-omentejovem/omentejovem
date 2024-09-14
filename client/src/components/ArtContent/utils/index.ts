@@ -1,12 +1,14 @@
+import { NftArt } from "../types"
+
 export function getNftLinks(
   value: string,
-  nftChain: 'ethereum' | 'tezos' | 'unknown',
+  nftChain: NftArt['nftChain'],
   secondaryValue?: string,
   type?: string
 ): string {
   switch (nftChain) {
-    case 'unknown':
-    case 'ethereum':
+    case 'Unknown':
+    case 'Ethereum':
       let baseUrl = 'https://etherscan.io'
 
       if (type === 'address') {
@@ -23,7 +25,7 @@ export function getNftLinks(
 
       return baseUrl
 
-    case 'tezos':
+    case 'Tezos':
       if (type === 'token') {
         return `https://tzkt.io/${value}/tokens/${secondaryValue}/transfers`
       }
