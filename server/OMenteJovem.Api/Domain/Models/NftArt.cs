@@ -12,7 +12,7 @@ public class NftArt
     public string Name { get; set; }
     public string? Description { get; set; }
     public DateTime? CreatedAt { get; set; }
-    public AvailablePurchase AvailablePurchase { get; set; } = new();
+    public AvailablePurchase? AvailablePurchase { get; set; }
     public string Address { get; set; }
     public DateTime? MintedDate { get; set; }
     public List<Owner> Owners { get; set; } = [];
