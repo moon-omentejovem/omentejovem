@@ -9,7 +9,6 @@ import { addHours, format, fromUnixTime } from 'date-fns'
 import { NftArt, isNftArt } from './types'
 import { cn } from '@/lib/utils'
 import { CustomIcons } from '@/assets/icons'
-import { VideoProcessModal } from '../Modals/VideoProcessModal'
 import {
   artInfoButtonAnimation,
   resetArtInfo,
@@ -17,7 +16,6 @@ import {
 } from '@/animations'
 import { HorizontalInCarousel } from '../Carousels/HorizontalInCarousel/HorizontalInCarousel'
 import './styles.css'
-import { omentejovemAddress } from '../ArtOwnership/ArtTransaction'
 import { getNftLinks } from './utils'
 interface ArtInfosProperties {
   email: string
@@ -199,8 +197,7 @@ export function ArtInfos({
 
             <p className="text-primary-50 underline">{selectedArt['name']}</p>
           </div>
-          {(selectedArt as NftArt).availablePurchase?.active &&
-            (selectedArt as NftArt).availablePurchase?.status && (
+          {!(selectedArt as NftArt).availablePurchase && (
               <p className="mt-2 grid content-center justify-start border-y-[1px] border-secondary-100 text-sm h-16 px-8 font-bold text-secondary-100">
                 NOT AVAILABLE FOR PURCHASE
               </p>

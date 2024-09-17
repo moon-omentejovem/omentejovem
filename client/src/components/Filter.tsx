@@ -4,7 +4,7 @@ import { ReactElement, useEffect, useMemo, useState } from 'react'
 import { Icons } from './Icons'
 import { filterAnimations } from '@/animations'
 import { cn } from '@/lib/utils'
-import { ChainedFilter } from './ArtFilter/filters'
+import { ChainedFilter, getLastFilterHistoryParent } from './ArtFilter/filters'
 
 export interface Filter {
   name: string
@@ -14,57 +14,67 @@ export interface Filter {
 }
 
 interface FilterProperties {
-  filter: ChainedFilter[]
-  onChangeFilter: (filterHistory: ChainedFilter[]) => void
+  filterHistory: ChainedFilter[]
+  onChangeFilter: (filterHistory?: ChainedFilter) => void
 }
 
 export function Filter({
-  filter,
+  filterHistory,
   onChangeFilter
 }: FilterProperties): ReactElement {
-  const initialFilter = useMemo(() => filter, [filter])
   const [open, setOpen] = useState(false)
-  const [filters, setFilters] = useState<ChainedFilter[]>(initialFilter)
-  const [filterHistory, setFilterHistory] = useState<ChainedFilter[]>([])
-  const [filterStep, setFilterStep] = useState(1)
-  const [selected, setSelected] = useState<string>('latest')
+  const [filters, setFilters] = useState([] as ChainedFilter[]);
+  const [selected, setSelected] = useState<string>('')
 
   useEffect(() => {
-    if (filters && open) {
+    refreshFilters()
+    
+  }, [filterHistory])
+
+  useEffect(() => {
+    if (filters.length > 0 && open) {
       filterAnimations(false)
     }
   }, [filters])
 
-  function updateFilters(content: ChainedFilter) {
-    setFilterHistory([...filterHistory, content])
-    if (content.children) setFilters(content.children)
+  function getFilters() : ChainedFilter[] {
+    const lastParentFilter = getLastFilterHistoryParent(filterHistory)
+    return lastParentFilter?.children
+  }
 
-    onChangeFilter(filterHistory)
+  function updateFilters(content: ChainedFilter) {
+    if (!content.children?.length) {
+      setSelected(content.label!)
+    }
+
+    onChangeFilter(content)
   }
 
   function leaveFilter() {
-    const historyCopy = [...filterHistory]
-    historyCopy.pop()
-    setFilterHistory(historyCopy)
-    if (historyCopy.length) {
-      setFilters(historyCopy[historyCopy.length - 1].children!)
-    } else {
-      setFilters(initialFilter)
+    if (selected) {
+      setSelected('')
     }
+    onChangeFilter()
+  }
 
-    onChangeFilter(filterHistory)
+  function refreshFilters() {
+    const currFilters = getFilters();
+    setFilters(currFilters);
+  }
+
+  function clickX() {
+    if (filterHistory.length === 1) {
+      filterAnimations(open)
+      setOpen(!open)
+    } else if (open) {
+      leaveFilter()
+    }
   }
 
   return (
     <div className="flex flex-col gap-2 mt-8 items-center">
       <button
-        onClick={() => {
-          if (filterHistory.length) leaveFilter()
-          else {
-            filterAnimations(open)
-            setOpen(!open)
-          }
-        }}
+        onClick={clickX}
         aria-label="Filter Menu"
         className="group grid relative place-items-center w-12 h-12 cursor-none hover:cursor-none"
       >

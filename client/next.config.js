@@ -9,6 +9,12 @@ const nextConfig = {
       fullUrl: true
     }
   },
+  webpack(config, { dev }) {
+    if (dev) {
+      config.devtool = 'source-map'; // Ensure source maps are generated
+    }
+    return config;
+  },
   headers: () => [
     {
       source: '/:path*',
@@ -19,7 +25,8 @@ const nextConfig = {
         }
       ]
     }
-  ]
+  ],
+  
 }
 
 module.exports = nextConfig

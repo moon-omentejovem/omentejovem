@@ -5,7 +5,6 @@ import { cn } from '@/lib/utils'
 import { usePathname } from 'next/navigation'
 import { NftArt, NftOwner, NftTransferEvent } from '../ArtContent/types'
 import { ArtTransaction, formatOwnerAddress } from './ArtTransaction'
-import type { ArtOwner, ArtTransaction as TArtTransaction } from './types'
 import { useState } from 'react'
 import { OwnersModal } from '../Modals/OwnersModal'
 
@@ -38,10 +37,10 @@ export function ArtOwnership({
       className={cn(
         'flex flex-col gap-12',
         collectionsMode ? 'w-full' : 'max-w-xl',
-        nftChain === 'unknown' && 'hidden'
+        nftChain === 'Unknown' && 'hidden'
       )}
     >
-      {owner && nftChain !== 'unknown' && owners.length === 1 && (
+      {owner && nftChain !== 'Unknown' && owners.length === 1 && (
         <div
           id="art-owned-by"
           className={cn(
@@ -50,7 +49,7 @@ export function ArtOwnership({
         >
           <p>OWNED BY</p>
           {pathname.includes('editions') ? (
-            nftChain === 'ethereum' ? (
+            nftChain === 'Ethereum' ? (
               <a target="_blank" rel="noreferrer" href={artAddress}>
                 <OpenSea />
               </a>

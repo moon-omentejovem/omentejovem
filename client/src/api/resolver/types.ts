@@ -22,10 +22,7 @@ export interface NftArt {
   description: string
   createdAt: string
   availablePurchase?: {
-    active: boolean
-    status: boolean
     text: string
-    textAvailable: string
     url: string
   }
   contracts?: {
@@ -37,7 +34,7 @@ export interface NftArt {
     }
   }[]
   videoProcess?: string
-  nftChain: 'ethereum' | 'tezos' | 'unknown'
+  nftChain: 'Ethereum' | 'Tezos' | 'Unknown'
   etherscan: boolean
   id: string
   address: string
