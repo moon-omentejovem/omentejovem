@@ -107,7 +107,10 @@ export function ArtInfos({
       {wasMinted(selectedArt) ? (
         <div
           id="art-container"
-          className="flex flex-col px-4 gap-2 transition-all overflow-y-scroll max-h-full h-full w-full xl:w-[400px] flex-shrink-0 flex-grow-0"
+          className={cn(
+            'flex flex-col px-4 gap-2 transition-all max-h-full h-full w-full xl:w-[400px] flex-shrink-0 flex-grow-0',
+            showDetails ? 'overflow-y-scroll' : ''
+          )}
         >
           <div
             id="art-description"
@@ -163,8 +166,10 @@ export function ArtInfos({
           {/* Conditional rendering with fade animation */}
           <div
             className={cn(
-              'fade-up overflow-y-auto',
-              showDetails ? 'opacity-100 max-h-screen' : 'opacity-0 max-h-0'
+              'fade-up',
+              showDetails
+                ? 'opacity-100 max-h-screen  visible'
+                : 'opacity-0 max-h-0 overflow-y-hidden invisible'
             )}
             style={{ transitionProperty: 'opacity, max-height' }}
           >
