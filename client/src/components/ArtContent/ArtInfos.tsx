@@ -78,7 +78,7 @@ export function ArtInfos({
 				/>
 			)} */}
 
-      <div className="2xl:flex-1 min-w-[400px] flex items-end flex-grow-0 shrink basis-0">
+      <div className="2xl:flex-1 min-w-[300px] xl:min-w-[350px] flex items-end flex-grow-0 shrink basis-0">
         <ArtDetails
           detailedImage={selectedArt.nftCompressedUrl}
           image={selectedArt.nftCompressedHdUrl}
@@ -96,7 +96,7 @@ export function ArtInfos({
         </button>
       )}
 
-      <div className="block w-[90vw] self-center xl:hidden">
+      <div className="block w-[75vw] self-center xl:hidden">
         <HorizontalInCarousel
           onChangeSlideIndex={onChangeSlideIndex}
           slides={slides}
