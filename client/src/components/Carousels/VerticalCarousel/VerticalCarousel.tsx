@@ -39,8 +39,7 @@ export function VerticalCarousel({
       className={cn(
         'hidden fixed h-[calc(100vh-6.5rem)] top-[6.5rem] right-0 z-20',
         'xl:flex',
-        '2xl:h-[100vh] 2xl:top-0 2xl:right-[10vw]',
-        'min-[2000px]:right-[15vw] min-[2350px]:right-[5vw]'
+        '2xl:h-[100vh] 2xl:top-0 xl:right-[5vw]'
       )}
     >
       <Swiper
