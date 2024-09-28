@@ -119,7 +119,7 @@ export function ArtInfosCollections({
 
         <div
           id="art-container"
-          className="flex flex-col gap-12 transition-all overflow-y-scroll max-h-full h-full"
+          className="flex flex-col gap-2 transition-all overflow-y-scroll max-h-full h-full"
         >
           <div
             id="art-description"
@@ -165,14 +165,32 @@ export function ArtInfosCollections({
               </p>
             </div>
           </div>
+          <button
+            aria-label="Open art infos"
+            className="group relative place-items-center w-6 h-6 py-4"
+            onClick={() => {
+              setShowDetails(!showDetails)
+              artInfoButtonAnimation()
+            }}
+            disabled={isAnimating}
+          >
+            <CustomIcons.Plus
+              className={cn(
+                'art-info-button absolute transition-all text-secondary-100 group-hover:text-primary-50'
+              )}
+            />
+          </button>
 
           {/* Conditional rendering with fade animation */}
           <div
             id="art-info-wrapper"
             className={cn(
-              'fade-up overflow-y-auto flex flex-col',
-              showDetails ? 'opacity-100 max-h-screen' : 'opacity-0 max-h-0'
+              'fade-up',
+              showDetails
+                ? 'opacity-100 max-h-screen  visible'
+                : 'opacity-0 max-h-0 overflow-y-hidden invisible'
             )}
+            style={{ transitionProperty: 'opacity, max-height' }}
           >
             <div id="art-links">
               <ArtLinks
@@ -186,45 +204,22 @@ export function ArtInfosCollections({
                   })
                 }}
               />
+
+              <ArtOwnership
+                collectionsMode
+                nftChain={selectedArt.nftChain}
+                artAddress={getNftLinks(
+                  selectedArt.address,
+                  selectedArt.nftChain,
+                  selectedArt.id,
+                  'token'
+                )}
+                owners={selectedArt.owners}
+                firstEvent={selectedArt.mintedEvent}
+                lastEvent={selectedArt.lastEvent}
+              />
             </div>
           </div>
-
-          {/* {isNftArt(selectedArt) && ( */}
-          <button
-            aria-label="Open art infos"
-            className="group hidden relative place-items-center w-6 h-6 xl:grid"
-            onClick={() => {
-              setShowDetails(!showDetails)
-              artInfoButtonAnimation()
-            }}
-            disabled={isAnimating}
-          >
-            <CustomIcons.Plus
-              className={cn(
-                'art-info-button absolute transition-all text-secondary-100 group-hover:text-primary-50'
-              )}
-            />
-          </button>
-          {/* )} */}
-        </div>
-
-        <div
-          id="art-ownership-collections"
-          className="flex w-full overflow-y-scroll max-h-full"
-        >
-          <ArtOwnership
-            collectionsMode
-            nftChain={selectedArt.nftChain}
-            artAddress={getNftLinks(
-              selectedArt.address,
-              selectedArt.nftChain,
-              selectedArt.id,
-              'token'
-            )}
-            owners={selectedArt.owners}
-            firstEvent={selectedArt.mintedEvent}
-            lastEvent={selectedArt.lastEvent}
-          />
         </div>
 
         {/* (
@@ -258,7 +253,7 @@ export function ArtInfosCollections({
         </div>
       </div>
 
-      <div className="block w-[100vw] self-center xl:block">
+      <div className="block w-[90vw] self-center xl:block">
         <HorizontalInCarousel
           onChangeSlideIndex={onChangeSlideIndex}
           slides={slides}
