@@ -22,7 +22,7 @@ public class CreateCollectionRequestHandler(IMongoDatabase mongoDatabase) : IReq
 
     public async Task Handle(CreateCollectionRequest request, CancellationToken cancellationToken)
     {
-        var existingCollection = await _collections.Find(c => c.Name == request.Name).FirstOrDefaultAsync(cancellationToken: cancellationToken);
+        var existingCollection = await _collections.Find(c => c.SourceId == request.SourceId).FirstOrDefaultAsync(cancellationToken: cancellationToken);
 
         if (existingCollection is null)
         {
