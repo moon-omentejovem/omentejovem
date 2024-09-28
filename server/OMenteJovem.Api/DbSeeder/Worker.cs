@@ -8,7 +8,8 @@ using Domain.Endpoints.Commands.CreateObjktNft;
 using Domain.Endpoints.Commands.CreateOpenSeaNft;
 using Domain.Models;
 using Domain.Models.Enums;
-using Domain.Services;
+using Domain.OpenSea;
+using Domain.OpenSea.Mappers;
 using MediatR;
 using TinifyAPI;
 
