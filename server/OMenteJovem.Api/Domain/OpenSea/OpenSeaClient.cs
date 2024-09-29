@@ -1,4 +1,5 @@
-﻿using Domain.OpenSea.Models.GetCollection;
+﻿using Domain.OpenSea.Models.GetAccount;
+using Domain.OpenSea.Models.GetCollection;
 using Domain.OpenSea.Models.GetCollections;
 using Domain.OpenSea.Models.GetNft;
 using Domain.OpenSea.Models.GetNftEvents;
@@ -125,6 +126,18 @@ public class OpenSeaClient
             var deserializedContent = await HttpUtils.DeserializeContent<GetCollectionResponse>(response);
 
             return deserializedContent is null ? throw new Exception() : deserializedContent;
+        });
+    }
+
+    public async Task<GetAccountResponse> GetAccount(string address)
+    {
+        return await _resiliencePipeline.ExecuteAsync(async (_) =>
+        {
+            var response = await _httpClient.GetAsync($"{API_BASE_URL}/accounts/{address}");
+
+            var deserializedContent = await HttpUtils.DeserializeContent<GetAccountResponse>(response);
+
+            return deserializedContent is null || deserializedContent is null ? throw new Exception() : deserializedContent;
         });
     }
 }

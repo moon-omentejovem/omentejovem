@@ -79,7 +79,7 @@ public class CreateOpenSeaNftRequestHandler(
             });
         }
 
-        if (existentNft.Owners.Count == 0 && request.Owners.Count > 0)
+        if (existentNft.Owners.Count == 0 && request.Owners?.Count > 0)
         {
             existentNft.Owners = request.Owners;
         }
