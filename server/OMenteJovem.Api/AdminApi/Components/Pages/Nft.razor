@@ -22,6 +22,11 @@
             <NftMediaForm NftArtModel="@NftArtModel" NftArtId="@Id" NftArtImageSource="@NftArtModel.NftUrl" NftImageUrlChanged="HandleMediaSubmit" />
         </Content>
     </Tab>
+    <Tab Title="Owners">
+        <Content>
+            <NftOwnersForm NftArtModel="@NftArtModel" NftArtModelChanged="HandleOwnersValidSubmit" />
+        </Content>
+    </Tab>
     <Tab Title="External Links">
         <Content>
             <ExternalLinksForm NftArtForm="@NftArtModel" ExternalLinksChanged="HandleExternalLinksSubmit" />
@@ -55,6 +60,13 @@
             .Set(n => n.MintedDate, NftArtModel.MintedDate)
             .Set(n => n.OneOfOne, NftArtModel.OneOfOne)
             .Set(n => n.Edition, NftArtModel.Edition)
+        );
+    }
+
+    private async Task HandleOwnersValidSubmit()
+    {
+        await NftService.UpdateNft(new UpdateNftBuilder(DomainNft!.Id)
+            .Set(n => n.Owners, NftArtModel.Owners)
         );
     }
 

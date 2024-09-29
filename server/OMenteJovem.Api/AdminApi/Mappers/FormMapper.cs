@@ -24,6 +24,7 @@ public static class FormMapper
             Edition = nftArt.Edition,
             OptimizedImages = nftArt.OptimizedImages,
             AvailablePurchase = nftArt.AvailablePurchase,
+            Owners = nftArt.Owners
         };
     }
 

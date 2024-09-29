@@ -20,4 +20,5 @@ public class NftArtForm
     public bool Edition { get; set; }
     public OptimizedImages OptimizedImages { get; set; }
     public AvailablePurchase? AvailablePurchase { get; set; }
+    public List<Owner> Owners { get; set; } = [];
 }
