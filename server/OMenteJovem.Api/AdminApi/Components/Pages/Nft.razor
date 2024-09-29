@@ -27,9 +27,14 @@
             <NftOwnersForm NftArtModel="@NftArtModel" NftArtModelChanged="HandleOwnersValidSubmit" />
         </Content>
     </Tab>
-    <Tab Title="External Links">
+    <Tab Title="Available Purchase">
         <Content>
             <ExternalLinksForm NftArtForm="@NftArtModel" ExternalLinksChanged="HandleExternalLinksSubmit" />
+        </Content>
+    </Tab>
+    <Tab Title="Mint Event">
+        <Content>
+            <MintedEventForm NftArtForm="@NftArtModel" MintedEventChanged="HandleMintedEventValidSubmit" />
         </Content>
     </Tab>
 </Tabs>
@@ -88,5 +93,12 @@
         );
 
         NftArtModel.AvailablePurchase = availablePurchase;
+    }
+
+    private async Task HandleMintedEventValidSubmit(NftTransferEvent mintedEvent)
+    {
+        await NftService.UpdateNft(new UpdateNftBuilder(DomainNft!.Id)
+            .Set(n => n.MintedEvent, mintedEvent)
+        );
     }
 }

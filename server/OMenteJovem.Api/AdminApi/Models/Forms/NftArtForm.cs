@@ -1,10 +1,12 @@
 ﻿using Domain.Models;
 using Domain.Models.Enums;
+using MongoDB.Bson;
 
 namespace AdminApi.Models.Forms;
 
 public class NftArtForm
 {
+    public ObjectId Id { get; set; }
     public string SourceId { get; set; }
     public string Name { get; set; }
     public string? Description { get; set; }
@@ -21,4 +23,5 @@ public class NftArtForm
     public OptimizedImages OptimizedImages { get; set; }
     public AvailablePurchase? AvailablePurchase { get; set; }
     public List<Owner> Owners { get; set; } = [];
+    public NftTransferEvent? MintedEvent { get; set; }
 }
