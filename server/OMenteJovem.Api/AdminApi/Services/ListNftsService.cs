@@ -1,5 +1,6 @@
 ﻿using AdminApi.Models;
 using Domain.Models;
+using Domain.Models.Enums;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Linq.Expressions;
@@ -29,6 +30,37 @@ public class ListNftsService(IMongoDatabase mongoDatabase)
     public async Task UpdateNft(UpdateNftBuilder updateBuilder)
     {
         await _nftsCollection.UpdateOneAsync(updateBuilder.IdFilter, updateBuilder.Update);
+    }    
+
+    public async Task<ObjectId> CreateNft(CreateNftFromScratchRequest createRequest)
+    {
+        var existingNft = await _nftsCollection.Find(n => n.Address == createRequest.ContractAddress).FirstOrDefaultAsync();
+        if (existingNft != null)
+        {
+            throw new ArgumentException("Contract Address should be unique");
+        }
+
+        var createdNft = new NftArt
+        {
+            Name = createRequest.Name,
+            Description = createRequest.Description,
+            NftChain = createRequest.NftChain,
+            Collection = createRequest.Collection,
+            Address = createRequest.ContractAddress,
+            Contracts =
+            [
+                new Contract
+                {
+                    ContractAddress = createRequest.ContractAddress,
+                    NftChain = createRequest.NftChain,
+                    SourceId = createRequest.NftId
+                }
+            ]
+        };
+
+        await _nftsCollection.InsertOneAsync(createdNft);
+
+        return createdNft.Id;
     }
 }
 

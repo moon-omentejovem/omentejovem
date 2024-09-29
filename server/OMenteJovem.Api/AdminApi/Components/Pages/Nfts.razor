@@ -27,6 +27,7 @@ else
 {
     <Modal @ref="modal" />
     <Button Color="ButtonColor.Primary" @onclick="OpenCreateNftModal">Criar NFT com link</Button>
+    <Button Color="ButtonColor.Primary" @onclick="OpenCreateNftFromScratchModal">Criar NFT do zero</Button>
 
     <Grid 
         TItem="NftArtResponse"
@@ -104,6 +105,11 @@ else
     private async Task OpenCreateNftModal()
     {
         await modal.ShowAsync<CreateNftFromLinkModal>(title: "Criar NFT");
+    }
+
+    private async Task OpenCreateNftFromScratchModal()
+    {
+        await modal.ShowAsync<CreateNftFromScratchModal>(title: "Criar NFT");
     }
 
     private static string GetNftDescription(NftArtResponse nftArt)

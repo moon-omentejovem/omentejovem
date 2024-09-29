@@ -85,6 +85,7 @@ public static class MappingMethods
             Name = collection.Name,
             Year = collection.Year,
             Visible = collection.Visible,
+            SourceId = collection.SourceId
         };
     }
 }
