@@ -39,11 +39,16 @@ else
         Responsive="true"
         OnRowClick="OnRowClick"
     >
+        <GridColumn TItem="NftArtResponse" HeaderText="Preview" HeaderTextAlignment="Alignment.Center" PropertyName="LowestCompressionUrl" Filterable="false">
+            <div class="d-flex justify-content-center">
+                <img src="@context.LowestCompressionUrl" style="max-width: 150px" />
+            </div>
+        </GridColumn>
         <GridColumn TItem="NftArtResponse" HeaderText="Name" PropertyName="Name">
             @context.Name
         </GridColumn>
-        <GridColumn TItem="NftArtResponse" HeaderText="Description" PropertyName="Description">
-            @context.Description
+        <GridColumn TItem="NftArtResponse" HeaderText="Description" PropertyName="CompactDescription">
+            @context.CompactDescription
         </GridColumn>
         <GridColumn TItem="NftArtResponse" HeaderText="Collection" PropertyName="Collection" Filterable="false">
             @context.Collection
