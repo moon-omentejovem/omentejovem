@@ -21,6 +21,7 @@ interface ArtInfosProperties {
   email: string
   selectedArt: NftArt
   slides: NftArt[]
+  source: 'portfolio' | '1-1' | 'editions'
   onChangeSlideIndex: (index: number) => void
 }
 
@@ -28,6 +29,7 @@ export function ArtInfos({
   email,
   selectedArt,
   slides,
+  source,
   onChangeSlideIndex
 }: ArtInfosProperties): ReactElement {
   const [isOpenVideo, setIsOpenVideo] = useState(false)
@@ -67,14 +69,7 @@ export function ArtInfos({
   }
 
   return (
-    <section
-      className={cn(
-        'flex h-full items-end gap-y-8 gap-x-8',
-        'grid-cols-[minmax(400px,auto)_minmax(400px,400px)]',
-        'xl:grid',
-        '2xl:gap-x-20 2xl:mr-[16%] 3xl:mr-0'
-      )}
-    >
+    <section className={cn('flex p-4 flex-wrap gap-4 h-full p-5 xl:pr-[12vw]')}>
       {/* {!!selectedArt.videoProcess && (
 				<VideoProcessModal
 					open={isOpenVideo}
@@ -83,7 +78,7 @@ export function ArtInfos({
 				/>
 			)} */}
 
-      <div className="xl:min-h-[708px] content-end">
+      <div className="2xl:flex-1 min-w-[300px] xl:min-w-[350px] flex items-end flex-grow-0 shrink basis-0">
         <ArtDetails
           detailedImage={selectedArt.nftCompressedUrl}
           image={selectedArt.nftCompressedHdUrl}
@@ -101,7 +96,7 @@ export function ArtInfos({
         </button>
       )}
 
-      <div className="block w-[100vw] self-center xl:hidden">
+      <div className="block w-[75vw] self-center xl:hidden">
         <HorizontalInCarousel
           onChangeSlideIndex={onChangeSlideIndex}
           slides={slides}
@@ -112,7 +107,10 @@ export function ArtInfos({
       {wasMinted(selectedArt) ? (
         <div
           id="art-container"
-          className="flex flex-col gap-8 transition-all overflow-y-scroll max-h-full h-full xl:gap-0 w-full md:w-[400px]"
+          className={cn(
+            'flex flex-col px-4 gap-2 transition-all max-h-full h-full w-full xl:w-[400px] flex-shrink-0 flex-grow-0',
+            showDetails ? 'overflow-y-scroll' : ''
+          )}
         >
           <div
             id="art-description"
@@ -125,7 +123,7 @@ export function ArtInfos({
               {isDescriptionExpanded
                 ? selectedArt.description
                 : truncate(selectedArt.description)}
-              {selectedArt.description.length > 600 && (
+              {selectedArt?.description?.length > 600 && (
                 <span>
                   <button
                     onClick={() =>
@@ -149,11 +147,29 @@ export function ArtInfos({
             </div>
           </div>
 
+          <button
+            aria-label="Open art infos"
+            className="group relative place-items-center w-6 h-6 py-4"
+            onClick={() => {
+              setShowDetails(!showDetails)
+              artInfoButtonAnimation()
+            }}
+            disabled={isAnimating}
+          >
+            <CustomIcons.Plus
+              className={cn(
+                'art-info-button absolute transition-all text-secondary-100 group-hover:text-primary-50'
+              )}
+            />
+          </button>
+
           {/* Conditional rendering with fade animation */}
           <div
             className={cn(
-              'fade-up overflow-y-auto',
-              showDetails ? 'opacity-100 max-h-screen' : 'opacity-0 max-h-0'
+              'fade-up',
+              showDetails
+                ? 'opacity-100 max-h-screen  visible'
+                : 'opacity-0 max-h-0 overflow-y-hidden invisible'
             )}
             style={{ transitionProperty: 'opacity, max-height' }}
           >
@@ -183,6 +199,7 @@ export function ArtInfos({
                 owners={selectedArt.owners}
                 firstEvent={selectedArt.mintedEvent}
                 lastEvent={selectedArt.lastEvent}
+                source={source}
               />
             </div>
           </div>
@@ -194,12 +211,11 @@ export function ArtInfos({
 
             <p className="text-primary-50 underline">{selectedArt['name']}</p>
           </div>
-          {(selectedArt as NftArt).availablePurchase?.active &&
-            (selectedArt as NftArt).availablePurchase?.status && (
-              <p className="mt-2 grid content-center justify-start border-y-[1px] border-secondary-100 text-sm h-16 px-8 font-bold text-secondary-100">
-                NOT AVAILABLE FOR PURCHASE
-              </p>
-            )}
+          {!(selectedArt as NftArt).availablePurchase && (
+            <p className="mt-2 grid content-center justify-start border-y-[1px] border-secondary-100 text-sm h-16 px-8 font-bold text-secondary-100">
+              NOT AVAILABLE FOR PURCHASE
+            </p>
+          )}
         </div>
       )}
 
@@ -216,22 +232,6 @@ export function ArtInfos({
           <span className="h-6" />
         )}
       </div>
-
-      <button
-        aria-label="Open art infos"
-        className="group hidden relative place-items-center w-6 h-6 xl:grid"
-        onClick={() => {
-          setShowDetails(!showDetails)
-          artInfoButtonAnimation()
-        }}
-        disabled={isAnimating}
-      >
-        <CustomIcons.Plus
-          className={cn(
-            'art-info-button absolute transition-all text-secondary-100 group-hover:text-primary-50'
-          )}
-        />
-      </button>
     </section>
   )
 }

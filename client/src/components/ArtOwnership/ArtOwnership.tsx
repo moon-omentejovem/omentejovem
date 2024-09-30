@@ -5,7 +5,8 @@ import { cn } from '@/lib/utils'
 import { usePathname } from 'next/navigation'
 import { NftArt, NftOwner, NftTransferEvent } from '../ArtContent/types'
 import { ArtTransaction, formatOwnerAddress } from './ArtTransaction'
-import type { ArtOwner, ArtTransaction as TArtTransaction } from './types'
+import { useState } from 'react'
+import { OwnersModal } from '../Modals/OwnersModal'
 
 interface ArtOwnershipProperties {
   nftChain: NftArt['nftChain']
@@ -14,6 +15,7 @@ interface ArtOwnershipProperties {
   owners: NftOwner[]
   firstEvent?: NftTransferEvent
   lastEvent?: NftTransferEvent
+  source?: 'portfolio' | '1-1' | 'editions'
 }
 
 export function ArtOwnership({
@@ -22,11 +24,13 @@ export function ArtOwnership({
   artAddress,
   owners,
   firstEvent,
-  lastEvent
+  lastEvent,
+  source
 }: ArtOwnershipProperties) {
   const pathname = usePathname()
 
   const owner = owners.length === 1 ? owners[0] : null
+  const [isOwnersModalOpen, setIsOwnersModalOpen] = useState(false)
 
   return (
     <div
@@ -36,7 +40,7 @@ export function ArtOwnership({
         nftChain === 'Unknown' && 'hidden'
       )}
     >
-      {owner && nftChain !== 'Unknown' && (
+      {owner && nftChain !== 'Unknown' && owners.length === 1 && (
         <div
           id="art-owned-by"
           className={cn(
@@ -66,15 +70,28 @@ export function ArtOwnership({
           )}
         </div>
       )}
-
-      {!owner && nftChain !== 'Unknown' && (
+      {owners.length > 1 && source === 'editions' && (
         <div
           id="art-owned-by"
           className={cn(
             'flex flex-row border-y-[1px] mt-auto border-secondary-100 items-center justify-between text-sm min-h-[4rem] px-8 font-bold text-secondary-100'
           )}
         >
-          <p>{owners.length} OWNERS</p>
+          <OwnersModal
+            owners={owners}
+            open={isOwnersModalOpen}
+            setOpen={setIsOwnersModalOpen}
+          >
+            <button
+              onClick={() => setIsOwnersModalOpen(true)}
+              style={{
+                textAlign: 'left'
+              }}
+              className={cn('hover:text-primary-50')}
+            >
+              VIEW ALL OWNERS
+            </button>
+          </OwnersModal>
         </div>
       )}
 

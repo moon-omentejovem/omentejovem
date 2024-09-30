@@ -43,6 +43,7 @@ export function ArtMainContent({
         selectedArt={selectedArt}
         slides={artImages}
         onChangeSlideIndex={onChangeSelectedArtIndex}
+        source={source}
       />
     )
   }, [selectedArtIndex])
@@ -68,7 +69,7 @@ export function ArtMainContent({
   }
 
   return (
-    <main className="flex flex-col px-6 pb-16 xl:px-20 xl:pt-10 xl:pb-8 xl:h-screenMinusHeader">
+    <main className="flex flex-col px-6 2xl:pb-16 2xl:px-20 2xl:pt-10 2xl:pb-8 xl:h-screenMinusHeader">
       <VerticalCarousel
         slideIndex={selectedArtIndex}
         onChangeSlideIndex={onChangeSelectedArtIndex}

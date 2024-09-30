@@ -1,15 +1,23 @@
-﻿namespace Domain.Endpoints.Models;
+﻿using Domain.Models;
+
+namespace Domain.Endpoints.Models;
 
 public record NftAvailablePurchaseResponse(
-    bool Active,
-    bool Status,
     string Text,
-    string TextAvailable,
     string Url
 )
 {
-    public static NftAvailablePurchaseResponse FromDomain()
+    public static NftAvailablePurchaseResponse? FromDomain(AvailablePurchase? availablePurchase)
     {
-        return new NftAvailablePurchaseResponse(true, true, "hahaha", "available ", "www.google.com");
+        if (availablePurchase is null)
+        {
+            return null;
+        }
+        if (!availablePurchase.Active)
+        {
+            return null;
+        }
+
+        return new NftAvailablePurchaseResponse(availablePurchase.Text, availablePurchase.Url);
     } 
 }

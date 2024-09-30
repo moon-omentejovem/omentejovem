@@ -50,14 +50,23 @@ const availableFilter: ChainedFilter = {
   children: []
 };
 
-const contractFilter: ChainedFilter = {
+const ethContractFilter: ChainedFilter = {
   label: "contract",
   children: [
-    { label: "manifold", inPlace: true, children: [] },
-    { label: "transient labs", inPlace: true, children: [] },
-    { label: "superrare", inPlace: true, children: [] },
-    { label: "opensea", inPlace: true, children: [] },
-    { label: "rarible", inPlace: true, children: [] }
+    { label: "manifold", inPlace: true, filterApply: (n) => n.availablePurchase?.text === "Manifold", children: [] },
+    { label: "transient labs", inPlace: true, filterApply: (n) => n.availablePurchase?.text === "Transient Labs", children: [] },
+    { label: "superrare", inPlace: true, filterApply: (n) => n.availablePurchase?.text === "SuperRare", children: [] },
+    { label: "opensea", inPlace: true, filterApply: (n) => n.availablePurchase?.text === "OpenSea", children: [] },
+    { label: "rarible", inPlace: true, filterApply: (n) => n.availablePurchase?.text === "Rarible", children: [] }
+  ]
+};
+
+const xtzContractFilter: ChainedFilter = {
+  label: "contract",
+  children: [
+    { label: "hen", inPlace: true, filterApply: (n) => n.availablePurchase?.text === "Hen", children: [] },
+    { label: "objkt", inPlace: true, filterApply: (n) => n.availablePurchase?.text === "objkt Labs", children: [] },
+    { label: "objkt.one", inPlace: true, filterApply: (n) => n.availablePurchase?.text === "objkt.one", children: [] }
   ]
 };
 
@@ -84,7 +93,7 @@ const filters: ChainedFilter[] = [
             children: [
               latestFilter,
               availableFilter,
-              contractFilter,
+              ethContractFilter,
               yearFilter
             ]
           },
@@ -92,6 +101,9 @@ const filters: ChainedFilter[] = [
             label: 'xtz',
             filterApply: (n) => n.nftChain == 'Tezos',
             children: [
+              latestFilter,
+              availableFilter,
+              xtzContractFilter,
               yearFilter
             ]
           }
