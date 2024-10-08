@@ -65,6 +65,7 @@ public class CreateOpenSeaNftRequestHandler(
         }
 
         existentNft.Address = request.ContractAddress;
+        existentNft.SourceId = request.TokenId;
         existentNft.NftChain = NftChain.Ethereum;
         existentNft.Collection = request.Collection;
         existentNft.ExternalLinks.AddLink(new() { Name = ExternalLinkEnum.OpenSea, Url = request.OpenSeaUrl });

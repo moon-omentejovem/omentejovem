@@ -49,9 +49,13 @@ public class CreateNftEventsRequestHandler(IMongoDatabase mongoDatabase) : IRequ
         }
 
         var mintEvent = FindMintEvent(request.Events);
-        var mintDate = NftConstants.ParsePosixTimestamp(mintEvent.EventTimestamp);
+        var mintDate = NftConstants.ParsePosixTimestamp(mintEvent?.EventTimestamp);
 
         var lastEvent = request.Events.OrderByDescending(e => e.EventTimestamp).FirstOrDefault();
+
+        existingNft.MintedDate = mintDate;
+        existingNft.MintedEvent = ToDomain(mintEvent);
+        existingNft.LastTransferEvent = ToDomain(lastEvent);
 
         var updateBuilder = Builders<NftArt>.Update
                 .Set(n => n.MintedDate, mintDate)
@@ -60,27 +64,27 @@ public class CreateNftEventsRequestHandler(IMongoDatabase mongoDatabase) : IRequ
 
         if (existingNft.CreatedAt is null && mintEvent is not null)
         {
-            updateBuilder = updateBuilder.Set(n => n.CreatedAt, NftConstants.ParsePosixTimestamp(mintEvent.EventTimestamp));
+            existingNft.CreatedAt = NftConstants.ParsePosixTimestamp(mintEvent.EventTimestamp);
         }
 
         if (existingNft.Edition && mintEvent is not null)
         {
             var (totalNfts, availableNfts) = CalculateAvailableTokens(mintEvent, request.Events);
 
-            updateBuilder = updateBuilder
-                .Set(n => n.TotalTokens, totalNfts)
-                .Set(n => n.AvailableTokens, availableNfts)
-                ;
+            existingNft.TotalTokens = totalNfts;
+            existingNft.AvailableTokens = availableNfts;
 
             if (request.CalculateOwners)
             {
                 var owners = GetOwnersFromTransactions(request.Events);
 
-                updateBuilder = updateBuilder.Set(n => n.Owners, owners);
+                existingNft.Owners = owners;
             }
         }
 
-        await _nftsCollection.UpdateOneAsync(n => n.Id == existingNft.Id, updateBuilder, cancellationToken: cancellationToken);
+        var updateString = updateBuilder.ToString();
+
+        await _nftsCollection.ReplaceOneAsync(n => n.Id == existingNft.Id, existingNft, new ReplaceOptions { IsUpsert = true }, cancellationToken: cancellationToken);
 
         foreach (var nftEvent in request.Events)
         {
@@ -188,9 +192,9 @@ public class CreateNftEventsRequestHandler(IMongoDatabase mongoDatabase) : IRequ
         return (totalNfts, availableNfts);
     }
 
-    private static CreateNftEventRequest FindMintEvent(IEnumerable<CreateNftEventRequest> events)
+    private static CreateNftEventRequest? FindMintEvent(IEnumerable<CreateNftEventRequest> events)
     {
-        var mintEvent = events.First(e => e.EventType == "transfer" && e.FromAddress == NftConstants.NullAddress);
+        var mintEvent = events.FirstOrDefault(e => e.EventType == "transfer" && e.FromAddress == NftConstants.NullAddress);
 
         return mintEvent;
     }

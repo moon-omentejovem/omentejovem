@@ -1,0 +1,141 @@
+﻿@using AdminApi.Models
+@using Domain.Endpoints.Commands.CreateNftEvents
+@using Domain.Endpoints.Commands.CreateOpenSeaNft
+@using Domain.Models
+@using Domain.Models.Enums
+@using Domain.OpenSea
+@using MediatR
+@inject OpenSeaClient OpenSeaClient
+@inject IMediator Mediator
+@inject NavigationManager Navigation
+
+<EditForm Model="@Request" OnValidSubmit="HandleValidSubmit">
+    <div class="mb-3">
+        <label for="contractAddress" class="form-label">Endereço Contrato</label>
+        <InputText id="contractAddress" class="form-control" @bind-Value="Request.ContractAddress" Disabled="@Disabled"/>
+        @if (!string.IsNullOrEmpty(errorAddress))
+        {
+            <p style="color: red">@errorAddress</p>
+        }
+        <ValidationMessage For="@(() => Request.ContractAddress)" />
+    </div>
+    <div class="mb-3">
+        <label for="nftId" class="form-label">NFT id</label>
+        <InputText id="nftId" class="form-control" @bind-Value="Request.NftId" Disabled="@Disabled" />
+        @if (!string.IsNullOrEmpty(errorNftId))
+        {
+            <p style="color: red">@errorNftId</p>
+        }
+        <ValidationMessage For="@(() => Request.NftId)" />
+    </div>
+    <div class="d-flex justify-content-between">
+        @if (createdNftId is not null)
+        {
+            <Button Color="ButtonColor.Success" @onclick="RedirectToNft">Ir para NFT</Button>
+
+            <Button Color="ButtonColor.Primary" @onclick="ResetForm">Criar outro</Button>
+        }
+        <Button Type="ButtonType.Submit" class="btn btn-success" Loading="loading" Disabled="Disabled">
+            Criar
+        </Button>
+    </div>
+    
+</EditForm>
+
+@code {
+    private bool loading = false;
+    private string? createdNftId;
+    private string? errorAddress;
+    private string? errorNftId;
+    private CreateNftFromLinkRequest Request = new();
+
+    private bool Disabled => createdNftId is not null;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        if (string.IsNullOrEmpty(Request.ContractAddress))
+        {
+            errorAddress = "Endereço Contrato precisa estar preenchido";
+            return;
+        }
+        if (string.IsNullOrEmpty(Request.NftId))
+        {
+            errorNftId = "NFT Id precisa estar preenchido";
+            return;
+        }
+
+        errorAddress = null;
+        errorNftId = null;
+
+        loading = true;
+
+        var nftResponse = await OpenSeaClient.GetNft(NftChain.Ethereum.ToString(), Request.ContractAddress, Request.NftId);
+
+        var openSeaLink = $"https://opensea.io/assets/ethereum/{Request.ContractAddress}/{Request.NftId}";
+
+        var createdNft = await Mediator.Send(new CreateOpenSeaNftRequest(
+            Name: nftResponse.Nft.Name,
+            Description: nftResponse.Nft.Description,
+            ContractAddress: nftResponse.Nft.Contract,
+            Collection: nftResponse.Nft.Collection,
+            TokenId: nftResponse.Nft.Identifier,
+            OpenSeaUrl: openSeaLink,
+            NftUrl: nftResponse.Nft.ImageUrl,
+            Edition: nftResponse.Nft.TokenStandard == "erc1155",
+            Owners: nftResponse.Nft.Owners?.Select(o => new Owner
+            {
+                Address = o.Address,
+                Quantity = o.Quantity
+            }).ToList()
+        ));
+
+        await SeedOpenSeaNftEvents(nftResponse.Nft.Contract, nftResponse.Nft.Identifier, nftResponse.Nft.Owners is null);
+
+        createdNftId = createdNft.Id.ToString();
+
+        loading = false;
+    }
+
+    private async Task SeedOpenSeaNftEvents(string nftAddress, string nftIdentifier, bool calculateOwners)
+    {
+        var nftEventsResponse = await OpenSeaClient.GetNftEvents(nftAddress, nftIdentifier);
+
+        await Mediator.Send(new CreateNftEventsRequest(nftEventsResponse.AssetEvents.Select(e =>
+        {
+            var (fromAddress, toAddress) = e.EventType == "sale"
+                ? (e.Seller, e.Buyer)
+                : (e.FromAddress, e.ToAddress);
+            return new CreateNftEventRequest(
+                TransactionId: e.Transaction,
+                FromAddress: fromAddress,
+                ToAddress: toAddress,
+                EventTimestamp: e.EventTimestamp,
+                EventType: e.EventType,
+                NftChain: NftChain.Ethereum,
+                NftIdentifier: e.NFT.Identifier,
+                NftContract: e.NFT.Contract,
+                Quantity: e.Quantity
+            );
+        }), CalculateOwners: calculateOwners));
+    }
+
+    private Task RedirectToNft()
+    {
+        Navigation.NavigateTo($"/nfts/{createdNftId}");
+
+        return Task.CompletedTask;
+    }
+
+    private void ResetForm()
+    {
+        createdNftId = null;
+        Request = new();
+        errorAddress = null;
+        errorNftId = null;
+    }
+}
