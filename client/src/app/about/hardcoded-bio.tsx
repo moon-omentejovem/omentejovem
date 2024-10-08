@@ -1,17 +1,51 @@
+import { AboutImage1, AboutImage2 } from '@/assets/images'
+import Image from 'next/image'
+
 const HardCodedBio = () => (
-  <div className="text-xs max-w-[65ch] sm:text-base xl:text-xl">
-    <h3 className="font-bold">The story of omentejovem (Thales Machado)</h3>
+  <div className="max-w-[65ch] text-base">
+    <h3 className="text-2xl">
+      Thales Machado, better known as omentejovem, creatively navigates between
+      figurative and abstract realms, crafting vibrant, color-rich artworks that
+      show a visual diary of his life experiences and emotions.
+    </h3>
+    <br />
+
+    <p>
+      Omentejovem hails from Rio de Janeiro (b. 2001), where his sketches were
+      already brought to life by others before he himself realized he could
+      become an artist. Born as Thales Machado, the Brazilian creator made a
+      career for himself in web3 without any formal art school training. His
+      work is a fusion of intuition and personal experiences, often oscillating
+      between figurative and abstract styles. Reflecting his explorations of the
+      world around him, omentejovem’s art is a visual diary documenting his
+      feelings and life events. His pieces range from having clear
+      representational elements to being completely open to interpretation,
+      allowing the audience to bring their own perspectives and experiences to
+      their understanding of his work. A distinct feature of his art is his use
+      of color, which he continually evolves to add depth to his creations.
+      Omentejovem blends the literal with the metaphorical, creating pieces that
+      come alive as viewers find their meanings within them
+    </p>
+    <br />
+
+    <h3 className="text-primary-50 text-2xl">
+      "I personally love it when someone sees something entirely different in my
+      work than I did myself. Then the artwork really comes to life.”
+    </h3>
+    <br />
+    <br />
+
+    <h3 className="text-2xl">The story of omentejovem (Thales Machado)</h3>
     <br />
     <p>
-      Born{' '}
-      <span className="text-primary-50">in the state of Rio de Janeiro</span>,
-      artist Thales Machado vividly recalls a period a decade ago, when his
-      drawings garnered particular attention. “My teacher and friends at school
-      would examine my sketches and animate them with their interpretations of
-      the lines and details,” he recalls. “Creating these compositions
-      intuitively was enjoyable, but it became even more fascinating when others
-      shared their perspectives, often seeing things in my work that I hadn’t
-      noticed.”
+      Born in the state of{' '}
+      <span className="text-primary-50">Rio de Janeiro</span>, artist Thales
+      Machado vividly recalls a period a decade ago, when his drawings garnered
+      particular attention. “My teacher and friends at school would examine my
+      sketches and animate them with their interpretations of the lines and
+      details,” he recalls. “Creating these compositions intuitively was
+      enjoyable, but it became even more fascinating when others shared their
+      perspectives, often seeing things in my work that I hadn’t noticed.”
     </p>
     <br />
 
@@ -206,16 +240,21 @@ const HardCodedBio = () => (
     </p>
     <br />
 
-    <h2>Featured works</h2>
-    <h3>
-      <a
-        href="https://media.omentejovem.com/wordpress/wp-content/uploads/2024/03/4_creative_workaholic_11zon-Personalizado.jpeg"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <em>Creative Workaholic</em>
-      </a>
-    </h3>
+    <h3 className="font-bold text-2xl"> Featured works</h3>
+
+    <br />
+
+    <p className="text-xl underline">Creative Workaholic</p>
+
+    <br />
+    <Image
+      src={AboutImage1}
+      alt="Omentejovem Artwork"
+      width={500}
+      height={300}
+    />
+    <br />
+
     <p>
       <em>Creative Workaholic</em> shows the start of omentejovem’s journey as
       an artist. “After my first NFT sale, I became obsessed with creations and
@@ -286,16 +325,19 @@ const HardCodedBio = () => (
       the world.
     </p>
     <br />
+    <br />
 
-    <h3>
-      <a
-        href="https://media.omentejovem.com/wordpress/wp-content/uploads/2024/03/13_late-night-love_11zon-Personalizado.jpeg"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <em>Late Night Love</em>
-      </a>
-    </h3>
+    <p className="text-xl underline">Late Night Love</p>
+    <br />
+
+    <Image
+      src={AboutImage2}
+      alt="Omentejovem Artwork"
+      width={500}
+      height={300}
+    />
+    <br />
+
     <p>
       In <em>Late Night Love</em>, omentejovem tells a visual story of
       introspection. In the upper central part of the composition are the
