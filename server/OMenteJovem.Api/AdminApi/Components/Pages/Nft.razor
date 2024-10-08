@@ -22,9 +22,19 @@
             <NftMediaForm NftArtModel="@NftArtModel" NftArtId="@Id" NftArtImageSource="@NftArtModel.NftUrl" NftImageUrlChanged="HandleMediaSubmit" />
         </Content>
     </Tab>
-    <Tab Title="External Links">
+    <Tab Title="Owners">
+        <Content>
+            <NftOwnersForm NftArtModel="@NftArtModel" NftArtModelChanged="HandleOwnersValidSubmit" />
+        </Content>
+    </Tab>
+    <Tab Title="Available Purchase">
         <Content>
             <ExternalLinksForm NftArtForm="@NftArtModel" ExternalLinksChanged="HandleExternalLinksSubmit" />
+        </Content>
+    </Tab>
+    <Tab Title="Mint Event">
+        <Content>
+            <MintedEventForm NftArtForm="@NftArtModel" MintedEventChanged="HandleMintedEventValidSubmit" />
         </Content>
     </Tab>
 </Tabs>
@@ -58,6 +68,13 @@
         );
     }
 
+    private async Task HandleOwnersValidSubmit()
+    {
+        await NftService.UpdateNft(new UpdateNftBuilder(DomainNft!.Id)
+            .Set(n => n.Owners, NftArtModel.Owners)
+        );
+    }
+
     private async Task HandleMediaSubmit(NftMediaImages nftMediaImages)
     {
         await NftService.UpdateNft(new UpdateNftBuilder(DomainNft!.Id)
@@ -76,5 +93,12 @@
         );
 
         NftArtModel.AvailablePurchase = availablePurchase;
+    }
+
+    private async Task HandleMintedEventValidSubmit(NftTransferEvent mintedEvent)
+    {
+        await NftService.UpdateNft(new UpdateNftBuilder(DomainNft!.Id)
+            .Set(n => n.MintedEvent, mintedEvent)
+        );
     }
 }

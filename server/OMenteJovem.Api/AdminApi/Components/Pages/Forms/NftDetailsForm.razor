@@ -40,23 +40,9 @@ else
 
         <div class="mb-3">
             <label for="createdAt" class="form-label">Created At</label>
-            <InputDate id="createdAt" class="form-control" @bind-Value="NftArtModel.CreatedAt" />
+            <DateInput id="createdAt" class="form-control" @bind-Value="NftArtModel.CreatedAt" @bind-Value:format="dd/MM/yyyy"/>
             <ValidationMessage For="@(() => NftArtModel.CreatedAt)" />
         </div>
-        
-        @* <div class="mb-3">
-            <label class="form-label">Minted</label>
-            <InputCheckbox class="form-check-input" @bind-Value="Minted" />
-            <ValidationMessage For="@(() => NftArtModel.Edition)" />
-        </div>
-
-        @if (Minted) {
-            <div class="mb-3">
-                <label for="mintedDate" class="form-label disabled">Minted Date</label>
-                <InputDate id="mintedDate" class="form-control"  @bind-Value="NftArtModel.MintedDate" readonly="@Minted"/>
-                <ValidationMessage For="@(() => NftArtModel.MintedDate)" />
-            </div>
-        } *@
 
         <div class="mb-3">
             <label for="nftChain" class="form-label">NFT Chain</label>
@@ -69,6 +55,7 @@ else
             <InputText id="collection" class="form-control" @bind-Value="NftArtModel.Collection" />
             <ValidationMessage For="@(() => NftArtModel.Collection)" />
         </div>
+
         <div class="mb-3">
             <Switch @bind-Value="NftArtModel.OneOfOne" Label="One Of One" />
         </div>

@@ -23,8 +23,8 @@ public record GetEventResponse
     public string Level {  get; init; } = string.Empty;
 
     [JsonPropertyName("creator")]
-    public AuthorResponse Creator { get; init; }
+    public AuthorResponse? Creator { get; init; }
 
     [JsonPropertyName("recipient")]
-    public AuthorResponse Recipient { get; init; }
+    public AuthorResponse? Recipient { get; init; }
 }

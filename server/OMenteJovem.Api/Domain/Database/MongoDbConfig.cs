@@ -2,8 +2,8 @@
 
 public class MongoDbConfig
 {
-    public string ConnectionString { get; set; }
-    public string DatabaseName { get; set; }
+    public string ConnectionString { get; set; } = string.Empty;
+    public string DatabaseName { get; set; } = string.Empty;
 
     public static readonly string NftArtsCollectionName = "nftArts";
     public static readonly string CollectionsCollectionName = "collections";

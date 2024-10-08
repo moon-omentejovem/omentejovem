@@ -2,5 +2,5 @@
 
 public class ObjktConfig
 {
-    public string CreatorAddress { get; set; }
+    public string CreatorAddress { get; set; } = string.Empty;
 }

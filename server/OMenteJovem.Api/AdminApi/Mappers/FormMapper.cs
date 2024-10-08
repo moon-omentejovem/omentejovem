@@ -9,6 +9,7 @@ public static class FormMapper
     {
         return new NftArtForm
         {
+            Id = nftArt.Id,
             SourceId = nftArt.SourceId,
             Name = nftArt.Name,
             Description = nftArt.Description,
@@ -24,6 +25,8 @@ public static class FormMapper
             Edition = nftArt.Edition,
             OptimizedImages = nftArt.OptimizedImages,
             AvailablePurchase = nftArt.AvailablePurchase,
+            Owners = nftArt.Owners,
+            MintedEvent = nftArt.MintedEvent
         };
     }
 

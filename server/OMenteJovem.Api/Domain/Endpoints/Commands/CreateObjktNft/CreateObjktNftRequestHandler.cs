@@ -28,7 +28,10 @@ public class CreateObjktNftRequestHandler(
 
     public async Task Handle(CreateObjktNftRequest request, CancellationToken cancellationToken)
     {
-        var existentNftCursor = await _nftsCollection.FindAsync(n => n.Name == request.Name);
+        var existentNftCursor = await _nftsCollection.FindAsync(n => 
+            n.Address == request.ContractAddress &&
+            n.SourceId == request.TokenId
+        );
         var existentNft = await existentNftCursor.FirstOrDefaultAsync(cancellationToken: cancellationToken);
 
         if (existentNft == null)

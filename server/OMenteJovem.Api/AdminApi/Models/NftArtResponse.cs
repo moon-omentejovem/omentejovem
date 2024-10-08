@@ -26,6 +26,21 @@ public class NftArtResponse
     public bool Edition { get; set; }
     public ExternalLinksResponse ExternalLinks { get; set; } = new([]);
     public string? LowestCompressionUrl;
+    public string CompactDescription
+    {
+        get {
+            if (string.IsNullOrEmpty(Description))
+            {
+                return string.Empty;
+            }
+            if (Description.Length <= 150)
+            {
+                return Description;
+            }
+
+            return $"{Description.Substring(0, 150)}...";
+        }
+    }
     
     public bool IsReady()
     {

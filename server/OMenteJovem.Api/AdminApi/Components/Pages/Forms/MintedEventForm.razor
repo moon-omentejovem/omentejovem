@@ -1,0 +1,84 @@
+﻿@using AdminApi.Models.Forms
+@using Domain.Models
+@using Domain.OpenSea
+@using Domain.Utils
+@using Microsoft.AspNetCore.Components.Forms
+@using System.ComponentModel.DataAnnotations
+@using BlazorBootstrap
+@inject OpenSeaConfig OpenSeaConfig
+
+@if (NftArtForm == null)
+{
+    <Spinner />
+}
+else
+{
+    <EditForm Model="@MintedEvent" OnValidSubmit="SubmitMintedEvent">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div>
+            <div class="mb-3">
+                <label for="transaction" class="form-label">Transaction ID</label>
+                <InputText id="transaction" class="form-control" @bind-Value="MintedEvent.Transaction" />
+            </div>
+            <div class="mb-3">
+                <label for="timestamp" class="form-label">Date</label>
+                <DateInput id="timestamp" class="form-control" @bind-Value="MintedEvent.Timestamp" />
+            </div>
+        </div>
+        <Button Type="ButtonType.Submit" Color="ButtonColor.Success" Loading="loading">
+            Submit
+        </Button>
+
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public NftArtForm? NftArtForm { get; set; }
+
+    [Parameter]
+    public EventCallback<NftTransferEvent> MintedEventChanged { get; set; }
+
+    private NftMintedEventForm MintedEvent { get; set; } = new();
+
+    private string? NftChain => NftArtForm?.NftChain.ToString();
+
+    private bool loading = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(1000);
+
+        if (NftArtForm?.MintedEvent is not null) 
+        {
+            MintedEvent = new NftMintedEventForm
+            {
+                Id = NftArtForm.MintedEvent.Id,
+                Transaction = NftArtForm.MintedEvent.Transaction,
+                Quantity = NftArtForm.MintedEvent.Quantity,
+                Timestamp = NftConstants.ParsePosixTimestamp(NftArtForm.MintedEvent.EventTimestamp) ?? throw new Exception()
+            };
+        }
+    }
+
+    private async Task SubmitMintedEvent()
+    {
+        loading = true;
+        DateTime unixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+        await MintedEventChanged.InvokeAsync(new NftTransferEvent
+        {
+            Transaction = MintedEvent.Transaction,
+            FromAddress = OpenSeaConfig.CreatorAddress,
+            ToAddress = NftConstants.NullAddress,
+            EventTimestamp = (long)(MintedEvent.Timestamp.ToUniversalTime() - unixEpoch).TotalSeconds,
+            NftChain = NftArtForm.NftChain,
+            NftId = NftArtForm.Id,
+            Quantity = MintedEvent.Quantity
+        });
+
+        loading = false;
+    }
+}
