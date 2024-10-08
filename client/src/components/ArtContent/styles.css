@@ -19,3 +19,7 @@
 .fade-up {
   transition: all 0.8s ease-in-out;
 }
+
+.art-detail-inner-container {
+  margin-bottom: calc(0.5rem + 40px);
+}

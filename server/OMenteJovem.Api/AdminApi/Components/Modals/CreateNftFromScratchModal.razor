@@ -1,0 +1,104 @@
+﻿@using AdminApi.Models
+@using AdminApi.Services
+@using Domain.Endpoints.Commands.CreateNftEvents
+@using Domain.Endpoints.Commands.CreateOpenSeaNft
+@using Domain.Models
+@using Domain.Models.Enums
+@using Domain.OpenSea
+@using MediatR
+@inject NavigationManager Navigation
+@inject ListNftsService NftsService
+@inject ListCollectionsService CollectionsService
+
+<EditForm Model="@Request" OnValidSubmit="HandleValidSubmit">
+    <div class="mb-3">
+        <label for="name" class="form-label">Name</label>
+        <InputText id="name" class="form-control" @bind-Value="Request.Name" Disabled="@Disabled" />
+        <ValidationMessage For="@(() => Request.Name)" />
+    </div>
+    <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <InputText id="description" class="form-control" @bind-Value="Request.Description" Disabled="@Disabled" />
+        <ValidationMessage For="@(() => Request.Description)" />
+    </div>
+    <div class="mb-3">
+        <label for="contractAddress" class="form-label">Endereço Contrato</label>
+        <InputText id="contractAddress" class="form-control" @bind-Value="Request.ContractAddress" Disabled="@Disabled"/>
+        <ValidationMessage For="@(() => Request.ContractAddress)" />
+    </div>
+    <div class="mb-3">
+        <label for="nftId" class="form-label">NFT id</label>
+        <InputText id="nftId" class="form-control" @bind-Value="Request.NftId" Disabled="@Disabled" />
+        <ValidationMessage For="@(() => Request.NftId)" />
+    </div>
+    <div class="mb-3">
+        <label for="nftChain" class="form-label">NFT Chain</label>
+        <InputSelect @bind-Value="Request.NftChain">
+            @foreach (var chainValue in Enum.GetValues<NftChain>())
+            {
+                <option value="@chainValue" selected="@chainValue == @Request.NftChain">@chainValue.ToString()</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => Request.NftChain)" />
+    </div>
+    <div class="mb-3">
+        <label for="nftChain" class="form-label">Collection</label>
+        <InputSelect @bind-Value="Request.Collection">
+            @foreach (var collection in collections)
+            {
+                <option value="@collection.SourceId" selected="@collection.SourceId == @Request.Collection">@collection.Name</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => Request.Collection)" />
+    </div>
+    <div class="d-flex justify-content-between">
+        @if (createdNftId is not null)
+        {
+            <Button Color="ButtonColor.Success" @onclick="RedirectToNft">Ir para NFT</Button>
+
+            <Button Color="ButtonColor.Primary" @onclick="ResetForm">Criar outro</Button>
+        }
+        <Button Type="ButtonType.Submit" class="btn btn-success" Loading="loading" Disabled="Disabled">
+            Criar
+        </Button>
+    </div>
+    
+</EditForm>
+
+@code {
+    private bool loading = false;
+    private string? createdNftId;
+    private CreateNftFromScratchRequest Request = new();
+    private IEnumerable<CollectionResponse> collections = [];
+
+    private bool Disabled => createdNftId is not null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        collections = await CollectionsService.ListCollections();
+
+        await base.OnInitializedAsync();
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        loading = true;
+
+        createdNftId = (await NftsService.CreateNft(Request)).ToString();
+
+        loading = false;
+    }
+
+    private Task RedirectToNft()
+    {
+        Navigation.NavigateTo($"/nfts/{createdNftId}");
+
+        return Task.CompletedTask;
+    }
+
+    private void ResetForm()
+    {
+        createdNftId = null;
+        Request = new();
+    }
+}

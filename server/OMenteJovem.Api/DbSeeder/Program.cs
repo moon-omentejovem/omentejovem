@@ -1,7 +1,7 @@
 using DbSeeder;
 using DbSeeder.Objkt;
-using DbSeeder.OpenSea;
 using Domain;
+using Domain.OpenSea;
 using Domain.Utils;
 using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.Newtonsoft;
@@ -41,4 +41,5 @@ builder.Services
 builder.Services.AddHostedService<Worker>();
 
 var host = builder.Build();
+
 host.Run();

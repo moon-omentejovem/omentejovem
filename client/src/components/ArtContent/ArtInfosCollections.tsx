@@ -86,7 +86,7 @@ export function ArtInfosCollections({
           />
         )}
 
-        <div className="flex flex-col w-full h-full justify-end items-center *:h-full">
+        <div className="art-detail-inner-container flex flex-col w-full h-full justify-end items-center *:h-full">
           <ImageModal detailedImage={selectedArt.nftUrl} collectionsMode>
             <Image
               src={selectedArt.url}
@@ -119,55 +119,102 @@ export function ArtInfosCollections({
 
         <div
           id="art-container"
-          className="flex flex-col gap-2 transition-all overflow-y-scroll max-h-full h-full"
+          className="gap-2 transition-all max-h-full h-full flex flex-col justify-end"
         >
           <div
-            id="art-description"
             className={cn(
-              'h-fit flex flex-col-reverse gap-4 w-full text-sm text-secondary-100',
-              'xl:flex-col xl:max-w-sm xl:mt-auto'
+              'overflow-hidden',
+              showDetails ? 'overflow-y-scroll' : ''
             )}
           >
-            <p id="art-description-text" className="break-words">
-              {isDescriptionExpanded
-                ? selectedArt.description
-                : truncate(selectedArt.description)}
-              {selectedArt?.description?.length > 600 && (
-                <span>
-                  <button
-                    onClick={() =>
-                      setIsDescriptionExpanded(!isDescriptionExpanded)
-                    }
-                    className="text-primary-50 font-extrabold"
-                  >
-                    {isDescriptionExpanded ? '-' : '+'}
-                  </button>
-                </span>
+            <div
+              id="art-description"
+              className={cn(
+                'h-fit flex flex-col-reverse gap-4 w-full text-sm text-secondary-100',
+                'xl:flex-col xl:max-w-sm xl:mt-auto'
               )}
-            </p>
-
-            <div>
-              <a
-                target="_blank"
-                rel="noreferrer"
-                href={selectedArt.url}
-                className="text-primary-50 underline mt-4"
-              >
-                {selectedArt.name}
-              </a>
-              <p>
-                minted on{' '}
-                {selectedArt.mintedDate &&
-                  format(
-                    addHours(new Date(selectedArt.mintedDate), 3),
-                    'd LLLL, yyyy'
-                  )}
+            >
+              <p id="art-description-text" className="break-words">
+                {isDescriptionExpanded
+                  ? selectedArt.description
+                  : truncate(selectedArt.description)}
+                {selectedArt?.description?.length > 600 && (
+                  <span>
+                    <button
+                      onClick={() =>
+                        setIsDescriptionExpanded(!isDescriptionExpanded)
+                      }
+                      className="text-primary-50 font-extrabold"
+                    >
+                      {isDescriptionExpanded ? '-' : '+'}
+                    </button>
+                  </span>
+                )}
               </p>
+
+              <div>
+                <a
+                  target="_blank"
+                  rel="noreferrer"
+                  href={selectedArt.url}
+                  className="text-primary-50 underline mt-4"
+                >
+                  {selectedArt.name}
+                </a>
+                <p>
+                  minted on{' '}
+                  {selectedArt.mintedDate &&
+                    format(
+                      addHours(new Date(selectedArt.mintedDate), 3),
+                      'd LLLL, yyyy'
+                    )}
+                </p>
+              </div>
+            </div>
+
+            {/* Conditional rendering with fade animation */}
+            <div
+              id="art-info-wrapper"
+              className={cn(
+                'fade-up',
+                showDetails
+                  ? 'opacity-100 max-h-screen  visible'
+                  : 'opacity-0 max-h-0 overflow-y-hidden invisible'
+              )}
+              style={{ transitionProperty: 'opacity, max-height' }}
+            >
+              <div id="art-links">
+                <ArtLinks
+                  email={email}
+                  externalLinks={selectedArt.externalLinks}
+                  makeOffer={selectedArt.makeOffer}
+                  availableForPurchase={selectedArt.availablePurchase}
+                  views={{
+                    ...(selectedArt.etherscan && {
+                      Etherscan: `https://etherscan.io/token/${selectedArt.address}?a=${selectedArt.id}`
+                    })
+                  }}
+                />
+
+                <ArtOwnership
+                  collectionsMode
+                  nftChain={selectedArt.nftChain}
+                  artAddress={getNftLinks(
+                    selectedArt.address,
+                    selectedArt.nftChain,
+                    selectedArt.id,
+                    'token'
+                  )}
+                  owners={selectedArt.owners}
+                  firstEvent={selectedArt.mintedEvent}
+                  lastEvent={selectedArt.lastEvent}
+                />
+              </div>
             </div>
           </div>
           <button
             aria-label="Open art infos"
-            className="group relative place-items-center w-6 h-6 py-4"
+            className="group relative flex items-center justify-center w-10 h-10" // Fixed width and height
             onClick={() => {
               setShowDetails(!showDetails)
               artInfoButtonAnimation()
@@ -176,50 +223,10 @@ export function ArtInfosCollections({
           >
             <CustomIcons.Plus
               className={cn(
-                'art-info-button absolute transition-all text-secondary-100 group-hover:text-primary-50'
+                'art-info-button w-6 h-6 transition-all text-secondary-100 group-hover:text-primary-50' // Set size for the SVG
               )}
             />
           </button>
-
-          {/* Conditional rendering with fade animation */}
-          <div
-            id="art-info-wrapper"
-            className={cn(
-              'fade-up',
-              showDetails
-                ? 'opacity-100 max-h-screen  visible'
-                : 'opacity-0 max-h-0 overflow-y-hidden invisible'
-            )}
-            style={{ transitionProperty: 'opacity, max-height' }}
-          >
-            <div id="art-links">
-              <ArtLinks
-                email={email}
-                externalLinks={selectedArt.externalLinks}
-                makeOffer={selectedArt.makeOffer}
-                availableForPurchase={selectedArt.availablePurchase}
-                views={{
-                  ...(selectedArt.etherscan && {
-                    Etherscan: `https://etherscan.io/token/${selectedArt.address}?a=${selectedArt.id}`
-                  })
-                }}
-              />
-
-              <ArtOwnership
-                collectionsMode
-                nftChain={selectedArt.nftChain}
-                artAddress={getNftLinks(
-                  selectedArt.address,
-                  selectedArt.nftChain,
-                  selectedArt.id,
-                  'token'
-                )}
-                owners={selectedArt.owners}
-                firstEvent={selectedArt.mintedEvent}
-                lastEvent={selectedArt.lastEvent}
-              />
-            </div>
-          </div>
         </div>
 
         {/* (

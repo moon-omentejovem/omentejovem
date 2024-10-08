@@ -18,7 +18,7 @@ public record NftTransferEventResponse(
         return new(
             FromAddress: nftTransferEvent.FromAddress,
             ToAddress: nftTransferEvent.ToAddress,
-            EventDate: NftConstants.ParsePosixTimestamp(nftTransferEvent.EventTimestamp),
+            EventDate: NftConstants.ParsePosixTimestamp(nftTransferEvent.EventTimestamp) ?? throw new Exception(),
             EventType: nftTransferEvent.EventType
         );
     }

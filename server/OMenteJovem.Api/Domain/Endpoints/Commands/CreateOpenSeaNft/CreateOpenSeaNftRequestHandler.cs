@@ -31,7 +31,11 @@ public class CreateOpenSeaNftRequestHandler(
 
     public async Task<NftArt> Handle(CreateOpenSeaNftRequest request, CancellationToken cancellationToken)
     {
-        var existentNft = await _nftsCollection.Find(n => n.Name == request.Name).FirstOrDefaultAsync(cancellationToken: cancellationToken);
+        var existentNft = await _nftsCollection.Find(n => 
+                n.Address == request.ContractAddress &&
+                n.SourceId == request.TokenId
+            )
+            .FirstOrDefaultAsync(cancellationToken: cancellationToken);
 
         if (existentNft == null)
         {
@@ -70,7 +74,7 @@ public class CreateOpenSeaNftRequestHandler(
         existentNft.Collection = request.Collection;
         existentNft.ExternalLinks.AddLink(new() { Name = ExternalLinkEnum.OpenSea, Url = request.OpenSeaUrl });
 
-        if (!existentNft.Contracts.Any(c => c.ContractAddress == request.ContractAddress))
+        if (!existentNft.Contracts.Any(c => c.ContractAddress == request.ContractAddress && c.SourceId == request.TokenId))
         {
             existentNft.Contracts.Add(new Contract
             {
@@ -80,7 +84,7 @@ public class CreateOpenSeaNftRequestHandler(
             });
         }
 
-        if (existentNft.Owners.Count == 0 && request.Owners.Count > 0)
+        if (existentNft.Owners.Count == 0 && request.Owners?.Count > 0)
         {
             existentNft.Owners = request.Owners;
         }

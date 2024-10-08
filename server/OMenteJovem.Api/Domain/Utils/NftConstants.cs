@@ -12,6 +12,11 @@ public static class NftConstants
         { NftChain.Tezos, [ "Hen", "objkt", "objkt.one" ] }
     };
 
-    public static DateTime ParsePosixTimestamp(long posixTimestamp) 
-        => DateTimeOffset.FromUnixTimeSeconds(posixTimestamp).UtcDateTime;
+    public static DateTime? ParsePosixTimestamp(long? posixTimestamp)
+    {
+        if (posixTimestamp is null)
+            return null;
+
+        return DateTimeOffset.FromUnixTimeSeconds((long)posixTimestamp).UtcDateTime;
+    }
 }

@@ -1,12 +1,10 @@
 using AdminApi.Components;
 using AdminApi.Services;
-using Amazon;
-using Amazon.Runtime;
-using Amazon.S3;
 using Domain;
-using Domain.Services;
+using Domain.OpenSea;
 using Domain.Utils;
-using Moq;
+using Polly;
+using Polly.Retry;
 using TinifyAPI;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,11 +16,22 @@ builder.Configuration
 
 // Add services to the container.
 builder.Services
+    .AddConfiguration<OpenSeaConfig>("OpenSea")
     .AddDomain()
     .AddS3Service(builder.Configuration)
     .AddSingleton<ListNftsService>()
     .AddSingleton<ListCollectionsService>()
     .AddSingleton<HomeCollectionService>()
+    .AddResiliencePipeline("httpPipeline", builder =>
+    {
+        builder
+            .AddRetry(new RetryStrategyOptions
+            {
+                MaxRetryAttempts = 3,
+                Delay = TimeSpan.FromSeconds(3)
+            });
+    })
+    .AddSingleton<OpenSeaClient>()
     .AddRazorComponents()
     .AddInteractiveServerComponents();
 
