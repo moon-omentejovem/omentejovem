@@ -9,38 +9,38 @@ public record TokenResponse
     public int Pk { get; init; }
 
     [JsonProperty("token_id")]
-    public string TokenId { get; init; }
+    public string TokenId { get; init; } = string.Empty;
 
     [JsonProperty("fa_contract")]
-    public string FaContract { get; init; }
+    public string FaContract { get; init; } = string.Empty;
 
     [JsonProperty("artifact_uri")]
-    public string ArtifactUri { get; init; }
+    public string ArtifactUri { get; init; } = string.Empty;
 
     [JsonProperty("description")]
-    public string Description { get; init; }
+    public string Description { get; init; } = string.Empty;
 
     [JsonProperty("display_uri")]
-    public string DisplayUri { get; init; }
+    public string DisplayUri { get; init; } = string.Empty;
 
     [JsonProperty("supply")]
-    public string Supply { get; init; }
+    public string Supply { get; init; } = string.Empty;
 
     [JsonProperty("name")]
-    public string Name { get; init; }
+    public string Name { get; init; } = string.Empty;
 
     [JsonProperty("mime")]
-    public string Mime { get; init; }
+    public string Mime { get; init; } = string.Empty;
 
     [JsonProperty("metadata")]
-    public string Metadata { get; init; }
+    public string Metadata { get; init; } = string.Empty;
 
     [JsonProperty("timestamp")]
-    public string Timestamp { get; init; }
+    public string Timestamp { get; init; } = string.Empty;
 
     [JsonProperty("fa")]
     public FaResponse Fa { get; init; }
 
     [JsonProperty("holders")]
-    public List<HoldersResponse> Holders { get; init; }
+    public List<HoldersResponse> Holders { get; init; } = [];
 }

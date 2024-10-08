@@ -58,7 +58,7 @@ else
                 Id = NftArtForm.MintedEvent.Id,
                 Transaction = NftArtForm.MintedEvent.Transaction,
                 Quantity = NftArtForm.MintedEvent.Quantity,
-                Timestamp = NftConstants.ParsePosixTimestamp(NftArtForm.MintedEvent.EventTimestamp)
+                Timestamp = NftConstants.ParsePosixTimestamp(NftArtForm.MintedEvent.EventTimestamp) ?? throw new Exception()
             };
         }
     }

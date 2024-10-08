@@ -34,6 +34,7 @@ public class CreateCollectionRequestHandler(IMongoDatabase mongoDatabase) : IReq
                 Year = request.Year,
                 ContractAddress = request.Address,
                 NftChain = request.NftChain,
+                Visible = true,
             };
 
             await _collections.InsertOneAsync(newCollection, cancellationToken: cancellationToken);

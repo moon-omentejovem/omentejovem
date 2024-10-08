@@ -31,7 +31,11 @@ public class CreateOpenSeaNftRequestHandler(
 
     public async Task<NftArt> Handle(CreateOpenSeaNftRequest request, CancellationToken cancellationToken)
     {
-        var existentNft = await _nftsCollection.Find(n => n.Address == request.ContractAddress).FirstOrDefaultAsync(cancellationToken: cancellationToken);
+        var existentNft = await _nftsCollection.Find(n => 
+                n.Address == request.ContractAddress &&
+                n.SourceId == request.TokenId
+            )
+            .FirstOrDefaultAsync(cancellationToken: cancellationToken);
 
         if (existentNft == null)
         {

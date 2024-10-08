@@ -1,8 +1,6 @@
 
 using DbSeeder.Objkt;
 using DbSeeder.Objkt.Mappers;
-using DbSeeder.OpenSea;
-using DbSeeder.OpenSea.Mappers;
 using Domain.Endpoints.Commands.CreateCollection;
 using Domain.Endpoints.Commands.CreateNftEvents;
 using Domain.Endpoints.Commands.CreateObjktNft;
@@ -119,12 +117,12 @@ public class Worker : BackgroundService
         }).ToList();
 
         var nftId = (await _mediator.Send(new CreateOpenSeaNftRequest(
-                Name: nft.Name,
-                Description: nft.Description,
-                ContractAddress: nft.Contract,
-                Collection: nft.Collection,
-                TokenId: nft.Identifier,
-                OpenSeaUrl: nft.OpenseaUrl,
+            Name: nft.Name,
+            Description: nft.Description,
+            ContractAddress: nft.Contract,
+            Collection: nft.Collection,
+            TokenId: nft.Identifier,
+            OpenSeaUrl: nft.OpenseaUrl,
             NftUrl: nft.ImageUrl,
             Edition: edition,
             Owners: nftOwners
