@@ -79,7 +79,6 @@ export function ArtInfos({
 					videoUrl={selectedArt.videoProcess}
 				/>
 			)} */}
-
       <div className="2xl:flex-1 min-w-[300px] xl:min-w-[350px] flex items-end flex-grow-0 shrink basis-0">
         <div className="art-detail-inner-container">
           <ArtDetails
@@ -89,7 +88,6 @@ export function ArtInfos({
           />
         </div>
       </div>
-
       {!!selectedArt.videoProcess && (
         <button
           aria-label="Open video process modal"
@@ -99,7 +97,6 @@ export function ArtInfos({
           <CustomIcons.Camera />
         </button>
       )}
-
       <div className="block w-[75vw] self-center xl:hidden">
         <HorizontalInCarousel
           onChangeSlideIndex={onChangeSlideIndex}
@@ -107,7 +104,6 @@ export function ArtInfos({
           getMoreSlides={() => handleMoreSlides()}
         />
       </div>
-
       {wasMinted(selectedArt) ? (
         <div
           id="art-container"
@@ -115,7 +111,12 @@ export function ArtInfos({
             'px-4 gap-2 transition-all max-h-full h-full w-full xl:w-[400px] flex-shrink-0 flex-grow-0 flex flex-col justify-end'
           )}
         >
-          <div className={cn(showDetails ? 'overflow-y-scroll' : '')}>
+          <div
+            className={cn(
+              'overflow-hidden',
+              showDetails ? 'overflow-y-scroll' : ''
+            )}
+          >
             <div
               id="art-description"
               className={cn(
@@ -223,7 +224,6 @@ export function ArtInfos({
           )}
         </div>
       )}
-
       <div className="hidden place-content-center xl:grid">
         {!!selectedArt.videoProcess ? (
           <button
