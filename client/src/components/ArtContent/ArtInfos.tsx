@@ -69,7 +69,9 @@ export function ArtInfos({
   }
 
   return (
-    <section className={cn('flex p-4 flex-wrap gap-4 h-full p-5 xl:pr-[12vw]')}>
+    <section
+      className={cn('flex p-4 flex-wrap gap-4 h-full p-5 pl-0 xl:pr-[12vw]')}
+    >
       {/* {!!selectedArt.videoProcess && (
 				<VideoProcessModal
 					open={isOpenVideo}
