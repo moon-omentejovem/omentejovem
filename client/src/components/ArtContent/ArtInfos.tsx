@@ -81,11 +81,13 @@ export function ArtInfos({
 			)} */}
 
       <div className="2xl:flex-1 min-w-[300px] xl:min-w-[350px] flex items-end flex-grow-0 shrink basis-0">
-        <ArtDetails
-          detailedImage={selectedArt.nftCompressedUrl}
-          image={selectedArt.nftCompressedHdUrl}
-          name={selectedArt.name}
-        />
+        <div className="art-detail-inner-container">
+          <ArtDetails
+            detailedImage={selectedArt.nftCompressedUrl}
+            image={selectedArt.nftCompressedHdUrl}
+            name={selectedArt.name}
+          />
+        </div>
       </div>
 
       {!!selectedArt.videoProcess && (
@@ -110,48 +112,90 @@ export function ArtInfos({
         <div
           id="art-container"
           className={cn(
-            'flex flex-col px-4 gap-2 transition-all max-h-full h-full w-full xl:w-[400px] flex-shrink-0 flex-grow-0',
-            showDetails ? 'overflow-y-scroll' : ''
+            'px-4 gap-2 transition-all max-h-full h-full w-full xl:w-[400px] flex-shrink-0 flex-grow-0 flex flex-col justify-end'
           )}
         >
-          <div
-            id="art-description"
-            className={cn(
-              'h-fit flex flex-col-reverse gap-4 w-full text-sm text-secondary-100',
-              'xl:flex-col xl:max-w-sm xl:mt-auto'
-            )}
-          >
-            <p id="art-description-text" className="break-words">
-              {isDescriptionExpanded
-                ? selectedArt.description
-                : truncate(selectedArt.description)}
-              {selectedArt?.description?.length > 600 && (
-                <span>
-                  <button
-                    onClick={() =>
-                      setIsDescriptionExpanded(!isDescriptionExpanded)
-                    }
-                    className="text-primary-50 font-extrabold"
-                  >
-                    {isDescriptionExpanded ? '-' : '+'}
-                  </button>
-                </span>
+          <div className={cn(showDetails ? 'overflow-y-scroll' : '')}>
+            <div
+              id="art-description"
+              className={cn(
+                'h-fit flex flex-col-reverse gap-4 w-full text-sm text-secondary-100',
+                'xl:flex-col xl:max-w-sm xl:mt-auto'
               )}
-            </p>
-            <div>
-              <p className="text-primary-50 underline mt-4">
-                {selectedArt.name}
+            >
+              <p id="art-description-text" className="break-words">
+                {isDescriptionExpanded
+                  ? selectedArt.description
+                  : truncate(selectedArt.description)}
+                {selectedArt?.description?.length > 600 && (
+                  <span>
+                    <button
+                      onClick={() =>
+                        setIsDescriptionExpanded(!isDescriptionExpanded)
+                      }
+                      className="text-primary-50 font-extrabold"
+                    >
+                      {isDescriptionExpanded ? '-' : '+'}
+                    </button>
+                  </span>
+                )}
               </p>
-              <p>
-                minted on{' '}
-                {format(addHours(selectedArt.mintedDate, 3), 'd LLLL, yyyy')}
-              </p>
+              <div>
+                <p className="text-primary-50 underline mt-4">
+                  {selectedArt.name}
+                </p>
+                <p>
+                  minted on{' '}
+                  {format(addHours(selectedArt.mintedDate, 3), 'd LLLL, yyyy')}
+                </p>
+              </div>
+            </div>
+
+            {/* Conditional rendering with fade animation */}
+            <div
+              className={cn(
+                'fade-up',
+                showDetails
+                  ? 'opacity-100 max-h-screen  visible'
+                  : 'opacity-0 max-h-0 overflow-y-hidden invisible'
+              )}
+              style={{ transitionProperty: 'opacity, max-height' }}
+            >
+              <div id="art-info-wrapper" className={cn('flex flex-col gap-12')}>
+                <div id="art-links" className="mt-12">
+                  <ArtLinks
+                    email={email}
+                    externalLinks={selectedArt.externalLinks}
+                    availableForPurchase={selectedArt.availablePurchase}
+                    makeOffer={selectedArt.makeOffer}
+                    views={{
+                      ...(selectedArt.etherscan && {
+                        Etherscan: `https://etherscan.io/token/${selectedArt.address}?a=${selectedArt.id}`
+                      })
+                    }}
+                  />
+                </div>
+
+                <ArtOwnership
+                  nftChain={selectedArt.nftChain}
+                  artAddress={getNftLinks(
+                    selectedArt.address,
+                    selectedArt.nftChain,
+                    selectedArt.id,
+                    'token'
+                  )}
+                  owners={selectedArt.owners}
+                  firstEvent={selectedArt.mintedEvent}
+                  lastEvent={selectedArt.lastEvent}
+                  source={source}
+                />
+              </div>
             </div>
           </div>
 
           <button
             aria-label="Open art infos"
-            className="group relative place-items-center w-6 h-6 py-4"
+            className="group relative flex items-center justify-center w-10 h-10" // Fixed width and height
             onClick={() => {
               setShowDetails(!showDetails)
               artInfoButtonAnimation()
@@ -160,51 +204,10 @@ export function ArtInfos({
           >
             <CustomIcons.Plus
               className={cn(
-                'art-info-button absolute transition-all text-secondary-100 group-hover:text-primary-50'
+                'art-info-button w-6 h-6 transition-all text-secondary-100 group-hover:text-primary-50' // Set size for the SVG
               )}
             />
           </button>
-
-          {/* Conditional rendering with fade animation */}
-          <div
-            className={cn(
-              'fade-up',
-              showDetails
-                ? 'opacity-100 max-h-screen  visible'
-                : 'opacity-0 max-h-0 overflow-y-hidden invisible'
-            )}
-            style={{ transitionProperty: 'opacity, max-height' }}
-          >
-            <div id="art-info-wrapper" className={cn('flex flex-col gap-12')}>
-              <div id="art-links" className="mt-12">
-                <ArtLinks
-                  email={email}
-                  externalLinks={selectedArt.externalLinks}
-                  availableForPurchase={selectedArt.availablePurchase}
-                  makeOffer={selectedArt.makeOffer}
-                  views={{
-                    ...(selectedArt.etherscan && {
-                      Etherscan: `https://etherscan.io/token/${selectedArt.address}?a=${selectedArt.id}`
-                    })
-                  }}
-                />
-              </div>
-
-              <ArtOwnership
-                nftChain={selectedArt.nftChain}
-                artAddress={getNftLinks(
-                  selectedArt.address,
-                  selectedArt.nftChain,
-                  selectedArt.id,
-                  'token'
-                )}
-                owners={selectedArt.owners}
-                firstEvent={selectedArt.mintedEvent}
-                lastEvent={selectedArt.lastEvent}
-                source={source}
-              />
-            </div>
-          </div>
         </div>
       ) : (
         <div className="flex flex-col w-full max-w-sm justify-end text-sm text-secondary-100 h-full">
