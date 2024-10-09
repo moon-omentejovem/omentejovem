@@ -9,7 +9,8 @@ public static class NftConstants
     public static readonly Dictionary<NftChain, string[]> AvailablePurchaseMapping = new()
     {
         { NftChain.Ethereum, [ "Manifold", "Transient Labs", "SuperRare", "OpenSea", "Rarible" ] },
-        { NftChain.Tezos, [ "Hen", "objkt", "objkt.one" ] }
+        { NftChain.Tezos, [ "Hen", "objkt", "objkt.one" ] },
+        { NftChain.Unknown, [] }
     };
 
     public static DateTime? ParsePosixTimestamp(long? posixTimestamp)
