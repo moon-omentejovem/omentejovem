@@ -1,5 +1,6 @@
 ﻿@page "/nfts/{id}"
 @inject ListNftsService NftService
+@inject NavigationManager Navigation
 
 @using System.ComponentModel.DataAnnotations
 @using AdminApi.Components.Pages.Forms
@@ -10,6 +11,13 @@
 @using Domain.Models
 @using Microsoft.AspNetCore.Components.Forms
 @using MongoDB.Bson
+
+<div>
+    <ConfirmDialog @ref="dialog" />
+    <Button Color="ButtonColor.Danger" @onclick="DeleteNft">
+        <Icon Name="IconName.Trash" />
+    </Button>
+</div>
 
 <Tabs>
     <Tab Title="NFT Details" IsActive="true">
@@ -47,6 +55,8 @@
     private LinksForm LinksForm = new();
 
     private NftArt? DomainNft;
+
+    private ConfirmDialog dialog;
 
     protected override async Task OnInitializedAsync()
     {
@@ -100,5 +110,18 @@
         await NftService.UpdateNft(new UpdateNftBuilder(DomainNft!.Id)
             .Set(n => n.MintedEvent, mintedEvent)
         );
+    }
+
+    private async Task DeleteNft()
+    {
+        var confirmation = await dialog.ShowAsync(
+            title: "Deletar NFT",
+            message1: "Tem certeza que quer deletar esse NFT?");
+
+        if (confirmation)
+        {
+            await NftService.DeleteNft(DomainNft!.Id);
+            Navigation.NavigateTo($"/nfts");
+        }
     }
 }
