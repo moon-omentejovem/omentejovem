@@ -30,7 +30,12 @@ public class ListNftsService(IMongoDatabase mongoDatabase)
     public async Task UpdateNft(UpdateNftBuilder updateBuilder)
     {
         await _nftsCollection.UpdateOneAsync(updateBuilder.IdFilter, updateBuilder.Update);
-    }    
+    }
+
+    public async Task DeleteNft(ObjectId nftId)
+    {
+        await _nftsCollection.DeleteOneAsync(n => n.Id == nftId);
+    }
 
     public async Task<ObjectId> CreateNft(CreateNftFromScratchRequest createRequest)
     {
