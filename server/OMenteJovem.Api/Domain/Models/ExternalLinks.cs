@@ -15,12 +15,10 @@ public class ExternalLinks
         links = [externalLink];
     }
 
-    public ExternalLinks AddLink(ExternalLink link)
+    public void AddLink(ExternalLink link)
     {
         links.RemoveAll(l => l.Name == link.Name);
         links.Add(link);
-
-        return this;
     }
 }
 

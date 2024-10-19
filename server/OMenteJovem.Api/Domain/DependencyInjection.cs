@@ -2,12 +2,15 @@
 using Amazon.Runtime;
 using Amazon.S3;
 using Domain.Database;
+using Domain.OpenSea;
 using Domain.Services;
 using Domain.Utils;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using MongoDB.Driver.Core.Configuration;
+using Polly;
+using Polly.Retry;
 using System.Reflection;
 using TinifyAPI;
 
@@ -54,10 +57,25 @@ public static class DependencyInjection
             });
 
         services
-            .AddSingleton<S3UploadService>();
+            .AddSingleton<S3UploadService>()
+            .AddSingleton<UploadImagesService>();
 
         Tinify.Key = configuration.GetValue<string>("TinifyKey");
 
         return services;
+    }
+
+    public static IServiceCollection AddResiliencePipeline(this IServiceCollection services)
+    {
+        return services.AddResiliencePipeline("httpPipeline", builder =>
+         {
+             builder
+                 .AddRetry(new RetryStrategyOptions
+                 {
+                     MaxRetryAttempts = 3,
+                     Delay = TimeSpan.FromSeconds(3),
+                     ShouldHandle = new PredicateBuilder().Handle<MappingException>()
+                 });
+         });
     }
 }

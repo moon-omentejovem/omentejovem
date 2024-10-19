@@ -73,13 +73,6 @@ public class CreateNftEventsRequestHandler(IMongoDatabase mongoDatabase) : IRequ
 
             existingNft.TotalTokens = totalNfts;
             existingNft.AvailableTokens = availableNfts;
-
-            if (request.CalculateOwners)
-            {
-                var owners = GetOwnersFromTransactions(request.Events);
-
-                existingNft.Owners = owners;
-            }
         }
 
         var updateString = updateBuilder.ToString();

@@ -1,4 +1,6 @@
-﻿using Domain.OpenSea.Models.GetAccount;
+﻿using Domain.Models;
+using Domain.Models.Enums;
+using Domain.OpenSea.Models.GetAccount;
 using Domain.OpenSea.Models.GetCollection;
 using Domain.OpenSea.Models.GetCollections;
 using Domain.OpenSea.Models.GetNft;
@@ -8,6 +10,7 @@ using Domain.Utils;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
 using Polly;
+using System.Net;
 
 namespace Domain.OpenSea;
 
@@ -35,16 +38,80 @@ public class OpenSeaClient
         _resiliencePipeline = resiliencePipeline;
     }
 
-    public async Task<ListNftsResponse> ListNftsByCollection(string collectionSlug)
+    public async Task<ListNftsResponse> ListNftsByCollection(string collectionSlug, int? hardLimit = null)
     {
-        return await _resiliencePipeline.ExecuteAsync(async (_) =>
+        string? next = null;
+        bool shouldGoOn = false;
+        var results = new List<ListNftResponse>();
+
+        do
         {
-            var response = await _httpClient.GetAsync($"{API_BASE_URL}/collection/{collectionSlug}/nfts");
+            await _resiliencePipeline.ExecuteAsync(async (_) =>
+            {
+                var response = await _httpClient.GetAsync($"{API_BASE_URL}/collection/{collectionSlug}/nfts?limit=200&" + (next is null ? "" : "next=" + next));
 
-            var deserializedContent = await HttpUtils.DeserializeContent<ListNftsResponse>(response);
+                if (response.StatusCode != System.Net.HttpStatusCode.NotFound)
+                {
+                    try
+                    {
+                        var deserializedContent = await HttpUtils.DeserializeContent<ListNftsResponse>(response);
 
-            return deserializedContent is null ? throw new Exception() : deserializedContent;
-        });
+                        next = deserializedContent!.Next;
+
+                        shouldGoOn = !string.IsNullOrEmpty(next);
+
+                        results.AddRange(deserializedContent.Nfts);
+
+                        shouldGoOn &= hardLimit is not null && results.Count < hardLimit;
+                    }
+                    catch (Exception)
+                    {
+                        throw new MappingException();
+                    }
+                }
+            });
+        }
+        while (shouldGoOn);
+
+        return new ListNftsResponse(results, null);
+    }
+
+    public async Task<ListNftsResponse> ListNftsByAddress(string address, int? hardLimit = null)
+    {
+        string? next = null;
+        bool shouldGoOn = false;
+        var results = new List<ListNftResponse>();
+
+        do
+        {
+            await _resiliencePipeline.ExecuteAsync(async (_) =>
+            {
+                var response = await _httpClient.GetAsync($"{API_BASE_URL}/chain/{NftChain.Ethereum}/contract/{address}/nfts?limit=200&" + (next is null ? "" : "next=" + next));
+
+                if (response.StatusCode != System.Net.HttpStatusCode.NotFound)
+                {
+                    try
+                    {
+                        var deserializedContent = await HttpUtils.DeserializeContent<ListNftsResponse>(response);
+
+                        next = deserializedContent!.Next;
+
+                        shouldGoOn = !string.IsNullOrEmpty(next);
+
+                        results.AddRange(deserializedContent.Nfts);
+
+                        shouldGoOn &= hardLimit is not null && results.Count < hardLimit;
+                    }
+                    catch (Exception)
+                    {
+                        throw new MappingException();
+                    }
+                }
+            });
+        }
+        while (shouldGoOn);
+
+        return new ListNftsResponse(results, null);
     }
 
     public async Task<ListNftsResponse> ListArtistNftsByChain(string chain)
@@ -82,16 +149,23 @@ public class OpenSeaClient
         });
     }
 
-    public async Task<GetNftEventsResponse> GetNftEvents(string addressId, string nftId)
+    public async Task<GetNftEventsResponse?> GetNftEvents(string addressId, string nftId)
     {
         string? next = null;
         var results = new List<NftEventResponse>();
+        bool nftFound = true;
 
         do
         {
             await _resiliencePipeline.ExecuteAsync(async (_) =>
             {
                 var response = await _httpClient.GetAsync($"{API_BASE_URL}/events/chain/ethereum/contract/{addressId}/nfts/{nftId}?next={next}&event_type=transfer&event_type=sale");
+
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    nftFound = false;
+                    return;
+                }
 
                 var deserializedContent = await HttpUtils.DeserializeContent<GetNftEventsResponse>(response);
 
@@ -102,7 +176,7 @@ public class OpenSeaClient
         }
         while (!string.IsNullOrEmpty(next));
 
-        return new GetNftEventsResponse { AssetEvents = results.ToArray() };
+        return nftFound ? new GetNftEventsResponse { AssetEvents = results.ToArray() } : null;
     }
 
     public async Task<GetCollectionsResponse> GetCollections()

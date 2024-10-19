@@ -16,8 +16,15 @@ public record CreateObjktNftRequest(
     string Timestamp,
     string TokenId,
     string ObjktUrl,
-    bool Edition
+    bool Edition,
+    IEnumerable<CreateObktNftOwnerRequest> Owners
 ) : IRequest;
+
+public record CreateObktNftOwnerRequest(
+    string Address,
+    string? Alias,
+    int Quantity
+);
 
 public class CreateObjktNftRequestHandler(
     IMongoDatabase mongoDatabase,
@@ -28,11 +35,10 @@ public class CreateObjktNftRequestHandler(
 
     public async Task Handle(CreateObjktNftRequest request, CancellationToken cancellationToken)
     {
-        var existentNftCursor = await _nftsCollection.FindAsync(n => 
+        var existentNft = await _nftsCollection.Find(n => 
             n.Address == request.ContractAddress &&
             n.SourceId == request.TokenId
-        );
-        var existentNft = await existentNftCursor.FirstOrDefaultAsync(cancellationToken: cancellationToken);
+        ).FirstOrDefaultAsync(cancellationToken: cancellationToken);
 
         if (existentNft == null)
         {
@@ -41,6 +47,7 @@ public class CreateObjktNftRequestHandler(
                 Name = request.Name,
                 Description = request.Description,
                 Address = request.ContractAddress,
+                SourceId = request.TokenId,
                 NftChain = NftChain.Tezos,
                 Collection = request.Collection,
                 Edition = request.Edition,
@@ -53,6 +60,12 @@ public class CreateObjktNftRequestHandler(
                         SourceId = request.TokenId
                     }
                 ],
+                Owners = request.Owners.Select(o => new Owner
+                {
+                    Quantity = o.Quantity,
+                    Alias = o.Alias,
+                    Address = o.Address,
+                }).ToList()
             };
 
             await mediator.Send(new CreateCollectionRequest(
@@ -69,15 +82,21 @@ public class CreateObjktNftRequestHandler(
             return;
         }
 
-        var foundContract = existentNft.Contracts?.FirstOrDefault(c => c.ContractAddress == request.ContractAddress);
-        if (foundContract is not null)
-            return;
-
         existentNft.Address = request.ContractAddress;
-        existentNft.NftChain = NftChain.Ethereum;
+        existentNft.SourceId = request.TokenId;
+        existentNft.NftChain = NftChain.Tezos;
         existentNft.Collection = request.Collection;
         existentNft.ExternalLinks.AddLink(new() { Name = ExternalLinkEnum.ObktOneLink, Url = request.ObjktUrl });
-        existentNft.Contracts.Add(new Contract
+
+        existentNft.Owners = request.Owners.Select(o => new Owner
+        {
+            Quantity = o.Quantity,
+            Alias = o.Alias,
+            Address = o.Address,
+        }).ToList();
+
+        existentNft.Contracts ??= [];
+        existentNft.AddContract(new Contract
         {
             ContractAddress = request.ContractAddress,
             NftChain = NftChain.Tezos,
