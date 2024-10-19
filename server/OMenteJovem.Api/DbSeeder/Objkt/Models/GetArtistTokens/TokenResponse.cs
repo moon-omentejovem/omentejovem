@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System.Text.Json.Serialization;
 
 namespace DbSeeder.Objkt.Models.GetArtistTokens;
 
@@ -39,7 +38,7 @@ public record TokenResponse
     public string Timestamp { get; init; } = string.Empty;
 
     [JsonProperty("fa")]
-    public FaResponse Fa { get; init; }
+    public required FaResponse Fa { get; init; }
 
     [JsonProperty("holders")]
     public List<HoldersResponse> Holders { get; init; } = [];

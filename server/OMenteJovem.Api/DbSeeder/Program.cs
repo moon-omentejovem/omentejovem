@@ -5,41 +5,58 @@ using Domain.OpenSea;
 using Domain.Utils;
 using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.Newtonsoft;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Polly;
 using Polly.Retry;
 
-var builder = Host.CreateApplicationBuilder(args);
-
-builder.Configuration
-    .AddJsonFile("appsettings.json")
-    .AddJsonFile("appsettings.Development.json")
-    .AddEnvironmentVariables("OMJ_DB_SEEDER_");
-
-builder.Services
-    .AddConfiguration<OpenSeaConfig>("OpenSea")
-    .AddConfiguration<ObjktConfig>("Objkt")
-    .AddSingleton(resolver =>
+using var host = Host.CreateDefaultBuilder(args)
+    .ConfigureAppConfiguration((context, builder) =>
     {
-        var graphQLClient = new GraphQLHttpClient("https://data.objkt.com/v3/graphql", new NewtonsoftJsonSerializer());
+        IConfiguration config = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json")
+            .AddJsonFile("appsettings.Development.json")
+            .AddEnvironmentVariables("OMJ_DB_SEEDER_")
+            .Build();
 
-        return graphQLClient;
+        builder.AddConfiguration(config);
     })
-    .AddResiliencePipeline("httpPipeline", builder =>
+    .ConfigureServices((context, services) =>
     {
-        builder
-            .AddRetry(new RetryStrategyOptions
+        services
+            .AddConfiguration<OpenSeaConfig>("OpenSea")
+            .AddConfiguration<ObjktConfig>("Objkt")
+            .AddSingleton(resolver =>
             {
-                MaxRetryAttempts = 3,
-                Delay = TimeSpan.FromSeconds(3)
-            });
+                var graphQLClient = new GraphQLHttpClient("https://data.objkt.com/v3/graphql", new NewtonsoftJsonSerializer());
+
+                return graphQLClient;
+            })
+            .AddResiliencePipeline("httpPipeline", builder =>
+            {
+                builder
+                    .AddRetry(new RetryStrategyOptions
+                    {
+                        MaxRetryAttempts = 6,
+                        Delay = TimeSpan.FromSeconds(5)
+                    });
+            })
+            .AddSingleton<ObjktClient>()
+            .AddSingleton<OpenSeaClient>()
+            .AddS3Service(context.Configuration)
+            .AddDomain()
+            .AddHostedService<Worker>();
     })
-    .AddSingleton<ObjktClient>()
-    .AddSingleton<OpenSeaClient>()
-    .AddS3Service(builder.Configuration)
-    .AddDomain();
+    .Build();
 
-builder.Services.AddHostedService<Worker>();
+try
+{
+    host.Start();
+}
+catch
+{
+    return -1;
+}
 
-var host = builder.Build();
-
-host.Run();
+return 0;

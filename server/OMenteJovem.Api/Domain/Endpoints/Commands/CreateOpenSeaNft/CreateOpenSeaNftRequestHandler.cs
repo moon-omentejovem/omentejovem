@@ -22,8 +22,15 @@ public class CreateOpenSeaNftRequestHandler(
 {
     private readonly IMongoCollection<NftArt> _nftsCollection = mongoDatabase.GetCollection<NftArt>(MongoDbConfig.NftArtsCollectionName);
 
+    private readonly string[] BlackListCreateNfts = [ "Ether-Man" ];
+
     public async Task<NftArt?> Handle(CreateOpenSeaNftRequest request, CancellationToken cancellationToken)
     {
+        if (BlackListCreateNfts.Contains(request.NftResponse.Name))
+        {
+            return null;
+        }
+
         var mappedNft = MapFromResponse(request.NftResponse);
 
         var existentNft = await _nftsCollection.Find(n =>
