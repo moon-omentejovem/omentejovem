@@ -85,13 +85,8 @@
         );
     }
 
-    private async Task HandleMediaSubmit(NftMediaImages nftMediaImages)
+    private void HandleMediaSubmit(NftMediaImages nftMediaImages)
     {
-        await NftService.UpdateNft(new UpdateNftBuilder(DomainNft!.Id)
-            .Set(n => n.NftUrl, nftMediaImages.NftUrl)
-            .Set(n => n.OptimizedImages, nftMediaImages.OptimizedImages)
-        );
-
         NftArtModel.NftUrl = nftMediaImages.NftUrl;
         NftArtModel.OptimizedImages = nftMediaImages.OptimizedImages;
     }

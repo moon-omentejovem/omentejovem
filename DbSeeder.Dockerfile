@@ -19,6 +19,4 @@ WORKDIR /app
 
 COPY --from=build /app/publish .
 
-EXPOSE 8000
-
 ENTRYPOINT [ "dotnet", "DbSeeder.dll" ]

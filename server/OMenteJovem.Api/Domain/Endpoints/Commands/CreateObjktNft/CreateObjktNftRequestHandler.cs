@@ -37,7 +37,7 @@ public class CreateObjktNftRequestHandler(
     {
         var existentNft = await _nftsCollection.Find(n => 
             n.Address == request.ContractAddress &&
-            n.SourceId == request.TokenId
+            n.Name == request.Name
         ).FirstOrDefaultAsync(cancellationToken: cancellationToken);
 
         if (existentNft == null)

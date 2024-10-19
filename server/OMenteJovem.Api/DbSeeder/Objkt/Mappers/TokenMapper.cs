@@ -11,7 +11,7 @@ public static class TokenMapper
         return new NftArt
         {
             NftChain = NftChain.Tezos,
-            SourceId = token.TokenId,
+            SourceId = token.Pk.ToString(),
             Address = token.FaContract,
             Name = token.Name,
             Url = $"https://cloudflare-ipfs.com/ipfs/{token.DisplayUri.Split("/")[^1]}",

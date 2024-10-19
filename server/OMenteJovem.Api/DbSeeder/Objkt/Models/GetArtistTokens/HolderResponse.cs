@@ -5,7 +5,7 @@ namespace DbSeeder.Objkt.Models.GetArtistTokens;
 public record HolderResponse
 {
     [JsonPropertyName("address")]
-    public string Address { get; init; }
+    public string Address { get; init; } = string.Empty;
 
     [JsonPropertyName("alias")]
     public string? Alias { get; init; }

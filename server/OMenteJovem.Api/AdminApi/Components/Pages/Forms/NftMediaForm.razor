@@ -5,7 +5,7 @@
 @using Domain.Services
 @using TinifyAPI
 
-@inject S3UploadService UploadService;
+@inject UploadImagesService UploadService;
 
 <div class="container pt-3">
 
@@ -96,34 +96,20 @@
 
     private async Task LoadNftFile(InputFileChangeEventArgs eventArgs)
     {
-        NftMediaImages optimizedImages = new();
 
         loading = true;
 
-        using (var stream = eventArgs.File.OpenReadStream(maxAllowedSize: 25 * 1024 * 1024))
+        using var stream = eventArgs.File.OpenReadStream(maxAllowedSize: 25 * 1024 * 1024);
+
+        var (nftUrl, optimizedImages) = await UploadService.OptimizeImages(NftArtModel.Id, NftArtModel.Name, stream, eventArgs.File.ContentType);
+
+        NftMediaImages mediaImages = new NftMediaImages
         {
-            optimizedImages.NftUrl = await UploadService.UploadAsync($"{NftArtId}/{eventArgs.File.Name}", stream, eventArgs.File.ContentType);
-        }
-        using (var stream = eventArgs.File.OpenReadStream(maxAllowedSize: 25 * 1024 * 1024))
-        {
-            var byteArray = await GetByteArrayContent(stream);
+            NftUrl = nftUrl,
+            OptimizedImages = optimizedImages
+        };
 
-            optimizedImages.OptimizedImages.OriginalCompression = await UploadService.UploadAsync($"{NftArtId}/compressed_{eventArgs.File.Name}", await CompressImage(byteArray), eventArgs.File.ContentType);
-
-            optimizedImages.OptimizedImages.ResizedImages.Add(new()
-            {
-                Height = 1080,
-                Source = await UploadService.UploadAsync($"{NftArtId}/resized_1920_{eventArgs.File.Name}", await ResizeImage(byteArray, 1080), eventArgs.File.ContentType)
-            });
-
-            optimizedImages.OptimizedImages.ResizedImages.Add(new()
-            {
-                Height = 720,
-                Source = await UploadService.UploadAsync($"{NftArtId}/resized_1280_{eventArgs.File.Name}", await ResizeImage(byteArray, 720), eventArgs.File.ContentType)
-            });
-        }
-
-        await NftImageUrlChanged.InvokeAsync(optimizedImages);
+        await NftImageUrlChanged.InvokeAsync(mediaImages);
 
         loading = false;
     }
