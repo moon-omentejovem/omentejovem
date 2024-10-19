@@ -24,7 +24,7 @@ public static class FormMapper
             OneOfOne = nftArt.OneOfOne,
             Edition = nftArt.Edition,
             OptimizedImages = nftArt.OptimizedImages,
-            AvailablePurchase = nftArt.AvailablePurchase,
+            AvailablePurchase = nftArt.AvailablePurchase ?? new(),
             Owners = nftArt.Owners,
             MintedEvent = nftArt.MintedEvent
         };

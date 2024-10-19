@@ -24,7 +24,7 @@ public class NftArt
     public string? VideoProcess { get; set; }
     public NftChain NftChain { get; set; } = NftChain.Unknown;
     public bool Etherscan { get; set; } = false;
-    public string? Collection { get; set; }
+    public string Collection { get; set; }
     public bool OneOfOne { get; set; }
     public bool Edition { get; set; }
     public int? TotalTokens { get; set; }
@@ -32,6 +32,12 @@ public class NftArt
     public ExternalLinks ExternalLinks { get; set; } = new();
     public NftTransferEvent? MintedEvent { get; set; }
     public NftTransferEvent? LastTransferEvent { get; set; }
+
+    public void AddContract(Contract contract)
+    {
+        Contracts.RemoveAll(c => c.ContractAddress == contract.ContractAddress && c.SourceId == contract.SourceId);
+        Contracts.Add(contract);
+    }
 }
 
 public class OptimizedImages

@@ -10,7 +10,6 @@ namespace Domain.Endpoints.Commands.UpdateOwners;
 
 public record UpdateOwnersRequest
 (
-    List<Owner>? OwnersRequest,
     ObjectId NftId
 ) : IRequest;
 
@@ -20,8 +19,7 @@ public class UpdateOwnersRequestHandler(IMongoDatabase mongoDatabase, OpenSeaCli
 
     public async Task Handle(UpdateOwnersRequest request, CancellationToken cancellationToken)
     {
-        var nftOwners = request.OwnersRequest
-            ?? (await _nftsCollection.Find(n => n.Id == request.NftId).FirstAsync(cancellationToken)).Owners;
+        var nftOwners = (await _nftsCollection.Find(n => n.Id == request.NftId).FirstAsync(cancellationToken)).Owners;
 
         foreach (var owner in nftOwners)
         {

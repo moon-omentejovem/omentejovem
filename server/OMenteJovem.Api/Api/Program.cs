@@ -1,4 +1,6 @@
 using Domain;
+using Domain.OpenSea;
+using Domain.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +12,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services
     .AddDomain()
-    .AddS3Service(builder.Configuration);
+    .AddS3Service(builder.Configuration)
+    .AddResiliencePipeline()
+    .AddConfiguration<OpenSeaConfig>("OpenSea")
+    .AddSingleton<OpenSeaClient>()
+    ;
 builder.Services.AddLogging();
 
 builder.Configuration

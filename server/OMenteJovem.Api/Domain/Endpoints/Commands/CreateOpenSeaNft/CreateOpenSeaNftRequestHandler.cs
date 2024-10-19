@@ -1,199 +1,129 @@
 ﻿using Domain.Database;
 using Domain.Models;
 using Domain.Models.Enums;
+using Domain.OpenSea;
+using Domain.OpenSea.Models.GetNft;
 using Domain.Services;
+using Domain.Utils;
 using MediatR;
-using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
-using TinifyAPI;
 
 namespace Domain.Endpoints.Commands.CreateOpenSeaNft;
 
 public record CreateOpenSeaNftRequest(
-    string Name,
-    string Description,
-    string ContractAddress,
-    string Collection,
-    string TokenId,
-    string OpenSeaUrl,
-    string NftUrl,
-    bool Edition,
-    List<Owner>? Owners
-) : IRequest<NftArt>;
+    NftResponse NftResponse
+) : IRequest<NftArt?>;
 
 public class CreateOpenSeaNftRequestHandler(
     IMongoDatabase mongoDatabase,
-    S3UploadService s3UploadService,
-    ILogger<CreateOpenSeaNftRequestHandler> logger
-) : IRequestHandler<CreateOpenSeaNftRequest, NftArt>
+    UploadImagesService uploadService,
+    OpenSeaClient openSeaClient
+) : IRequestHandler<CreateOpenSeaNftRequest, NftArt?>
 {
     private readonly IMongoCollection<NftArt> _nftsCollection = mongoDatabase.GetCollection<NftArt>(MongoDbConfig.NftArtsCollectionName);
 
-    public async Task<NftArt> Handle(CreateOpenSeaNftRequest request, CancellationToken cancellationToken)
+    public async Task<NftArt?> Handle(CreateOpenSeaNftRequest request, CancellationToken cancellationToken)
     {
-        var existentNft = await _nftsCollection.Find(n => 
-                n.Address == request.ContractAddress &&
-                n.SourceId == request.TokenId
-            )
-            .FirstOrDefaultAsync(cancellationToken: cancellationToken);
+        var mappedNft = MapFromResponse(request.NftResponse);
+
+        var existentNft = await _nftsCollection.Find(n =>
+            n.Name == mappedNft.Name &&
+            n.Collection == mappedNft.Collection
+        )
+        .FirstOrDefaultAsync(cancellationToken: cancellationToken);
+
+        var isNftBurned = await IsNftBurned(mappedNft.Address, mappedNft.SourceId);
+
+        if (isNftBurned)
+        {
+            return null;
+        }
 
         if (existentNft == null)
         {
-            var newNft = new NftArt
-            {
-                Name = request.Name,
-                Description = request.Description,
-                Address = request.ContractAddress,
-                SourceId = request.TokenId,
-                NftChain = NftChain.Ethereum,
-                Collection = request.Collection,
-                NftUrl = request.NftUrl,
-                Edition = request.Edition,
-                ExternalLinks = new(new() { Name = ExternalLinkEnum.OpenSea, Url = request.OpenSeaUrl }),
-                Contracts =
-                [
-                    new Contract
-                    {
-                        ContractAddress = request.ContractAddress,
-                        NftChain = NftChain.Ethereum,
-                        SourceId = request.TokenId
-                    }
-                ],
-                Owners = request.Owners ?? []
-            };
+            await _nftsCollection.InsertOneAsync(mappedNft, cancellationToken: cancellationToken);
 
-            await _nftsCollection.InsertOneAsync(newNft, cancellationToken: cancellationToken);
+            await uploadService.OptimizeImages(mappedNft);
 
-            await OptimizeImages(newNft);
-
-            return newNft;
+            return mappedNft;
         }
 
         existentNft.NftChain = NftChain.Ethereum;
-        existentNft.Collection = request.Collection;
-        existentNft.ExternalLinks.AddLink(new() { Name = ExternalLinkEnum.OpenSea, Url = request.OpenSeaUrl });
+        existentNft.Collection = mappedNft.Collection;
+        existentNft.ExternalLinks.AddLink(mappedNft.ExternalLinks.Links.First());
+        existentNft.AddContract(mappedNft.Contracts.First());
+        existentNft.SourceId = mappedNft.SourceId;
 
-        if (!existentNft.Contracts.Any(c => c.ContractAddress == request.ContractAddress && c.SourceId == request.TokenId))
+        if (mappedNft.Owners.Count > 0)
         {
-            existentNft.Contracts.Add(new Contract
-            {
-                ContractAddress = request.ContractAddress.ToLower(),
-                NftChain = NftChain.Ethereum,
-                SourceId = request.TokenId
-            });
-        }
-
-        if (existentNft.Owners.Count == 0 && request.Owners?.Count > 0)
-        {
-            existentNft.Owners = request.Owners;
+            existentNft.Owners = mappedNft.Owners;
         }
 
         await _nftsCollection.ReplaceOneAsync(n => n.Id == existentNft.Id, existentNft, cancellationToken: cancellationToken);
 
-        if (
-            existentNft.OptimizedImages == null 
-            || 
-                (existentNft.OptimizedImages != null && 
-                string.IsNullOrEmpty(existentNft.OptimizedImages.OriginalCompression) &&
-                existentNft.OptimizedImages.ResizedImages.Any())
-        )
+        if (!AreImagesReady(existentNft))
         {
-            await OptimizeImages(existentNft);
+            await uploadService.OptimizeImages(existentNft);
         }
 
         return existentNft;
     }
 
-    private async Task OptimizeImages(NftArt nft)
+    private static bool AreImagesReady(NftArt nftArt)
     {
-        if (nft.OptimizedImages is not null &&
-            !string.IsNullOrEmpty(nft.OptimizedImages.OriginalCompression) &&
-            nft.OptimizedImages.ResizedImages.Count != 0)
-        {
-            return;
-        }
+        if (nftArt.OptimizedImages == null)
+            return false;
+        if (string.IsNullOrEmpty(nftArt.OptimizedImages.OriginalCompression))
+            return false;
 
-        if (string.IsNullOrEmpty(nft.NftUrl))
-        {
-            return;
-        }
+        if (!nftArt.OptimizedImages.ResizedImages.Any(i => i.Height == 720))
+            return false;
+        if (!nftArt.OptimizedImages.ResizedImages.Any(i => i.Height == 1080))
+            return false;
 
-        var (contentType, responseContent) = await GetContentType(nft.NftUrl);
-
-        var fileExtension = contentType.Split('/')[1];
-
-        var source = Tinify.FromUrl(nft.NftUrl);
-
-        var nftName = nft.Name.ToLower().Replace('/', ' ').Replace(' ', '-');
-
-        var newNftUrl = await s3UploadService.UploadAsync($"{nft.Id}/{nftName}.{fileExtension}", new MemoryStream(await source.ToBuffer()), contentType);
-
-        var originalCompression = await s3UploadService.UploadAsync($"{nft.Id}/compressed_{nftName}.{fileExtension}", new MemoryStream(await source.ToBuffer()), contentType);
-
-        var resizedFullHd = await s3UploadService.UploadAsync(
-            $"{nft.Id}/resized_1920_{nftName}.{fileExtension}",
-            new MemoryStream(await source.Resize(new
-            {
-                method = "scale",
-                height = 1080
-            }).ToBuffer()),
-            contentType
-        );
-
-        var resizedHd = await s3UploadService.UploadAsync(
-            $"{nft.Id}/resized_1280_{nftName}.{fileExtension}",
-            new MemoryStream(await source.Resize(new
-            {
-                method = "scale",
-                height = 720
-            }).ToBuffer()),
-            contentType
-        );
-
-        var optimizedImages = new OptimizedImages
-        {
-            OriginalCompression = originalCompression,
-            ResizedImages = new()
-            {
-                new ResizedImage
-                {
-                    Height = 720,
-                    Source = resizedHd
-                },
-                new ResizedImage
-                {
-                    Height = 1080,
-                    Source = resizedHd
-                }
-            }
-        };
-
-        await _nftsCollection.UpdateOneAsync(n => n.Id == nft.Id, Builders<NftArt>.Update
-            .Set(n => n.NftUrl, newNftUrl)
-            .Set(n => n.OptimizedImages, optimizedImages)
-        );
+        return true;
     }
 
-    private async Task<(string, HttpContent)> GetContentType(string sourceUrl)
+    private static NftArt MapFromResponse(NftResponse nftResponse)
     {
-        var httpClient = new HttpClient();
-
-        var response = await httpClient.GetAsync(sourceUrl);
-
-        try
+        return new NftArt
         {
-            var contentType = response.Headers.FirstOrDefault(k => k.Key == "ContentType");
-
-            if (contentType.Key is not null && contentType.Value is not null)
+            Name = nftResponse.Name,
+            Description = nftResponse.Description,
+            Address = nftResponse.Contract,
+            SourceId = nftResponse.Identifier,
+            Collection = nftResponse.Collection,
+            NftUrl = nftResponse.ImageUrl,
+            NftChain = NftChain.Ethereum,
+            ExternalLinks = new(new() { Name = ExternalLinkEnum.OpenSea, Url = nftResponse.OpenseaUrl }),
+            Edition = nftResponse.TokenStandard == "erc1155" || nftResponse.Collection.Contains("edition", StringComparison.InvariantCultureIgnoreCase),
+            Owners = nftResponse.Owners?.Select(o => new Owner
             {
-                return (contentType.Value.First(), response.Content);
-            }
-        }
-        catch
+                Address = o.Address,
+                Quantity = o.Quantity
+            }).ToList() ?? [],
+            Contracts = [
+                new Contract
+                {
+                    ContractAddress = nftResponse.Contract,
+                    NftChain = NftChain.Ethereum,
+                    SourceId = nftResponse.Identifier
+                }
+            ],
+        };
+    }
+
+    private async Task<bool> IsNftBurned(string address, string sourceId)
+    {
+        var nftEventsResponse = await openSeaClient.GetNftEvents(address, sourceId)
+            ?? throw new Exception("Something went really wrong");
+        var lastEvent = nftEventsResponse.AssetEvents.OrderByDescending(e => e.EventTimestamp).FirstOrDefault();
+
+        if (lastEvent is null)
         {
-            logger.LogWarning("Failed to determine content type for nft url {SourceUrl}", sourceUrl);
+            return false;
         }
 
-        return ("image/jpeg", response.Content);
+        return lastEvent.ToAddress == NftConstants.NullAddress;
     }
 }
