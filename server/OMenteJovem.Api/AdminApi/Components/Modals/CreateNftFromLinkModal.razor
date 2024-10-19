@@ -76,23 +76,21 @@
 
         var nftResponse = await OpenSeaClient.GetNft(NftChain.Ethereum.ToString(), Request.ContractAddress, Request.NftId);
 
+        if (nftResponse is null)
+        {
+            errorNftId = "NFT não encontrado. Revise os dados e tente novamente";
+            return;
+        }
+
         var openSeaLink = $"https://opensea.io/assets/ethereum/{Request.ContractAddress}/{Request.NftId}";
 
-        var createdNft = await Mediator.Send(new CreateOpenSeaNftRequest(
-            Name: nftResponse.Nft.Name,
-            Description: nftResponse.Nft.Description,
-            ContractAddress: nftResponse.Nft.Contract,
-            Collection: nftResponse.Nft.Collection,
-            TokenId: nftResponse.Nft.Identifier,
-            OpenSeaUrl: openSeaLink,
-            NftUrl: nftResponse.Nft.ImageUrl,
-            Edition: nftResponse.Nft.TokenStandard == "erc1155",
-            Owners: nftResponse.Nft.Owners?.Select(o => new Owner
-            {
-                Address = o.Address,
-                Quantity = o.Quantity
-            }).ToList()
-        ));
+        var createdNft = await Mediator.Send(new CreateOpenSeaNftRequest(nftResponse.Nft));
+
+        if (createdNft is null)
+        {
+            errorNftId = "Esse NFT foi queimado";
+            return;
+        }
 
         await SeedOpenSeaNftEvents(nftResponse.Nft.Contract, nftResponse.Nft.Identifier, nftResponse.Nft.Owners is null);
 
@@ -104,6 +102,11 @@
     private async Task SeedOpenSeaNftEvents(string nftAddress, string nftIdentifier, bool calculateOwners)
     {
         var nftEventsResponse = await OpenSeaClient.GetNftEvents(nftAddress, nftIdentifier);
+
+        if (nftEventsResponse is null)
+        {
+            return;
+        }
 
         await Mediator.Send(new CreateNftEventsRequest(nftEventsResponse.AssetEvents.Select(e =>
         {

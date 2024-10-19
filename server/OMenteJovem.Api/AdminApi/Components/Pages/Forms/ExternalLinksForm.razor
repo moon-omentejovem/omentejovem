@@ -11,7 +11,7 @@
 }
 else
 {
-    <EditForm Model="@AvailablePurchase" OnValidSubmit="SubmitLink">
+    <EditForm Model="@NftArtForm.AvailablePurchase" OnValidSubmit="SubmitLink">
         <DataAnnotationsValidator />
         <ValidationSummary />
             <div>
@@ -23,13 +23,13 @@ else
                 {
                     <div class="mb-3">
                         <label for="sourceId" class="form-label">Name</label>
-                        <InputSelect id="sourceId" class="form-control" @bind-Value="AvailablePurchase.Text">
-                            <option checked="@(AvailablePurchase.Text is null)" value="">
+                    <InputSelect id="sourceId" class="form-control" @bind-Value="NftArtForm.AvailablePurchase.Text">
+                        <option checked="@(NftArtForm.AvailablePurchase.Text is null)" value="">
                                 Select
                             </option>
                             @foreach (var externalName in NftConstants.AvailablePurchaseMapping[NftArtForm.NftChain])
                             {
-                            <option checked="@(AvailablePurchase.Text == externalName)" value="@externalName">
+                            <option checked="@(NftArtForm.AvailablePurchase.Text == externalName)" value="@externalName">
                                     @externalName.ToString()
                                 </option>
                             }
@@ -38,10 +38,10 @@ else
                 }
                 <div class="mb-3">
                     <label for="sourceId" class="form-label">Url</label>
-                <InputText id="sourceId" class="form-control" @bind-Value="AvailablePurchase.Url" />
+                <InputText id="sourceId" class="form-control" @bind-Value="NftArtForm.AvailablePurchase.Url" />
                 </div>
                 <div class="mb-3">
-                <Switch @bind-Value="AvailablePurchase.Active" Label="Active" />
+                <Switch @bind-Value="NftArtForm.AvailablePurchase.Active" Label="Active" />
                 </div>
             </div>
             <button type="submit" class="btn btn-success">Submit</button>
@@ -51,12 +51,19 @@ else
 
 @code {
     [Parameter]
-    public NftArtForm? NftArtForm { get; set; }
+    public NftArtForm NftArtForm { get; set; } = new();
 
     [Parameter]
     public EventCallback<AvailablePurchase> ExternalLinksChanged { get; set; }
 
-    private AvailablePurchase AvailablePurchase => NftArtForm?.AvailablePurchase ?? new();
+    private AvailablePurchase? AvailablePurchase;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        AvailablePurchase = NftArtForm?.AvailablePurchase ?? new();
+    }
 
     private string? NftChain => NftArtForm?.NftChain.ToString();
 
@@ -65,7 +72,7 @@ else
     private async Task SubmitLink()
     {
         loading = true;
-        await ExternalLinksChanged.InvokeAsync(AvailablePurchase);
+        await ExternalLinksChanged.InvokeAsync(NftArtForm.AvailablePurchase);
         loading = false;
     }
 }

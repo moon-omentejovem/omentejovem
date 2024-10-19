@@ -21,7 +21,7 @@ public class NftArtForm
     public bool OneOfOne { get; set; }
     public bool Edition { get; set; }
     public OptimizedImages OptimizedImages { get; set; }
-    public AvailablePurchase? AvailablePurchase { get; set; }
+    public AvailablePurchase AvailablePurchase { get; set; } = new();
     public List<Owner> Owners { get; set; } = [];
     public NftTransferEvent? MintedEvent { get; set; }
 }
