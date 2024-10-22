@@ -6,7 +6,8 @@ import { CollectionsResponse } from '../resolver/types'
 export async function fetchCollections() {
   const data = await fetch(`${api.baseURL}/collections`, {
     ...api,
-    method: 'GET'
+    method: 'GET',
+    next: { revalidate: 600 }
   })
 
   const jsonData = await data.json()
