@@ -6,7 +6,8 @@ import { NftArt } from '../resolver/types'
 export async function fetchEditionNfts() {
   const data = await fetch(`${api.baseURL}/nfts/edition`, {
     ...api,
-    method: 'GET'
+    method: 'GET',
+    next: { revalidate: 600 }
   })
 
   const jsonData = await data.json()

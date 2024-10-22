@@ -11,7 +11,8 @@ export async function requestNftsByCollection(
 ): Promise<RequestCollectionNftsResponse> {
   const data = await fetch(`${api.baseURL}/nfts/collections/${slug}`, {
     ...api,
-    method: 'GET'
+    method: 'GET',
+    next: { revalidate: 600 }
   })
 
   const jsonData = await data.json()
