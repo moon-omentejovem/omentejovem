@@ -62,7 +62,7 @@ export function ArtOwnership({
             <a
               target="_blank"
               rel="noreferrer"
-              href={owner.address}
+              href={`https://etherscan.io/address/${owner.address}`}
               className="text-primary-50 hover:underline"
             >
               {formatOwnerAddress(owner.address)}
