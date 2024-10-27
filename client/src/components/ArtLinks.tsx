@@ -40,29 +40,29 @@ export function ArtLinks({
 			))} */}
 
       {!!availableForPurchase && (
-          <p
-            className={cn(
-              'mt-2 grid content-center justify-start border-y-[1px] border-secondary-100 text-sm h-16 sm:px-8 px-4 font-bold text-secondary-100',
-              !!makeOffer?.active && 'border-b-0'
-            )}
-            style={{
-              textAlign: 'left'
-            }}
-          >
-            {!availableForPurchase.url ? (
-              availableForPurchase.text
-            ) : (
-              <a
-                target="_blank"
-                rel="noreferrer"
-                href={(availableForPurchase.url as string) ?? '#'}
-                className={cn('text-secondary-100 hover:text-primary-50')}
-              >
-                AVAILABLE FOR PURCHASE
-              </a>
-            )}
-          </p>
-        )}
+        <p
+          className={cn(
+            'mt-2 grid content-center justify-start border-y-[1px] border-secondary-100 text-sm h-16 sm:px-8 px-4 font-bold text-secondary-100',
+            !!makeOffer?.active && 'border-b-0'
+          )}
+          style={{
+            textAlign: 'left'
+          }}
+        >
+          {!availableForPurchase.url ? (
+            availableForPurchase.text
+          ) : (
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href={(availableForPurchase.url as string) ?? '#'}
+              className={cn('text-secondary-100 hover:text-primary-50')}
+            >
+              AVAILABLE FOR PURCHASE
+            </a>
+          )}
+        </p>
+      )}
 
       {!!makeOffer?.active && (
         <OfferModal email={email} open={isOpenOffer} setOpen={setIsOpenOffer}>
@@ -84,18 +84,30 @@ export function ArtLinks({
       )}
 
       {externalLinks?.map((externalLink, index) => (
-        <a
+        <div
           key={index}
-          target="_blank"
-          rel="noreferrer"
-          href={externalLink.url}
           className={cn(
-            'flex justify-between items-center border-t-[1px] border-secondary-100 text-sm h-16 px-4 font-bold text-secondary-100 hover:text-primary-50',
+            'flex justify-between items-center border-t-[1px] border-secondary-100 text-sm h-16 px-4 font-bold',
             'sm:px-8 last:border-b-[1px]'
           )}
         >
-          VIEW ON {externalLink.name.toUpperCase()} <CustomIcons.ArrowUpRight />
-        </a>
+          <a
+            href={externalLink.url}
+            target="_blank"
+            rel="noreferrer"
+            className="text-secondary-100 hover:text-primary-50"
+          >
+            VIEW ON {externalLink.name.toUpperCase()}
+          </a>
+          <a
+            href={views['Etherscan']}
+            target="_blank"
+            rel="noreferrer"
+            className="text-secondary-100 hover:text-primary-50"
+          >
+            <CustomIcons.ArrowUpRight />
+          </a>
+        </div>
       ))}
     </div>
   )

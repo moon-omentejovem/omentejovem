@@ -190,9 +190,7 @@ export function ArtInfosCollections({
                   makeOffer={selectedArt.makeOffer}
                   availableForPurchase={selectedArt.availablePurchase}
                   views={{
-                    ...(selectedArt.etherscan && {
-                      Etherscan: `https://etherscan.io/token/${selectedArt.address}?a=${selectedArt.id}`
-                    })
+                    Etherscan: `https://etherscan.io/token/${selectedArt.address}?a=${selectedArt.id}`
                   }}
                 />
 
