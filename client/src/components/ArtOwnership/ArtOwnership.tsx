@@ -9,11 +9,13 @@ import {
   NFT,
   NftOwner,
   NftTransferEvent,
-  Owner
+  Owner,
+  Sale
 } from '../ArtContent/types'
 import { ArtTransaction, formatOwnerAddress } from './ArtTransaction'
 import { useState } from 'react'
 import { OwnersModal } from '../Modals/OwnersModal'
+import { ArtMint } from './ArtMint'
 
 interface ArtOwnershipProperties {
   nftChain: Chain
@@ -21,7 +23,7 @@ interface ArtOwnershipProperties {
   artAddress: string
   owners: Owner[]
   firstEvent?: FirstCreated
-  lastEvent?: NftTransferEvent
+  lastEvent?: Sale
   source?: 'portfolio' | '1-1' | 'editions'
 }
 
@@ -118,7 +120,7 @@ export function ArtOwnership({
           </div>
 
           <ul className="list-none">
-            <ArtTransaction
+            <ArtMint
               transaction={firstEvent}
               collectionsMode={collectionsMode}
             />

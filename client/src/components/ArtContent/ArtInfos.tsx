@@ -198,7 +198,7 @@ export function ArtInfos({
                   )}
                   owners={selectedArt.owners}
                   firstEvent={selectedArt.first_created}
-                  // lastEvent={selectedArt.last_transfer_date || new Date()}
+                  lastEvent={selectedArt.last_sale}
                   source={source}
                 />
               </div>

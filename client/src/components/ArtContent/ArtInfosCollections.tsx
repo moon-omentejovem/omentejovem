@@ -207,8 +207,8 @@ export function ArtInfosCollections({
                     'token'
                   )}
                   owners={selectedArt.owners}
-                  // firstEvent={selectedArt.mintedEvent}
-                  // lastEvent={selectedArt.lastEvent}
+                  firstEvent={selectedArt.first_created}
+                  lastEvent={selectedArt.last_sale}
                 />
               </div>
             </div>

@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils'
 import { FirstCreated, NftTransferEvent, Sale } from '../ArtContent/types'
 
 interface ArtTransactionProperties {
-  transaction?: Sale
+  transaction?: FirstCreated
   collectionsMode?: boolean
 }
 
@@ -26,7 +26,7 @@ export function formatOwnerAddress(ownerName?: string): string {
   return `${ownerName?.slice(0, 6) ?? ''}...${ownerName?.slice(-4) ?? ''}`
 }
 
-export function ArtTransaction({
+export function ArtMint({
   transaction,
   collectionsMode
 }: ArtTransactionProperties): ReactElement {
@@ -86,21 +86,21 @@ export function ArtTransaction({
           <a
             target="_blank"
             rel="noreferrer"
-            href={transaction?.from_address}
+            href={transaction?.minted_to}
             className="text-primary-50 hover:underline"
-            aria-label={`${transaction?.from_address} seller profile`}
+            aria-label={`${transaction?.minted_to} seller profile`}
           >
-            {formatOwnerAddress(transaction?.from_address)}
+            {formatOwnerAddress(transaction?.minted_to)}
           </a>{' '}
           to{' '}
           <a
             target="_blank"
             rel="noreferrer"
-            href={transaction?.to_address}
+            href={transaction?.minted_to}
             className="text-primary-50 hover:underline"
-            aria-label={`${transaction?.to_address} seller profile`}
+            aria-label={`${transaction?.minted_to} seller profile`}
           >
-            {formatOwnerAddress(transaction?.to_address)}
+            {formatOwnerAddress(transaction?.minted_to)}
           </a>
         </p>
         <p>{formattedDate(transaction?.timestamp || '2020-01-01')}</p>
