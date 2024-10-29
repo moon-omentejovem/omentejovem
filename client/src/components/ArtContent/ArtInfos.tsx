@@ -169,12 +169,12 @@ export function ArtInfos({
                 <div id="art-links" className="mt-12">
                   <ArtLinks
                     email={email}
-                    // externalLinks={[
-                    //   {
-                    //     url: selectedArt.external_url || '',
-                    //     name: 'External URL'
-                    //   }
-                    // ]}
+                    externalLinks={[
+                      {
+                        url: `https://opensea.io/assets/${selectedArt.chain.toLowerCase()}/${selectedArt.contract_address}/${selectedArt.token_id}`,
+                        name: 'OpenSea'
+                      }
+                    ]}
                     // availableForPurchase={selectedArt.available_purchase}
                     makeOffer={{
                       active: false,

@@ -79,7 +79,6 @@ export function ArtMainContent({
           nftCompressedHdUrl: art.image_url || ''
         }))}
       />
-
       {renderContent()}
     </main>
   )
