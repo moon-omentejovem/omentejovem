@@ -75,7 +75,7 @@ export function ArtOwnership({
           )}
         </div>
       )}
-      {owners.length > 1 && source === 'editions' && (
+      {owners.length > 1 && (
         <div
           id="art-owned-by"
           className={cn(

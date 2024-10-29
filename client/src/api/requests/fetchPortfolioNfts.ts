@@ -94,8 +94,6 @@ export async function fetchPortfolioNfts() {
     .filter((nft) => nft !== '')
     .join(',')
 
-  console.log('formattedQuery', formattedQuery)
-
   const data = await fetch(`${api.baseURL}?nft_ids=${formattedQuery}`, {
     method: 'GET',
     headers: {
