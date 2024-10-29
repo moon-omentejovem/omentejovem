@@ -5,7 +5,7 @@ import { ReactElement, useEffect, useState } from 'react'
 import { ArtLinks } from '@/components/ArtLinks'
 import { ArtOwnership } from '@/components/ArtOwnership/ArtOwnership'
 import { addHours, format, fromUnixTime } from 'date-fns'
-import { NftArt } from './types'
+import { Chain, NFT } from './types'
 import { cn } from '@/lib/utils'
 import { CustomIcons } from '@/assets/icons'
 import { VideoProcessModal } from '../Modals/VideoProcessModal'
@@ -23,8 +23,8 @@ import { getNftLinks } from './utils'
 
 interface ArtInfosCollectionsProperties {
   email: string
-  selectedArt: NftArt
-  slides: NftArt[]
+  selectedArt: NFT
+  slides: NFT[]
   onChangeSlideIndex: (index: number) => void
 }
 
@@ -78,28 +78,28 @@ export function ArtInfosCollections({
           'xl:grid xl:items-end'
         )}
       >
-        {!!selectedArt.videoProcess && (
+        {!!selectedArt.video_url && (
           <VideoProcessModal
             open={isOpenVideo}
             setOpen={setIsOpenVideo}
-            videoUrl={selectedArt.videoProcess}
+            videoUrl={selectedArt.video_url}
           />
         )}
 
         <div className="art-detail-inner-container flex flex-col w-full h-full justify-end items-center *:h-full">
-          <ImageModal detailedImage={selectedArt.nftUrl} collectionsMode>
+          <ImageModal detailedImage={selectedArt.image_url} collectionsMode>
             <Image
-              src={selectedArt.url}
+              src={selectedArt.image_url ?? ''}
               width={0}
               height={0}
-              alt={selectedArt.name}
+              alt={selectedArt.name ?? ''}
               className="w-full h-auto xl:w-auto xl:max-h-[100%]"
               id="active-image"
             />
           </ImageModal>
         </div>
 
-        {!!selectedArt.videoProcess && (
+        {!!selectedArt.video_url && (
           <button
             aria-label="Open video process modal"
             onClick={() => setIsOpenVideo(true)}
@@ -137,8 +137,8 @@ export function ArtInfosCollections({
               <p id="art-description-text" className="break-words">
                 {isDescriptionExpanded
                   ? selectedArt.description
-                  : truncate(selectedArt.description)}
-                {selectedArt?.description?.length > 600 && (
+                  : truncate(selectedArt.description ?? '')}
+                {(selectedArt?.description?.length ?? 0) > 600 && (
                   <span>
                     <button
                       onClick={() =>
@@ -156,16 +156,16 @@ export function ArtInfosCollections({
                 <a
                   target="_blank"
                   rel="noreferrer"
-                  href={selectedArt.url}
+                  href={selectedArt.external_url ?? ''}
                   className="text-primary-50 underline mt-4"
                 >
                   {selectedArt.name}
                 </a>
                 <p>
                   minted on{' '}
-                  {selectedArt.mintedDate &&
+                  {selectedArt.created_date &&
                     format(
-                      addHours(new Date(selectedArt.mintedDate), 3),
+                      addHours(new Date(selectedArt.created_date), 3),
                       'd LLLL, yyyy'
                     )}
                 </p>
@@ -186,26 +186,29 @@ export function ArtInfosCollections({
               <div id="art-links">
                 <ArtLinks
                   email={email}
-                  externalLinks={selectedArt.externalLinks}
-                  makeOffer={selectedArt.makeOffer}
-                  availableForPurchase={selectedArt.availablePurchase}
+                  // externalLinks={selectedArt.externalLinks}
+                  makeOffer={{
+                    active: false,
+                    buttonText: 'Make Offer'
+                  }}
+                  // availableForPurchase={selectedArt.availablePurchase}
                   views={{
-                    Etherscan: `https://etherscan.io/token/${selectedArt.address}?a=${selectedArt.id}`
+                    Etherscan: `https://etherscan.io/token/${selectedArt.contract_address}?a=${selectedArt.token_id}`
                   }}
                 />
 
                 <ArtOwnership
                   collectionsMode
-                  nftChain={selectedArt.nftChain}
+                  nftChain={selectedArt.chain.toLowerCase() as Chain}
                   artAddress={getNftLinks(
-                    selectedArt.address,
-                    selectedArt.nftChain,
-                    selectedArt.id,
+                    selectedArt.contract_address,
+                    selectedArt.chain.toLowerCase() as Chain,
+                    selectedArt.token_id,
                     'token'
                   )}
                   owners={selectedArt.owners}
-                  firstEvent={selectedArt.mintedEvent}
-                  lastEvent={selectedArt.lastEvent}
+                  // firstEvent={selectedArt.mintedEvent}
+                  // lastEvent={selectedArt.lastEvent}
                 />
               </div>
             </div>
@@ -244,7 +247,7 @@ export function ArtInfosCollections({
 			) */}
 
         <div className="hidden place-content-center xl:grid">
-          {!!selectedArt.videoProcess ? (
+          {!!selectedArt.video_url ? (
             <button
               aria-label="Open video process modal"
               onClick={() => setIsOpenVideo(true)}

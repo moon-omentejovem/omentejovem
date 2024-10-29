@@ -2,7 +2,7 @@ import type { ReactElement, ReactNode } from 'react'
 import { useEffect, useMemo, useState } from 'react'
 
 import { Filter } from '@/components/Filter'
-import { NftArt } from '@/api/resolver/types'
+import { NFT } from '@/api/resolver/types'
 import {
   EditionsContext,
   type EditionsContextProperties
@@ -11,7 +11,7 @@ import { ChainedFilter } from '@/components/ArtFilter/filters'
 
 interface EditionsProviderProperties {
   email: string
-  images: NftArt[]
+  images: NFT[]
   filters: ChainedFilter[]
   totalPages: number
   children: ReactNode
@@ -24,7 +24,7 @@ export function EditionsProvider({
   totalPages,
   children
 }: EditionsProviderProperties): ReactElement {
-  const [artImages, setArtImages] = useState<NftArt[]>(images)
+  const [artImages, setArtImages] = useState<NFT[]>(images)
   const [artTotalPages, setArtTotalPages] = useState(totalPages)
   const [selectedArtIndex, setSelectedArtIndex] = useState(-1)
 
@@ -32,7 +32,7 @@ export function EditionsProvider({
     setSelectedArtIndex(index)
   }
 
-  function onChangeArtImages(images: NftArt[]): void {
+  function onChangeArtImages(images: NFT[]): void {
     setArtImages(images)
   }
 

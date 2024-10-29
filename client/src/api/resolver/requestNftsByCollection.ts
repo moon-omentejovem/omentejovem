@@ -1,9 +1,9 @@
-import { NftArt } from './types'
+import { NFT } from './types'
 import { api } from '../client'
 
 interface RequestCollectionNftsResponse {
   email: string
-  images: NftArt[]
+  images: NFT[]
 }
 
 export async function requestNftsByCollection(

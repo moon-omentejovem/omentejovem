@@ -3,13 +3,13 @@
 import { ReactElement } from 'react'
 import { OneOfOneProvider } from './context/OneOfOneProvider'
 import OneOfOneContent from './content'
-import { NftArt } from '@/components/ArtContent/types'
 import { Filter } from '@/components/Filter'
 import { ChainedFilter } from '@/components/ArtFilter/filters'
+import { NFT } from '@/api/resolver/types'
 
 interface OneOfOneContentProviderProperties {
   email: string
-  images: NftArt[]
+  images: NFT[]
   filters: ChainedFilter[]
   totalPages: number
 }

@@ -3,16 +3,22 @@ import Objkt from '@/assets/icons/objkt'
 import OpenSea from '@/assets/icons/open-sea'
 import { cn } from '@/lib/utils'
 import { usePathname } from 'next/navigation'
-import { NftArt, NftOwner, NftTransferEvent } from '../ArtContent/types'
+import {
+  Chain,
+  NFT,
+  NftOwner,
+  NftTransferEvent,
+  Owner
+} from '../ArtContent/types'
 import { ArtTransaction, formatOwnerAddress } from './ArtTransaction'
 import { useState } from 'react'
 import { OwnersModal } from '../Modals/OwnersModal'
 
 interface ArtOwnershipProperties {
-  nftChain: NftArt['nftChain']
+  nftChain: Chain
   collectionsMode?: boolean
   artAddress: string
-  owners: NftOwner[]
+  owners: Owner[]
   firstEvent?: NftTransferEvent
   lastEvent?: NftTransferEvent
   source?: 'portfolio' | '1-1' | 'editions'
@@ -36,11 +42,10 @@ export function ArtOwnership({
     <div
       className={cn(
         'flex flex-col gap-12',
-        collectionsMode ? 'w-full' : 'max-w-xl',
-        nftChain === 'Unknown' && 'hidden'
+        collectionsMode ? 'w-full' : 'max-w-xl'
       )}
     >
-      {owner && nftChain !== 'Unknown' && owners.length === 1 && (
+      {owner && owners.length === 1 && (
         <div
           id="art-owned-by"
           className={cn(
@@ -49,7 +54,7 @@ export function ArtOwnership({
         >
           <p>OWNED BY</p>
           {pathname.includes('editions') ? (
-            nftChain === 'Ethereum' ? (
+            nftChain === 'ethereum' ? (
               <a target="_blank" rel="noreferrer" href={artAddress}>
                 <OpenSea />
               </a>
@@ -62,15 +67,15 @@ export function ArtOwnership({
             <a
               target="_blank"
               rel="noreferrer"
-              href={`https://etherscan.io/address/${owner.address}`}
+              href={`https://etherscan.io/address/${owner.owner_address}`}
               className="text-primary-50 hover:underline"
             >
-              {formatOwnerAddress(owner.address)}
+              {formatOwnerAddress(owner.owner_address)}
             </a>
           )}
         </div>
       )}
-      {owners.length > 1 && owners.length <= 50 && source === 'editions' && (
+      {owners.length > 1 && source === 'editions' && (
         <div
           id="art-owned-by"
           className={cn(

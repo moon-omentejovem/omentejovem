@@ -6,7 +6,7 @@ import { ArtDetails } from '@/components/ArtDetails'
 import { ArtLinks } from '@/components/ArtLinks'
 import { ArtOwnership } from '@/components/ArtOwnership/ArtOwnership'
 import { addHours, format, fromUnixTime } from 'date-fns'
-import { NftArt, isNftArt } from './types'
+import { Chain, NFT } from './types'
 import { cn } from '@/lib/utils'
 import { CustomIcons } from '@/assets/icons'
 import {
@@ -19,8 +19,8 @@ import './styles.css'
 import { getNftLinks } from './utils'
 interface ArtInfosProperties {
   email: string
-  selectedArt: NftArt
-  slides: NftArt[]
+  selectedArt: NFT
+  slides: NFT[]
   source: 'portfolio' | '1-1' | 'editions'
   onChangeSlideIndex: (index: number) => void
 }
@@ -48,8 +48,8 @@ export function ArtInfos({
     // Busca mais slides
   }
 
-  function wasMinted(nft: NftArt) {
-    return !!nft.mintedEvent
+  function wasMinted(nft: NFT) {
+    return true // TODO!!nft.mintedEvent
   }
 
   const truncate = (input: string) =>
@@ -82,13 +82,13 @@ export function ArtInfos({
       <div className="2xl:flex-1 min-w-[300px] xl:min-w-[350px] flex items-end flex-grow-0 shrink basis-0">
         <div className="art-detail-inner-container">
           <ArtDetails
-            detailedImage={selectedArt.nftCompressedUrl}
-            image={selectedArt.nftCompressedHdUrl}
-            name={selectedArt.name}
+            detailedImage={selectedArt.image_url || ''}
+            image={selectedArt.image_url || ''}
+            name={selectedArt.name || ''}
           />
         </div>
       </div>
-      {!!selectedArt.videoProcess && (
+      {!!selectedArt.video_url && (
         <button
           aria-label="Open video process modal"
           onClick={() => setIsOpenVideo(true)}
@@ -127,8 +127,8 @@ export function ArtInfos({
               <p id="art-description-text" className="break-words">
                 {isDescriptionExpanded
                   ? selectedArt.description
-                  : truncate(selectedArt.description)}
-                {selectedArt?.description?.length > 600 && (
+                  : truncate(selectedArt.description || '')}
+                {(selectedArt?.description?.length || 0) > 600 && (
                   <span>
                     <button
                       onClick={() =>
@@ -147,7 +147,10 @@ export function ArtInfos({
                 </p>
                 <p>
                   minted on{' '}
-                  {format(addHours(selectedArt.mintedDate, 3), 'd LLLL, yyyy')}
+                  {format(
+                    addHours(selectedArt.created_date || new Date(), 3),
+                    'd LLLL, yyyy'
+                  )}
                 </p>
               </div>
             </div>
@@ -166,26 +169,34 @@ export function ArtInfos({
                 <div id="art-links" className="mt-12">
                   <ArtLinks
                     email={email}
-                    externalLinks={selectedArt.externalLinks}
-                    availableForPurchase={selectedArt.availablePurchase}
-                    makeOffer={selectedArt.makeOffer}
+                    // externalLinks={[
+                    //   {
+                    //     url: selectedArt.external_url || '',
+                    //     name: 'External URL'
+                    //   }
+                    // ]}
+                    // availableForPurchase={selectedArt.available_purchase}
+                    makeOffer={{
+                      active: false,
+                      buttonText: 'Make Offer'
+                    }}
                     views={{
-                      Etherscan: `https://etherscan.io/token/${selectedArt.address}?a=${selectedArt.id}`
+                      Etherscan: `https://etherscan.io/token/${selectedArt.contract_address}?a=${selectedArt.token_id}`
                     }}
                   />
                 </div>
 
                 <ArtOwnership
-                  nftChain={selectedArt.nftChain}
+                  nftChain={selectedArt.chain.toLowerCase() as Chain}
                   artAddress={getNftLinks(
-                    selectedArt.address,
-                    selectedArt.nftChain,
-                    selectedArt.id,
+                    selectedArt.contract_address,
+                    selectedArt.chain.toLowerCase() as Chain,
+                    selectedArt.token_id,
                     'token'
                   )}
                   owners={selectedArt.owners}
-                  firstEvent={selectedArt.mintedEvent}
-                  lastEvent={selectedArt.lastEvent}
+                  // firstEvent={selectedArt.created_date || new Date()}
+                  // lastEvent={selectedArt.last_transfer_date || new Date()}
                   source={source}
                 />
               </div>
@@ -215,15 +226,15 @@ export function ArtInfos({
 
             <p className="text-primary-50 underline">{selectedArt['name']}</p>
           </div>
-          {!(selectedArt as NftArt).availablePurchase && (
+          {/* {!(selectedArt as NFT).availablePurchase && (
             <p className="mt-2 grid content-center justify-start border-y-[1px] border-secondary-100 text-sm h-16 px-8 font-bold text-secondary-100">
               NOT AVAILABLE FOR PURCHASE
             </p>
-          )}
+          )} */}
         </div>
       )}
       <div className="hidden place-content-center xl:grid">
-        {!!selectedArt.videoProcess ? (
+        {!!selectedArt.video_url ? (
           <button
             aria-label="Open video process modal"
             onClick={() => setIsOpenVideo(true)}

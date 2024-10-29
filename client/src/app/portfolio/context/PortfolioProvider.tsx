@@ -1,7 +1,7 @@
 import type { ReactElement, ReactNode } from 'react'
 import { useMemo, useState } from 'react'
 
-import { NftArt } from '@/api/resolver/types'
+import { NFT } from '@/api/resolver/types'
 import {
   PortfolioContext,
   type PortfolioContextProperties
@@ -9,7 +9,7 @@ import {
 
 interface PortfolioProviderProperties {
   email: string
-  images: NftArt[]
+  images: NFT[]
   children: ReactNode
 }
 
@@ -18,14 +18,14 @@ export function PortfolioProvider({
   images,
   children
 }: PortfolioProviderProperties): ReactElement {
-  const [artImages, setArtImages] = useState<NftArt[]>(images)
+  const [artImages, setArtImages] = useState<NFT[]>(images)
   const [selectedArtIndex, setSelectedArtIndex] = useState(-1)
 
   function onChangeSelectedArtIndex(index: number): void {
     setSelectedArtIndex(index)
   }
 
-  function onChangeArtImages(images: NftArt[]): void {
+  function onChangeArtImages(images: NFT[]): void {
     setArtImages(images)
   }
 

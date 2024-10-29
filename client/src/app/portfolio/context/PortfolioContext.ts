@@ -1,11 +1,11 @@
 import { createContext } from 'react'
-import { NftArt } from '@/api/resolver/types'
+import { NFT } from '@/api/resolver/types'
 
 export interface PortfolioContextProperties {
   email: string
-  unfilteredImages: NftArt[]
-  artImages: NftArt[]
-  onChangeArtImages: (images: NftArt[]) => void
+  unfilteredImages: NFT[]
+  artImages: NFT[]
+  onChangeArtImages: (images: NFT[]) => void
   selectedArtIndex: number
   onChangeSelectedArtIndex: (index: number) => void
   // totalPages: number

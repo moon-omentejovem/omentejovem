@@ -1,11 +1,11 @@
 import * as Dialog from '@radix-ui/react-dialog'
 import { Dispatch, ReactNode, SetStateAction, useState } from 'react'
 import { Icons } from '../Icons'
-import { NftOwner } from '@/api/resolver/types'
+import { NftOwner, Owner } from '@/api/resolver/types'
 import { modalAnimations } from '@/animations'
 
 interface OwnersModalProps {
-  owners: NftOwner[]
+  owners: Owner[]
   open: boolean
   setOpen: Dispatch<SetStateAction<boolean>>
   children: ReactNode
@@ -53,12 +53,12 @@ export function OwnersModal({
                 {owners.map((owner, index) => (
                   <li key={index} className="mb-2">
                     <a
-                      href={owner.url}
+                      href={`https://etherscan.io/address/${owner.owner_address}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-primary-50 underline"
                     >
-                      {owner.address}
+                      {owner.owner_address}
                     </a>
                   </li>
                 ))}

@@ -8,14 +8,16 @@ import Image from 'next/image'
 import { Mousewheel, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Swiper as SwiperType } from 'swiper/types'
-import { NftArt } from '@/components/ArtContent/types'
 import { cn } from '@/lib/utils'
 import { addLoadedClass } from '@/utils/lazyLoading'
 
 interface VerticalCarouselProperties {
   slideIndex?: number
   onChangeSlideIndex: (index: number) => void
-  slides: NftArt[]
+  slides: {
+    name: string
+    nftCompressedHdUrl: string
+  }[]
   getMoreSlides?: () => void
 }
 

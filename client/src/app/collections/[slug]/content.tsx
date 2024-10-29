@@ -1,13 +1,13 @@
 'use client'
 
-import { NftArt } from '@/api/resolver/types'
+import { NFT } from '@/api/resolver/types'
 import { ArtInfosCollections } from '@/components/ArtContent/ArtInfosCollections'
 import { HorizontalInCarousel } from '@/components/Carousels/HorizontalInCarousel/HorizontalInCarousel'
 import { ReactElement, useState } from 'react'
 
 interface InnerCollectionContentProperties {
   email: string
-  images: Omit<NftArt, 'contracts'>[]
+  images: Omit<NFT, 'contracts'>[]
 }
 
 export function InnerCollectionContent({

@@ -1,21 +1,20 @@
 'use client'
 
-import { ReactElement, useCallback, useMemo, useState } from 'react'
+import { ReactElement, useCallback, useState } from 'react'
 import { ArtFilter } from '../ArtFilter/ArtFilter'
 import { HorizontalCarousel } from '../Carousels/HorizontalCarousel/HorizontalCarousel'
 import { VerticalCarousel } from '../Carousels/VerticalCarousel/VerticalCarousel'
-import { Filter } from '../Filter'
 import { ArtInfos } from './ArtInfos'
-import { NftArt } from './types'
+import { NFT } from './types'
 import { ChainedFilter } from '../ArtFilter/filters'
 
 interface ArtMainContentProperties {
   email: string
   source: 'portfolio' | '1-1' | 'editions'
   filters: ChainedFilter[]
-  unfilteredImages: NftArt[]
-  onChangeArtImages: (images: NftArt[]) => void
-  artImages: NftArt[]
+  unfilteredImages: NFT[]
+  onChangeArtImages: (images: NFT[]) => void
+  artImages: NFT[]
   selectedArtIndex: number
   onChangeSelectedArtIndex: (index: number) => void
 }
@@ -30,7 +29,6 @@ export function ArtMainContent({
 }: ArtMainContentProperties): ReactElement {
   const [page, setPage] = useState(1)
   const [loading, setLoading] = useState(false)
-  const selectedArt = artImages[selectedArtIndex]
 
   function onRedirect(index: number): void {
     onChangeSelectedArtIndex(index)
@@ -40,7 +38,7 @@ export function ArtMainContent({
     return (
       <ArtInfos
         email={email}
-        selectedArt={selectedArt}
+        selectedArt={artImages[selectedArtIndex]}
         slides={artImages}
         onChangeSlideIndex={onChangeSelectedArtIndex}
         source={source}
@@ -54,7 +52,10 @@ export function ArtMainContent({
         <HorizontalCarousel
           currentPage={page}
           loading={loading}
-          slides={artImages}
+          slides={artImages?.map((art) => ({
+            name: art.name || '',
+            nftCompressedHdUrl: art.image_url || ''
+          }))}
           redirectSource={source}
           onRedirect={onRedirect}
         />
@@ -73,7 +74,10 @@ export function ArtMainContent({
       <VerticalCarousel
         slideIndex={selectedArtIndex}
         onChangeSlideIndex={onChangeSelectedArtIndex}
-        slides={artImages}
+        slides={artImages.map((art) => ({
+          name: art.name || '',
+          nftCompressedHdUrl: art.image_url || ''
+        }))}
       />
 
       {renderContent()}

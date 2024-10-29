@@ -87,7 +87,7 @@ export function HorizontalCarousel({
         }}
       >
         {(currentPage > 1 || !loading) &&
-          slides.map((slide, index) => (
+          slides?.map((slide, index) => (
             <SwiperSlide key={index} className="w-fit max-w-fit">
               <div className="flex flex-col items-center">
                 <div
