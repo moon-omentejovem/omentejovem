@@ -3,10 +3,10 @@ import { type ArtTransaction } from './types'
 import { addHours, format } from 'date-fns'
 import { CustomIcons } from '@/assets/icons'
 import { cn } from '@/lib/utils'
-import { NftTransferEvent } from '../ArtContent/types'
+import { FirstCreated, NftTransferEvent } from '../ArtContent/types'
 
 interface ArtTransactionProperties {
-  transaction?: NftTransferEvent
+  transaction?: FirstCreated
   collectionsMode?: boolean
 }
 
@@ -30,7 +30,7 @@ export function ArtTransaction({
   transaction,
   collectionsMode
 }: ArtTransactionProperties): ReactElement {
-  if (transaction?.fromAddress === nullAddress) {
+  if (transaction?.minted_to === nullAddress) {
     return (
       <li
         className={cn(
@@ -46,20 +46,20 @@ export function ArtTransaction({
             <a
               target="_blank"
               rel="noreferrer"
-              href={transaction.toAddress}
+              href={transaction.minted_to}
               className="text-primary-50 hover:underline"
-              aria-label={`${transaction.toAddress} seller profile`}
+              aria-label={`${transaction.minted_to} seller profile`}
             >
-              {formatOwnerAddress(transaction.toAddress)}
+              {formatOwnerAddress(transaction.minted_to)}
             </a>
           </p>
-          <p>{formattedDate(transaction.eventDate)}</p>
+          <p>{formattedDate(transaction.timestamp)}</p>
         </div>
 
         <a
           target="_blank"
           rel="noreferrer"
-          href={transaction.transactionUrl}
+          href={`https://etherscan.io/tx/${transaction.transaction}`}
           className="hover:fill-primary-50"
           aria-label="Transaction page"
         >
@@ -82,32 +82,30 @@ export function ArtTransaction({
           <a
             target="_blank"
             rel="noreferrer"
-            href={transaction?.fromAddress}
+            href={transaction?.minted_to}
             className="text-primary-50 hover:underline"
-            aria-label={`${transaction?.fromAddress} seller profile`}
+            aria-label={`${transaction?.minted_to} seller profile`}
           >
-            {formatOwnerAddress(transaction?.fromAddress)}
+            {formatOwnerAddress(transaction?.minted_to)}
           </a>{' '}
           to{' '}
           <a
             target="_blank"
             rel="noreferrer"
-            href={transaction?.toAddress}
+            href={transaction?.minted_to}
             className="text-primary-50 hover:underline"
-            aria-label={`${transaction?.toAddress} seller profile`}
+            aria-label={`${transaction?.minted_to} seller profile`}
           >
-            {formatOwnerAddress(transaction?.toAddress)}
+            {formatOwnerAddress(transaction?.minted_to)}
           </a>
         </p>
-        {transaction?.eventDate && (
-          <p>{formattedDate(transaction?.eventDate)}</p>
-        )}
+        <p>{formattedDate(transaction?.timestamp || '2020-01-01')}</p>
       </div>
 
       <a
         target="_blank"
         rel="noreferrer"
-        href={transaction?.transactionUrl}
+        href={`https://etherscan.io/tx/${transaction?.transaction}`}
         className="hover:fill-primary-50"
         aria-label="Transaction page"
       >

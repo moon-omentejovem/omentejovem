@@ -87,6 +87,16 @@ export type Chain =
   | 'zksync-era-testnet'
   | 'zora-testnet'
 
+export interface FirstCreated {
+  block_number: string
+  minted_to: string
+  quantity: number
+  quantity_string: string
+  timestamp: string
+  transaction: string
+  transaction_initiator: string
+}
+
 export interface SaleDetails {
   marketplace_name: string
   is_bundle_sale: boolean
@@ -227,6 +237,7 @@ export interface NFT {
     }[]
   }
   queried_wallet_balances?: TokenQuantity[]
+  first_created: FirstCreated
 }
 
 export interface TokenQuantityFungible extends TokenQuantity {

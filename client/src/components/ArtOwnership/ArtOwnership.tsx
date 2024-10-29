@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils'
 import { usePathname } from 'next/navigation'
 import {
   Chain,
+  FirstCreated,
   NFT,
   NftOwner,
   NftTransferEvent,
@@ -19,7 +20,7 @@ interface ArtOwnershipProperties {
   collectionsMode?: boolean
   artAddress: string
   owners: Owner[]
-  firstEvent?: NftTransferEvent
+  firstEvent?: FirstCreated
   lastEvent?: NftTransferEvent
   source?: 'portfolio' | '1-1' | 'editions'
 }

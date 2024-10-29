@@ -38,6 +38,8 @@ export function ArtInfos({
   const [showDetails, setShowDetails] = useState(false)
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
 
+  console.log('selectedArt', selectedArt)
+
   // function animateInfos(isOpen: boolean) {
   // 	if (window.screen.width >= 1280) {
   // 		artInfosAnimation(true, setIsAnimating)
@@ -195,7 +197,7 @@ export function ArtInfos({
                     'token'
                   )}
                   owners={selectedArt.owners}
-                  // firstEvent={selectedArt.created_date || new Date()}
+                  firstEvent={selectedArt.first_created}
                   // lastEvent={selectedArt.last_transfer_date || new Date()}
                   source={source}
                 />
