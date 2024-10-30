@@ -40,6 +40,12 @@ export function ArtInfos({
 
   console.log('selectedArt', selectedArt)
 
+  const onChangeToOtherSlide = (index: number) => {
+    onChangeSlideIndex(index)
+    setShowDetails(false)
+    resetButtonInfo()
+  }
+
   // function animateInfos(isOpen: boolean) {
   // 	if (window.screen.width >= 1280) {
   // 		artInfosAnimation(true, setIsAnimating)
@@ -63,6 +69,8 @@ export function ArtInfos({
       setIsOpenInfos(false)
       setIsAnimating(false)
       resetArtInfo()
+      setShowDetails(false)
+      resetButtonInfo()
     }
   }, [onChangeSlideIndex])
 
@@ -101,7 +109,7 @@ export function ArtInfos({
       )}
       <div className="block w-[75vw] self-center xl:hidden">
         <HorizontalInCarousel
-          onChangeSlideIndex={onChangeSlideIndex}
+          onChangeSlideIndex={onChangeToOtherSlide}
           slides={slides}
           getMoreSlides={() => handleMoreSlides()}
         />
