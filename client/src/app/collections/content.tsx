@@ -15,7 +15,7 @@ export default function CollectionsContent(data: CollectionsResponse) {
 
   useEffect(() => {
     const currentImages =
-      data.collections.find((c) => c.name === currentCollection)
+      data.collections?.find((c) => c.name === currentCollection)
         ?.nftImageUrls || []
 
     setImages(currentImages)
