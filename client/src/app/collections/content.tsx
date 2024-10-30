@@ -80,7 +80,7 @@ export default function CollectionsContent(data: CollectionsResponse) {
           />
         </div>
       )}
-      {data.collections.map((collection) => (
+      {data.collections?.map((collection) => (
         <CollectionLink
           key={collection.name}
           projectName={collection.name}
