@@ -105,5 +105,13 @@ export async function fetchPortfolioNfts() {
   const jsonData = await data.json()
   ALL_DATA = jsonData as { nfts: NFT[] }
 
+  // Order by created_date newest first
+  ALL_DATA.nfts.sort((a, b) => {
+    return (
+      new Date(b.created_date || '').getTime() -
+      new Date(a.created_date || '').getTime()
+    )
+  })
+
   return ALL_DATA
 }
