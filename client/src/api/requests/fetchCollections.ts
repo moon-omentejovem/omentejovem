@@ -49,9 +49,8 @@ export async function fetchCollections() {
     return {
       name: collection.name || '',
       year:
-        new Date(collection.first_created.timestamp || '')
-          .getFullYear()
-          .toLocaleString() || '',
+        `${new Date(collection.first_created.timestamp || '').getFullYear()}` ||
+        '',
       slug: collection.name?.toLowerCase().replace(/ /g, '-') || '',
       nftImageUrls: collection.image_url ? [collection.image_url] : []
     }
