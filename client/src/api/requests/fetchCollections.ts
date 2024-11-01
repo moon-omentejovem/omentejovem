@@ -43,9 +43,9 @@ export async function fetchCollections() {
   })
 
   const jsonData = await data.json()
-  const DATA_MAPPED = jsonData as { collections: NFT[] }
+  const DATA_MAPPED = jsonData as { nfts: NFT[] }
 
-  ALL_DATA.collections = DATA_MAPPED.collections?.map((collection) => {
+  ALL_DATA.collections = DATA_MAPPED.nfts?.map((collection) => {
     return {
       name: collection.name || '',
       year: collection.created_date?.getFullYear().toString() || '',
