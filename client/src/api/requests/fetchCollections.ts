@@ -21,7 +21,7 @@ const ALL_NFTS = [
 ]
 
 export async function fetchCollections() {
-  let ALL_DATA: { nfts: NFT[] } = { nfts: [] }
+  let ALL_DATA: { collections: NFT[] } = { collections: [] }
 
   const formattedQuery = ALL_NFTS.map((nft) => {
     if (nft.startsWith('KT')) {
@@ -43,10 +43,10 @@ export async function fetchCollections() {
   })
 
   const jsonData = await data.json()
-  ALL_DATA = jsonData as { nfts: NFT[] }
+  ALL_DATA = jsonData as { collections: NFT[] }
 
   // Order by created_date newest first
-  ALL_DATA.nfts.sort((a, b) => {
+  ALL_DATA.collections.sort((a, b) => {
     return (
       new Date(b.created_date || '').getTime() -
       new Date(a.created_date || '').getTime()
