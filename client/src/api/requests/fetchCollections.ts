@@ -48,7 +48,10 @@ export async function fetchCollections() {
   ALL_DATA.collections = DATA_MAPPED.nfts?.map((collection) => {
     return {
       name: collection.name || '',
-      year: '2024',
+      year:
+        new Date(collection.first_created.timestamp || '')
+          .getFullYear()
+          .toLocaleString() || '',
       slug: collection.name?.toLowerCase().replace(/ /g, '-') || '',
       nftImageUrls: collection.image_url ? [collection.image_url] : []
     }
