@@ -23,7 +23,7 @@ export interface ExternalLink {
   url: string
 }
 
-export interface Collection {
+export interface CollectionRes {
   name: string
   year: string
   slug: string
@@ -31,7 +31,7 @@ export interface Collection {
 }
 
 export interface CollectionsResponse {
-  collections: Collection[]
+  collections: CollectionRes[]
 }
 
 export interface HomeData {

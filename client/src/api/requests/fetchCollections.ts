@@ -1,7 +1,7 @@
 'use server'
 
 import { api } from '../client'
-import { NFT } from '../resolver/types'
+import { CollectionRes, NFT } from '../resolver/types'
 import fetch from 'node-fetch'
 
 const ALL_NFTS = [
@@ -21,7 +21,7 @@ const ALL_NFTS = [
 ]
 
 export async function fetchCollections() {
-  let ALL_DATA: { collections: NFT[] } = { collections: [] }
+  let ALL_DATA: { collections: CollectionRes[] } = { collections: [] }
 
   const formattedQuery = ALL_NFTS.map((nft) => {
     if (nft.startsWith('KT')) {
@@ -43,14 +43,20 @@ export async function fetchCollections() {
   })
 
   const jsonData = await data.json()
-  ALL_DATA = jsonData as { collections: NFT[] }
+  const DATA_MAPPED = jsonData as { collections: NFT[] }
+
+  ALL_DATA.collections = DATA_MAPPED.collections.map((collection) => {
+    return {
+      name: collection.name || '',
+      year: collection.created_date?.getFullYear().toString() || '',
+      slug: collection.name?.toLowerCase().replace(/ /g, '-') || '',
+      nftImageUrls: collection.image_url ? [collection.image_url] : []
+    }
+  })
 
   // Order by created_date newest first
   ALL_DATA.collections.sort((a, b) => {
-    return (
-      new Date(b.created_date || '').getTime() -
-      new Date(a.created_date || '').getTime()
-    )
+    return new Date(b.year || '').getTime() - new Date(a.year || '').getTime()
   })
 
   return ALL_DATA
