@@ -1,5 +1,7 @@
 'use server'
 
+export const dynamic = 'force-dynamic'
+
 import { HomeData, NFT } from '../resolver/types'
 import { api } from '../client'
 
