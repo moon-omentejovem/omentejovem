@@ -1,5 +1,3 @@
-'use client'
-
 import { fetchHomeInfo } from '@/api/requests/fetchHomeInfo'
 import HomeContent from './home/content'
 
