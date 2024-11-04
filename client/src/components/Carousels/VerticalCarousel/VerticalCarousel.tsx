@@ -36,6 +36,8 @@ export function VerticalCarousel({
     }
   }
 
+  console.log('first slide', slides[0])
+
   return (
     <div
       className={cn(
@@ -50,7 +52,7 @@ export function VerticalCarousel({
         grabCursor={true}
         modules={[Mousewheel, Pagination]}
         watchSlidesProgress={true}
-        loop={true}
+        loop={false}
         mousewheel={true}
         slideToClickedSlide={true}
         initialSlide={slideIndex}
