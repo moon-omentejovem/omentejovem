@@ -28,7 +28,7 @@ const THE_CYCLE_COLLECTION = {
 }
 
 const SHAPES_AND_COLORS_COLLECTION = {
-  name: 'Shapes & Colors by omentejovem',
+  name: 'Shapes & Colors',
   year: '2022',
   slug: 'shapesncolors',
   nftImageUrls: [] as string[]
