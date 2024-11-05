@@ -89,7 +89,7 @@ export function ArtInfos({
 					videoUrl={selectedArt.videoProcess}
 				/>
 			)} */}
-      <div className="2xl:flex-1 min-w-[300px] xl:min-w-[350px] flex items-end flex-grow-0 shrink basis-0">
+      <div className="2xl:flex-1 min-w-[300px] xl:min-w-[350px] flex items-end flex-grow-0">
         <div className="art-detail-inner-container">
           <ArtDetails
             detailedImage={selectedArt.image_url || ''}
