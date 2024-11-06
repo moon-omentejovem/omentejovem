@@ -32,6 +32,7 @@ export function InnerCollectionContent({
         selectedArt={selectedArt}
         slides={images}
         onChangeSlideIndex={onChangeSelectedArtIndex}
+        currentImageIndex={activeIndex}
       />
 
       {/* <div className="hidden w-[100vw] self-center xl:block">

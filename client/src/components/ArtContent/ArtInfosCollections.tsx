@@ -26,13 +26,15 @@ interface ArtInfosCollectionsProperties {
   selectedArt: NFT
   slides: NFT[]
   onChangeSlideIndex: (index: number) => void
+  currentImageIndex: number
 }
 
 export function ArtInfosCollections({
   email,
   selectedArt,
   slides,
-  onChangeSlideIndex
+  onChangeSlideIndex,
+  currentImageIndex
 }: ArtInfosCollectionsProperties): ReactElement {
   const [isOpenVideo, setIsOpenVideo] = useState(false)
   const [isOpenInfos, setIsOpenInfos] = useState(false)
@@ -266,6 +268,7 @@ export function ArtInfosCollections({
           onChangeSlideIndex={onChangeSlideIndex}
           slides={slides}
           getMoreSlides={() => handleMoreSlides()}
+          slideIndex={currentImageIndex}
         />
       </div>
     </section>

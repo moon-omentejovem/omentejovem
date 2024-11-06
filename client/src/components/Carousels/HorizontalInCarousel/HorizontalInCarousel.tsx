@@ -68,7 +68,9 @@ export function HorizontalInCarousel({
                 alt={art.name || ''}
                 width={100}
                 height={100}
-                className="h-full w-full object-cover"
+                className={`h-full w-full object-cover transition-opacity duration-300 ${
+                  slideIndex === index ? 'opacity-100' : 'opacity-40'
+                }`}
               />
             </div>
           </SwiperSlide>
