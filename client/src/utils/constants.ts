@@ -89,3 +89,14 @@ export const ALL_NFTS = [
   'KT1RJ6PbjHpwc3M5rw5s2Nbmefwbuwbdxton:448564',
   'KT1RJ6PbjHpwc3M5rw5s2Nbmefwbuwbdxton:135181'
 ]
+
+export const MANIFOLD_NFTS = [
+  '0xfda33af4770d844dc18d8788c7bf84accfac79ad',
+  '0x2b3bbde45422d65ab3fb5cdc5427944db0729b50',
+  '0x28a6f816eae721fea4ad34c000077b5fe525fc3c'
+]
+export const TRANSIENT_NFTS = ['0x826b11a95a9393e8a3cc0c2a7dfc9accb4ff4e43']
+export const SUPERRARE_NFTS = ['0xb932a70a57673d89f4acffbe830e8ed7f75fb9e0']
+export const POAP_NFTS = ['0x22c1f6050e56d2876009903609a2cc3fef83b415']
+export const GRAILS_NFTS = ['0x92a50fe6ede411bd26e171b97472e24d245349b8']
+export const RARIBLE_NFTS = ['0x60f80121c31a0d46b5279700f9df786054aa5ee5']

@@ -1,6 +1,13 @@
 'use client'
 
 import { NFT } from '@/api/resolver/types'
+import {
+  MANIFOLD_NFTS,
+  POAP_NFTS,
+  RARIBLE_NFTS,
+  SUPERRARE_NFTS,
+  TRANSIENT_NFTS
+} from '@/utils/constants'
 
 export interface ChainedFilter {
   label?: string
@@ -62,31 +69,46 @@ const ethContractFilter: ChainedFilter = {
     {
       label: 'manifold',
       inPlace: true,
-      filterApply: (n) => true, //  n.availablePurchase?.text === 'Manifold',
+      filterApply: (n) =>
+        MANIFOLD_NFTS.map((nft) => nft.toLowerCase()).includes(
+          n.contract_address?.toLowerCase() ?? ''
+        ),
       children: []
     },
     {
       label: 'transient labs',
       inPlace: true,
-      filterApply: (n) => true, //  n.availablePurchase?.text === 'Transient Labs',
+      filterApply: (n) =>
+        TRANSIENT_NFTS.map((nft) => nft.toLowerCase()).includes(
+          n.contract_address?.toLowerCase() ?? ''
+        ),
       children: []
     },
     {
       label: 'superrare',
       inPlace: true,
-      filterApply: (n) => true, //  n.availablePurchase?.text === 'SuperRare',
+      filterApply: (n) =>
+        SUPERRARE_NFTS.map((nft) => nft.toLowerCase()).includes(
+          n.contract_address?.toLowerCase() ?? ''
+        ),
       children: []
     },
     {
       label: 'opensea',
       inPlace: true,
-      filterApply: (n) => true, //  n.availablePurchase?.text === 'OpenSea',
+      filterApply: (n) =>
+        POAP_NFTS.map((nft) => nft.toLowerCase()).includes(
+          n.contract_address?.toLowerCase() ?? ''
+        ),
       children: []
     },
     {
       label: 'rarible',
       inPlace: true,
-      filterApply: (n) => true, //  n.availablePurchase?.text === 'Rarible',
+      filterApply: (n) =>
+        RARIBLE_NFTS.map((nft) => nft.toLowerCase()).includes(
+          n.contract_address?.toLowerCase() ?? ''
+        ),
       children: []
     }
   ]
