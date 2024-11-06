@@ -80,17 +80,12 @@ export function ArtInfos({
 
   return (
     <section
-      className={cn('flex p-4 flex-wrap gap-4 h-full p-5 pl-0 xl:pr-[12vw]')}
+      className={cn(
+        'flex p-4 flex-wrap gap-4 h-[calc(100vh-4rem)] pl-0 xl:pr-[12vw] overflow-hidden'
+      )}
     >
-      {/* {!!selectedArt.videoProcess && (
-				<VideoProcessModal
-					open={isOpenVideo}
-					setOpen={setIsOpenVideo}
-					videoUrl={selectedArt.videoProcess}
-				/>
-			)} */}
-      <div className="2xl:flex-1 min-w-[300px] xl:min-w-[350px] flex items-end flex-grow-0">
-        <div className="art-detail-inner-container">
+      <div className="2xl:flex-1 min-w-[300px] xl:min-w-[350px] flex items-end flex-grow-0 h-full">
+        <div className="art-detail-inner-container h-full max-h-[calc(100vh-6rem)] overflow-hidden">
           <ArtDetails
             detailedImage={selectedArt.image_url || ''}
             image={selectedArt.image_url || ''}
@@ -118,13 +113,13 @@ export function ArtInfos({
         <div
           id="art-container"
           className={cn(
-            'px-4 gap-2 transition-all max-h-full h-full w-full xl:w-[400px] flex-shrink-0 flex-grow-0 flex flex-col justify-end'
+            'px-4 gap-2 transition-all max-h-[calc(100vh-8rem)] h-full w-full xl:w-[400px] flex-shrink-0 flex-grow-0 flex flex-col justify-end'
           )}
         >
           <div
             className={cn(
               'overflow-hidden',
-              showDetails ? 'overflow-y-scroll' : ''
+              showDetails ? 'overflow-y-auto' : ''
             )}
           >
             <div

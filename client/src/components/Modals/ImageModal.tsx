@@ -79,14 +79,14 @@ export function ImageModal({
         <Dialog.Content>
           <div
             id="modal-wrapper"
-            className="fixed w-full h-auto flex items-center justify-center top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 md:w-auto"
+            className="fixed w-full h-auto max-h-[70vh] flex items-center justify-center top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 md:w-auto overflow-hidden"
           >
             <TransformWrapper onInit={() => removeOverflowHidden()}>
               <TransformComponent>
                 <div
                   className={cn(
                     'grid place-content-center',
-                    collectionsMode && '*:!max-h-[80vh]'
+                    collectionsMode ? '*:!max-h-[60vh]' : '*:max-h-[65vh]'
                   )}
                 >
                   {!!detailedImage ? (
@@ -95,7 +95,7 @@ export function ImageModal({
                       width={0}
                       height={0}
                       alt={'High resolution'}
-                      className="w-full h-auto xl:w-auto xl:h-full xl:max-h-[75vh]"
+                      className="w-auto h-auto object-contain"
                       id="active-image"
                     />
                   ) : (
