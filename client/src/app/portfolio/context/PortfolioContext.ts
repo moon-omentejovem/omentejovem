@@ -1,5 +1,6 @@
 import { createContext } from 'react'
 import { NFT } from '@/api/resolver/types'
+import { ChainedFilter } from '@/components/ArtFilter/filters'
 
 export interface PortfolioContextProperties {
   email: string

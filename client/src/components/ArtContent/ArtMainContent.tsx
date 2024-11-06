@@ -11,7 +11,7 @@ import { ChainedFilter } from '../ArtFilter/filters'
 interface ArtMainContentProperties {
   email: string
   source: 'portfolio' | '1-1' | 'editions'
-  filters: ChainedFilter[]
+  filters?: ChainedFilter[]
   unfilteredImages: NFT[]
   onChangeArtImages: (images: NFT[]) => void
   artImages: NFT[]
@@ -68,8 +68,6 @@ export function ArtMainContent({
       </main>
     )
   }
-
-  console.log('SLIDES', artImages)
 
   return (
     <main className="flex flex-col px-6 2xl:pb-16 2xl:px-20 2xl:pb-8 xl:h-screenMinusHeader">

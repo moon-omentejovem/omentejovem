@@ -23,7 +23,6 @@ export default function PortfolioContent(): ReactElement {
       onChangeSelectedArtIndex={onChangeSelectedArtIndex}
       selectedArtIndex={selectedArtIndex}
       unfilteredImages={unfilteredImages}
-      filters={[]}
     />
   )
 }

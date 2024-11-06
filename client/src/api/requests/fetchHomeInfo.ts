@@ -82,6 +82,24 @@ const ALL_NFTS = [
 ]
 
 export async function fetchHomeInfo() {
+  // Just to see which are unminted...
+  const oldServerData = await fetch(`http://15.229.6.95/nfts/one-of-one`, {
+    ...api,
+    method: 'GET',
+    next: { revalidate: 600 }
+  })
+
+  const oldServerDataJSON = await oldServerData.json()
+
+  // console.log('oldServerDataJSON', oldServerDataJSON.nfts)
+
+  for (let i = 0; i < oldServerDataJSON.nfts.length; i++) {
+    const nft = oldServerDataJSON.nfts[i]
+    if (nft.mintedDate == null) {
+      console.log(nft)
+    }
+  }
+
   // Pick 3 random from ALL_NFTS that start with 0x
   const randomNfts = ALL_NFTS.filter((nft) => nft.startsWith('0x'))
     .sort(() => Math.random() - 0.5)

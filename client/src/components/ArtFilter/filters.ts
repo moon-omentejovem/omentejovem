@@ -18,14 +18,16 @@ export interface SortOption {
 export function getLastFilterHistoryParent(
   filterHistory: ChainedFilter[]
 ): ChainedFilter {
-  if (filterHistory.length > 1) {
-    for (let i = filterHistory.length - 1; i > 0; i--) {
-      if (filterHistory[i].children.length > 0) {
-        return filterHistory[i]
-      }
+  if (filterHistory.length === 0) {
+    throw new Error('Filter history cannot be empty')
+  }
+
+  for (let i = filterHistory.length - 1; i >= 0; i--) {
+    if (filterHistory[i].children.length > 0) {
+      return filterHistory[i]
     }
   }
-  return filterHistory[0]
+  return filterHistory[filterHistory.length - 1] // Return last filter if none have children
 }
 
 function extractYearFromISO(dateString: string): number {
@@ -33,7 +35,9 @@ function extractYearFromISO(dateString: string): number {
   return date.getFullYear()
 }
 function getNftYearFilter(year: number) {
-  return (n: NFT) => n.created_date?.getFullYear() === year
+  return (n: NFT) => {
+    return new Date(n.created_date ?? '').getFullYear() === year
+  }
 }
 
 const latestFilter: ChainedFilter = {
@@ -158,24 +162,24 @@ const filters: ChainedFilter[] = [
               ethContractFilter,
               yearFilter
             ]
-          },
-          {
-            label: 'xtz',
-            filterApply: (n) => n.chain.toLowerCase() === 'tezos',
-            children: [
-              latestFilter,
-              availableFilter,
-              xtzContractFilter,
-              yearFilter
-            ]
           }
+          // {
+          //   label: 'xtz',
+          //   filterApply: (n) => n.chain.toLowerCase() === 'tezos',
+          //   children: [
+          //     latestFilter,
+          //     availableFilter,
+          //     xtzContractFilter,
+          //     yearFilter
+          //   ]
+          // }
         ]
-      },
-      {
-        label: 'non minted',
-        filterApply: (n) => !n.created_date,
-        children: [latestFilter, availableFilter, yearFilter]
       }
+      // {
+      //   label: 'non minted',
+      //   filterApply: (n) => !n.created_date,
+      //   children: [latestFilter, availableFilter, yearFilter]
+      // }
     ]
   }
 ]

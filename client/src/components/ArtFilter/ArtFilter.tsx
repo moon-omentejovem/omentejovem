@@ -29,13 +29,8 @@ export function ArtFilter({
   ])
 
   useEffect(() => {
-    const lastFilter = getLastFilterHistoryParent(filterHistory)
-    onChangeArtImages((lastFilter as FilterArtHistory).filteredImages)
-  }, [artImages, currentPage, onChangeArtImages])
-
-  useEffect(() => {
-    const lastFilter = getLastFilterHistoryParent(filterHistory)
-    const currentImages = (lastFilter as FilterArtHistory).filteredImages
+    const lastFilter = filterHistory[filterHistory.length - 1]
+    const currentImages = lastFilter.filteredImages
     onChangeArtImages(currentImages)
   }, [filterHistory])
 
@@ -52,6 +47,11 @@ export function ArtFilter({
 
   function onChangeFilter(filter?: ChainedFilter): void {
     const lastFilter = filterHistory[filterHistory.length - 1]
+
+    if (filter?.label === lastFilter.label) {
+      return
+    }
+
     const currentImages = lastFilter.filteredImages
 
     if (!filter) {
@@ -62,25 +62,47 @@ export function ArtFilter({
       return
     }
 
-    if (filter.label !== lastFilter.label) {
-      let appliedImages = currentImages
+    if (filter.inPlace && lastFilter.inPlace) {
+      const previousFilter = filterHistory[filterHistory.length - 2]
+      let appliedImages = previousFilter.filteredImages
 
       if (filter.filterApply) {
-        appliedImages = currentImages.filter(filter.filterApply)
+        appliedImages = appliedImages.filter(filter.filterApply)
       }
+
       if (filter.sortApply) {
         appliedImages = orderBy(
-          currentImages,
+          appliedImages,
           filter.sortApply.key,
           filter.sortApply.option
         )
       }
 
       setFilterHistory([
-        ...filterHistory,
+        ...filterHistory.slice(0, -1),
         { ...filter, filteredImages: appliedImages }
       ])
+      return
     }
+
+    let appliedImages = currentImages
+
+    if (filter.filterApply) {
+      appliedImages = currentImages.filter(filter.filterApply)
+    }
+
+    if (filter.sortApply) {
+      appliedImages = orderBy(
+        appliedImages,
+        filter.sortApply.key,
+        filter.sortApply.option
+      )
+    }
+
+    setFilterHistory([
+      ...filterHistory,
+      { ...filter, filteredImages: appliedImages }
+    ])
   }
 
   return (
