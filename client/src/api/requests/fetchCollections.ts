@@ -1,24 +1,9 @@
 'use server'
 
+import { COLLECTION_NFTS } from '@/utils/constants'
 import { api } from '../client'
 import { CollectionRes, NFT } from '../resolver/types'
 import fetch from 'node-fetch'
-
-const ALL_NFTS = [
-  '0x826b11a95a9393e8a3cc0c2a7dfc9accb4ff4e43:5',
-  '0x826b11a95a9393e8a3cc0c2a7dfc9accb4ff4e43:6',
-  '0x826b11a95a9393e8a3cc0c2a7dfc9accb4ff4e43:4',
-  '0x2b3bbde45422d65ab3fb5cdc5427944db0729b50:1',
-  '0x2b3bbde45422d65ab3fb5cdc5427944db0729b50:2',
-  '0x2b3bbde45422d65ab3fb5cdc5427944db0729b50:3',
-  '0x2b3bbde45422d65ab3fb5cdc5427944db0729b50:4',
-  '0x2b3bbde45422d65ab3fb5cdc5427944db0729b50:5',
-  '0x2b3bbde45422d65ab3fb5cdc5427944db0729b50:6',
-  '0x2b3bbde45422d65ab3fb5cdc5427944db0729b50:7',
-  '0x2b3bbde45422d65ab3fb5cdc5427944db0729b50:8',
-  '0x2b3bbde45422d65ab3fb5cdc5427944db0729b50:9',
-  '0x2b3bbde45422d65ab3fb5cdc5427944db0729b50:10'
-]
 
 const THE_CYCLE_COLLECTION = {
   name: 'The Cycle',
@@ -36,7 +21,7 @@ const SHAPES_AND_COLORS_COLLECTION = {
 export async function fetchCollections() {
   let ALL_DATA: { collections: CollectionRes[] } = { collections: [] }
 
-  const formattedQuery = ALL_NFTS?.map((nft) => {
+  const formattedQuery = COLLECTION_NFTS?.map((nft) => {
     if (nft.startsWith('KT')) {
       return ''
     }
