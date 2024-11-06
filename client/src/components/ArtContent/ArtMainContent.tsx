@@ -54,7 +54,7 @@ export function ArtMainContent({
           loading={loading}
           slides={artImages?.map((art) => ({
             name: art.name || '',
-            nftCompressedHdUrl: art.image_url || ''
+            nftCompressedHdUrl: art.previews.image_medium_url || ''
           }))}
           redirectSource={source}
           onRedirect={onRedirect}
@@ -78,7 +78,7 @@ export function ArtMainContent({
         onChangeSlideIndex={onChangeSelectedArtIndex}
         slides={artImages.map((art) => ({
           name: art.name || '',
-          nftCompressedHdUrl: art.image_url || ''
+          nftCompressedHdUrl: art.previews.image_medium_url || ''
         }))}
       />
       {renderContent()}
