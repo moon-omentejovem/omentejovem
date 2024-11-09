@@ -24,7 +24,7 @@ interface ArtOwnershipProperties {
   owners: Owner[]
   firstEvent?: FirstCreated
   lastEvent?: Sale
-  source?: 'portfolio' | '1-1' | 'editions'
+  source?: 'portfolio' | '1-1' | 'editions' | 'collections'
 }
 
 export function ArtOwnership({
