@@ -186,7 +186,8 @@ export function ArtInfos({
                       buttonText: 'Make Offer'
                     }}
                     views={{
-                      Etherscan: `https://etherscan.io/token/${selectedArt.contract_address}?a=${selectedArt.token_id}`
+                      Etherscan: `https://etherscan.io/token/${selectedArt.contract_address}?a=${selectedArt.token_id}`,
+                      TezosScan: `https://tzkt.io/${selectedArt.contract_address}/${selectedArt.token_id}`
                     }}
                   />
                 </div>

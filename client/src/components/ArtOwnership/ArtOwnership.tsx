@@ -66,11 +66,20 @@ export function ArtOwnership({
                 <Objkt />
               </a>
             )
-          ) : (
+          ) : nftChain === 'ethereum' ? (
             <a
               target="_blank"
               rel="noreferrer"
               href={`https://etherscan.io/address/${owner.owner_address}`}
+              className="text-primary-50 hover:underline"
+            >
+              {formatOwnerAddress(owner.owner_address)}
+            </a>
+          ) : (
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href={`https://tzkt.io/${owner.owner_address}`}
               className="text-primary-50 hover:underline"
             >
               {formatOwnerAddress(owner.owner_address)}
