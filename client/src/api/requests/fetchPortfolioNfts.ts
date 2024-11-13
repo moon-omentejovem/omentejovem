@@ -9,12 +9,10 @@ export async function fetchPortfolioNfts() {
   let ALL_DATA: { nfts: NFT[] } = { nfts: [] }
 
   const formattedQuery = ALL_NFTS.map((nft) => {
-    if (nft.startsWith('KT')) {
-      return ''
-    }
+    const prefix = nft.startsWith('KT') ? 'tezos.' : 'ethereum.'
     const tokenAddress = nft.split(':')[0]
     const tokenId = nft.split(':')[1]
-    return `ethereum.${tokenAddress}.${tokenId}`
+    return `${prefix}${tokenAddress}.${tokenId}`
   })
     .filter((nft) => nft !== '')
     .join(',')

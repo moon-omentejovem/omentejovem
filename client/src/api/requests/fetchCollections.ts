@@ -22,12 +22,10 @@ export async function fetchCollections() {
   let ALL_DATA: { collections: CollectionRes[] } = { collections: [] }
 
   const formattedQuery = COLLECTION_NFTS?.map((nft) => {
-    if (nft.startsWith('KT')) {
-      return ''
-    }
+    const prefix = nft.startsWith('KT') ? 'tezos.' : 'ethereum.'
     const tokenAddress = nft.split(':')[0]
     const tokenId = nft.split(':')[1]
-    return `ethereum.${tokenAddress}.${tokenId}`
+    return `${prefix}${tokenAddress}.${tokenId}`
   })
     .filter((nft) => nft !== '')
     .join(',')

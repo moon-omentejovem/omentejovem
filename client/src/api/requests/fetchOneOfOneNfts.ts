@@ -9,12 +9,10 @@ export async function fetchOneOfOneNfts() {
   let ALL_DATA: { nfts: NFT[] } = { nfts: [] }
 
   const formattedQuery = ALL_NFTS.map((nft) => {
-    if (nft.startsWith('KT')) {
-      return ''
-    }
+    const prefix = nft.startsWith('KT') ? 'tezos.' : 'ethereum.'
     const tokenAddress = nft.split(':')[0]
     const tokenId = nft.split(':')[1]
-    return `ethereum.${tokenAddress}.${tokenId}`
+    return `${prefix}${tokenAddress}.${tokenId}`
   })
     .filter((nft) => nft !== '')
     .join(',')
@@ -39,7 +37,12 @@ export async function fetchOneOfOneNfts() {
   })
 
   // Only return if contract.type === 'ERC721'
-  ALL_DATA.nfts = ALL_DATA.nfts.filter((nft) => nft.contract.type === 'ERC721')
+  ALL_DATA.nfts = ALL_DATA.nfts.filter((nft) => {
+    if (nft.contract_address.startsWith('KT')) {
+      return nft.token_count === 1
+    }
+    return nft.contract.type === 'ERC721'
+  })
 
   return ALL_DATA
 }
