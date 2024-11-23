@@ -1,5 +1,6 @@
 import { requestNftsByCollection } from '@/api/resolver/requestNftsByCollection'
-import { InnerCollectionContent } from './content'
+import InnerCollectionContent from './content'
+import { CollectionsContentProvider } from './provider'
 
 interface CollectionsInProperties {
   params: {
@@ -12,5 +13,13 @@ export default async function CollectionsIn({
 }: CollectionsInProperties) {
   const { email, images } = await requestNftsByCollection(params.slug)
 
-  return <InnerCollectionContent email={email} images={images} />
+  return (
+    <CollectionsContentProvider
+      email={'email'}
+      filters={[]}
+      images={images}
+      totalPages={1}
+      slug={params.slug}
+    />
+  )
 }

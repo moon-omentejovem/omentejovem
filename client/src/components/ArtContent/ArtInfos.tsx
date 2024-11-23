@@ -21,7 +21,7 @@ interface ArtInfosProperties {
   email: string
   selectedArt: NFT
   slides: NFT[]
-  source: 'portfolio' | '1-1' | 'editions' | 'collections'
+  source: 'portfolio' | '1-1' | 'editions' | string
   onChangeSlideIndex: (index: number) => void
 }
 
