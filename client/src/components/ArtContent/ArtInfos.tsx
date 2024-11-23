@@ -84,8 +84,8 @@ export function ArtInfos({
         'flex p-4 flex-wrap gap-4 h-[calc(100vh)] xl:h-[calc(100vh-4rem)] pl-0 xl:pr-[12vw] overflow-scroll'
       )}
     >
-      <div className="2xl:flex-1 min-w-[200px] xl:min-w-[350px] flex items-end h-1/2 xl:h-full">
-        <div className="art-detail-inner-container h-full max-h-[calc(100vh-6rem)] overflow-hidden">
+      <div className="2xl:flex-1 min-w-[200px] xl:min-w-[350px] flex flex-col justify-end h-1/2 xl:h-full">
+        <div className="art-detail-inner-container h-full max-h-[calc(100vh-6rem)] overflow-hidden flex flex-col justify-end">
           <ArtDetails
             detailedImage={selectedArt.image_url || ''}
             image={selectedArt.image_url || ''}
