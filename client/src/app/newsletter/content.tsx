@@ -15,7 +15,7 @@ import './style.css'
 import HardCodedBio from './hardcoded-bio'
 import { fetchHomeInfo } from '@/api/requests/fetchHomeInfo'
 
-const KIT_API_KEY = 'kit_13992a553edf980d441d37bccc4ca777'
+const KIT_API_KEY = 'kit_af59c54039b362cacce7f0f13aec4b6f'
 
 interface AboutContentProperties {
   data: AboutData | undefined
