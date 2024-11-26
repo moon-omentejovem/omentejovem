@@ -81,7 +81,7 @@ export function ArtInfos({
   return (
     <section
       className={cn(
-        'flex p-4 flex-wrap gap-4 h-[calc(100vh)] xl:h-[calc(100vh-4rem)] pl-0 xl:pr-[12vw] overflow-scroll'
+        'flex p-4 flex-wrap gap-4 h-[calc(100vh)] xl:h-[calc(100vh-4rem)] pl-12 overflow-scroll'
       )}
     >
       <div className="2xl:flex-1 min-w-[200px] xl:min-w-[350px] flex flex-col justify-end h-1/2 xl:h-full">
