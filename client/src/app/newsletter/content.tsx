@@ -15,11 +15,22 @@ import './style.css'
 import HardCodedBio from './hardcoded-bio'
 import { fetchHomeInfo } from '@/api/requests/fetchHomeInfo'
 
+const KIT_API_KEY = 'kit_13992a553edf980d441d37bccc4ca777'
+
 interface AboutContentProperties {
   data: AboutData | undefined
   talks: PressTalk[]
   press: PressTalk[]
   exhibitions: PressTalk[]
+}
+
+interface SubscriberData {
+  email_address: string
+  state: 'active'
+  fields?: {
+    // Add any custom fields you want to collect
+    Source?: string
+  }
 }
 
 function AboutBio({ text }: { text: string }): ReactElement {
@@ -76,17 +87,41 @@ export function AboutContent({
   const [isSubmitted, setIsSubmitted] = useState(false)
   const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (isValidEmail) {
-      // TODO: Implement newsletter subscription logic
-      console.log('Submitting email:', email)
-      setIsSubmitted(true)
-      setEmail('') // Clear the input
+      try {
+        const subscriberData: SubscriberData = {
+          email_address: email,
+          state: 'active',
+          fields: {
+            Source: 'newsletter page'
+          }
+        }
 
-      // Reset success message after 3 seconds
-      setTimeout(() => {
-        setIsSubmitted(false)
-      }, 3000)
+        const response = await fetch('https://api.kit.com/v4/subscribers', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            'X-Kit-Api-Key': KIT_API_KEY
+          },
+          body: JSON.stringify(subscriberData)
+        })
+
+        if (!response.ok) {
+          throw new Error('Failed to subscribe')
+        }
+
+        setIsSubmitted(true)
+        setEmail('')
+
+        setTimeout(() => {
+          setIsSubmitted(false)
+        }, 3000)
+      } catch (error) {
+        console.error('Error subscribing:', error)
+        // You might want to add error state handling here
+      }
     }
   }
 
