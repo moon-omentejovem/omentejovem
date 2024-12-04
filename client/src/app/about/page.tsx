@@ -18,7 +18,7 @@ async function requestGetAboutInfo() {
         objkt: 'https://objkt.com/@omentejovem'
       },
       contact: {
-        'e-mail': ''
+        'e-mail': 'moon@omentejovem.com'
       }
     } as AboutData
 
