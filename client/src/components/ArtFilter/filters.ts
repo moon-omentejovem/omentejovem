@@ -184,17 +184,17 @@ const filters: ChainedFilter[] = [
               ethContractFilter,
               yearFilter
             ]
+          },
+          {
+            label: 'xtz',
+            filterApply: (n) => n.chain.toLowerCase() === 'tezos',
+            children: [
+              latestFilter,
+              availableFilter,
+              xtzContractFilter,
+              yearFilter
+            ]
           }
-          // {
-          //   label: 'xtz',
-          //   filterApply: (n) => n.chain.toLowerCase() === 'tezos',
-          //   children: [
-          //     latestFilter,
-          //     availableFilter,
-          //     xtzContractFilter,
-          //     yearFilter
-          //   ]
-          // }
         ]
       }
       // {
