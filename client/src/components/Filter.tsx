@@ -23,12 +23,11 @@ export function Filter({
   onChangeFilter
 }: FilterProperties): ReactElement {
   const [open, setOpen] = useState(false)
-  const [filters, setFilters] = useState([] as ChainedFilter[]);
+  const [filters, setFilters] = useState([] as ChainedFilter[])
   const [selected, setSelected] = useState<string>('')
 
   useEffect(() => {
     refreshFilters()
-    
   }, [filterHistory])
 
   useEffect(() => {
@@ -37,7 +36,7 @@ export function Filter({
     }
   }, [filters])
 
-  function getFilters() : ChainedFilter[] {
+  function getFilters(): ChainedFilter[] {
     const lastParentFilter = getLastFilterHistoryParent(filterHistory)
     return lastParentFilter?.children
   }
@@ -58,8 +57,8 @@ export function Filter({
   }
 
   function refreshFilters() {
-    const currFilters = getFilters();
-    setFilters(currFilters);
+    const currFilters = getFilters()
+    setFilters(currFilters)
   }
 
   function clickX() {
@@ -81,13 +80,13 @@ export function Filter({
         <Icons.X
           className={cn(
             open ? 'scale-100' : 'scale-0',
-            'absolute stroke-secondary-100 transition-all group-hover:opacity-60 w-8 h-8'
+            'absolute stroke-secondary-100 stroke-1 transition-all group-hover:opacity-60 w-8 h-8'
           )}
         />
         <Icons.Menu
           className={cn(
             open ? 'scale-0' : 'scale-100',
-            'absolute stroke-secondary-100 transition-all group-hover:opacity-60 w-8 h-8'
+            'absolute stroke-secondary-100 stroke-1 transition-all group-hover:opacity-60 w-8 h-8'
           )}
         />
       </button>
