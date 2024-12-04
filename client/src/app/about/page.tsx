@@ -4,18 +4,18 @@ import { AboutData } from './@types/wordpress'
 async function requestGetAboutInfo() {
   try {
     const data = {
-      title: '',
+      title: 'omentejovem',
       subtitle: '',
       subtitle_art: '',
       bio: '',
       social_media: {
-        twitter: 'string',
-        instagram: 'string',
-        aotm: 'string',
-        superrare: 'string',
-        foundation: 'string',
-        opensea: 'string',
-        objkt: 'string'
+        twitter: 'https://x.com/omentejovem',
+        instagram: 'https://www.instagram.com/omentejovem',
+        aotm: 'https://aotm.gallery/artist/omentejovem',
+        superrare: 'https://superrare.com/omentejovem',
+        foundation: 'https://foundation.app/@omentejovem',
+        opensea: 'https://opensea.io/omentejovem',
+        objkt: 'https://objkt.com/@omentejovem'
       },
       contact: {
         'e-mail': ''
