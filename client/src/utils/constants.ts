@@ -60,7 +60,6 @@ export const ALL_NFTS = [
   '0xb932a70a57673d89f4acffbe830e8ed7f75fb9e0:32201',
   '0xb932a70a57673d89f4acffbe830e8ed7f75fb9e0:31463',
   '0xb932a70a57673d89f4acffbe830e8ed7f75fb9e0:30838',
-  '0xb932a70a57673d89f4acffbe830e8ed7f75fb9e0:48623',
   '0x826b11a95a9393e8a3cc0c2a7dfc9accb4ff4e43:4',
   '0xfda33af4770d844dc18d8788c7bf84accfac79ad:14',
   '0xfda33af4770d844dc18d8788c7bf84accfac79ad:8',
