@@ -13,23 +13,35 @@ export default function CollectionsContent(data: CollectionsResponse) {
   const [images, setImages] = useState([] as string[])
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
+  const [
+    highlightedImageIndexPerCollection,
+    setHighlightedImageIndexPerCollection
+  ] = useState({} as Record<string, number>)
+
+  useEffect(() => {
+    const recordForHighlightedImageIndexPerCollection: Record<string, number> =
+      {}
+
+    for (const collection of data.collections) {
+      recordForHighlightedImageIndexPerCollection[collection.name] = Math.floor(
+        Math.random() * collection.nftImageUrls.length
+      )
+    }
+
+    setHighlightedImageIndexPerCollection(
+      recordForHighlightedImageIndexPerCollection
+    )
+  }, [data.collections])
+
   useEffect(() => {
     const currentImages =
       data.collections?.find((c) => c.name === currentCollection)
         ?.nftImageUrls || []
 
     setImages(currentImages)
-
-    const intervalId = setInterval(() => {
-      setCurrentImageIndex((before) => {
-        let newIndex = before + 1
-        if (newIndex > currentImages.length - 1) newIndex = 0
-
-        return newIndex
-      })
-    }, 1500)
-
-    return () => clearInterval(intervalId)
+    setCurrentImageIndex(
+      highlightedImageIndexPerCollection[currentCollection ?? ''] || 0
+    )
   }, [currentCollection, data.collections])
 
   useEffect(() => {
