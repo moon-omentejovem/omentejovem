@@ -81,7 +81,7 @@ export function ArtInfos({
   return (
     <section
       className={cn(
-        'flex p-4 flex-wrap gap-4 h-[calc(100vh)] xl:h-[calc(100vh-4rem)] pl-12 overflow-scroll'
+        'flex p-4 flex-wrap gap-4 h-[calc(100vh)] xl:h-[calc(100vh-4rem)] pl-12 overflow-scroll max-w-[85%] gap-x-auto w-full'
       )}
     >
       <div className="2xl:flex-1 min-w-[200px] xl:min-w-[350px] flex flex-col justify-end h-1/2 xl:h-full">
@@ -113,7 +113,7 @@ export function ArtInfos({
         <div
           id="art-container"
           className={cn(
-            'px-4 gap-2 transition-all max-h-[calc(100vh-8rem)] h-full w-full xl:w-[400px] flex-shrink-0 flex flex-col justify-start xl:justify-end'
+            'px-4 gap-2 transition-all max-h-[calc(100vh-8rem)] h-full w-full xl:w-[400px] flex-shrink-0 flex flex-col justify-start sm:justify-end ml-auto'
           )}
         >
           <div
