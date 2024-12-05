@@ -92,7 +92,7 @@ const ethContractFilter: ChainedFilter = {
           n.contract_address?.toLowerCase() ?? ''
         ),
       children: []
-    }
+    },
     // {
     //   label: 'opensea',
     //   inPlace: true,
@@ -102,15 +102,15 @@ const ethContractFilter: ChainedFilter = {
     //     ),
     //   children: []
     // },
-    // {
-    //   label: 'rarible',
-    //   inPlace: true,
-    //   filterApply: (n) =>
-    //     RARIBLE_NFTS.map((nft) => nft.toLowerCase()).includes(
-    //       n.contract_address?.toLowerCase() ?? ''
-    //     ),
-    //   children: []
-    // }
+    {
+      label: 'rarible',
+      inPlace: true,
+      filterApply: (n) =>
+        RARIBLE_NFTS.map((nft) => nft.toLowerCase()).includes(
+          n.contract_address?.toLowerCase() ?? ''
+        ),
+      children: []
+    }
   ]
 }
 
@@ -120,7 +120,7 @@ const xtzContractFilter: ChainedFilter = {
     {
       label: 'hen',
       inPlace: true,
-      filterApply: (n) => true, //  n.availablePurchase?.text === 'Hen',
+      filterApply: (n) => n.contract.name === 'hen',
       children: []
     },
     {
@@ -132,7 +132,7 @@ const xtzContractFilter: ChainedFilter = {
     {
       label: 'objkt.one',
       inPlace: true,
-      filterApply: (n) => true, //  n.availablePurchase?.text === 'objkt.one',
+      filterApply: (n) => n.contract.name === 'objkt one NFT',
       children: []
     }
   ]
