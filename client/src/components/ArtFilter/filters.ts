@@ -117,16 +117,16 @@ const ethContractFilter: ChainedFilter = {
 const xtzContractFilter: ChainedFilter = {
   label: 'contract',
   children: [
-    {
-      label: 'hen',
-      inPlace: true,
-      filterApply: (n) => n.contract.name === 'hen',
-      children: []
-    },
+    // {
+    //   label: 'hen',
+    //   inPlace: true,
+    //   filterApply: (n) => n.contract.name === 'hen',
+    //   children: []
+    // },
     {
       label: 'objkt',
       inPlace: true,
-      filterApply: (n) => true, //  n.availablePurchase?.text === 'objkt Labs',
+      filterApply: (n) => n.contract.name === 'OBJKTs',
       children: []
     },
     {
