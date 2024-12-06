@@ -8,7 +8,7 @@ import { api } from '../client'
 
 export async function fetchHomeInfo() {
   // Pick 3 random from ALL_NFTS that start with 0x
-  const randomNfts = ALL_NFTS.sort(() => Math.random() - 0.5).slice(0, 3)
+  const randomNfts = ALL_NFTS.sort(() => Math.random() - 0.5).slice(0, 5)
 
   const formattedQuery = randomNfts
     .map((nft) => {

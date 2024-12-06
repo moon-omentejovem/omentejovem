@@ -62,15 +62,15 @@ function ImageBanner(): ReactElement {
   }, [])
 
   return (
-    <div className="fixed left-0 top-0 h-full flex flex-col justify-center gap-8 p-6">
+    <div className="fixed left-0 top-0 h-full flex flex-col justify-center p-6">
       {images.map((src, index) => (
         <Image
           key={index}
           src={src}
           alt={`Banner image ${index + 1}`}
-          width={100}
-          height={100}
-          className="object-cover rounded-lg"
+          width={200}
+          height={200}
+          className="object-cover"
         />
       ))}
     </div>
