@@ -84,7 +84,7 @@ export function ArtInfos({
         'flex sm:p-4 flex-wrap gap-4 h-[calc(100vh)] xl:h-[calc(100vh-4rem)] sm:pl-12 overflow-scroll sm:max-w-[85%] gap-x-auto w-full scrollbar-hide'
       )}
     >
-      <div className="2xl:flex-1 min-w-[200px] xl:min-w-[350px] flex flex-col justify-end h-1/2 xl:h-full">
+      <div className="px-4 2xl:flex-1 min-w-[200px] xl:min-w-[350px] flex flex-col justify-end h-1/2 xl:h-full">
         <div className="art-detail-inner-container h-full max-h-[calc(100vh-6rem)] overflow-hidden flex flex-col justify-end">
           <ArtDetails
             detailedImage={selectedArt.image_url || ''}
@@ -113,7 +113,7 @@ export function ArtInfos({
         <div
           id="art-container"
           className={cn(
-            'px-4 gap-2 transition-all max-h-[calc(100vh-8rem)] h-full w-full xl:w-[400px] flex-shrink-0 flex flex-col justify-start sm:justify-end ml-auto'
+            'px-8 gap-2 transition-all max-h-[calc(100vh-8rem)] h-full w-full xl:w-[400px] flex-shrink-0 flex flex-col justify-start sm:justify-end ml-auto'
           )}
         >
           <div
