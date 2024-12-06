@@ -113,7 +113,7 @@ export function ArtInfos({
         <div
           id="art-container"
           className={cn(
-            'px-8 gap-2 transition-all max-h-[calc(100vh-8rem)] h-full w-full xl:w-[400px] flex-shrink-0 flex flex-col justify-start sm:justify-end ml-auto'
+            'gap-2 transition-all max-h-[calc(100vh-8rem)] h-full w-full xl:w-[400px] flex-shrink-0 flex flex-col justify-start sm:justify-end ml-auto'
           )}
         >
           <div
