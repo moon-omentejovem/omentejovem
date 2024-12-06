@@ -30,10 +30,12 @@ export async function fetchHomeInfo() {
 
   const jsonData = (await data.json()) as { nfts: NFT[] }
 
+  console.log(jsonData.nfts[0])
+
   const formattedNfts = jsonData.nfts.map((nft) => ({
     title: nft.name,
     createdAt: nft.created_date?.toString() || '',
-    imageUrl: nft.image_url
+    imageUrl: nft.previews.image_small_url
   }))
 
   return {

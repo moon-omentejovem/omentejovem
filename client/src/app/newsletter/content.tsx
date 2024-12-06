@@ -225,7 +225,7 @@ export function AboutContent({
             id="newsletter-title"
             className="mb-8 text-[5vw] leading-none overflow-hidden xl:mb-16 text-left"
           >
-            <span className="block text-[2vw]">NEWSLETTER</span>
+            <span className="block text-[2vw] text-gray-500">NEWSLETTER</span>
             <span className="block text-primary-100">omentejovem</span>
           </h1>
 
