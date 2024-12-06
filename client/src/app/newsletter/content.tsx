@@ -62,7 +62,7 @@ function ImageBanner(): ReactElement {
   }, [])
 
   return (
-    <div className="fixed left-0 top-0 h-full flex flex-col justify-center p-6">
+    <div className="fixed left-0 top-0 h-full flex flex-col justify-center">
       {images.map((src, index) => (
         <Image
           key={index}
