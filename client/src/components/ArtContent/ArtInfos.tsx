@@ -84,8 +84,8 @@ export function ArtInfos({
         'flex sm:p-4 flex-wrap gap-4 h-[calc(100vh)] xl:h-[calc(100vh-4rem)] sm:pl-12 overflow-scroll sm:max-w-[85%] gap-x-auto w-full scrollbar-hide'
       )}
     >
-      <div className="px-4 2xl:flex-1 min-w-[200px] xl:min-w-[350px] flex flex-col justify-end h-1/2 xl:h-full">
-        <div className="art-detail-inner-container h-full max-h-[calc(100vh-6rem)] overflow-hidden flex flex-col justify-end">
+      <div className="px-4 2xl:flex-1 min-w-[200px] xl:min-w-[350px] flex flex-col justify-start xl:justify-end h-auto xl:h-full">
+        <div className="art-detail-inner-container h-full max-h-[calc(100vh-6rem)] overflow-hidden flex flex-col justify-start xl:justify-end">
           <ArtDetails
             detailedImage={selectedArt.image_url || ''}
             image={selectedArt.image_url || ''}
@@ -102,7 +102,7 @@ export function ArtInfos({
           <CustomIcons.Camera />
         </button>
       )}
-      <div className="block w-[75vw] self-center xl:hidden">
+      <div className="block w-[100vw] sm:w-[75vw] self-center xl:hidden">
         <HorizontalInCarousel
           onChangeSlideIndex={onChangeToOtherSlide}
           slides={slides}
