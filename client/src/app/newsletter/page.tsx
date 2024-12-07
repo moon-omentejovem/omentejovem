@@ -1,4 +1,4 @@
-import { AboutContent } from './content'
+import { Newsletter } from './content'
 import { AboutData } from './@types/wordpress'
 
 async function requestGetAboutInfo() {
@@ -33,11 +33,11 @@ async function requestGetAboutInfo() {
   }
 }
 
-export default async function About() {
+export default async function NewsletterPage() {
   const data = await requestGetAboutInfo()
 
   return (
-    <AboutContent
+    <Newsletter
       data={data}
       press={data?.press ?? []}
       talks={data?.talks ?? []}

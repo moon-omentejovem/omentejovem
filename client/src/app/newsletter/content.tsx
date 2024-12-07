@@ -5,15 +5,14 @@ import type { ReactElement } from 'react'
 import { AboutData, PressTalk } from './@types/wordpress'
 
 import { aboutAnimations } from '@/animations'
-import { AboutArt } from '@/assets/images'
-import { Footer, FooterProperties } from '@/components/Footer'
+import { FooterProperties } from '@/components/Footer'
 import { decodeRenderedString } from '@/utils/decodeRenderedString'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import parse from 'html-react-parser'
 import './style.css'
-import HardCodedBio from './hardcoded-bio'
 import { fetchHomeInfo } from '@/api/requests/fetchHomeInfo'
+import Cookies from 'js-cookie'
 
 const KIT_API_KEY = 'kit_af59c54039b362cacce7f0f13aec4b6f'
 
@@ -77,7 +76,7 @@ function ImageBanner(): ReactElement {
   )
 }
 
-export function AboutContent({
+export function Newsletter({
   data,
   talks,
   press,
@@ -86,6 +85,21 @@ export function AboutContent({
   const [email, setEmail] = useState('')
   const [isSubmitted, setIsSubmitted] = useState(false)
   const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  const [isHidden, setIsHidden] = useState(false)
+
+  useEffect(() => {
+    // Check for existing cookie on component mount
+    const hasUserDismissed = Cookies.get('newsletter_dismissed')
+    if (hasUserDismissed) {
+      setIsHidden(true)
+    }
+  }, [])
+
+  const handleDismiss = () => {
+    // Set cookie for 7 days
+    Cookies.set('newsletter_dismissed', 'true', { expires: 7 })
+    setIsHidden(true)
+  }
 
   const handleSubmit = async () => {
     if (isValidEmail) {
@@ -114,6 +128,10 @@ export function AboutContent({
 
         setIsSubmitted(true)
         setEmail('')
+        handleDismiss()
+
+        // refresh page
+        window.location.reload()
 
         setTimeout(() => {
           setIsSubmitted(false)
@@ -218,36 +236,36 @@ export function AboutContent({
       <ImageBanner />
       <main
         id="about-page"
-        className="flex flex-col items-center px-6 font-heading xl:px-32 xl:pt-16 ml-[120px]"
+        className="fixed left-[20%] top-0 h-full w-full flex flex-col bg-background justify-center"
       >
-        <div className="flex flex-col items-start max-w-3xl">
+        <div className="flex flex-col items-start max-w-3xl ml-[10vw]">
           <h1
             id="newsletter-title"
             className="mb-8 text-[5vw] leading-none overflow-hidden xl:mb-16 text-left"
           >
-            <span className="block text-[2vw] text-gray-500">NEWSLETTER</span>
-            <span className="block text-primary-100">omentejovem</span>
+            <span className="block text-base text-gray-500">NEWSLETTER</span>
+            <span className="block text-primary-100 text-4xl">omentejovem</span>
           </h1>
 
-          <div className="mb-24 flex flex-col gap-8 max-w-xl">
+          <div className="mb-24 flex flex-col gap-8 max-w-md">
             <p className="text-base text-secondary-100">
               Receive exclusive insights on new art drops, collaborations,
               exhibitions, and upcoming talks from OMENTEJOVEM. Enter your email
               to connect with the vision and evolution behind the art.
             </p>
 
-            <div className="relative w-full max-w-sm">
+            <div className="relative w-[50vw] max-w-2xl">
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="your email here"
-                className="w-full px-4 py-3 bg-transparent border-b border-secondary-100 text-secondary-100 placeholder-secondary-100/50 outline-none"
+                placeholder="Your email here"
+                className="w-full text-4xl bg-transparent border-b border-secondary-100 text-secondary-100 placeholder-secondary-100/50 outline-none pr-14"
               />
               {isValidEmail && !isSubmitted && (
                 <button
                   onClick={handleSubmit}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-primary-100 rounded-lg w-8 h-8 flex items-center justify-center hover:opacity-80 transition-opacity"
+                  className="absolute right-0 top-1/2 -translate-y-1/2 bottom-auto bg-primary-100 rounded-lg w-12 h-8 flex items-center justify-center hover:opacity-80 transition-opacity"
                 >
                   <span className="text-white text-lg">→</span>
                 </button>
@@ -257,6 +275,13 @@ export function AboutContent({
                   Thank you for subscribing!
                 </div>
               )}
+
+              <button
+                onClick={handleDismiss}
+                className="mt-16 mx-auto px-4 py-2 border border-gray-400 rounded-lg text-secondary-100 hover:bg-gray-100/10 transition-colors"
+              >
+                {isSubmitted ? 'Close' : 'Not now'}
+              </button>
             </div>
           </div>
 
