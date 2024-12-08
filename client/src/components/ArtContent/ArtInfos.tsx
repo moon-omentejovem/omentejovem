@@ -176,8 +176,14 @@ export function ArtInfos({
                     email={email}
                     externalLinks={[
                       {
-                        url: `https://opensea.io/assets/${selectedArt.chain.toLowerCase()}/${selectedArt.contract_address}/${selectedArt.token_id}`,
-                        name: 'OpenSea'
+                        url:
+                          selectedArt.chain.toLowerCase() === 'tezos'
+                            ? `https://objkt.com/asset/${selectedArt.contract_address}/${selectedArt.token_id}`
+                            : `https://opensea.io/assets/${selectedArt.chain.toLowerCase()}/${selectedArt.contract_address}/${selectedArt.token_id}`,
+                        name:
+                          selectedArt.chain.toLowerCase() === 'tezos'
+                            ? 'Objkt'
+                            : 'OpenSea'
                       }
                     ]}
                     // availableForPurchase={selectedArt.available_purchase}
@@ -186,8 +192,10 @@ export function ArtInfos({
                       buttonText: 'Make Offer'
                     }}
                     views={{
-                      Etherscan: `https://etherscan.io/token/${selectedArt.contract_address}?a=${selectedArt.token_id}`,
-                      TezosScan: `https://tzkt.io/${selectedArt.contract_address}/${selectedArt.token_id}`
+                      explorer:
+                        selectedArt.chain.toLowerCase() === 'tezos'
+                          ? `https://tzkt.io/${selectedArt.contract_address}/tokens/${selectedArt.token_id}`
+                          : `https://etherscan.io/token/${selectedArt.contract_address}?a=${selectedArt.token_id}`
                     }}
                   />
                 </div>

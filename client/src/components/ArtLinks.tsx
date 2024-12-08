@@ -106,7 +106,7 @@ export function ArtLinks({
             VIEW ON {externalLink.name.toUpperCase()}
           </a>
           <a
-            href={views['Etherscan']}
+            href={views['explorer']}
             target="_blank"
             rel="noreferrer"
             className="text-secondary-100 hover:text-primary-50"
