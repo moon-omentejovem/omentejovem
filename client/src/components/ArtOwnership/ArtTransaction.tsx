@@ -8,6 +8,7 @@ import { FirstCreated, NftTransferEvent, Sale } from '../ArtContent/types'
 interface ArtTransactionProperties {
   transaction?: Sale
   collectionsMode?: boolean
+  chain: 'ethereum' | 'tezos'
 }
 
 export const omentejovemAddress: Record<string, string> = {
@@ -28,6 +29,7 @@ export function formatOwnerAddress(ownerName?: string): string {
 
 export function ArtTransaction({
   transaction,
+  chain,
   collectionsMode
 }: ArtTransactionProperties): ReactElement {
   if (
@@ -54,7 +56,7 @@ export function ArtTransaction({
               className="text-primary-50 hover:underline"
               aria-label={`${transaction.minted_to} seller profile`}
             >
-              {formatOwnerAddress(transaction.minted_to)}
+              {formatOwnerAddress(transaction.minted_to)}ayo
             </a>
           </p>
           <p>{formattedDate(transaction.timestamp)}</p>
@@ -63,7 +65,7 @@ export function ArtTransaction({
         <a
           target="_blank"
           rel="noreferrer"
-          href={`https://etherscan.io/tx/${transaction.transaction}`}
+          href={`https://${chain === 'ethereum' ? 'etherscan.io/tx' : 'tzkt.io'}/${transaction.transaction}`}
           className="hover:fill-primary-50"
           aria-label="Transaction page"
         >
@@ -109,7 +111,7 @@ export function ArtTransaction({
       <a
         target="_blank"
         rel="noreferrer"
-        href={`https://etherscan.io/tx/${transaction?.transaction}`}
+        href={`https://${chain === 'ethereum' ? 'etherscan.io/tx' : 'tzkt.io'}/${transaction?.transaction}`}
         className="hover:fill-primary-50"
         aria-label="Transaction page"
       >

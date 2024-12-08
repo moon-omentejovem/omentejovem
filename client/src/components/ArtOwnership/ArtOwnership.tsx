@@ -130,10 +130,12 @@ export function ArtOwnership({
 
           <ul className="list-none">
             <ArtMint
+              chain={nftChain === 'ethereum' ? 'ethereum' : 'tezos'}
               transaction={firstEvent}
               collectionsMode={collectionsMode}
             />
             <ArtTransaction
+              chain={nftChain === 'ethereum' ? 'ethereum' : 'tezos'}
               transaction={lastEvent}
               collectionsMode={collectionsMode}
             />

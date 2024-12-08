@@ -3,11 +3,17 @@ import { type ArtTransaction } from './types'
 import { addHours, format } from 'date-fns'
 import { CustomIcons } from '@/assets/icons'
 import { cn } from '@/lib/utils'
-import { FirstCreated, NftTransferEvent, Sale } from '../ArtContent/types'
+import {
+  Chain,
+  FirstCreated,
+  NftTransferEvent,
+  Sale
+} from '../ArtContent/types'
 
 interface ArtTransactionProperties {
   transaction?: FirstCreated
   collectionsMode?: boolean
+  chain: 'ethereum' | 'tezos'
 }
 
 export const omentejovemAddress: Record<string, string> = {
@@ -28,8 +34,10 @@ export function formatOwnerAddress(ownerName?: string): string {
 
 export function ArtMint({
   transaction,
+  chain,
   collectionsMode
 }: ArtTransactionProperties): ReactElement {
+  console.log('transaction!!', transaction)
   if (
     transaction &&
     'minted_to' in transaction &&
@@ -63,7 +71,7 @@ export function ArtMint({
         <a
           target="_blank"
           rel="noreferrer"
-          href={`https://etherscan.io/tx/${transaction.transaction}`}
+          href={`https://${chain === 'ethereum' ? 'etherscan.io/tx' : 'tzkt.io'}/${transaction.transaction}`}
           className="hover:fill-primary-50"
           aria-label="Transaction page"
         >
@@ -109,7 +117,7 @@ export function ArtMint({
       <a
         target="_blank"
         rel="noreferrer"
-        href={`https://etherscan.io/tx/${transaction?.transaction}`}
+        href={`https://${chain === 'ethereum' ? 'etherscan.io/tx' : 'tzkt.io'}/${transaction?.transaction}`}
         className="hover:fill-primary-50"
         aria-label="Transaction page"
       >
