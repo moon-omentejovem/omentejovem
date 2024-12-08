@@ -32,17 +32,6 @@ interface SubscriberData {
   }
 }
 
-function AboutBio({ text }: { text: string }): ReactElement {
-  return (
-    <>
-      <div id="bio-content" className="bio">
-        {parse(text)}
-      </div>
-      <br />
-    </>
-  )
-}
-
 async function fetchRandomImages() {
   const data = await fetchHomeInfo()
   // Assuming the data contains an images array
@@ -76,12 +65,7 @@ function ImageBanner(): ReactElement {
   )
 }
 
-export function Newsletter({
-  data,
-  talks,
-  press,
-  exhibitions
-}: AboutContentProperties): ReactElement {
+export function Newsletter(): ReactElement {
   const [email, setEmail] = useState('')
   const [isSubmitted, setIsSubmitted] = useState(false)
   const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
@@ -96,9 +80,13 @@ export function Newsletter({
   }, [])
 
   const handleDismiss = () => {
-    // Set cookie for 7 days
-    Cookies.set('newsletter_dismissed', 'true', { expires: 7 })
-    setIsHidden(true)
+    if (email?.length > 0) {
+      // Set cookie for 7 days
+      Cookies.set('newsletter_dismissed', 'true', { expires: 7 })
+      setIsHidden(true)
+    } else {
+      setIsHidden(true)
+    }
   }
 
   const handleSubmit = async () => {
@@ -147,92 +135,12 @@ export function Newsletter({
     aboutAnimations()
   }, [])
 
-  const parsedTalks = useMemo<FooterProperties['talks']>(
-    () =>
-      talks.map((talk) => ({
-        talkName: decodeRenderedString(talk.title.rendered),
-        talkUrl: talk.acf.link
-      })),
-    []
-  )
-
-  const parsedPress = useMemo<FooterProperties['interviews']>(
-    () =>
-      press.map((interview) => ({
-        interviewName: decodeRenderedString(interview.title.rendered),
-        interviewUrl: interview.acf.link
-      })),
-    []
-  )
-
-  const parsedExhibitions = useMemo<FooterProperties['exhibitions']>(
-    () =>
-      exhibitions.map((exhibition) => ({
-        exhibitionName: decodeRenderedString(exhibition.title.rendered),
-        exhibitionUrl: exhibition.acf.link
-      })),
-    []
-  )
-
-  const renderAboutInfo = useCallback((aboutString: string): ReactElement => {
-    return <AboutBio key={'about-bio'} text={aboutString} />
-  }, [])
-
-  useEffect(() => {
-    const anchorElements = document.getElementsByTagName(
-      'a'
-    ) as HTMLCollectionOf<HTMLAnchorElement>
-    const parsedElements = [...anchorElements]
-
-    const filtered = parsedElements.filter(
-      (element) => element.className === '' || element.id === 'image-reference'
-    )
-
-    for (const element of filtered) {
-      element.id = `image-reference-${element.innerText}`
-      element.className = 'bio-link'
-      element.setAttribute('target', '_blank')
-
-      const overlayImage = document.createElement('img')
-      overlayImage.classList.add('overlay-image')
-      overlayImage.src = element.href
-      overlayImage.alt = ''
-      overlayImage.style.minWidth = '500px'
-      overlayImage.style.maxWidth = '500px'
-      overlayImage.style.position = 'absolute'
-
-      document.getElementById('about-page')?.appendChild(overlayImage)
-
-      element.addEventListener('mouseover', () => {
-        overlayImage.style.display = 'block'
-      })
-
-      element.addEventListener('mouseout', () => {
-        overlayImage.style.display = 'none'
-      })
-
-      element.addEventListener('mousemove', (event) => {
-        const parentRect = document
-          .getElementById('about-page')
-          ?.getBoundingClientRect()
-
-        if (parentRect) {
-          const headerHeight = 104
-
-          const x = event.clientX - parentRect.left - overlayImage.width / 2
-          const y =
-            event.clientY -
-            parentRect.top +
-            headerHeight -
-            overlayImage.height / 2
-          overlayImage.style.transform = `translate(${x}px, ${y}px)`
-        }
-      })
-    }
-  }, [])
+  if (isHidden) {
+    return <></>
+  }
 
   return (
-    <div className="relative">
+    <div className="relative z-50 bg-background">
       <ImageBanner />
       <main
         id="about-page"
@@ -265,7 +173,7 @@ export function Newsletter({
               {isValidEmail && !isSubmitted && (
                 <button
                   onClick={handleSubmit}
-                  className="absolute right-0 top-1/2 -translate-y-1/2 bottom-auto bg-primary-100 rounded-lg w-12 h-8 flex items-center justify-center hover:opacity-80 transition-opacity"
+                  className="absolute right-0 top-4 -translate-y-1/2 bottom-auto bg-primary-100 rounded-lg w-12 h-8 flex items-center justify-center hover:opacity-80 transition-opacity"
                 >
                   <span className="text-white text-lg">→</span>
                 </button>
@@ -276,12 +184,18 @@ export function Newsletter({
                 </div>
               )}
 
-              <button
-                onClick={handleDismiss}
-                className="mt-16 mx-auto px-4 py-2 border border-gray-400 rounded-lg text-secondary-100 hover:bg-gray-100/10 transition-colors"
-              >
-                {isSubmitted ? 'Close' : 'Not now'}
-              </button>
+              <div className="flex justify-center w-full">
+                <button
+                  onClick={handleDismiss}
+                  className="mt-16 mx-auto px-4 py-2 border border-gray-400 rounded-lg text-secondary-100 hover:bg-gray-100/10 transition-colors"
+                >
+                  {isSubmitted
+                    ? 'Close'
+                    : email?.length > 0
+                      ? 'Not now'
+                      : 'Close window'}
+                </button>
+              </div>
             </div>
           </div>
 

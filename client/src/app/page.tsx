@@ -20,6 +20,7 @@ export default async function Home() {
   return (
     <div className="fixed z-50 bg-background w-full h-[100vh]">
       <NewsletterPage />
+      <HomeContent data={data} />
     </div>
   )
 }
