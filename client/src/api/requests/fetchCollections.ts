@@ -47,13 +47,17 @@ export async function fetchCollections() {
       nft.contract_address?.toLowerCase() ===
       '0x826b11a95a9393e8a3cc0c2a7dfc9accb4ff4e43'.toLowerCase()
     ) {
-      THE_CYCLE_COLLECTION.nftImageUrls.push(nft.image_url || '')
+      THE_CYCLE_COLLECTION.nftImageUrls.push(
+        nft.previews.image_medium_url || ''
+      )
     }
     if (
       nft.contract_address?.toLowerCase() ===
       '0x2b3bbde45422d65ab3fb5cdc5427944db0729b50'.toLowerCase()
     ) {
-      SHAPES_AND_COLORS_COLLECTION.nftImageUrls.push(nft.image_url || '')
+      SHAPES_AND_COLORS_COLLECTION.nftImageUrls.push(
+        nft.previews.image_medium_url || ''
+      )
     }
   }
 
