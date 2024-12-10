@@ -50,17 +50,20 @@ function ImageBanner(): ReactElement {
   }, [])
 
   return (
-    <div className="fixed left-0 top-0 h-full flex flex-col justify-center">
-      {images.map((src, index) => (
-        <Image
-          key={index}
-          src={src}
-          alt={`Banner image ${index + 1}`}
-          width={200}
-          height={200}
-          className="object-cover"
-        />
-      ))}
+    <div className="fixed left-0 top-0 h-full overflow-hidden">
+      <div className="animate-scroll flex flex-col">
+        {/* Duplicate images for seamless loop */}
+        {[...images, ...images].map((src, index) => (
+          <Image
+            key={index}
+            src={src}
+            alt={`Banner image ${index + 1}`}
+            width={200}
+            height={200}
+            className="object-cover"
+          />
+        ))}
+      </div>
     </div>
   )
 }

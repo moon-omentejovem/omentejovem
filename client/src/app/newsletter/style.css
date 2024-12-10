@@ -50,3 +50,22 @@ div#bio-content {
     }
   }
 }
+
+@keyframes scroll {
+  0% {
+    transform: translateY(-50%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 30s linear infinite;
+  will-change: transform;
+}
+
+/* Optional: Pause animation on hover */
+.animate-scroll:hover {
+  animation-play-state: paused;
+}
