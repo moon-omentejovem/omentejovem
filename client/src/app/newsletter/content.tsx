@@ -148,6 +148,26 @@ export function Newsletter(): ReactElement {
         id="about-page"
         className="fixed sm:left-[20%] top-0 h-full w-full flex flex-col bg-background justify-center"
       >
+        <button
+          onClick={handleDismiss}
+          className="absolute top-8 right-8 sm:right-0 sm:right-[30vw] text-secondary-100 hover:text-primary-100 transition-colors"
+          aria-label="Close newsletter"
+        >
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+
         <div className="flex flex-col items-start max-w-3xl mx-8 sm:ml-[10vw]">
           <h1
             id="newsletter-title"
