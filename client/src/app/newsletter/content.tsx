@@ -50,9 +50,8 @@ function ImageBanner(): ReactElement {
   }, [])
 
   return (
-    <div className="fixed left-0 top-0 h-full overflow-hidden">
+    <div className="fixed left-0 top-0 h-full overflow-hidden hidden md:block">
       <div className="animate-scroll flex flex-col">
-        {/* Duplicate images for seamless loop */}
         {[...images, ...images].map((src, index) => (
           <Image
             key={index}
@@ -147,9 +146,9 @@ export function Newsletter(): ReactElement {
       <ImageBanner />
       <main
         id="about-page"
-        className="fixed left-[20%] top-0 h-full w-full flex flex-col bg-background justify-center"
+        className="fixed sm:left-[20%] top-0 h-full w-full flex flex-col bg-background justify-center"
       >
-        <div className="flex flex-col items-start max-w-3xl ml-[10vw]">
+        <div className="flex flex-col items-start max-w-3xl mx-8 sm:ml-[10vw]">
           <h1
             id="newsletter-title"
             className="mb-8 text-[5vw] leading-none overflow-hidden xl:mb-16 text-left"
@@ -165,18 +164,18 @@ export function Newsletter(): ReactElement {
               to connect with the vision and evolution behind the art.
             </p>
 
-            <div className="relative w-[50vw] max-w-2xl">
+            <div className="relative w-full sm:w-[50vw] max-w-2xl">
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Your email here"
-                className="w-full text-4xl bg-transparent border-b border-secondary-100 text-secondary-100 placeholder-secondary-100/50 outline-none pr-14"
+                className="w-full text-2xl sm:text-4xl bg-transparent border-b border-secondary-100 text-secondary-100 placeholder-secondary-100/50 outline-none pr-14"
               />
               {isValidEmail && !isSubmitted && (
                 <button
                   onClick={handleSubmit}
-                  className="absolute right-0 top-4 -translate-y-1/2 bottom-auto bg-primary-100 rounded-lg w-12 h-8 flex items-center justify-center hover:opacity-80 transition-opacity"
+                  className="absolute right-0 top-4 -translate-y-1/2 bottom-auto bg-primary-100 rounded-lg w-12 h-8 hidden sm:flex items-center justify-center hover:opacity-80 transition-opacity"
                 >
                   <span className="text-white text-lg">→</span>
                 </button>
@@ -187,10 +186,10 @@ export function Newsletter(): ReactElement {
                 </div>
               )}
 
-              <div className="flex justify-center w-full">
+              <div className="fixed sm:static bottom-16 left-0 w-full sm:w-auto flex justify-center gap-4 sm:flex-row">
                 <button
                   onClick={handleDismiss}
-                  className="mt-16 mx-auto px-4 py-2 border border-gray-400 rounded-lg text-secondary-100 hover:bg-gray-100/10 transition-colors"
+                  className="sm:mt-12 px-4 py-2 border border-gray-400 rounded-lg text-secondary-100 hover:bg-gray-100/10 transition-colors"
                 >
                   {isSubmitted
                     ? 'Close'
@@ -198,6 +197,16 @@ export function Newsletter(): ReactElement {
                       ? 'Not now'
                       : 'Close window'}
                 </button>
+                {isValidEmail && !isSubmitted && (
+                  <button
+                    onClick={handleSubmit}
+                    className="sm:hidden bg-primary-100 rounded-lg w-1/2 py-2 flex items-center justify-center hover:opacity-80 transition-opacity"
+                  >
+                    <span className="text-white text-lg">
+                      Subscribe <span className="ml-12">→</span>
+                    </span>
+                  </button>
+                )}
               </div>
             </div>
           </div>
