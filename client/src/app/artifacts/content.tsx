@@ -34,7 +34,7 @@ export function ArtifactsContent(): ReactElement {
         />
       </div>
 
-      <div className="relative z-10 w-1/4 mt-20">
+      <div className="relative z-10 w-full xl:w-1/4 mt-[45vh] sm:mt-20 flex flex-col">
         <h2 className="text-orange-500 text-base font-bold uppercase">
           claimable for collectors
         </h2>
