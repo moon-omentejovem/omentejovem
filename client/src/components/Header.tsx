@@ -23,6 +23,10 @@ const tabs = [
   {
     name: 'collections',
     link: '/collections'
+  },
+  {
+    name: 'artifacts',
+    link: '/artifacts'
   }
 ]
 
