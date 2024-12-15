@@ -19,7 +19,7 @@ function AboutBio({ text }: { text: string }): ReactElement {
 
 export function ArtifactsContent(): ReactElement {
   return (
-    <main className="flex flex-col justify-center px-6 font-heading xl:px-20 relative h-screen overflow-hidden">
+    <main className="flex flex-col justify-center px-6 font-heading xl:px-20 relative h-full overflow-hidden">
       <div className="fixed inset-0 z-0">
         <video
           src="/crate.mp4"
@@ -31,7 +31,7 @@ export function ArtifactsContent(): ReactElement {
         />
       </div>
 
-      <div className="relative z-10 w-full xl:w-1/4 mt-[45vh] sm:mt-20 flex flex-col">
+      <div className="relative z-10 w-full xl:w-1/4 mt-[50vh] sm:mt-60 flex flex-col">
         <h2 className="text-orange-500 text-base font-bold uppercase">
           claimable for collectors
         </h2>
