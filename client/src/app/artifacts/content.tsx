@@ -19,18 +19,15 @@ function AboutBio({ text }: { text: string }): ReactElement {
 
 export function ArtifactsContent(): ReactElement {
   return (
-    <main
-      id="about-page"
-      className="flex flex-col justify-center px-6 font-heading xl:px-20 relative min-h-screen"
-    >
+    <main className="flex flex-col justify-center px-6 font-heading xl:px-20 relative h-screen overflow-hidden">
       <div className="fixed inset-0 z-0">
-        <Image
-          src="/crate.png"
-          alt="Crate background"
-          layout="fill"
-          objectFit="cover"
-          objectPosition="center 45%"
-          priority
+        <video
+          src="/crate.mp4"
+          className="object-cover w-full h-full"
+          autoPlay
+          loop
+          muted
+          playsInline
         />
       </div>
 
