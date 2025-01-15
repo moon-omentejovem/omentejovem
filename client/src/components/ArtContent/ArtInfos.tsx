@@ -17,7 +17,11 @@ import {
 import { HorizontalInCarousel } from '../Carousels/HorizontalInCarousel/HorizontalInCarousel'
 import './styles.css'
 import { getNftLinks } from './utils'
-import { MANIFOLD_NFTS, SUPERRARE_NFTS } from '@/utils/constants'
+import {
+  MANIFOLD_NFTS,
+  SUPERRARE_NFTS,
+  TRANSIENT_NFTS
+} from '@/utils/constants'
 interface ArtInfosProperties {
   email: string
   selectedArt: NFT
@@ -92,6 +96,9 @@ export function ArtInfos({
       selectedArt.contract_address.toLowerCase()
     ) ||
     SUPERRARE_NFTS.map((nft) => nft.toLowerCase()).includes(
+      selectedArt.contract_address.toLowerCase()
+    ) ||
+    TRANSIENT_NFTS.map((nft) => nft.toLowerCase()).includes(
       selectedArt.contract_address.toLowerCase()
     )
   ) {
