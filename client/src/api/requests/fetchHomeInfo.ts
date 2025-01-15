@@ -35,7 +35,7 @@ export async function fetchHomeInfo() {
   const formattedNfts = jsonData.nfts.map((nft) => ({
     title: nft.name,
     createdAt: nft.created_date?.toString() || '',
-    imageUrl: nft.previews.image_small_url
+    imageUrl: nft.previews.image_large_url
   }))
 
   return {

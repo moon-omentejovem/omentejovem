@@ -123,7 +123,7 @@ export function CalloutParallax({
               width={0}
               height={0}
               alt={'omentejovem'}
-              className="w-auto max-h-96 invisible 2xl:max-h-[600px]"
+              className="h-[32rem] w-auto object-contain invisible 2xl:h-[600px]"
               onClick={() =>
                 setCurrentImageIndex(
                   currentImageIndex >= calloutImages.length - 1
