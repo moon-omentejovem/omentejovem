@@ -13,20 +13,28 @@ export async function fetchPortfolioNfts() {
     const tokenAddress = nft.split(':')[0]
     const tokenId = nft.split(':')[1]
     return `${prefix}${tokenAddress}.${tokenId}`
-  })
-    .filter((nft) => nft !== '')
-    .join(',')
+  }).filter((nft) => nft !== '')
+  // Batch into groups of 50
+  const batches = formattedQuery.reduce((acc, nft, index) => {
+    const batchIndex = Math.floor(index / 50)
+    acc[batchIndex] = acc[batchIndex] || []
+    acc[batchIndex].push(nft)
+    return acc
+  }, [] as string[][])
 
-  const data = await fetch(`${api.baseURL}?nft_ids=${formattedQuery}`, {
-    method: 'GET',
-    headers: {
-      'X-API-KEY': api.apiKey || '',
-      Accept: 'application/json'
-    }
-  })
+  // Fetch each batch
+  for (const batch of batches) {
+    const data = await fetch(`${api.baseURL}?nft_ids=${batch.join(',')}`, {
+      method: 'GET',
+      headers: {
+        'X-API-KEY': api.apiKey || '',
+        Accept: 'application/json'
+      }
+    })
 
-  const jsonData = await data.json()
-  ALL_DATA = jsonData as { nfts: NFT[] }
+    const jsonData = (await data.json()) as { nfts: NFT[] }
+    ALL_DATA.nfts = [...ALL_DATA.nfts, ...jsonData.nfts]
+  }
 
   // Order by created_date newest first
   ALL_DATA.nfts.sort((a, b) => {
