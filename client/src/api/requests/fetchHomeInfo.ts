@@ -10,6 +10,8 @@ export async function fetchHomeInfo() {
   // Pick 3 random from ALL_NFTS that start with 0x
   const randomNfts = ALL_NFTS.sort(() => Math.random() - 0.5).slice(0, 5)
 
+  // console.log('the random ones!!', randomNfts)
+
   const formattedQuery = randomNfts
     .map((nft) => {
       const prefix = nft.startsWith('KT') ? 'tezos.' : 'ethereum.'

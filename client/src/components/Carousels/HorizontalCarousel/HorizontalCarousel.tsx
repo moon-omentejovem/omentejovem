@@ -37,7 +37,7 @@ export function HorizontalCarousel({
   onRedirect,
   getMoreSlides
 }: HorizontalCarouselProperties) {
-  console.log('slides', slides)
+  // console.log('slides', slides)
 
   useEffect(() => {
     // horizontalCarouselAnimation()
