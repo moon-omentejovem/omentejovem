@@ -17,6 +17,7 @@ import {
 import { HorizontalInCarousel } from '../Carousels/HorizontalInCarousel/HorizontalInCarousel'
 import './styles.css'
 import { getNftLinks } from './utils'
+import { MANIFOLD_NFTS, SUPERRARE_NFTS } from '@/utils/constants'
 interface ArtInfosProperties {
   email: string
   selectedArt: NFT
@@ -76,6 +77,26 @@ export function ArtInfos({
 
   if (!selectedArt) {
     throw new Error('Image does not exists')
+  }
+
+  let externalLinkName =
+    selectedArt.chain.toLowerCase() === 'tezos' ? 'Objkt' : 'OpenSea'
+  let externalLinkUrl =
+    selectedArt.chain.toLowerCase() === 'tezos'
+      ? `https://objkt.com/asset/${selectedArt.contract_address}/${selectedArt.token_id}`
+      : `https://opensea.io/assets/${selectedArt.chain.toLowerCase()}/${selectedArt.contract_address}/${selectedArt.token_id}`
+
+  // If the token is on manifold, show it on superrare
+  if (
+    MANIFOLD_NFTS.map((nft) => nft.toLowerCase()).includes(
+      selectedArt.contract_address.toLowerCase()
+    ) ||
+    SUPERRARE_NFTS.map((nft) => nft.toLowerCase()).includes(
+      selectedArt.contract_address.toLowerCase()
+    )
+  ) {
+    externalLinkName = 'SuperRare'
+    externalLinkUrl = `https://superrare.co/artwork/eth/${selectedArt.contract_address}/${selectedArt.token_id}`
   }
 
   return (
@@ -176,14 +197,8 @@ export function ArtInfos({
                     email={email}
                     externalLinks={[
                       {
-                        url:
-                          selectedArt.chain.toLowerCase() === 'tezos'
-                            ? `https://objkt.com/asset/${selectedArt.contract_address}/${selectedArt.token_id}`
-                            : `https://opensea.io/assets/${selectedArt.chain.toLowerCase()}/${selectedArt.contract_address}/${selectedArt.token_id}`,
-                        name:
-                          selectedArt.chain.toLowerCase() === 'tezos'
-                            ? 'Objkt'
-                            : 'OpenSea'
+                        url: externalLinkUrl,
+                        name: externalLinkName
                       }
                     ]}
                     // availableForPurchase={selectedArt.available_purchase}
