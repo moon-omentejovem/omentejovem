@@ -51,12 +51,31 @@ export function ImageModal({
     }
   }
 
+  function updateContainerSize() {
+    const imageElement = document.querySelector<HTMLImageElement>(
+      '#modal-wrapper #active-image'
+    )
+    const container = document.querySelector<HTMLElement>('#modal-wrapper')
+
+    if (imageElement && container) {
+      const isRotated = rotation % 180 !== 0
+      if (isRotated) {
+        container.style.height = '70vh'
+        container.style.maxHeight = 'none'
+      } else {
+        container.style.height = 'auto'
+        container.style.maxHeight = '70vh'
+      }
+    }
+  }
+
   useEffect(() => {
     flipImage()
   }, [scaleX, scaleY])
 
   useEffect(() => {
     rotateImage()
+    updateContainerSize()
   }, [rotation])
 
   return (
@@ -79,7 +98,7 @@ export function ImageModal({
         <Dialog.Content>
           <div
             id="modal-wrapper"
-            className="fixed w-full h-auto max-h-[70vh] flex items-center justify-center top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 md:w-auto overflow-hidden"
+            className="fixed w-auto h-auto flex items-center justify-center top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 md:w-auto overflow-visible"
           >
             <TransformWrapper onInit={() => removeOverflowHidden()}>
               <TransformComponent>
