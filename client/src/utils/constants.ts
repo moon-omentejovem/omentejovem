@@ -85,6 +85,7 @@ export const ALL_NFTS = [
   '0x28a6f816eae721fea4ad34c000077b5fe525fc3c:3',
   '0x28a6f816eae721fea4ad34c000077b5fe525fc3c:1',
   '0x60f80121c31a0d46b5279700f9df786054aa5ee5:19434',
+  '0xe70659b717112ac4e14284d0db2f5d5703df8e43:343',
   'KT1RJ6PbjHpwc3M5rw5s2Nbmefwbuwbdxton:240867',
   'KT1RJ6PbjHpwc3M5rw5s2Nbmefwbuwbdxton:448564',
   'KT1RJ6PbjHpwc3M5rw5s2Nbmefwbuwbdxton:135181'
@@ -93,7 +94,8 @@ export const ALL_NFTS = [
 export const MANIFOLD_NFTS = [
   '0xfda33af4770d844dc18d8788c7bf84accfac79ad',
   '0x2b3bbde45422d65ab3fb5cdc5427944db0729b50',
-  '0x28a6f816eae721fea4ad34c000077b5fe525fc3c'
+  '0x28a6f816eae721fea4ad34c000077b5fe525fc3c',
+  '0xe70659b717112ac4e14284d0db2f5d5703df8e43'
 ]
 export const TRANSIENT_NFTS = ['0x826b11a95a9393e8a3cc0c2a7dfc9accb4ff4e43']
 export const SUPERRARE_NFTS = ['0xb932a70a57673d89f4acffbe830e8ed7f75fb9e0']
