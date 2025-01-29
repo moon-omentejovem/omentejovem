@@ -33,7 +33,7 @@ export function OneOfOneProvider({
   }
 
   function onChangeArtImages(images: NFT[]): void {
-    setArtImages(images)
+    setArtImages([...images])
   }
 
   function onChangeTotalPages(newTotal: number): void {
