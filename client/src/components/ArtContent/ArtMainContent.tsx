@@ -27,8 +27,6 @@ export function ArtMainContent({
   selectedArtIndex,
   onChangeSelectedArtIndex
 }: ArtMainContentProperties): ReactElement {
-  console.log('!!!re-rendering')
-
   const [page, setPage] = useState(1)
   const [loading, setLoading] = useState(false)
 

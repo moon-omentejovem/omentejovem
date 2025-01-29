@@ -48,9 +48,6 @@ export function ArtFilter({
   function onChangeFilter(filter?: ChainedFilter): void {
     const lastFilter = filterHistory[filterHistory.length - 1]
 
-    console.log('!!!lastFilter', lastFilter)
-    console.log('!!!filter', filter)
-
     if (filter?.label === lastFilter.label) {
       return
     }
