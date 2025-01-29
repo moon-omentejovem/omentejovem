@@ -199,7 +199,6 @@ const filters: ChainedFilter[] = [
             children: [
               latestFilter,
               // availableFilter,
-              ethContractFilter,
               ethContractFilter
             ]
           },
