@@ -56,6 +56,15 @@ const latestFilter: ChainedFilter = {
   children: []
 }
 
+const oldestFilter: ChainedFilter = {
+  label: 'oldest',
+  sortApply: {
+    key: 'created_date',
+    option: 'asc'
+  },
+  children: []
+}
+
 const availableFilter: ChainedFilter = {
   label: 'available',
   filterApply: (n) => true, // todo n.available_purchase != null,
@@ -197,7 +206,7 @@ const filters: ChainedFilter[] = [
             label: 'eth',
             filterApply: (n) => n.chain.toLowerCase() === 'ethereum',
             children: [
-              latestFilter,
+              oldestFilter,
               // availableFilter,
               ethContractFilter,
               ethYearFilter
@@ -207,7 +216,7 @@ const filters: ChainedFilter[] = [
             label: 'xtz',
             filterApply: (n) => n.chain.toLowerCase() === 'tezos',
             children: [
-              latestFilter,
+              oldestFilter,
               // availableFilter,
               xtzContractFilter,
               xtzYearFilter
