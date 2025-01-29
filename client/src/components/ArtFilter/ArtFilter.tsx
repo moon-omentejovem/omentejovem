@@ -45,6 +45,23 @@ export function ArtFilter({
     return count
   }
 
+  function testFilter(filter: ChainedFilter, images: NFT[]): boolean {
+    if (!filter.filterApply) return true
+
+    // Test if applying this filter would result in any items
+    return images.some(filter.filterApply)
+  }
+
+  function getAvailableFilters(
+    currentImages: NFT[],
+    parentFilter: ChainedFilter
+  ) {
+    // Only return children filters that would produce results
+    return parentFilter.children.filter((filter) =>
+      testFilter(filter, currentImages)
+    )
+  }
+
   function onChangeFilter(filter?: ChainedFilter): void {
     const lastFilter = filterHistory[filterHistory.length - 1]
 
@@ -105,7 +122,18 @@ export function ArtFilter({
     ])
   }
 
+  // Modify the Filter component props to pass only available filters
+  const lastFilter = filterHistory[filterHistory.length - 1]
+  const availableFilters = getAvailableFilters(
+    lastFilter.filteredImages,
+    lastFilter
+  )
+
   return (
-    <Filter filterHistory={filterHistory} onChangeFilter={onChangeFilter} />
+    <Filter
+      filterHistory={filterHistory}
+      onChangeFilter={onChangeFilter}
+      availableFilters={availableFilters}
+    />
   )
 }

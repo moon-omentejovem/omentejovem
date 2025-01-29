@@ -16,11 +16,13 @@ export interface Filter {
 interface FilterProperties {
   filterHistory: ChainedFilter[]
   onChangeFilter: (filterHistory?: ChainedFilter) => void
+  availableFilters: ChainedFilter[] // Add this line
 }
 
 export function Filter({
   filterHistory,
-  onChangeFilter
+  onChangeFilter,
+  availableFilters
 }: FilterProperties): ReactElement {
   const [open, setOpen] = useState(false)
   const [filters, setFilters] = useState([] as ChainedFilter[])
@@ -37,8 +39,7 @@ export function Filter({
   }, [filters])
 
   function getFilters(): ChainedFilter[] {
-    const lastParentFilter = getLastFilterHistoryParent(filterHistory)
-    return lastParentFilter?.children
+    return availableFilters
   }
 
   function updateFilters(content: ChainedFilter) {
