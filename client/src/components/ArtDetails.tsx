@@ -11,7 +11,7 @@ interface ArtDetails {
 
 export function ArtDetails({ image, detailedImage, name }: ArtDetails) {
   return (
-    <section className="flex items-center sm:px-0 h-full">
+    <section className="flex items-end sm:px-0 h-full">
       <div className="flex flex-col w-full sm:w-auto justify-center">
         <ImageModal detailedImage={detailedImage}>
           <Image
@@ -19,7 +19,7 @@ export function ArtDetails({ image, detailedImage, name }: ArtDetails) {
             width={0}
             height={0}
             alt={name}
-            className="w-full h-auto max-w-full max-h-[50vh] sm:max-h-[70vh] object-contain mx-auto sm:mx-0"
+            className="w-full h-auto max-w-full max-h-[50vh] xl:max-h-[70vh] object-contain mx-auto sm:mx-0 mb-[48px]"
             id="active-image"
           />
         </ImageModal>
