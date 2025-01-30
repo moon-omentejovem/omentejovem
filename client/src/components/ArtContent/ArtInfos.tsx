@@ -109,11 +109,11 @@ export function ArtInfos({
   return (
     <section
       className={cn(
-        'flex flex-wrap gap-4 h-[calc(100vh)] xl:h-[calc(100vh-4rem)] overflow-scroll sm:max-w-[85%] gap-x-auto w-full scrollbar-hide'
+        'flex flex-wrap gap-8 xl:h-[calc(100vh-4rem)] overflow-scroll xl:max-w-[85%] gap-x-auto w-full scrollbar-hide'
       )}
     >
-      <div className="2xl:flex-1 min-w-[200px] xl:min-w-[350px] flex flex-col justify-start xl:justify-end h-auto xl:h-full">
-        <div className="art-detail-inner-container h-full max-h-[calc(100vh-6rem)] overflow-hidden flex flex-col justify-start xl:justify-end">
+      <div className="md:flex-1 min-w-[200px] xl:min-w-[350px] flex flex-col max-h-full">
+        <div className="xl:art-detail-inner-container h-full max-h-[calc(100vh-6rem)] overflow-hidden flex flex-col justify-start xl:justify-end">
           <ArtDetails
             detailedImage={selectedArt.image_url || ''}
             image={selectedArt.image_url || ''}
@@ -130,7 +130,7 @@ export function ArtInfos({
           <CustomIcons.Camera />
         </button>
       )}
-      <div className="block w-[100vw] sm:w-[75vw] self-center xl:hidden">
+      <div className="block w-[100vw] self-center xl:hidden md:order-3">
         <HorizontalInCarousel
           onChangeSlideIndex={onChangeToOtherSlide}
           slides={slides}
@@ -141,7 +141,7 @@ export function ArtInfos({
         <div
           id="art-container"
           className={cn(
-            'gap-2 transition-all max-h-[calc(100vh-8rem)] h-full w-full xl:w-[400px] flex-shrink-0 flex flex-col justify-start sm:justify-end ml-auto'
+            'gap-2 transition-all max-h-[calc(100vh-8rem)] xl:h-full w-full sm:w-auto md:w-[400px] flex-shrink-0 flex flex-col justify-end xl:justify-end ml-auto md:order-2'
           )}
         >
           <div
