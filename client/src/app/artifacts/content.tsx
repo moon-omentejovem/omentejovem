@@ -31,20 +31,18 @@ export function ArtifactsContent(): ReactElement {
         />
       </div>
 
-      <div className="relative z-10 w-full xl:w-1/4 mt-[50vh] sm:mt-60 flex flex-col">
-        <h2 className="text-orange-500 text-base font-bold uppercase">
+      <div className="relative z-10 w-full max-w-[500px]  mt-[50vh] sm:mt-[40vh] flex flex-col">
+        <span className="text-orange-500 text-base font-bold font-body uppercase">
           claimable for collectors
-        </h2>
-        <h3 className="text-gray-500 text-2xl mt-3">
+        </span>
+        <h3 className="text-secondary-100 text-2xl mt-3 font-body">
           Shapes&Colors:
           <br />
           Collectible Crates
         </h3>
-        <p className="mt-8 text-gray-700">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ut
-          neque vel enim bibendum semper. Nunc at lobortis massa. Suspendisse at
-          nulla vel metus blandit venenatis. Aenean aliquet lectus a condimentum
-          consectetur.
+        <p className="mt-8 text-secondary-100 opacity-70 font-body">
+          Collectors can now claim the “S&C Package”.
+          Each set includes a unique wooden collectible, accompanied by a 48x48cm individually signed fine art print.
         </p>
       </div>
     </main>
