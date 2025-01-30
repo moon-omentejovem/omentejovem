@@ -50,7 +50,7 @@ function ImageBanner(): ReactElement {
   }, [])
 
   return (
-    <div className="fixed left-0 top-0 h-full overflow-hidden hidden md:block">
+    <div className="fixed left-0 top-0 h-full overflow-hidden hidden md:block z-50">
       <div className="animate-scroll flex flex-col">
         {[...images, ...images].map((src, index) => (
           <Image
@@ -146,11 +146,11 @@ export function Newsletter(): ReactElement {
       <ImageBanner />
       <main
         id="about-page"
-        className="fixed sm:left-[20%] top-0 h-full w-full flex flex-col bg-background justify-center"
+        className="fixed max-w-[1920px] z-40 mx-auto top-0 h-full w-full flex flex-col bg-background justify-center"
       >
         <button
           onClick={handleDismiss}
-          className="absolute top-8 right-8 sm:right-0 sm:right-[30vw] text-secondary-100 hover:text-primary-100 transition-colors"
+          className="absolute top-8 right-8 text-secondary-100 hover:text-primary-100 transition-colors"
           aria-label="Close newsletter"
         >
           <svg
@@ -168,17 +168,17 @@ export function Newsletter(): ReactElement {
           </svg>
         </button>
 
-        <div className="flex flex-col items-start max-w-3xl mx-8 sm:ml-[10vw]">
+        <div className="flex flex-col items-start max-w-3xl mx-auto">
           <h1
             id="newsletter-title"
-            className="mb-8 text-[5vw] leading-none overflow-hidden xl:mb-16 text-left"
+            className="text-[16px] leading-none overflow-hidden xl:mb-12 text-left"
           >
-            <span className="block text-base text-gray-500">NEWSLETTER</span>
+            <span className="block text-base text-secondary-100 font-body">NEWSLETTER</span>
             <span className="block text-primary-100 text-4xl">omentejovem</span>
           </h1>
 
-          <div className="mb-24 flex flex-col gap-8 max-w-md">
-            <p className="text-base text-secondary-100">
+          <div className="mb-24 flex flex-col gap-8">
+            <p className="text-base text-secondary-100 font-body  max-w-[480px]">
               Receive exclusive insights on new art drops, collaborations,
               exhibitions, and upcoming talks from OMENTEJOVEM. Enter your email
               to connect with the vision and evolution behind the art.
@@ -230,8 +230,6 @@ export function Newsletter(): ReactElement {
               </div>
             </div>
           </div>
-
-          <hr className="bg-secondary-100 w-full" />
         </div>
       </main>
     </div>
