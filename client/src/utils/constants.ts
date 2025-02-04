@@ -110,5 +110,37 @@ export const OVERRIDE_EXTERNAL_LINKS: Record<
   '0xe70659b717112ac4e14284d0db2f5d5703df8e43:343': {
     name: 'pepe.wtf',
     link: 'https://pepe.wtf/asset/omentepepe'
+  },
+  '0xfda33af4770d844dc18d8788c7bf84accfac79ad:14': {
+    name: 'AOTM',
+    link: 'https://aotm.gallery/artwork/we-always-find-a-way/'
+  },
+  '0xfda33af4770d844dc18d8788c7bf84accfac79ad:13': {
+    name: 'AOTM',
+    link: 'https://aotm.gallery/artwork/my-desires/'
+  },
+  '0xfda33af4770d844dc18d8788c7bf84accfac79ad:12': {
+    name: 'AOTM',
+    link: 'https://aotm.gallery/artwork/between-the-sun-and-moon/'
+  },
+  '0xfda33af4770d844dc18d8788c7bf84accfac79ad:11': {
+    name: 'AOTM',
+    link: 'https://aotm.gallery/artwork/ups-and-downs/'
+  },
+  '0x28a6f816eae721fea4ad34c000077b5fe525fc3c:11': {
+    name: 'OpenSea',
+    link: 'https://opensea.io/assets/ethereum/0x28a6f816eae721fea4ad34c000077b5fe525fc3c/11'
+  },
+  '0x92a50fe6ede411bd26e171b97472e24d245349b8': {
+    name: 'Grails',
+    link: 'https://www.proof.xyz/grails/season-5/a-black-dot-with-a-white-dot-on-a-green-background'
+  },
+  '0x28a6f816eae721fea4ad34c000077b5fe525fc3c:10': {
+    name: 'OpenSea',
+    link: 'https://opensea.io/assets/ethereum/0x28a6f816eae721fea4ad34c000077b5fe525fc3c/10'
+  },
+  '0xfda33af4770d844dc18d8788c7bf84accfac79ad:8': {
+    name: 'AOTM',
+    link: 'https://aotm.gallery/artwork/cheap-problems/'
   }
 }
