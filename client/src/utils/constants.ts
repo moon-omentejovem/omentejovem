@@ -142,5 +142,29 @@ export const OVERRIDE_EXTERNAL_LINKS: Record<
   '0xfda33af4770d844dc18d8788c7bf84accfac79ad:8': {
     name: 'AOTM',
     link: 'https://aotm.gallery/artwork/cheap-problems/'
+  },
+  '0x28a6f816eae721fea4ad34c000077b5fe525fc3c:9': {
+    name: 'OpenSea',
+    link: 'https://opensea.io/assets/ethereum/0x28a6f816eae721fea4ad34c000077b5fe525fc3c/9'
+  },
+  '0xfda33af4770d844dc18d8788c7bf84accfac79ad:6': {
+    name: 'AOTM',
+    link: 'https://aotm.gallery/artwork/6-dots/'
+  },
+  '0xfda33af4770d844dc18d8788c7bf84accfac79ad:5': {
+    name: 'AOTM',
+    link: 'https://aotm.gallery/artwork/musician-at-ipanemas-beach/'
+  },
+  '0x28a6f816eae721fea4ad34c000077b5fe525fc3c:8': {
+    name: 'OpenSea',
+    link: 'https://opensea.io/assets/ethereum/0x28a6f816eae721fea4ad34c000077b5fe525fc3c/8'
+  },
+  '0xfda33af4770d844dc18d8788c7bf84accfac79ad:4': {
+    name: 'AOTM',
+    link: 'https://aotm.gallery/artwork/the-search/'
+  },
+  '0x28a6f816eae721fea4ad34c000077b5fe525fc3c:7': {
+    name: 'OpenSea',
+    link: 'https://opensea.io/assets/ethereum/0x28a6f816eae721fea4ad34c000077b5fe525fc3c/7'
   }
 }
