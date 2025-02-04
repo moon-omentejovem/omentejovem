@@ -206,5 +206,25 @@ export const OVERRIDE_EXTERNAL_LINKS: Record<
   '0x2b3bbde45422d65ab3fb5cdc5427944db0729b50:1': {
     name: 'Foundation',
     link: 'https://foundation.app/mint/eth/0x2b3bBde45422D65AB3fb5cDC5427944dB0729B50/1'
+  },
+  '0x28a6f816eae721fea4ad34c000077b5fe525fc3c:5': {
+    name: 'OpenSea',
+    link: 'https://opensea.io/assets/ethereum/0x28a6f816eae721fea4ad34c000077b5fe525fc3c/5'
+  },
+  '0x28a6f816eae721fea4ad34c000077b5fe525fc3c:4': {
+    name: 'OpenSea',
+    link: 'https://opensea.io/assets/ethereum/0x28a6f816eae721fea4ad34c000077b5fe525fc3c/4'
+  },
+  '0x28a6f816eae721fea4ad34c000077b5fe525fc3c:3': {
+    name: 'OpenSea',
+    link: 'https://opensea.io/assets/ethereum/0x28a6f816eae721fea4ad34c000077b5fe525fc3c/3'
+  },
+  '0x28a6f816eae721fea4ad34c000077b5fe525fc3c:2': {
+    name: 'OpenSea',
+    link: 'https://opensea.io/assets/ethereum/0x28a6f816eae721fea4ad34c000077b5fe525fc3c/2'
+  },
+  '0x28a6f816eae721fea4ad34c000077b5fe525fc3c:1': {
+    name: 'OpenSea',
+    link: 'https://opensea.io/assets/ethereum/0x28a6f816eae721fea4ad34c000077b5fe525fc3c/1'
   }
 }
