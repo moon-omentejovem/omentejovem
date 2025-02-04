@@ -19,6 +19,7 @@ import './styles.css'
 import { getNftLinks } from './utils'
 import {
   MANIFOLD_NFTS,
+  OVERRIDE_EXTERNAL_LINKS,
   SUPERRARE_NFTS,
   TRANSIENT_NFTS
 } from '@/utils/constants'
@@ -104,6 +105,21 @@ export function ArtInfos({
   ) {
     externalLinkName = 'SuperRare'
     externalLinkUrl = `https://superrare.co/artwork/eth/${selectedArt.contract_address}/${selectedArt.token_id}`
+  }
+
+  if (
+    OVERRIDE_EXTERNAL_LINKS[
+      `${selectedArt.contract_address.toLowerCase()}:${selectedArt.token_id}`
+    ]
+  ) {
+    externalLinkName =
+      OVERRIDE_EXTERNAL_LINKS[
+        `${selectedArt.contract_address.toLowerCase()}:${selectedArt.token_id}`
+      ].name
+    externalLinkUrl =
+      OVERRIDE_EXTERNAL_LINKS[
+        `${selectedArt.contract_address.toLowerCase()}:${selectedArt.token_id}`
+      ].link
   }
 
   return (

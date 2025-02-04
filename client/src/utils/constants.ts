@@ -102,3 +102,13 @@ export const SUPERRARE_NFTS = ['0xb932a70a57673d89f4acffbe830e8ed7f75fb9e0']
 export const POAP_NFTS = ['0x22c1f6050e56d2876009903609a2cc3fef83b415']
 export const GRAILS_NFTS = ['0x92a50fe6ede411bd26e171b97472e24d245349b8']
 export const RARIBLE_NFTS = ['0x60f80121c31a0d46b5279700f9df786054aa5ee5']
+
+export const OVERRIDE_EXTERNAL_LINKS: Record<
+  string,
+  { name: string; link: string }
+> = {
+  '0xe70659b717112ac4e14284d0db2f5d5703df8e43:343': {
+    name: 'pepe.wtf',
+    link: 'https://pepe.wtf/asset/omentepepe'
+  }
+}
