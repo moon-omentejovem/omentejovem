@@ -166,5 +166,45 @@ export const OVERRIDE_EXTERNAL_LINKS: Record<
   '0x28a6f816eae721fea4ad34c000077b5fe525fc3c:7': {
     name: 'OpenSea',
     link: 'https://opensea.io/assets/ethereum/0x28a6f816eae721fea4ad34c000077b5fe525fc3c/7'
+  },
+  '0x2b3bbde45422d65ab3fb5cdc5427944db0729b50:10': {
+    name: 'Foundation',
+    link: 'https://foundation.app/mint/eth/0x2b3bBde45422D65AB3fb5cDC5427944dB0729B50/10'
+  },
+  '0x2b3bbde45422d65ab3fb5cdc5427944db0729b50:9': {
+    name: 'Foundation',
+    link: 'https://foundation.app/mint/eth/0x2b3bBde45422D65AB3fb5cDC5427944dB0729B50/9'
+  },
+  '0x2b3bbde45422d65ab3fb5cdc5427944db0729b50:8': {
+    name: 'Foundation',
+    link: 'https://foundation.app/mint/eth/0x2b3bBde45422D65AB3fb5cDC5427944dB0729B50/8'
+  },
+  '0x2b3bbde45422d65ab3fb5cdc5427944db0729b50:7': {
+    name: 'Foundation',
+    link: 'https://foundation.app/mint/eth/0x2b3bBde45422D65AB3fb5cDC5427944dB0729B50/7'
+  },
+  '0x2b3bbde45422d65ab3fb5cdc5427944db0729b50:6': {
+    name: 'Foundation',
+    link: 'https://foundation.app/mint/eth/0x2b3bBde45422D65AB3fb5cDC5427944dB0729B50/6'
+  },
+  '0x2b3bbde45422d65ab3fb5cdc5427944db0729b50:5': {
+    name: 'Foundation',
+    link: 'https://foundation.app/mint/eth/0x2b3bBde45422D65AB3fb5cDC5427944dB0729B50/5'
+  },
+  '0x2b3bbde45422d65ab3fb5cdc5427944db0729b50:4': {
+    name: 'Foundation',
+    link: 'https://foundation.app/mint/eth/0x2b3bBde45422D65AB3fb5cDC5427944dB0729B50/4'
+  },
+  '0x2b3bbde45422d65ab3fb5cdc5427944db0729b50:3': {
+    name: 'Foundation',
+    link: 'https://foundation.app/mint/eth/0x2b3bBde45422D65AB3fb5cDC5427944dB0729B50/3'
+  },
+  '0x2b3bbde45422d65ab3fb5cdc5427944db0729b50:2': {
+    name: 'Foundation',
+    link: 'https://foundation.app/mint/eth/0x2b3bBde45422D65AB3fb5cDC5427944dB0729B50/2'
+  },
+  '0x2b3bbde45422d65ab3fb5cdc5427944db0729b50:1': {
+    name: 'Foundation',
+    link: 'https://foundation.app/mint/eth/0x2b3bBde45422D65AB3fb5cDC5427944dB0729B50/1'
   }
 }
