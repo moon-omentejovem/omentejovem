@@ -3,9 +3,11 @@
 import { useSelectedLayoutSegment } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { headerAnimations } from '@/animations'
+import { logo } from '@/assets/images'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
 import { Icons } from './Icons'
+import Image from 'next/image'
 
 const tabs = [
   {
@@ -48,14 +50,15 @@ export function Header() {
           document.cookie = 'newsletter_dismissed=true; path=/; max-age=3600' // 1 hour expiry
         }}
       >
-        <p
-          className={cn(
-            'font-heading text-secondary-100 hover:text-secondary-200 hover:underline',
-            !segment && 'text-secondary-200 underline'
-          )}
-        >
-          omentejovem
-        </p>
+        <Image
+            src={logo}
+            className={cn(
+              'opacity-20 hover:opacity-100',
+              !segment && 'opacity-100'
+            )}
+            alt="Omentejovem Artwork"
+            height={23}
+          />
       </Link>
 
       <div
