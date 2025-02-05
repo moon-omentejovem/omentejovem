@@ -59,7 +59,8 @@ export function OwnersModal({
                       className="text-primary-50 underline"
                     >
                       {owner.owner_address}
-                    </a>
+                    </a>{' '}
+                    ({owner.quantity})
                   </li>
                 ))}
               </ul>
