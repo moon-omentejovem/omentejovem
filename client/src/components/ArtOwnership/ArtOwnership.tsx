@@ -28,7 +28,7 @@ interface ArtOwnershipProperties {
   owners: Owner[]
   firstEvent?: FirstCreated
   lastEvent?: Sale
-  source?: 'portfolio' | '1-1' | 'editions' | string
+  source?: 'portfolio' | '1-1' | 'series' | string
 }
 
 export function ArtOwnership({
@@ -75,7 +75,7 @@ export function ArtOwnership({
           )}
         >
           <p>OWNED BY</p>
-          {pathname.includes('editions') ? (
+          {pathname.includes('series') ? (
             nftChain === 'ethereum' ? (
               <a target="_blank" rel="noreferrer" href={artAddress}>
                 <OpenSea />

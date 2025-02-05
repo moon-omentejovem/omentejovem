@@ -19,8 +19,8 @@ const tabs = [
     link: '/1-1'
   },
   {
-    name: 'editions',
-    link: '/editions'
+    name: 'series',
+    link: '/series'
   },
   {
     name: 'collections',
@@ -51,14 +51,14 @@ export function Header() {
         }}
       >
         <Image
-            src={logo}
-            className={cn(
-              'opacity-20 hover:opacity-100',
-              !segment && 'opacity-100'
-            )}
-            alt="Omentejovem Artwork"
-            height={23}
-          />
+          src={logo}
+          className={cn(
+            'opacity-20 hover:opacity-100',
+            !segment && 'opacity-100'
+          )}
+          alt="Omentejovem Artwork"
+          height={23}
+        />
       </Link>
 
       <div
