@@ -183,7 +183,7 @@ export function AboutContent({
       <hr className="bg-secondary-100" />
 
       <section className="relative flex flex-col justify-between px-4 py-10 gap-8 overflow-hidden xl:flex-row xl:px-20 xl:py-32 xl:gap-24">
-        <div className="flex flex-row gap-6 xl:gap-24">
+        <div className="flex flex-col sm:flex-row gap-6 xl:gap-24">
           <p className="bio font-heading text-xs min-w-[4.5rem] text-secondary-100 sm:text-base sm:min-w-[6rem] xl:text-lg xl:min-w-[7rem]">
             Bio
           </p>
