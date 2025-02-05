@@ -41,7 +41,13 @@ export function Header() {
 
   return (
     <header className="sticky top-0 flex w-full justify-between bg-background z-20 max-w-[1920px] mx-auto md:bg-transparent p-8 md:px-12 lg:px-20 md:py-10 md:gap-16">
-      <Link href="/" className="header-tab min-w-fit overflow-hidden">
+      <Link
+        href="/"
+        className="header-tab min-w-fit overflow-hidden"
+        onClick={() => {
+          document.cookie = 'newsletter_dismissed=true; path=/; max-age=3600' // 1 hour expiry
+        }}
+      >
         <p
           className={cn(
             'font-heading text-secondary-100 hover:text-secondary-200 hover:underline',
