@@ -256,7 +256,15 @@ export function ArtInfos({
                       {
                         url: externalLinkUrl,
                         name: externalLinkName
-                      }
+                      },
+                      ...(secondaryExternalLinkName && secondaryExternalLinkUrl
+                        ? [
+                            {
+                              url: secondaryExternalLinkUrl,
+                              name: secondaryExternalLinkName
+                            }
+                          ]
+                        : [])
                     ]}
                     // availableForPurchase={selectedArt.available_purchase}
                     makeOffer={{
