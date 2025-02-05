@@ -156,6 +156,18 @@ export function ArtInfos({
       ].link
   }
 
+  let mintedOn = format(
+    addHours(selectedArt.created_date || new Date(), 3),
+    'd LLLL, yyyy'
+  )
+
+  if (
+    selectedArt.contract_address.toLowerCase() ===
+      '0x28a6f816eae721fea4ad34c000077b5fe525fc3c' &&
+    selectedArt.token_id === '6'
+  ) {
+    mintedOn = '1 November, 2021'
+  }
   return (
     <section
       className={cn(
@@ -228,13 +240,7 @@ export function ArtInfos({
                 <p className="text-primary-50 underline mt-4">
                   {selectedArt.name}
                 </p>
-                <p>
-                  minted on{' '}
-                  {format(
-                    addHours(selectedArt.created_date || new Date(), 3),
-                    'd LLLL, yyyy'
-                  )}
-                </p>
+                <p>minted on {mintedOn}</p>
               </div>
             </div>
 
