@@ -16,7 +16,6 @@ import HardCodedBio from './hardcoded-bio'
 
 interface AboutContentProperties {
   data: AboutData | undefined
-  talks: PressTalk[]
   press: PressTalk[]
   exhibitions: PressTalk[]
 }
@@ -34,7 +33,6 @@ function AboutBio({ text }: { text: string }): ReactElement {
 
 export function AboutContent({
   data,
-  talks,
   press,
   exhibitions
 }: AboutContentProperties): ReactElement {
@@ -43,15 +41,6 @@ export function AboutContent({
   useEffect(() => {
     aboutAnimations()
   }, [])
-
-  const parsedTalks = useMemo<FooterProperties['talks']>(
-    () =>
-      talks.map((talk) => ({
-        talkName: decodeRenderedString(talk.title.rendered),
-        talkUrl: talk.acf.link
-      })),
-    []
-  )
 
   const parsedPress = useMemo<FooterProperties['interviews']>(
     () =>
@@ -215,7 +204,6 @@ export function AboutContent({
 
       <Footer
         interviews={parsedPress}
-        talks={parsedTalks}
         exhibitions={parsedExhibitions}
         email={data?.contact['e-mail']}
       />

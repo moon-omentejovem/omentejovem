@@ -40,7 +40,6 @@ export default async function About() {
     <AboutContent
       data={data}
       press={data?.press ?? []}
-      talks={data?.talks ?? []}
       exhibitions={data?.exhibitions ?? []}
     />
   )
