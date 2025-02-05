@@ -18,6 +18,7 @@ import { HorizontalInCarousel } from '../Carousels/HorizontalInCarousel/Horizont
 import './styles.css'
 import { getNftLinks } from './utils'
 import {
+  GRAILS_NFTS,
   MANIFOLD_NFTS,
   OVERRIDE_EXTERNAL_LINKS,
   SUPERRARE_NFTS,
@@ -100,6 +101,9 @@ export function ArtInfos({
       selectedArt.contract_address.toLowerCase()
     ) ||
     TRANSIENT_NFTS.map((nft) => nft.toLowerCase()).includes(
+      selectedArt.contract_address.toLowerCase()
+    ) ||
+    GRAILS_NFTS.map((nft) => nft.toLowerCase()).includes(
       selectedArt.contract_address.toLowerCase()
     )
   ) {
