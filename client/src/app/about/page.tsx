@@ -24,9 +24,74 @@ async function requestGetAboutInfo() {
 
     return {
       ...data,
-      talks: [],
-      press: [],
-      exhibitions: []
+      press: [
+        {
+          title: {
+            rendered: `The Cycles of Creation: 'Ups and Downs' and the Art of Embracing Change`
+          },
+          acf: {
+            link: 'https://aotm.gallery/the-cycles-of-creation-omentejovems-ups-and-downs-and-the-art-of-embracing-change/'
+          }
+        },
+        {
+          title: {
+            rendered: `Exploring omentejovem's Poignant Perspective`
+          },
+          acf: {
+            link: 'https://aotm.gallery/abstract-visuals-concrete-truths-exploring-omentejovems-poignant-perspective/'
+          }
+        },
+        {
+          title: {
+            rendered: `omentejovem's Interview`
+          },
+          acf: {
+            link: 'https://www.dalosdov.com/writing/omentejovem-interview'
+          }
+        },
+        {
+          title: {
+            rendered: `World of WEB3 Summit (Dubai)`
+          },
+          acf: {
+            link: 'https://superrare.com/features'
+          }
+        },
+        {
+          title: {
+            rendered: `Exhibition in honor of Hispanic Heritage Month`
+          },
+          acf: {
+            link: 'https://x.com/crypt_gallery/status/1709610052716282185'
+          }
+        }
+      ],
+      exhibitions: [
+        {
+          title: {
+            rendered: `Omente Orange Exhibition (2022)`
+          },
+          acf: {
+            link: 'https://oncyber.io/spaces/piAkYMyCUXm6DGrTAH5U?coords=-6.90x2.90x15.31x-3.11'
+          }
+        },
+        {
+          title: {
+            rendered: `The Day I Found Out`
+          },
+          acf: {
+            link: 'https://oncyber.io/omentejovemaotm'
+          }
+        },
+        {
+          title: {
+            rendered: `Des/Conectados`
+          },
+          acf: {
+            link: 'https://oncyber.io/desconectados'
+          }
+        }
+      ]
     }
   } catch (error) {
     console.log('#ERROR:', error)
