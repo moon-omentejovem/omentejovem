@@ -102,13 +102,19 @@ export function ArtInfos({
     ) ||
     TRANSIENT_NFTS.map((nft) => nft.toLowerCase()).includes(
       selectedArt.contract_address.toLowerCase()
-    ) ||
-    GRAILS_NFTS.map((nft) => nft.toLowerCase()).includes(
-      selectedArt.contract_address.toLowerCase()
     )
   ) {
     externalLinkName = 'SuperRare'
     externalLinkUrl = `https://superrare.co/artwork/eth/${selectedArt.contract_address}/${selectedArt.token_id}`
+  }
+
+  if (
+    GRAILS_NFTS.map((nft) => nft.toLowerCase()).includes(
+      selectedArt.contract_address.toLowerCase()
+    )
+  ) {
+    externalLinkName = 'Grails'
+    externalLinkUrl = `https://www.proof.xyz/grails/season-5/a-black-dot-with-a-white-dot-on-a-green-background`
   }
 
   if (
