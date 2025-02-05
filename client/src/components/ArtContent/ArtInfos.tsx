@@ -132,8 +132,9 @@ export function ArtInfos({
 
   if (
     selectedArt.contract_address.toLowerCase() ===
-      '0x28a6f816eae721fea4ad34c000077b5fe525fc3c' &&
-    selectedArt.token_id === '6'
+      '0x495f947276749ce646f68ac8c248420045cb7b5e' &&
+    selectedArt.token_id ===
+      '7871549583317194720263843996823387702908660152655034722079186002726342361098'
   ) {
     externalLinkName = 'OpenSea'
     externalLinkUrl = `https://opensea.io/assets/ethereum/0x28a6f816eae721fea4ad34c000077b5fe525fc3c/6`
@@ -163,8 +164,9 @@ export function ArtInfos({
 
   if (
     selectedArt.contract_address.toLowerCase() ===
-      '0x28a6f816eae721fea4ad34c000077b5fe525fc3c' &&
-    selectedArt.token_id === '6'
+      '0x495f947276749ce646f68ac8c248420045cb7b5e' &&
+    selectedArt.token_id ===
+      '7871549583317194720263843996823387702908660152655034722079186002726342361098'
   ) {
     mintedOn = '1 November, 2021'
   }
