@@ -3,9 +3,11 @@
 import { useSelectedLayoutSegment } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { headerAnimations } from '@/animations'
+import { logo } from '@/assets/images'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
 import { Icons } from './Icons'
+import Image from 'next/image'
 
 const tabs = [
   {
@@ -42,14 +44,15 @@ export function Header() {
   return (
     <header className="sticky top-0 flex w-full justify-between bg-background z-20 max-w-[1920px] mx-auto md:bg-transparent p-8 md:px-12 lg:px-20 md:py-10 md:gap-16">
       <Link href="/" className="header-tab min-w-fit overflow-hidden">
-        <p
-          className={cn(
-            'font-heading text-secondary-100 hover:text-secondary-200 hover:underline',
-            !segment && 'text-secondary-200 underline'
-          )}
-        >
-          omentejovem
-        </p>
+          <Image
+            src={logo}
+            className={cn(
+              'opacity-20 hover:opacity-100',
+              !segment && 'opacity-100'
+            )}
+            alt="Omentejovem Artwork"
+            height={23}
+          />
       </Link>
 
       <div
