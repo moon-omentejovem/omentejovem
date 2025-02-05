@@ -93,7 +93,7 @@ export function ArtTransaction({
           <a
             target="_blank"
             rel="noreferrer"
-            href={transaction?.from_address}
+            href={`https://${chain === 'ethereum' ? 'etherscan.io/address' : 'tzkt.io/address'}/${transaction?.from_address}`}
             className="text-primary-50 hover:underline"
             aria-label={`${transaction?.from_address} seller profile`}
           >
@@ -103,7 +103,7 @@ export function ArtTransaction({
           <a
             target="_blank"
             rel="noreferrer"
-            href={transaction?.to_address}
+            href={`https://${chain === 'ethereum' ? 'etherscan.io/address' : 'tzkt.io/address'}/${transaction?.to_address}`}
             className="text-primary-50 hover:underline"
             aria-label={`${transaction?.to_address} seller profile`}
           >
