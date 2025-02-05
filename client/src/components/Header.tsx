@@ -23,8 +23,8 @@ const tabs = [
     link: '/editions'
   },
   {
-    name: 'collections',
-    link: '/collections'
+    name: 'series',
+    link: '/series'
   },
   {
     name: 'artifacts',
