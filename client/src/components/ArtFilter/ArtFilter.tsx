@@ -56,14 +56,30 @@ export function ArtFilter({
     currentImages: NFT[],
     parentFilter: ChainedFilter
   ) {
-    // Only return children filters that would produce results
-    return parentFilter.children.filter((filter) =>
-      testFilter(filter, currentImages)
-    )
+    // If the filter has children, return only those that would produce results
+    if (parentFilter.children.length > 0) {
+      return parentFilter.children.filter((filter) =>
+        testFilter(filter, currentImages)
+      )
+    }
+
+    // If no children, get the parent's children (siblings)
+    const parent = getLastFilterHistoryParent([...filterHistory])
+    if (parent) {
+      return parent.children.filter((filter) =>
+        testFilter(filter, currentImages)
+      )
+    }
+
+    // If no parent (root level), return empty array
+    return []
   }
 
   function onChangeFilter(filter?: ChainedFilter): void {
     const lastFilter = filterHistory[filterHistory.length - 1]
+
+    console.log('filter', filter)
+    console.log('lastFilter', lastFilter)
 
     if (filter?.label === lastFilter.label) {
       return
@@ -73,8 +89,7 @@ export function ArtFilter({
 
     if (!filter) {
       if (filterHistory.length > 1) {
-        const count = getSliceCount()
-        setFilterHistory([...filterHistory.slice(0, -count)])
+        setFilterHistory([...filterHistory.slice(0, -1)])
       }
       return
     }
