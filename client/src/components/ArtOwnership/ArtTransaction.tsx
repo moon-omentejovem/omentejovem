@@ -3,10 +3,15 @@ import { type ArtTransaction } from './types'
 import { addHours, format } from 'date-fns'
 import { CustomIcons } from '@/assets/icons'
 import { cn } from '@/lib/utils'
-import { FirstCreated, NftTransferEvent, Sale } from '../ArtContent/types'
+import {
+  FirstCreated,
+  NftTransferEvent,
+  Sale,
+  TransferFromAPI
+} from '../ArtContent/types'
 
 interface ArtTransactionProperties {
-  transaction?: Sale
+  transaction?: TransferFromAPI
   collectionsMode?: boolean
   chain: 'ethereum' | 'tezos'
 }

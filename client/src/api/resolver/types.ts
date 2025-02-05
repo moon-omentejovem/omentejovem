@@ -283,4 +283,29 @@ export interface FungibleTokenTransfer {
   transaction_hash: string
 }
 
+export interface TransferFromAPI {
+  batch_transfer_index: number
+  block_hash: string
+  block_number: number
+  chain: string
+  collection_id: string
+  contract_address: string
+  event_type: string
+  from_address: string
+  log_index: number
+  nft_id: string
+  quantity: number
+  quantity_string: string
+  sale_details: null | unknown
+  timestamp: string
+  to_address: string
+  token_id: string
+  transaction: string
+  transaction_fee: number
+  transaction_index: number
+  transaction_initiator: string
+  transaction_to_address: string
+  transaction_value: number
+}
+
 // FROM SIMPLEHASH

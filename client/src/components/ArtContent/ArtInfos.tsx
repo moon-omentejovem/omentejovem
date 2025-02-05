@@ -296,6 +296,8 @@ export function ArtInfos({
                     selectedArt.token_id,
                     'token'
                   )}
+                  tokenId={selectedArt.token_id}
+                  contractAddress={selectedArt.contract_address}
                   owners={selectedArt.owners}
                   firstEvent={selectedArt.first_created}
                   lastEvent={selectedArt.last_sale}

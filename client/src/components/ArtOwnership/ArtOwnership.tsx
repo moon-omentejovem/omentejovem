@@ -10,15 +10,19 @@ import {
   NftOwner,
   NftTransferEvent,
   Owner,
-  Sale
+  Sale,
+  TransferFromAPI
 } from '../ArtContent/types'
 import { ArtTransaction, formatOwnerAddress } from './ArtTransaction'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { OwnersModal } from '../Modals/OwnersModal'
 import { ArtMint } from './ArtMint'
+import { fetchTransfersForToken } from '@/api/requests/fetchTransfersForToken'
 
 interface ArtOwnershipProperties {
   nftChain: Chain
+  tokenId: string
+  contractAddress: string
   collectionsMode?: boolean
   artAddress: string
   owners: Owner[]
@@ -29,6 +33,8 @@ interface ArtOwnershipProperties {
 
 export function ArtOwnership({
   nftChain,
+  tokenId,
+  contractAddress,
   collectionsMode,
   artAddress,
   owners,
@@ -37,9 +43,22 @@ export function ArtOwnership({
   source
 }: ArtOwnershipProperties) {
   const pathname = usePathname()
+  const [transfers, setTransfers] = useState<TransferFromAPI[]>([])
 
   const owner = owners.length === 1 ? owners[0] : null
   const [isOwnersModalOpen, setIsOwnersModalOpen] = useState(false)
+
+  useEffect(() => {
+    const fetchTransfers = async () => {
+      const transfers = await fetchTransfersForToken(
+        nftChain,
+        contractAddress,
+        tokenId
+      )
+      setTransfers(transfers)
+    }
+    fetchTransfers()
+  }, [])
 
   return (
     <div
@@ -129,11 +148,13 @@ export function ArtOwnership({
           </div>
 
           <ul className="list-none">
-            <ArtTransaction
-              chain={nftChain === 'ethereum' ? 'ethereum' : 'tezos'}
-              transaction={lastEvent}
-              collectionsMode={collectionsMode}
-            />
+            {transfers.map((transfer) => (
+              <ArtTransaction
+                chain={nftChain === 'ethereum' ? 'ethereum' : 'tezos'}
+                transaction={transfer}
+                collectionsMode={collectionsMode}
+              />
+            ))}
             <ArtMint
               chain={nftChain === 'ethereum' ? 'ethereum' : 'tezos'}
               transaction={firstEvent}
