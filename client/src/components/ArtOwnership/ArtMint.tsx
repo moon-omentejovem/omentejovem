@@ -38,48 +38,6 @@ export function ArtMint({
   collectionsMode
 }: ArtTransactionProperties): ReactElement {
   console.log('transaction!!', transaction)
-  if (
-    transaction &&
-    'minted_to' in transaction &&
-    transaction.minted_to === nullAddress
-  ) {
-    return (
-      <li
-        className={cn(
-          'flex flex-row border-b-[1px] border-secondary-100 items-center gap-4 justify-between text-sm px-4 text-secondary-100',
-          collectionsMode
-            ? 'h-fit py-4 sm:py-4'
-            : 'py-2 sm:py-0 sm:h-16 sm:px-8'
-        )}
-      >
-        <div className="flex flex-col">
-          <p className="font-bold">
-            Minted by&nbsp;
-            <a
-              target="_blank"
-              rel="noreferrer"
-              href={transaction.minted_to}
-              className="text-primary-50 hover:underline"
-              aria-label={`${transaction.minted_to} seller profile`}
-            >
-              {formatOwnerAddress(transaction.minted_to)}
-            </a>
-          </p>
-          <p>{formattedDate(transaction.timestamp)}</p>
-        </div>
-
-        <a
-          target="_blank"
-          rel="noreferrer"
-          href={`https://${chain === 'ethereum' ? 'etherscan.io/tx' : 'tzkt.io'}/${transaction.transaction}`}
-          className="hover:fill-primary-50"
-          aria-label="Transaction page"
-        >
-          <CustomIcons.ArrowUpRight />
-        </a>
-      </li>
-    )
-  }
 
   return (
     <li
@@ -90,17 +48,7 @@ export function ArtMint({
     >
       <div className="flex flex-col">
         <p className="font-bold">
-          Transferred from{' '}
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href={transaction?.minted_to}
-            className="text-primary-50 hover:underline"
-            aria-label={`${transaction?.minted_to} seller profile`}
-          >
-            {formatOwnerAddress(transaction?.minted_to)}
-          </a>{' '}
-          to{' '}
+          Minted by&nbsp;
           <a
             target="_blank"
             rel="noreferrer"
@@ -111,7 +59,7 @@ export function ArtMint({
             {formatOwnerAddress(transaction?.minted_to)}
           </a>
         </p>
-        <p>{formattedDate(transaction?.timestamp || '2020-01-01')}</p>
+        <p>{formattedDate(transaction?.timestamp || '')}</p>
       </div>
 
       <a
