@@ -21,6 +21,7 @@ import {
   GRAILS_NFTS,
   MANIFOLD_NFTS,
   OVERRIDE_EXTERNAL_LINKS,
+  POAP_NFTS,
   SUPERRARE_NFTS,
   TRANSIENT_NFTS
 } from '@/utils/constants'
@@ -115,6 +116,15 @@ export function ArtInfos({
   ) {
     externalLinkName = 'Grails'
     externalLinkUrl = `https://www.proof.xyz/grails/season-5/a-black-dot-with-a-white-dot-on-a-green-background`
+  }
+
+  if (
+    POAP_NFTS.map((nft) => nft.toLowerCase()).includes(
+      selectedArt.contract_address.toLowerCase()
+    )
+  ) {
+    externalLinkName = 'OpenSea'
+    externalLinkUrl = `https://opensea.io/collection/poap-v2?search%5Bquery%5D=garden%25%20bidder`
   }
 
   if (
