@@ -69,7 +69,7 @@ export function HorizontalCarousel({
   }
 
   return (
-    <section className="animated-section h-[44vh] w-[75vw] flex items-end self-center sm:h-[52vh] md:h-[65vh]">
+    <section className="animated-section h-[44vh] flex items-end self-center sm:h-[52vh] md:h-[65vh]">
       <Swiper
         className="horizontal-carousel"
         grabCursor={true}
