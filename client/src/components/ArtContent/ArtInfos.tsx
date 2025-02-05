@@ -93,6 +93,9 @@ export function ArtInfos({
       ? `https://objkt.com/asset/${selectedArt.contract_address}/${selectedArt.token_id}`
       : `https://opensea.io/assets/${selectedArt.chain.toLowerCase()}/${selectedArt.contract_address}/${selectedArt.token_id}`
 
+  let secondaryExternalLinkName = ''
+  let secondaryExternalLinkUrl = ''
+
   // If the token is on manifold, show it on superrare
   if (
     MANIFOLD_NFTS.map((nft) => nft.toLowerCase()).includes(
@@ -125,6 +128,17 @@ export function ArtInfos({
   ) {
     externalLinkName = 'OpenSea'
     externalLinkUrl = `https://opensea.io/collection/poap-v2?search%5Bquery%5D=garden%25%20bidder`
+  }
+
+  if (
+    selectedArt.contract_address.toLowerCase() ===
+      '0x28a6f816eae721fea4ad34c000077b5fe525fc3c' &&
+    selectedArt.token_id === '6'
+  ) {
+    externalLinkName = 'OpenSea'
+    externalLinkUrl = `https://opensea.io/assets/ethereum/0x28a6f816eae721fea4ad34c000077b5fe525fc3c/6`
+    secondaryExternalLinkName = 'OpenSea (old token)'
+    secondaryExternalLinkUrl = `https://opensea.io/assets/ethereum/0x495f947276749ce646f68ac8c248420045cb7b5e/7871549583317194720263843996823387702908660152655034722079186002726342361098`
   }
 
   if (
