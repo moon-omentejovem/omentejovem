@@ -19,8 +19,8 @@ const tabs = [
     link: '/1-1'
   },
   {
-    name: 'series',
-    link: '/series'
+    name: 'editions',
+    link: '/editions'
   },
   {
     name: 'collections',

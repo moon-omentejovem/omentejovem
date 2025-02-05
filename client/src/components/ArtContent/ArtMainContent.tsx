@@ -10,7 +10,7 @@ import { ChainedFilter } from '../ArtFilter/filters'
 
 interface ArtMainContentProperties {
   email: string
-  source: 'portfolio' | '1-1' | 'series' | string
+  source: 'portfolio' | '1-1' | 'editions' | string
   filters?: ChainedFilter[]
   unfilteredImages: NFT[]
   onChangeArtImages: (images: NFT[]) => void

@@ -20,7 +20,7 @@ export default function EditionsContent(): ReactElement {
   return (
     <ArtMainContent
       email={email}
-      source="series"
+      source="editions"
       artImages={artImages}
       filters={filters}
       onChangeArtImages={onChangeArtImages}
