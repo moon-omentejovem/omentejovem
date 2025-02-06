@@ -71,7 +71,7 @@ export function ArtOwnership({
         <div
           id="art-owned-by"
           className={cn(
-            'flex flex-row border-y-[1px] mt-auto border-secondary-100 items-center justify-between text-sm min-h-[4rem] px-8 font-bold text-secondary-100'
+            'flex flex-row border-b-[1px] mt-auto border-secondary-100 items-center justify-between text-sm min-h-[4rem] px-8 font-bold text-secondary-100'
           )}
         >
           <p>OWNED BY</p>
@@ -110,7 +110,7 @@ export function ArtOwnership({
         <div
           id="art-owned-by"
           className={cn(
-            'flex flex-row border-y-[1px] mt-auto border-secondary-100 items-center justify-between text-sm min-h-[4rem] px-8 font-bold text-secondary-100'
+            'flex flex-row border-b-[1px] mt-auto border-secondary-100 items-center justify-between text-sm min-h-[4rem] px-8 font-bold text-secondary-100'
           )}
         >
           <OwnersModal
@@ -147,7 +147,7 @@ export function ArtOwnership({
             </a>
           </div>
 
-          <ul className="list-none">
+          <ul className="list-none max-h-[320px] overflow-y-auto">
             {transfers.map((transfer) => (
               <ArtTransaction
                 chain={nftChain === 'ethereum' ? 'ethereum' : 'tezos'}
