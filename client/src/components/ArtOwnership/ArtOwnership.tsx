@@ -58,7 +58,7 @@ export function ArtOwnership({
       setTransfers(transfers)
     }
     fetchTransfers()
-  }, [])
+  }, [contractAddress, tokenId, nftChain])
 
   return (
     <div
