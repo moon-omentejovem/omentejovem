@@ -1,4 +1,4 @@
-import { AboutImage1, AboutImage2} from '@/assets/images'
+import { AboutImage1, AboutImage2 } from '@/assets/images'
 import Image from 'next/image'
 
 const HardCodedBio = () => (
@@ -202,7 +202,7 @@ const HardCodedBio = () => (
     <p>
       An unmissable feature of omentejovem’s works is the{' '}
       <em>
-      <span className="text-primary-50">vibrant use of colors</span>
+        <span className="text-primary-50">vibrant use of colors</span>
       </em>
       . “Even though I receive compliments for my color choices, I feel like I’m
       just beginning to explore this aspect. Initially, I limited my palette to
@@ -244,7 +244,7 @@ const HardCodedBio = () => (
 
     <br />
     <Image
-      src={AboutImage2}
+      src={AboutImage1}
       alt="Omentejovem Artwork"
       width={500}
       height={300}
