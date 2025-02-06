@@ -97,7 +97,7 @@ export default function CollectionsContent(data: CollectionsResponse) {
           key={collection.name}
           projectName={collection.name}
           year={collection.year}
-          redirect={`/collections/${collection.slug}`}
+          redirect={`/series/${collection.slug}`}
           images={collection.nftImageUrls}
           onMouseOver={() => setCurrentCollection(collection.name)}
         />
