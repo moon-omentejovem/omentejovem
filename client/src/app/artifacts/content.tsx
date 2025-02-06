@@ -31,7 +31,7 @@ export function ArtifactsContent(): ReactElement {
         />
       </div>
 
-      <div className="relative z-10 w-full max-w-[500px]  mt-[50vh] sm:mt-[40vh] flex flex-col">
+      <div className="relative z-10 w-full max-w-[500px]  mt-[40vh] sm:mt-[40vh] flex flex-col">
         <span className="text-orange-500 text-base font-bold font-body uppercase">
           claimable for collectors
         </span>
@@ -44,6 +44,14 @@ export function ArtifactsContent(): ReactElement {
           Collectors can now claim the “S&C Package”.
           Each set includes a unique wooden collectible, accompanied by a 48x48cm individually signed fine art print. Claim is made once by the collector that owns it by the release of the artifact.
         </p>
+        <a
+          href="https://www.youtube.com/playlist?list=PLk9K75kTXfFMkh0yLeJTlHWAjfS3zeSDw"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-8 px-4 py-2 rounded-lg text-white bg-primary-100/80 hover:bg-primary-100 transition-colors flex items-center justify-center inline flex w-64"
+        >
+          Watch More
+        </a>
       </div>
     </main>
   )
