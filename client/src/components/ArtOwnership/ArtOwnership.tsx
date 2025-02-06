@@ -6,9 +6,6 @@ import { usePathname } from 'next/navigation'
 import {
   Chain,
   FirstCreated,
-  NFT,
-  NftOwner,
-  NftTransferEvent,
   Owner,
   Sale,
   TransferFromAPI
