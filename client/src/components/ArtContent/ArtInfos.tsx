@@ -256,7 +256,7 @@ export function ArtInfos({
               )}
               style={{ transitionProperty: 'opacity, max-height' }}
             >
-              <div id="art-info-wrapper" className={cn('flex flex-col gap-12')}>
+              <div id="art-info-wrapper" className={cn('flex flex-col')}>
                 <div id="art-links" className="mt-12">
                   <ArtLinks
                     email={email}
