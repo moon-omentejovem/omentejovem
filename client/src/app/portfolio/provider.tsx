@@ -4,7 +4,6 @@ import { ReactElement } from 'react'
 import { PortfolioProvider } from './context/PortfolioProvider'
 import PortfolioContent from './content'
 import { NFT } from '@/components/ArtContent/types'
-import { Filter } from '@/components/Filter'
 
 interface PortfolioContentProviderProperties {
   email: string
