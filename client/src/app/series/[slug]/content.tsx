@@ -32,7 +32,7 @@ export default function InnerCollectionContent({
   return (
     <ArtMainContent
       email={email}
-      source={`collections/${slug}`}
+      source={`series/${slug}`}
       artImages={images}
       onChangeArtImages={onChangeArtImages}
       onChangeSelectedArtIndex={onChangeSelectedArtIndex}
