@@ -18,7 +18,7 @@ export default async function Home() {
   console.log('closeNewsletter', closeNewsletter)
 
   return (
-    <div className="fixed z-50 bg-background w-full h-full max-w-[1920px]">
+    <div className="fixed sm:z-50 bg-background w-full h-full max-w-[1920px]">
       <NewsletterPage />
       <HomeContent data={data} />
     </div>
