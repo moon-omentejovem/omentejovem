@@ -50,7 +50,7 @@ function ImageBanner(): ReactElement {
   }, [])
 
   return (
-    <div className="fixed left-0 top-0 h-full overflow-hidden hidden md:block z-50">
+    <div className="fixed left-0 top-0 h-full overflow-hidden hidden md:block z-10">
       <div className="animate-scroll flex flex-col">
         {[...images, ...images].map((src, index) => (
           <Image
@@ -146,7 +146,7 @@ export function Newsletter(): ReactElement {
       <ImageBanner />
       <main
         id="about-page"
-        className="fixed max-w-[1920px] z-40 mx-auto top-0 h-full w-full flex flex-col bg-background justify-center"
+        className="fixed max-w-[1920px] z-40 mx-auto top-0 h-full w-full sm:p-0 p-8 flex flex-col bg-background justify-center"
       >
         <button
           onClick={handleDismiss}
