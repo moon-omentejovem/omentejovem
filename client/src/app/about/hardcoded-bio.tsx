@@ -1,4 +1,4 @@
-import { AboutImage1, AboutImage2 } from '@/assets/images'
+import { AboutImage1, AboutImage2} from '@/assets/images'
 import Image from 'next/image'
 
 const HardCodedBio = () => (
@@ -161,7 +161,7 @@ const HardCodedBio = () => (
       from his life experiences and feelings. For example,{' '}
       <em>
         <a
-          href="https://media.omentejovem.com/wordpress/wp-content/uploads/2024/03/7_ThedayIfoundoutIcandoeverything_11zon-Personalizado.jpeg"
+          href="/_next/static/media/tdifo.ec478fa9.jpg"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -180,7 +180,7 @@ const HardCodedBio = () => (
       challenging times. The piece{' '}
       <em>
         <a
-          href="https://media.omentejovem.com/wordpress/wp-content/uploads/2024/03/9_the_day_i_felt_god_11zon-Personalizado.jpg"
+          href="/_next/static/media/tdifg.aa846162.jpg"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -201,13 +201,9 @@ const HardCodedBio = () => (
 
     <p>
       An unmissable feature of omentejovem’s works is the{' '}
-      <a
-        href="https://media.omentejovem.com/wordpress/wp-content/uploads/2024/03/19_the_day_i_met_you_11zon-Personalizado.jpg"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        vibrant use of colors
-      </a>
+      <em>
+      <span className="text-primary-50">vibrant use of colors</span>
+      </em>
       . “Even though I receive compliments for my color choices, I feel like I’m
       just beginning to explore this aspect. Initially, I limited my palette to
       prevent indecision from the overwhelming possibilities,” he explains. Now,
@@ -248,7 +244,7 @@ const HardCodedBio = () => (
 
     <br />
     <Image
-      src={AboutImage1}
+      src={AboutImage2}
       alt="Omentejovem Artwork"
       width={500}
       height={300}
