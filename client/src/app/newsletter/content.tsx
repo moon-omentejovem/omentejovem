@@ -50,7 +50,7 @@ function ImageBanner(): ReactElement {
   }, [])
 
   return (
-    <div className="fixed left-0 top-0 h-full overflow-hidden hidden md:block z-10">
+    <div className="fixed left-0 top-0 h-full overflow-hidden hidden md:block z-50">
       <div className="animate-scroll flex flex-col">
         {[...images, ...images].map((src, index) => (
           <Image
@@ -173,7 +173,9 @@ export function Newsletter(): ReactElement {
             id="newsletter-title"
             className="text-[16px] leading-none overflow-hidden xl:mb-12 text-left"
           >
-            <span className="block text-base text-secondary-100 font-body">NEWSLETTER</span>
+            <span className="block text-base text-secondary-100 font-body">
+              NEWSLETTER
+            </span>
             <span className="block text-primary-100 text-4xl">omentejovem</span>
           </h1>
 
