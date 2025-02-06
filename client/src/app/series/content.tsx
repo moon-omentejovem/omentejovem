@@ -12,37 +12,17 @@ export default function CollectionsContent(data: CollectionsResponse) {
   )
   const [images, setImages] = useState([] as string[])
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
-
-  const [
-    highlightedImageIndexPerCollection,
-    setHighlightedImageIndexPerCollection
-  ] = useState({} as Record<string, number>)
+  const [collectionPreviewImages, setCollectionPreviewImages] = useState<
+    string[]
+  >(['/S&C Cover.jpg', '/TheCycleCover.jpg'])
 
   useEffect(() => {
-    const recordForHighlightedImageIndexPerCollection: Record<string, number> =
-      {}
-
-    for (const collection of data.collections) {
-      recordForHighlightedImageIndexPerCollection[collection.name] = Math.floor(
-        Math.random() * collection.nftImageUrls.length
-      )
+    if (currentCollection === 'Shapes & Colors') {
+      setCurrentImageIndex(0)
+    } else if (currentCollection === 'The Cycle') {
+      setCurrentImageIndex(1)
     }
-
-    setHighlightedImageIndexPerCollection(
-      recordForHighlightedImageIndexPerCollection
-    )
-  }, [data.collections])
-
-  useEffect(() => {
-    const currentImages =
-      data.collections?.find((c) => c.name === currentCollection)
-        ?.nftImageUrls || []
-
-    setImages(currentImages)
-    setCurrentImageIndex(
-      highlightedImageIndexPerCollection[currentCollection ?? ''] || 0
-    )
-  }, [currentCollection, data.collections])
+  }, [currentCollection])
 
   useEffect(() => {
     const moveElement = moveRef.current
@@ -73,7 +53,7 @@ export default function CollectionsContent(data: CollectionsResponse) {
       className="grid place-content-center justify-items-center py-40 min-h-screenMinusHeader overflow-hidden scroll-smooth"
       onPointerLeave={() => setCurrentCollection(null)}
     >
-      {currentCollection && images[currentImageIndex] && (
+      {currentCollection && collectionPreviewImages[currentImageIndex] && (
         <div
           style={{
             left: '50%',
@@ -84,7 +64,7 @@ export default function CollectionsContent(data: CollectionsResponse) {
           ref={moveRef}
         >
           <Image
-            src={images[currentImageIndex]}
+            src={collectionPreviewImages[currentImageIndex]}
             width={400}
             height={300}
             alt="Collections"
