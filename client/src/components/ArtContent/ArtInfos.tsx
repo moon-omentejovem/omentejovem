@@ -173,7 +173,7 @@ export function ArtInfos({
   return (
     <section
       className={cn(
-        'flex flex-wrap gap-8 xl:h-[calc(100vh-4rem)] overflow-scroll xl:max-w-[85%] gap-x-auto w-full scrollbar-hide'
+        'flex flex-wrap gap-8 xl:h-[calc(100vh-4rem)] xl:overflow-scroll xl:max-w-[85%] gap-x-auto w-full scrollbar-hide'
       )}
     >
       <div className="md:flex-1 min-w-[200px] xl:min-w-[350px] flex flex-col max-h-full">

@@ -19,7 +19,7 @@ export function ArtDetails({ image, detailedImage, name }: ArtDetails) {
             width={0}
             height={0}
             alt={name}
-            className="w-full h-auto max-w-full max-h-[50vh] xl:max-h-[70vh] object-contain mx-auto sm:mx-0 mb-[48px]"
+            className="w-full h-auto max-w-full max-h-[50vh] xl:max-h-[70vh] object-contain mx-auto sm:mx-0 xl:mb-[48px]"
             id="active-image"
           />
         </ImageModal>
