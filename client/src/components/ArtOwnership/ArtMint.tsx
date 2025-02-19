@@ -25,6 +25,7 @@ export const omentejovemAddress: Record<string, string> = {
 const nullAddress = '0x0000000000000000000000000000000000000000'
 
 function formattedDate(date: string): string {
+  if (!date) return '-'
   return format(addHours(date, 3), 'LLL d, yyyy hh:mmaaa')
 }
 
