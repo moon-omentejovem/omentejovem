@@ -28,7 +28,7 @@ export function OwnersModal({
       <Dialog.Portal>
         <Dialog.Overlay className="modal-overlay fixed inset-0 bg-black/[30%] backdrop-blur-sm z-20">
           <Dialog.Content
-            className="modal-content fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] sm:w-full max-w-xl border-[1px] border-[#B1B1B1] bg-background z-30"
+            className="modal-content fixed left-1/2 top-1/4 -translate-x-1/2 -translate-y-1/2 w-[90vw] sm:w-full max-w-xl border-[1px] border-[#B1B1B1] bg-background z-30"
             onOpenAutoFocus={() => {
               if (!isAnimating) {
                 modalAnimations(setIsAnimating)
