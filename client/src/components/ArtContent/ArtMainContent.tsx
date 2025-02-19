@@ -70,7 +70,7 @@ export function ArtMainContent({
   }
 
   return (
-    <main className="p-8 md:px-12 lg:px-20 flex flex-col sm:px-6 2xl:pb-16 2xl:px-20 2xl:pb-8 xl:h-screenMinusHeader">
+    <main className="p-8 md:px-12 lg:px-20 flex flex-col sm:px-6 2xl:pb-16 2xl:px-20 2xl:pb-8 xl:h-screenMinusHeader overflow-hidden xl:overflow-auto">
       <VerticalCarousel
         slideIndex={selectedArtIndex}
         onChangeSlideIndex={onChangeSelectedArtIndex}
