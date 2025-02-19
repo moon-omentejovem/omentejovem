@@ -173,6 +173,12 @@ const ethYearFilter: ChainedFilter = {
       filterApply: getNftYearFilter(2021),
       inPlace: true,
       children: []
+    },
+    {
+      label: '2020',
+      filterApply: getNftYearFilter(2020),
+      inPlace: true,
+      children: []
     }
   ]
 }
