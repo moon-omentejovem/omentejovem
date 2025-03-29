@@ -6,12 +6,13 @@ import { cn } from '@/lib/utils'
 import {
   Chain,
   FirstCreated,
+  Mint,
   NftTransferEvent,
   Sale
 } from '../ArtContent/types'
 
 interface ArtTransactionProperties {
-  transaction?: FirstCreated
+  transaction?: Mint
   collectionsMode?: boolean
   chain: 'ethereum' | 'tezos'
 }
@@ -53,11 +54,11 @@ export function ArtMint({
           <a
             target="_blank"
             rel="noreferrer"
-            href={transaction?.minted_to}
+            href={transaction?.mintAddress || ''}
             className="text-primary-50 hover:underline"
-            aria-label={`${transaction?.minted_to} seller profile`}
+            aria-label={`${transaction?.mintAddress} seller profile`}
           >
-            {formatOwnerAddress(transaction?.minted_to)}
+            {formatOwnerAddress(transaction?.mintAddress || '')}
           </a>
         </p>
         <p>{formattedDate(transaction?.timestamp || '')}</p>
@@ -66,7 +67,7 @@ export function ArtMint({
       <a
         target="_blank"
         rel="noreferrer"
-        href={`https://${chain === 'ethereum' ? 'etherscan.io/tx' : 'tzkt.io'}/${transaction?.transaction}`}
+        href={`https://${chain === 'ethereum' ? 'etherscan.io/tx' : 'tzkt.io'}/${transaction?.transactionHash}`}
         className="hover:fill-primary-50"
         aria-label="Transaction page"
       >

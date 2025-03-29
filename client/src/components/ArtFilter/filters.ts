@@ -43,14 +43,14 @@ function extractYearFromISO(dateString: string): number {
 }
 function getNftYearFilter(year: number) {
   return (n: NFT) => {
-    return new Date(n.created_date ?? '').getFullYear() === year
+    return new Date(n.mint.timestamp ?? '').getFullYear() === year
   }
 }
 
 const latestFilter: ChainedFilter = {
   label: 'latest',
   sortApply: {
-    key: 'created_date',
+    key: 'mint',
     option: 'desc'
   },
   children: []
@@ -59,7 +59,7 @@ const latestFilter: ChainedFilter = {
 const oldestFilter: ChainedFilter = {
   label: 'oldest',
   sortApply: {
-    key: 'created_date',
+    key: 'mint',
     option: 'asc'
   },
   children: []
@@ -80,7 +80,7 @@ const ethContractFilter: ChainedFilter = {
       inPlace: true,
       filterApply: (n) =>
         MANIFOLD_NFTS.map((nft) => nft.toLowerCase()).includes(
-          n.contract_address?.toLowerCase() ?? ''
+          n.contract.address?.toLowerCase() ?? ''
         ),
       children: []
     },
@@ -89,7 +89,7 @@ const ethContractFilter: ChainedFilter = {
       inPlace: true,
       filterApply: (n) =>
         TRANSIENT_NFTS.map((nft) => nft.toLowerCase()).includes(
-          n.contract_address?.toLowerCase() ?? ''
+          n.contract.address?.toLowerCase() ?? ''
         ),
       children: []
     },
@@ -98,7 +98,7 @@ const ethContractFilter: ChainedFilter = {
       inPlace: true,
       filterApply: (n) =>
         SUPERRARE_NFTS.map((nft) => nft.toLowerCase()).includes(
-          n.contract_address?.toLowerCase() ?? ''
+          n.contract.address?.toLowerCase() ?? ''
         ),
       children: []
     },
@@ -116,7 +116,7 @@ const ethContractFilter: ChainedFilter = {
       inPlace: true,
       filterApply: (n) =>
         RARIBLE_NFTS.map((nft) => nft.toLowerCase()).includes(
-          n.contract_address?.toLowerCase() ?? ''
+          n.contract.address?.toLowerCase() ?? ''
         ),
       children: []
     }
@@ -206,7 +206,7 @@ const filters: ChainedFilter[] = [
     children: [
       {
         label: 'minted',
-        filterApply: (n) => !!n.created_date,
+        filterApply: (n) => !!n.mint.timestamp,
         children: [
           {
             label: 'eth',

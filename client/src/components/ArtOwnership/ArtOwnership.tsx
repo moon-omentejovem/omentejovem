@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import {
   Chain,
   FirstCreated,
+  Mint,
   Owner,
   Sale,
   TransferFromAPI
@@ -23,8 +24,8 @@ interface ArtOwnershipProperties {
   collectionsMode?: boolean
   artAddress: string
   owners: Owner[]
-  firstEvent?: FirstCreated
-  lastEvent?: Sale
+  firstEvent?: Mint
+  lastEvent?: Mint
   source?: 'portfolio' | '1-1' | 'editions' | string
 }
 

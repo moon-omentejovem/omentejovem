@@ -64,7 +64,7 @@ export function HorizontalInCarousel({
               className="flex h-24 w-24 xl:h-[120px] xl:w-[120px]"
             >
               <Image
-                src={art.image_url || ''}
+                src={art.image.pngUrl || ''}
                 alt={art.name || ''}
                 width={100}
                 height={100}

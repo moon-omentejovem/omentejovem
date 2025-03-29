@@ -90,8 +90,8 @@ export function ArtInfos({
     selectedArt.chain.toLowerCase() === 'tezos' ? 'Objkt' : 'OpenSea'
   let externalLinkUrl =
     selectedArt.chain.toLowerCase() === 'tezos'
-      ? `https://objkt.com/asset/${selectedArt.contract_address}/${selectedArt.token_id}`
-      : `https://opensea.io/assets/${selectedArt.chain.toLowerCase()}/${selectedArt.contract_address}/${selectedArt.token_id}`
+      ? `https://objkt.com/asset/${selectedArt.contract.address}/${selectedArt.token_id}`
+      : `https://opensea.io/assets/${selectedArt.chain.toLowerCase()}/${selectedArt.contract.address}/${selectedArt.token_id}`
 
   let secondaryExternalLinkName = ''
   let secondaryExternalLinkUrl = ''
@@ -99,22 +99,22 @@ export function ArtInfos({
   // If the token is on manifold, show it on superrare
   if (
     MANIFOLD_NFTS.map((nft) => nft.toLowerCase()).includes(
-      selectedArt.contract_address.toLowerCase()
+      selectedArt.contract.address.toLowerCase()
     ) ||
     SUPERRARE_NFTS.map((nft) => nft.toLowerCase()).includes(
-      selectedArt.contract_address.toLowerCase()
+      selectedArt.contract.address.toLowerCase()
     ) ||
     TRANSIENT_NFTS.map((nft) => nft.toLowerCase()).includes(
-      selectedArt.contract_address.toLowerCase()
+      selectedArt.contract.address.toLowerCase()
     )
   ) {
     externalLinkName = 'SuperRare'
-    externalLinkUrl = `https://superrare.co/artwork/eth/${selectedArt.contract_address}/${selectedArt.token_id}`
+    externalLinkUrl = `https://superrare.co/artwork/eth/${selectedArt.contract.address}/${selectedArt.token_id}`
   }
 
   if (
     GRAILS_NFTS.map((nft) => nft.toLowerCase()).includes(
-      selectedArt.contract_address.toLowerCase()
+      selectedArt.contract.address.toLowerCase()
     )
   ) {
     externalLinkName = 'Grails'
@@ -123,7 +123,7 @@ export function ArtInfos({
 
   if (
     POAP_NFTS.map((nft) => nft.toLowerCase()).includes(
-      selectedArt.contract_address.toLowerCase()
+      selectedArt.contract.address.toLowerCase()
     )
   ) {
     externalLinkName = 'OpenSea'
@@ -131,7 +131,7 @@ export function ArtInfos({
   }
 
   if (
-    selectedArt.contract_address.toLowerCase() ===
+    selectedArt.contract.address.toLowerCase() ===
       '0x495f947276749ce646f68ac8c248420045cb7b5e' &&
     selectedArt.token_id ===
       '7871549583317194720263843996823387702908660152655034722079186002726342361098'
@@ -144,26 +144,26 @@ export function ArtInfos({
 
   if (
     OVERRIDE_EXTERNAL_LINKS[
-      `${selectedArt.contract_address.toLowerCase()}:${selectedArt.token_id}`
+      `${selectedArt.contract.address.toLowerCase()}:${selectedArt.token_id}`
     ]
   ) {
     externalLinkName =
       OVERRIDE_EXTERNAL_LINKS[
-        `${selectedArt.contract_address.toLowerCase()}:${selectedArt.token_id}`
+        `${selectedArt.contract.address.toLowerCase()}:${selectedArt.token_id}`
       ].name
     externalLinkUrl =
       OVERRIDE_EXTERNAL_LINKS[
-        `${selectedArt.contract_address.toLowerCase()}:${selectedArt.token_id}`
+        `${selectedArt.contract.address.toLowerCase()}:${selectedArt.token_id}`
       ].link
   }
 
   let mintedOn = format(
-    addHours(selectedArt.created_date || new Date(), 3),
+    addHours(selectedArt.mint.timestamp || new Date(), 3),
     'd LLLL, yyyy'
   )
 
   if (
-    selectedArt.contract_address.toLowerCase() ===
+    selectedArt.contract.address.toLowerCase() ===
       '0x495f947276749ce646f68ac8c248420045cb7b5e' &&
     selectedArt.token_id ===
       '7871549583317194720263843996823387702908660152655034722079186002726342361098'
@@ -179,13 +179,13 @@ export function ArtInfos({
       <div className="md:flex-1 min-w-[200px] xl:min-w-[350px] flex flex-col max-h-full">
         <div className="xl:art-detail-inner-container overflow-hidden flex flex-1 justify-start xl:justify-end">
           <ArtDetails
-            detailedImage={selectedArt.image_url || ''}
-            image={selectedArt.image_url || ''}
+            detailedImage={selectedArt.image.pngUrl || ''}
+            image={selectedArt.image.pngUrl || ''}
             name={selectedArt.name || ''}
           />
         </div>
       </div>
-      {!!selectedArt.video_url && (
+      {!!selectedArt.raw.tokenUri && (
         <button
           aria-label="Open video process modal"
           onClick={() => setIsOpenVideo(true)}
@@ -282,8 +282,8 @@ export function ArtInfos({
                     views={{
                       explorer:
                         selectedArt.chain.toLowerCase() === 'tezos'
-                          ? `https://tzkt.io/${selectedArt.contract_address}/tokens/${selectedArt.token_id}`
-                          : `https://etherscan.io/token/${selectedArt.contract_address}?a=${selectedArt.token_id}`
+                          ? `https://tzkt.io/${selectedArt.contract.address}/tokens/${selectedArt.token_id}`
+                          : `https://etherscan.io/token/${selectedArt.contract.address}?a=${selectedArt.token_id}`
                     }}
                   />
                 </div>
@@ -291,16 +291,16 @@ export function ArtInfos({
                 <ArtOwnership
                   nftChain={selectedArt.chain.toLowerCase() as Chain}
                   artAddress={getNftLinks(
-                    selectedArt.contract_address,
+                    selectedArt.contract.address,
                     selectedArt.chain.toLowerCase() as Chain,
                     selectedArt.token_id,
                     'token'
                   )}
                   tokenId={selectedArt.token_id}
-                  contractAddress={selectedArt.contract_address}
+                  contractAddress={selectedArt.contract.address}
                   owners={selectedArt.owners}
-                  firstEvent={selectedArt.first_created}
-                  lastEvent={selectedArt.last_sale}
+                  firstEvent={selectedArt.mint}
+                  lastEvent={selectedArt.mint}
                   source={source}
                 />
               </div>
@@ -338,7 +338,7 @@ export function ArtInfos({
         </div>
       )}
       <div className="hidden place-content-center xl:grid">
-        {!!selectedArt.video_url ? (
+        {!!selectedArt.raw.tokenUri ? (
           <button
             aria-label="Open video process modal"
             onClick={() => setIsOpenVideo(true)}

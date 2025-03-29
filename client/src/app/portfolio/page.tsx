@@ -12,12 +12,12 @@ export default async function Portfolio() {
   // Filter out '0x28a6f816eae721fea4ad34c000077b5fe525fc3c:6'
   const filteredNFTs = _images.nfts.filter((art) => {
     if (
-      art.contract_address.toLocaleLowerCase() ===
+      art.contract.address.toLocaleLowerCase() ===
         '0x28a6f816eae721fea4ad34c000077b5fe525fc3c' &&
       art.token_id === '6'
     ) {
       extraOwnershipData = art.owners
-      extraOwnershipQuantity = art.owner_count
+      extraOwnershipQuantity = art.owners.length
       return false
     }
     return true
@@ -26,7 +26,7 @@ export default async function Portfolio() {
   // Modify the filteredNFTs array to include the extra ownership data
   for (let i = 0; i < filteredNFTs.length; i++) {
     if (
-      filteredNFTs[i].contract_address.toLocaleLowerCase() ===
+      filteredNFTs[i].contract.address.toLocaleLowerCase() ===
         '0x495f947276749ce646f68ac8c248420045cb7b5e' &&
       filteredNFTs[i].token_id ===
         '7871549583317194720263843996823387702908660152655034722079186002726342361098'
@@ -35,7 +35,7 @@ export default async function Portfolio() {
         ...filteredNFTs[i].owners,
         ...extraOwnershipData
       ]
-      filteredNFTs[i].owner_count += extraOwnershipQuantity
+      filteredNFTs[i].owners.length += extraOwnershipQuantity
       break
     }
   }

@@ -254,14 +254,16 @@ export interface NFT {
     externalUrl: string | null
     bannerImageUrl: string
   }
-  mint: {
-    mintAddress: string | null
-    blockNumber: number | null
-    timestamp: string | null
-    transactionHash: string | null
-  }
+  mint: Mint
   owners: any | null
   timeLastUpdated: string
+}
+
+export interface Mint {
+  mintAddress: string | null
+  blockNumber: number | null
+  timestamp: string | null
+  transactionHash: string | null
 }
 
 export interface TokenQuantityFungible extends TokenQuantity {
