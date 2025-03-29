@@ -21,21 +21,27 @@ const SHAPES_AND_COLORS_COLLECTION = {
 export async function fetchCollections() {
   let ALL_DATA: { collections: CollectionRes[] } = { collections: [] }
 
-  const formattedQuery = COLLECTION_NFTS?.map((nft) => {
-    const prefix = nft.startsWith('KT') ? 'tezos.' : 'ethereum.'
+  const formattedQuery = COLLECTION_NFTS.filter(
+    (nft) => !nft.startsWith('KT')
+  ).map((nft) => {
     const tokenAddress = nft.split(':')[0]
     const tokenId = nft.split(':')[1]
-    return `${prefix}${tokenAddress}.${tokenId}`
+    return {
+      contractAddress: `${tokenAddress}`,
+      tokenId: tokenId
+    }
   })
-    .filter((nft) => nft !== '')
-    .join(',')
 
-  const data = await fetch(`${api.baseURL}?nft_ids=${formattedQuery}`, {
-    method: 'GET',
+  const data = await fetch(`${api.baseURL}`, {
+    method: 'POST',
     headers: {
       'X-API-KEY': api.apiKey || '',
-      Accept: 'application/json'
-    }
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      tokens: formattedQuery
+    })
   })
 
   const jsonData = await data.json()
@@ -44,20 +50,16 @@ export async function fetchCollections() {
   for (let i = 0; i < DATA_MAPPED.nfts.length; i++) {
     const nft = DATA_MAPPED.nfts[i]
     if (
-      nft.contract_address?.toLowerCase() ===
+      nft.contract.address?.toLowerCase() ===
       '0x826b11a95a9393e8a3cc0c2a7dfc9accb4ff4e43'.toLowerCase()
     ) {
-      THE_CYCLE_COLLECTION.nftImageUrls.push(
-        nft.previews.image_medium_url || ''
-      )
+      THE_CYCLE_COLLECTION.nftImageUrls.push(nft.image.pngUrl || '')
     }
     if (
-      nft.contract_address?.toLowerCase() ===
+      nft.contract.address?.toLowerCase() ===
       '0x2b3bbde45422d65ab3fb5cdc5427944db0729b50'.toLowerCase()
     ) {
-      SHAPES_AND_COLORS_COLLECTION.nftImageUrls.push(
-        nft.previews.image_medium_url || ''
-      )
+      SHAPES_AND_COLORS_COLLECTION.nftImageUrls.push(nft.image.pngUrl || '')
     }
   }
 
