@@ -43,7 +43,7 @@ export function ArtOwnership({
   const pathname = usePathname()
   const [transfers, setTransfers] = useState<TransferFromAPI[]>([])
 
-  const owner = owners.length === 1 ? owners[0] : null
+  const owner = owners?.length === 1 ? owners[0] : null
   const [isOwnersModalOpen, setIsOwnersModalOpen] = useState(false)
 
   useEffect(() => {
@@ -104,7 +104,7 @@ export function ArtOwnership({
           )}
         </div>
       )}
-      {owners.length > 1 && (
+      {owners?.length > 1 && (
         <div
           id="art-owned-by"
           className={cn(
@@ -146,7 +146,7 @@ export function ArtOwnership({
           </div>
 
           <ul className="list-none max-h-[320px] overflow-y-auto">
-            {transfers.map((transfer) => (
+            {transfers?.map((transfer) => (
               <ArtTransaction
                 chain={nftChain === 'ethereum' ? 'ethereum' : 'tezos'}
                 transaction={transfer}

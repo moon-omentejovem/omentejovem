@@ -87,11 +87,11 @@ export function ArtInfos({
   }
 
   let externalLinkName =
-    selectedArt.chain.toLowerCase() === 'tezos' ? 'Objkt' : 'OpenSea'
+    selectedArt.chain?.toLowerCase() === 'tezos' ? 'Objkt' : 'OpenSea'
   let externalLinkUrl =
-    selectedArt.chain.toLowerCase() === 'tezos'
+    selectedArt.chain?.toLowerCase() === 'tezos'
       ? `https://objkt.com/asset/${selectedArt.contract.address}/${selectedArt.token_id}`
-      : `https://opensea.io/assets/${selectedArt.chain.toLowerCase()}/${selectedArt.contract.address}/${selectedArt.token_id}`
+      : `https://opensea.io/assets/${selectedArt.chain?.toLowerCase()}/${selectedArt.contract.address}/${selectedArt.token_id}`
 
   let secondaryExternalLinkName = ''
   let secondaryExternalLinkUrl = ''
@@ -281,7 +281,7 @@ export function ArtInfos({
                     }}
                     views={{
                       explorer:
-                        selectedArt.chain.toLowerCase() === 'tezos'
+                        selectedArt.chain?.toLowerCase() === 'tezos'
                           ? `https://tzkt.io/${selectedArt.contract.address}/tokens/${selectedArt.token_id}`
                           : `https://etherscan.io/token/${selectedArt.contract.address}?a=${selectedArt.token_id}`
                     }}
@@ -289,10 +289,10 @@ export function ArtInfos({
                 </div>
 
                 <ArtOwnership
-                  nftChain={selectedArt.chain.toLowerCase() as Chain}
+                  nftChain={selectedArt.chain?.toLowerCase() as Chain}
                   artAddress={getNftLinks(
                     selectedArt.contract.address,
-                    selectedArt.chain.toLowerCase() as Chain,
+                    selectedArt.chain?.toLowerCase() as Chain,
                     selectedArt.token_id,
                     'token'
                   )}
