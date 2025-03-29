@@ -198,46 +198,70 @@ export interface TokenQuantity {
 export interface NFT {
   nft_id: string
   chain: Chain
-  contract_address: string
-  token_id: string
-  name?: string
-  description?: string
-  image_url?: string
-  video_url?: string
-  audio_url?: string
-  model_url?: string
-  previews: {
-    image_small_url?: string
-    image_medium_url?: string
-    image_large_url?: string
-    image_opengraph_url?: string
-    blurhash?: string
-  }
-  background_color?: string
-  external_url?: string
-  created_date?: Date
-  status: 'minted' | 'burned'
-  token_count: number
-  owner_count: number
-  owners: Owner[]
-  last_sale?: Sale
   contract: {
-    type: string
+    address: string
     name: string
     symbol: string
+    totalSupply: string
+    tokenType: string
+    contractDeployer: string
+    deployedBlockNumber: number
+    openSeaMetadata: {
+      floorPrice: number
+      collectionName: string
+      collectionSlug: string
+      safelistRequestStatus: string
+      imageUrl: string
+      description: string
+      externalUrl: string | null
+      twitterUsername: string
+      discordUrl: string
+      bannerImageUrl: string
+      lastIngestedAt: string
+    }
+    isSpam: boolean
+    spamClassifications: any[]
   }
-  collection: Collection
-  extra_metadata?: {
-    [key: string]: any
-    image_original_url?: string
-    animation_original_url?: string
-    attributes?: {
-      trait_type: string
-      value: string | number
-    }[]
+  token_id: string
+  tokenType: string
+  name?: string
+  description?: string
+  tokenUri?: string
+  image: {
+    cachedUrl: string
+    thumbnailUrl: string
+    pngUrl: string
+    contentType: string
+    size: number
+    originalUrl: string
   }
-  queried_wallet_balances?: TokenQuantity[]
-  first_created: FirstCreated
+  raw: {
+    tokenUri: string
+    metadata: {
+      image: string
+      createdBy: string
+      yearCreated: string
+      name: string
+      description: string
+      media: any
+      tags: any[]
+    }
+    error: null | string
+  }
+  collection: {
+    name: string
+    slug: string
+    externalUrl: string | null
+    bannerImageUrl: string
+  }
+  mint: {
+    mintAddress: string | null
+    blockNumber: number | null
+    timestamp: string | null
+    transactionHash: string | null
+  }
+  owners: any | null
+  timeLastUpdated: string
 }
 
 export interface TokenQuantityFungible extends TokenQuantity {

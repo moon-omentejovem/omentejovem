@@ -11,31 +11,36 @@ export async function fetchHomeInfo() {
   const randomNfts = ALL_NFTS.sort(() => Math.random() - 0.5).slice(0, 5)
 
   const formattedQuery = randomNfts
+    .filter((nft) => !nft.startsWith('KT'))
     .map((nft) => {
-      const prefix = nft.startsWith('KT') ? 'tezos.' : 'ethereum.'
       const tokenAddress = nft.split(':')[0]
       const tokenId = nft.split(':')[1]
-      return `${prefix}${tokenAddress}.${tokenId}`
+      return {
+        contractAddress: `${tokenAddress}`,
+        tokenId: tokenId
+      }
     })
-    .filter((nft) => nft !== '')
-    .join(',')
 
-  const data = await fetch(`${api.baseURL}?nft_ids=${formattedQuery}`, {
-    method: 'GET',
+  const data = await fetch(`${api.baseURL}`, {
+    method: 'POST',
     headers: {
       'X-API-KEY': api.apiKey || '',
-      Accept: 'application/json'
-    }
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      tokens: formattedQuery
+    })
   })
 
-  const jsonData = (await data.json()) as { nfts: NFT[] }
+  const dataJSON = await data.json()
 
-  console.log(jsonData.nfts[0])
+  console.log(dataJSON.nfts[0])
 
-  const formattedNfts = jsonData.nfts.map((nft) => ({
+  const formattedNfts = dataJSON.nfts.map((nft: NFT) => ({
     title: nft.name,
-    createdAt: nft.created_date?.toString() || '',
-    imageUrl: nft.previews.image_large_url
+    createdAt: nft.timeLastUpdated?.toString() || '',
+    imageUrl: nft.image.pngUrl
   }))
 
   return {
