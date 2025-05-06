@@ -210,7 +210,7 @@ const filters: ChainedFilter[] = [
         children: [
           {
             label: 'eth',
-            filterApply: (n) => n.chain.toLowerCase() === 'ethereum',
+            filterApply: (n) => n.chain?.toLowerCase() === 'ethereum',
             children: [
               oldestFilter,
               // availableFilter,
@@ -220,7 +220,7 @@ const filters: ChainedFilter[] = [
           },
           {
             label: 'xtz',
-            filterApply: (n) => n.chain.toLowerCase() === 'tezos',
+            filterApply: (n) => n.chain?.toLowerCase() === 'tezos',
             children: [
               oldestFilter,
               // availableFilter,
