@@ -78,5 +78,22 @@ export async function fetchPortfolioNfts() {
     return new Date(bMintDate).getTime() - new Date(aMintDate).getTime()
   })
 
+  // Add the display URL if it's in the mintDates
+  ALL_DATA.nfts = ALL_DATA.nfts.map((nft) => {
+    const mintDate = mintDates.find(
+      (mint: MintDate | null) =>
+        mint &&
+        mint.contractAddress.toLowerCase() ===
+          nft.contract.address.toLowerCase() &&
+        mint.tokenId === nft.tokenId
+    )
+
+    if (mintDate) {
+      nft.image.displayUrl = mintDate.imageUrl || undefined
+    }
+
+    return nft
+  })
+
   return ALL_DATA
 }

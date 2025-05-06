@@ -234,6 +234,7 @@ export interface NFT {
     contentType: string
     size: number
     originalUrl: string
+    displayUrl?: string
   }
   raw: {
     tokenUri: string

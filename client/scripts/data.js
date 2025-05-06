@@ -1,6 +1,7 @@
 import { createPublicClient, http, parseAbiItem } from 'viem'
 import { mainnet } from 'viem/chains'
 import { writeFile } from 'fs/promises'
+import fetch from 'node-fetch'
 const ALL_NFTS = [
   '0x826b11a95a9393e8a3cc0c2a7dfc9accb4ff4e43:5',
   '0x826b11a95a9393e8a3cc0c2a7dfc9accb4ff4e43:6',
@@ -91,6 +92,57 @@ const transferEvent = parseAbiItem(
   'event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)'
 )
 
+async function getImageUrl(contractAddress, tokenId) {
+  try {
+    const response = await fetch('https://api.highlight.xyz:8080/', {
+      method: 'POST',
+      headers: {
+        accept: 'application/json',
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        operationName: 'TokensDetailsNormalized',
+        variables: {
+          collectionId: `ethereum:${contractAddress}:b8fde6366a91617daabedbaad0e1b5b9`,
+          tokenIds: [tokenId],
+          fromS3: true,
+          nonFilteredUserAddress: null,
+          isImportedCollection: false
+        },
+        query: `query TokensDetailsNormalized($collectionId: String!, $tokenIds: [String!]!, $fromS3: Boolean, $isImportedCollection: Boolean, $nonFilteredUserAddress: String) {
+          getPublicCollection(collectionId: $collectionId) {
+            tokensNormalized(
+              tokenIds: $tokenIds
+              fromS3: $fromS3
+              isImportedCollection: $isImportedCollection
+              nonFilteredUserAddress: $nonFilteredUserAddress
+            ) {
+              imageUrl
+            }
+            __typename
+          }
+        }`
+      })
+    })
+
+    const data = await response.json()
+    const token = data.data?.getPublicCollection?.tokensNormalized?.[0]
+
+    if (!token) {
+      console.log(`No image data found for ${contractAddress}:${tokenId}`)
+      return null
+    }
+
+    return token.imageUrl || token.metadata?.imageUrlOriginal
+  } catch (error) {
+    console.error(
+      `Error fetching image URL for ${contractAddress}:${tokenId}:`,
+      error.message
+    )
+    return null
+  }
+}
+
 async function getMintDate(contractAddress, tokenId) {
   try {
     const logs = await client.getLogs({
@@ -112,10 +164,18 @@ async function getMintDate(contractAddress, tokenId) {
     const firstLog = logs[0]
     const block = await client.getBlock({ blockNumber: firstLog.blockNumber })
     const mintDate = new Date(Number(block.timestamp) * 1000)
+
+    // Fetch image URL
+    const imageUrl = await getImageUrl(contractAddress, tokenId)
+
+    console.log('mintDate', mintDate.toISOString())
+    console.log('imageUrl', imageUrl)
+
     return {
       contractAddress,
       tokenId,
-      mintDate: mintDate.toISOString()
+      mintDate: mintDate.toISOString(),
+      imageUrl
     }
   } catch (error) {
     console.error(
@@ -150,7 +210,7 @@ async function processAllNFTs() {
   }
 
   // Save results to a file using ES modules
-  await writeFile('mint-dates.json', JSON.stringify(results, null, 2))
+  await writeFile('public/mint-dates.json', JSON.stringify(results, null, 2))
   console.log('Results saved to mint-dates.json')
 }
 

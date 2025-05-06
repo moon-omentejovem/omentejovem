@@ -57,6 +57,7 @@ export function ArtMainContent({
           slides={artImages?.map((art) => ({
             name: art.name || '',
             nftCompressedHdUrl:
+              art.image.displayUrl ||
               art.image.thumbnailUrl ||
               art.image.cachedUrl ||
               art.image.pngUrl ||
@@ -84,6 +85,7 @@ export function ArtMainContent({
         slides={artImages.map((art) => ({
           name: art.name || '',
           nftCompressedHdUrl:
+            art.image.displayUrl ||
             art.image.thumbnailUrl ||
             art.image.pngUrl ||
             art.image.cachedUrl ||
