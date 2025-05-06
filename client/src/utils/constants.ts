@@ -16,10 +16,10 @@ export const COLLECTION_NFTS = [
   '0x2b3bbde45422d65ab3fb5cdc5427944db0729b50:10'
 ]
 
-const STORIES_ON_CIRCLES_COLLECTION_ADDRESS =
+export const STORIES_ON_CIRCLES_COLLECTION_ADDRESS =
   '0x0000000000000000000000000000000000000000'
 
-const STORIES_ON_CIRCLES_SLUG = 'storiesoncircles'
+export const STORIES_ON_CIRCLES_SLUG = 'storiesoncircles'
 
 export const FAKE_TOKENS: NFT[] = [
   {
@@ -84,7 +84,7 @@ export const FAKE_TOKENS: NFT[] = [
     mint: {
       mintAddress: null,
       blockNumber: null,
-      timestamp: null,
+      timestamp: '2025-04-28T12:00:00.000Z',
       transactionHash: null
     },
     owners: null,
@@ -152,7 +152,7 @@ export const FAKE_TOKENS: NFT[] = [
     mint: {
       mintAddress: null,
       blockNumber: null,
-      timestamp: null,
+      timestamp: '2025-04-30T12:00:00.000Z`',
       transactionHash: null
     },
     owners: null,
@@ -222,7 +222,7 @@ Ironically, i feel that’s still the life i live.`,
     mint: {
       mintAddress: null,
       blockNumber: null,
-      timestamp: null,
+      timestamp: '2025-05-02T12:00:00.000Z',
       transactionHash: null
     },
     owners: null,
@@ -290,7 +290,7 @@ Ironically, i feel that’s still the life i live.`,
     mint: {
       mintAddress: null,
       blockNumber: null,
-      timestamp: null,
+      timestamp: '2025-05-05T12:00:00.000Z',
       transactionHash: null
     },
     owners: null,
