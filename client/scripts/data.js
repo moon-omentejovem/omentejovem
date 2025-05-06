@@ -1,7 +1,6 @@
 import { createPublicClient, http, parseAbiItem } from 'viem'
 import { mainnet } from 'viem/chains'
 import { writeFile } from 'fs/promises'
-
 const ALL_NFTS = [
   '0x826b11a95a9393e8a3cc0c2a7dfc9accb4ff4e43:5',
   '0x826b11a95a9393e8a3cc0c2a7dfc9accb4ff4e43:6',
@@ -53,6 +52,7 @@ const ALL_NFTS = [
   '0xb932a70a57673d89f4acffbe830e8ed7f75fb9e0:30838',
   '0x826b11a95a9393e8a3cc0c2a7dfc9accb4ff4e43:4',
   '0xfda33af4770d844dc18d8788c7bf84accfac79ad:14',
+  '0xfda33af4770d844dc18d8788c7bf84accfac79ad:15',
   '0xfda33af4770d844dc18d8788c7bf84accfac79ad:8',
   '0xfda33af4770d844dc18d8788c7bf84accfac79ad:7',
   '0xfda33af4770d844dc18d8788c7bf84accfac79ad:6',
