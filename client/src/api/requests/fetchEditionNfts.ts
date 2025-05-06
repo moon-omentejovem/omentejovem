@@ -4,6 +4,13 @@ import { ALL_NFTS } from '@/utils/constants'
 import { api } from '../client'
 import { NFT } from '../resolver/types'
 import fetch from 'node-fetch'
+import mintDates from '../../../public/mint-dates.json'
+
+interface MintDate {
+  contractAddress: string
+  tokenId: string
+  mintDate: string
+}
 
 export async function fetchEditionNfts() {
   let ALL_DATA: { nfts: NFT[] } = { nfts: [] }
@@ -37,9 +44,28 @@ export async function fetchEditionNfts() {
 
   console.log('yooo', jsonData.nfts[0])
 
-  // Order by created_date newest first
+  // Order by mint date newest first
   ALL_DATA.nfts = jsonData.nfts.sort((a, b) => {
-    return b.contract.deployedBlockNumber - a.contract.deployedBlockNumber
+    const aMintDate = mintDates.find(
+      (mint: MintDate | null) =>
+        mint &&
+        mint.contractAddress.toLowerCase() ===
+          a.contract.address.toLowerCase() &&
+        mint.tokenId === a.tokenId
+    )?.mintDate
+
+    const bMintDate = mintDates.find(
+      (mint: MintDate | null) =>
+        mint &&
+        mint.contractAddress.toLowerCase() ===
+          b.contract.address.toLowerCase() &&
+        mint.tokenId === b.tokenId
+    )?.mintDate
+
+    if (!aMintDate) return 1
+    if (!bMintDate) return -1
+
+    return new Date(bMintDate).getTime() - new Date(aMintDate).getTime()
   })
 
   // Only return if contract.type === 'ERC721'

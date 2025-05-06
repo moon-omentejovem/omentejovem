@@ -59,6 +59,9 @@ export async function fetchOneOfOneNfts() {
         mint.tokenId === b.tokenId
     )?.mintDate
 
+    console.log('aMintDate', aMintDate)
+    console.log('bMintDate', bMintDate)
+
     if (!aMintDate) return 1
     if (!bMintDate) return -1
 
