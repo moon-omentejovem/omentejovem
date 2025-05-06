@@ -36,10 +36,7 @@ export async function fetchOneOfOneNfts() {
 
   // Order by created_date newest first
   ALL_DATA.nfts.sort((a, b) => {
-    return (
-      new Date(b.timeLastUpdated || '').getTime() -
-      new Date(a.timeLastUpdated || '').getTime()
-    )
+    return b.contract.deployedBlockNumber - a.contract.deployedBlockNumber
   })
 
   // Only return if contract.type === 'ERC721'
