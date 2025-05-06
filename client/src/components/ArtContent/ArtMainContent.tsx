@@ -30,6 +30,8 @@ export function ArtMainContent({
   const [page, setPage] = useState(1)
   const [loading, setLoading] = useState(false)
 
+  console.log('!!!', artImages)
+
   function onRedirect(index: number): void {
     onChangeSelectedArtIndex(index)
   }
@@ -55,8 +57,9 @@ export function ArtMainContent({
           slides={artImages?.map((art) => ({
             name: art.name || '',
             nftCompressedHdUrl:
-              art.image.pngUrl ||
+              art.image.thumbnailUrl ||
               art.image.cachedUrl ||
+              art.image.pngUrl ||
               art.image.originalUrl ||
               ''
           }))}
@@ -81,6 +84,7 @@ export function ArtMainContent({
         slides={artImages.map((art) => ({
           name: art.name || '',
           nftCompressedHdUrl:
+            art.image.thumbnailUrl ||
             art.image.pngUrl ||
             art.image.cachedUrl ||
             art.image.originalUrl ||
