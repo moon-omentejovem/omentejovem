@@ -14,13 +14,15 @@ export default function CollectionsContent(data: CollectionsResponse) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [collectionPreviewImages, setCollectionPreviewImages] = useState<
     string[]
-  >(['/S&C Cover.jpg', '/TheCycleCover.jpg'])
+  >(['/S&C Cover.jpg', '/TheCycleCover.jpg', '/Stories on Circles Cover.jpg'])
 
   useEffect(() => {
     if (currentCollection === 'Shapes & Colors') {
       setCurrentImageIndex(0)
     } else if (currentCollection === 'The Cycle') {
       setCurrentImageIndex(1)
+    } else if (currentCollection === 'Stories on Circles') {
+      setCurrentImageIndex(2)
     }
   }, [currentCollection])
 

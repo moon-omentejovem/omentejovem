@@ -18,6 +18,14 @@ const SHAPES_AND_COLORS_COLLECTION = {
   slug: 'shapesncolors',
   nftImageUrls: [] as string[]
 }
+
+const STORIES_ON_CIRCLES_COLLECTION = {
+  name: 'Stories on Circles',
+  year: '2025',
+  slug: 'storiesoncircles',
+  nftImageUrls: [] as string[]
+}
+
 export async function fetchCollections() {
   let ALL_DATA: { collections: CollectionRes[] } = { collections: [] }
 
@@ -69,6 +77,10 @@ export async function fetchCollections() {
   })
 
   return {
-    collections: [THE_CYCLE_COLLECTION, SHAPES_AND_COLORS_COLLECTION]
+    collections: [
+      STORIES_ON_CIRCLES_COLLECTION,
+      THE_CYCLE_COLLECTION,
+      SHAPES_AND_COLORS_COLLECTION
+    ]
   }
 }
