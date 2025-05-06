@@ -4,6 +4,7 @@ import filters from '@/components/ArtFilter/filters'
 
 export default async function Editions() {
   let _images = await fetchEditionNfts()
+
   const _totalPages = 3
 
   // Special case because he minted a token twice... once on opensea and once on manifold

@@ -351,8 +351,6 @@ Ironically, i feel that’s still the life i live.`,
     })
   })
 
-  console.log('!!!', data)
-
   const jsonData = await data.json()
   const DATA_MAPPED = jsonData as { nfts: NFT[] }
 

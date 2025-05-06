@@ -32,11 +32,13 @@ export async function fetchEditionNfts() {
     })
   })
 
-  const jsonData = await data.json()
+  const jsonData = (await data.json()) as { nfts: NFT[] }
   const DATA_MAPPED = jsonData as { nfts: NFT[] }
 
+  console.log('yooo', jsonData.nfts[0])
+
   // Order by created_date newest first
-  ALL_DATA.nfts.sort((a, b) => {
+  ALL_DATA.nfts = jsonData.nfts.sort((a, b) => {
     return (
       new Date(b.timeLastUpdated || '').getTime() -
       new Date(a.timeLastUpdated || '').getTime()
@@ -48,7 +50,7 @@ export async function fetchEditionNfts() {
     if (nft.contract.address.startsWith('KT')) {
       return nft.tokenType !== 'ERC1155'
     }
-    return nft.contract.tokenType === 'ERC721'
+    return nft.contract.tokenType === 'ERC1155'
   })
 
   return ALL_DATA
