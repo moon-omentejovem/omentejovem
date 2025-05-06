@@ -75,6 +75,9 @@ export async function fetchPortfolioNfts() {
     if (!aMintDate) return 1
     if (!bMintDate) return -1
 
+    a.mint.timestamp = aMintDate
+    b.mint.timestamp = bMintDate
+
     return new Date(bMintDate).getTime() - new Date(aMintDate).getTime()
   })
 
