@@ -21,9 +21,12 @@ const THE_CYCLE_COLLECTION_ADDRESS =
   '0x826b11a95a9393e8a3cc0c2a7dfc9accb4ff4e43'
 const SHAPES_AND_COLORS_COLLECTION_ADDRESS =
   '0x2b3bbde45422d65ab3fb5cdc5427944db0729b50'
+const STORIES_ON_CIRCLES_COLLECTION_ADDRESS =
+  '0x2b3bbde45422d65ab3fb5cdc5427944db0729b50'
 
 const THE_CYCLE_SLUG = 'the3cycle'
 const SHAPES_AND_COLORS_SLUG = 'shapesncolors'
+const STORIES_ON_CIRCLES_SLUG = 'storiesoncircles'
 
 interface RequestCollectionNftsResponse {
   email: string
@@ -41,23 +44,32 @@ export async function requestNftsByCollection(
     if (slug === SHAPES_AND_COLORS_SLUG) {
       return tokenAddress === SHAPES_AND_COLORS_COLLECTION_ADDRESS
     }
+    if (slug === STORIES_ON_CIRCLES_SLUG) {
+      return tokenAddress === STORIES_ON_CIRCLES_COLLECTION_ADDRESS
+    }
     return false
-  })
-    .map((nft) => {
-      const tokenAddress = nft.split(':')[0]
-      const tokenId = nft.split(':')[1]
-      return `ethereum.${tokenAddress}.${tokenId}`
-    })
-    .filter((nft) => nft !== '')
-    .join(',')
-
-  const data = await fetch(`${api.baseURL}?nft_ids=${formattedQuery}`, {
-    method: 'GET',
-    headers: {
-      'X-API-KEY': api.apiKey || '',
-      Accept: 'application/json'
+  }).map((nft) => {
+    const tokenAddress = nft.split(':')[0]
+    const tokenId = nft.split(':')[1]
+    return {
+      contractAddress: tokenAddress,
+      tokenId: tokenId
     }
   })
+
+  const data = await fetch(`${api.baseURL}`, {
+    method: 'POST',
+    headers: {
+      'X-API-KEY': api.apiKey || '',
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      tokens: formattedQuery
+    })
+  })
+
+  console.log('!!!', data)
 
   const jsonData = await data.json()
   const DATA_MAPPED = jsonData as { nfts: NFT[] }
