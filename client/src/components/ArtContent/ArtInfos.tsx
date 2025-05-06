@@ -184,8 +184,18 @@ export function ArtInfos({
       <div className="md:flex-1 min-w-[200px] xl:min-w-[350px] flex flex-col max-h-full">
         <div className="xl:art-detail-inner-container overflow-hidden flex flex-1 justify-start xl:justify-end">
           <ArtDetails
-            detailedImage={selectedArt.image.pngUrl || ''}
-            image={selectedArt.image.pngUrl || ''}
+            detailedImage={
+              selectedArt.image.pngUrl ||
+              selectedArt.image.cachedUrl ||
+              selectedArt.image.originalUrl ||
+              ''
+            }
+            image={
+              selectedArt.image.pngUrl ||
+              selectedArt.image.cachedUrl ||
+              selectedArt.image.originalUrl ||
+              ''
+            }
             name={selectedArt.name || ''}
           />
         </div>

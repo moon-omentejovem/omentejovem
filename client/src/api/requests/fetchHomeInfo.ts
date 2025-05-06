@@ -40,7 +40,8 @@ export async function fetchHomeInfo() {
   const formattedNfts = dataJSON.nfts.map((nft: NFT) => ({
     title: nft.name,
     createdAt: nft.timeLastUpdated?.toString() || '',
-    imageUrl: nft.image.pngUrl
+    imageUrl:
+      nft.image.pngUrl || nft.image.cachedUrl || nft.image.originalUrl || ''
   }))
 
   return {

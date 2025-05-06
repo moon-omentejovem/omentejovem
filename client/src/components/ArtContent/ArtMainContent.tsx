@@ -54,7 +54,11 @@ export function ArtMainContent({
           loading={loading}
           slides={artImages?.map((art) => ({
             name: art.name || '',
-            nftCompressedHdUrl: art.image.pngUrl || art.image.cachedUrl || ''
+            nftCompressedHdUrl:
+              art.image.pngUrl ||
+              art.image.cachedUrl ||
+              art.image.originalUrl ||
+              ''
           }))}
           redirectSource={source}
           onRedirect={onRedirect}
@@ -76,7 +80,11 @@ export function ArtMainContent({
         onChangeSlideIndex={onChangeSelectedArtIndex}
         slides={artImages.map((art) => ({
           name: art.name || '',
-          nftCompressedHdUrl: art.image.pngUrl || ''
+          nftCompressedHdUrl:
+            art.image.pngUrl ||
+            art.image.cachedUrl ||
+            art.image.originalUrl ||
+            ''
         }))}
       />
       {renderContent()}

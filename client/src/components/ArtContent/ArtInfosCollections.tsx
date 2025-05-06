@@ -89,7 +89,11 @@ export function ArtInfosCollections({
         onChangeSlideIndex={onChangeSlideIndex}
         slides={slides.map((art) => ({
           name: art.name || '',
-          nftCompressedHdUrl: art.image.pngUrl || ''
+          nftCompressedHdUrl:
+            art.image.pngUrl ||
+            art.image.cachedUrl ||
+            art.image.originalUrl ||
+            ''
         }))}
       />
       {renderContent()}
