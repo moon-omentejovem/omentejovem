@@ -66,7 +66,7 @@ export async function requestNftsByCollection(
           isSpam: false,
           spamClassifications: []
         },
-        token_id: '1',
+        tokenId: '1',
         tokenType: 'ERC721',
         name: 'Sitting at the Edge',
         description: 'In the middle of the seen and unseen.',
@@ -134,7 +134,7 @@ export async function requestNftsByCollection(
           isSpam: false,
           spamClassifications: []
         },
-        token_id: '2',
+        tokenId: '2',
         tokenType: 'ERC721',
         name: 'Two Voices, One Circle',
         description: 'One speaks, the other feels.',
@@ -202,7 +202,7 @@ export async function requestNftsByCollection(
           isSpam: false,
           spamClassifications: []
         },
-        token_id: '3',
+        tokenId: '3',
         tokenType: 'ERC721',
         name: 'The Ground Was My Teacher',
         description: `I enjoyed playing with kites in my childhood. Fun fact, most of them didn't even get to fly. I ended up hurting my knee hundreds of times as the kites still got destroyed. Thankfully I could craft other toys with their sticks and strings.
@@ -272,7 +272,7 @@ Ironically, i feel that’s still the life i live.`,
           isSpam: false,
           spamClassifications: []
         },
-        token_id: '4',
+        tokenId: '4',
         tokenType: 'ERC721',
         name: 'I Had Dreams About You',
         description: 'I wish I could remember exactly.',

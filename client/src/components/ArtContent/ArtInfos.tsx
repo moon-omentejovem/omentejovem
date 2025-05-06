@@ -93,8 +93,8 @@ export function ArtInfos({
     '0x0000000000000000000000000000000000000000'
       ? ``
       : selectedArt.chain?.toLowerCase() === 'tezos'
-        ? `https://objkt.com/asset/${selectedArt.contract.address}/${selectedArt.token_id}`
-        : `https://opensea.io/assets/${selectedArt.chain?.toLowerCase()}/${selectedArt.contract.address}/${selectedArt.token_id}`
+        ? `https://objkt.com/asset/${selectedArt.contract.address}/${selectedArt.tokenId}`
+        : `https://opensea.io/assets/${selectedArt.chain?.toLowerCase()}/${selectedArt.contract.address}/${selectedArt.tokenId}`
 
   let secondaryExternalLinkName = ''
   let secondaryExternalLinkUrl = ''
@@ -112,7 +112,7 @@ export function ArtInfos({
     )
   ) {
     externalLinkName = 'SuperRare'
-    externalLinkUrl = `https://superrare.co/artwork/eth/${selectedArt.contract.address}/${selectedArt.token_id}`
+    externalLinkUrl = `https://superrare.co/artwork/eth/${selectedArt.contract.address}/${selectedArt.tokenId}`
   }
 
   if (
@@ -136,7 +136,7 @@ export function ArtInfos({
   if (
     selectedArt.contract.address.toLowerCase() ===
       '0x495f947276749ce646f68ac8c248420045cb7b5e' &&
-    selectedArt.token_id ===
+    selectedArt.tokenId ===
       '7871549583317194720263843996823387702908660152655034722079186002726342361098'
   ) {
     externalLinkName = 'OpenSea'
@@ -147,16 +147,16 @@ export function ArtInfos({
 
   if (
     OVERRIDE_EXTERNAL_LINKS[
-      `${selectedArt.contract.address.toLowerCase()}:${selectedArt.token_id}`
+      `${selectedArt.contract.address.toLowerCase()}:${selectedArt.tokenId}`
     ]
   ) {
     externalLinkName =
       OVERRIDE_EXTERNAL_LINKS[
-        `${selectedArt.contract.address.toLowerCase()}:${selectedArt.token_id}`
+        `${selectedArt.contract.address.toLowerCase()}:${selectedArt.tokenId}`
       ].name
     externalLinkUrl =
       OVERRIDE_EXTERNAL_LINKS[
-        `${selectedArt.contract.address.toLowerCase()}:${selectedArt.token_id}`
+        `${selectedArt.contract.address.toLowerCase()}:${selectedArt.tokenId}`
       ].link
   }
 
@@ -170,7 +170,7 @@ export function ArtInfos({
   if (
     selectedArt.contract.address.toLowerCase() ===
       '0x495f947276749ce646f68ac8c248420045cb7b5e' &&
-    selectedArt.token_id ===
+    selectedArt.tokenId ===
       '7871549583317194720263843996823387702908660152655034722079186002726342361098'
   ) {
     mintedOn = '1 November, 2021'
@@ -297,8 +297,8 @@ export function ArtInfos({
                     views={{
                       explorer:
                         selectedArt.chain?.toLowerCase() === 'tezos'
-                          ? `https://tzkt.io/${selectedArt.contract.address}/tokens/${selectedArt.token_id}`
-                          : `https://etherscan.io/token/${selectedArt.contract.address}?a=${selectedArt.token_id}`
+                          ? `https://tzkt.io/${selectedArt.contract.address}/tokens/${selectedArt.tokenId}`
+                          : `https://etherscan.io/token/${selectedArt.contract.address}?a=${selectedArt.tokenId}`
                     }}
                   />
                 </div>

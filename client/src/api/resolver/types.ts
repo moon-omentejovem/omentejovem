@@ -222,7 +222,7 @@ export interface NFT {
     isSpam: boolean
     spamClassifications: any[]
   }
-  token_id: string
+  tokenId: string
   tokenType: string
   name?: string
   description?: string

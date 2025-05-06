@@ -14,7 +14,7 @@ export default async function Portfolio() {
     if (
       art.contract.address.toLocaleLowerCase() ===
         '0x28a6f816eae721fea4ad34c000077b5fe525fc3c' &&
-      art.token_id === '6'
+      art.tokenId === '6'
     ) {
       extraOwnershipData = art.owners
       extraOwnershipQuantity = art.owners.length
@@ -28,7 +28,7 @@ export default async function Portfolio() {
     if (
       filteredNFTs[i].contract.address.toLocaleLowerCase() ===
         '0x495f947276749ce646f68ac8c248420045cb7b5e' &&
-      filteredNFTs[i].token_id ===
+      filteredNFTs[i].tokenId ===
         '7871549583317194720263843996823387702908660152655034722079186002726342361098'
     ) {
       filteredNFTs[i].owners = [
