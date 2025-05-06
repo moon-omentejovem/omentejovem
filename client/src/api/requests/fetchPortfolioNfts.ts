@@ -98,5 +98,12 @@ export async function fetchPortfolioNfts() {
     return nft
   })
 
+  // Add the chain to the nft
+  ALL_DATA.nfts = ALL_DATA.nfts.map((nft) => {
+    // @ts-ignore
+    nft.chain = nft.contract.address.startsWith('KT') ? 'tezos' : 'ethereum'
+    return nft
+  })
+
   return ALL_DATA
 }

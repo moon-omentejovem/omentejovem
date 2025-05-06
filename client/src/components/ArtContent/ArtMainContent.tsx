@@ -30,7 +30,7 @@ export function ArtMainContent({
   const [page, setPage] = useState(1)
   const [loading, setLoading] = useState(false)
 
-  // console.log('!!!', artImages)
+  console.log('!!!', artImages)
 
   function onRedirect(index: number): void {
     onChangeSelectedArtIndex(index)

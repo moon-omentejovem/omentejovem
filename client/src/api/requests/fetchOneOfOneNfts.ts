@@ -76,5 +76,12 @@ export async function fetchOneOfOneNfts() {
     return nft.contract.tokenType === 'ERC721'
   })
 
+  // Add the chain to the nft
+  ALL_DATA.nfts = ALL_DATA.nfts.map((nft) => {
+    // @ts-ignore
+    nft.chain = nft.contract.address.startsWith('KT') ? 'tezos' : 'ethereum'
+    return nft
+  })
+
   return ALL_DATA
 }
