@@ -157,10 +157,12 @@ export function ArtInfos({
       ].link
   }
 
-  let mintedOn = format(
-    addHours(selectedArt.mint.timestamp || new Date(), 3),
-    'd LLLL, yyyy'
-  )
+  let mintedOn = selectedArt.mint.timestamp
+    ? format(
+        addHours(selectedArt.mint.timestamp || new Date(), 3),
+        'd LLLL, yyyy'
+      )
+    : ''
 
   if (
     selectedArt.contract.address.toLowerCase() ===
@@ -242,7 +244,7 @@ export function ArtInfos({
                 <p className="text-primary-50 underline mt-4">
                   {selectedArt.name}
                 </p>
-                <p>minted on {mintedOn}</p>
+                {mintedOn && <p>minted on {mintedOn}</p>}
               </div>
             </div>
 
@@ -288,7 +290,7 @@ export function ArtInfos({
                   />
                 </div>
 
-                <ArtOwnership
+                {/* <ArtOwnership
                   nftChain={selectedArt.chain?.toLowerCase() as Chain}
                   artAddress={getNftLinks(
                     selectedArt.contract.address,
@@ -302,7 +304,7 @@ export function ArtInfos({
                   firstEvent={selectedArt.mint}
                   lastEvent={selectedArt.mint}
                   source={source}
-                />
+                /> */}
               </div>
             </div>
           </div>
