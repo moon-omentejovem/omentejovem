@@ -152,7 +152,7 @@ export const FAKE_TOKENS: NFT[] = [
     mint: {
       mintAddress: null,
       blockNumber: null,
-      timestamp: '2025-04-30T12:00:00.000Z`',
+      timestamp: '2025-04-30T12:00:00.000Z',
       transactionHash: null
     },
     owners: null,
