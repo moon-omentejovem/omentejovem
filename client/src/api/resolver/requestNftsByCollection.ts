@@ -69,7 +69,7 @@ export async function requestNftsByCollection(
         token_id: '1',
         tokenType: 'ERC721',
         name: 'Sitting at the Edge',
-        description: 'Stories on Circles Collection',
+        description: 'In the middle of the seen and unseen.',
         tokenUri: '',
         image: {
           cachedUrl: '/new_series/1_Sitting_at_the_Edge.jpg',
@@ -86,7 +86,7 @@ export async function requestNftsByCollection(
             createdBy: '',
             yearCreated: '2024',
             name: 'Sitting at the Edge',
-            description: 'Stories on Circles Collection',
+            description: 'In the middle of the seen and unseen.',
             media: null,
             tags: []
           },
@@ -137,7 +137,7 @@ export async function requestNftsByCollection(
         token_id: '2',
         tokenType: 'ERC721',
         name: 'Two Voices, One Circle',
-        description: 'Stories on Circles Collection',
+        description: 'One speaks, the other feels.',
         tokenUri: '',
         image: {
           cachedUrl: '/new_series/2_Two_Voices,_One_Circle.jpg',
@@ -154,7 +154,7 @@ export async function requestNftsByCollection(
             createdBy: '',
             yearCreated: '2024',
             name: 'Two Voices, One Circle',
-            description: 'Stories on Circles Collection',
+            description: 'One speaks, the other feels.',
             media: null,
             tags: []
           },
@@ -205,7 +205,8 @@ export async function requestNftsByCollection(
         token_id: '3',
         tokenType: 'ERC721',
         name: 'The Ground Was My Teacher',
-        description: 'Stories on Circles Collection',
+        description: `I enjoyed playing with kites in my childhood. Fun fact, most of them didn't even get to fly. I ended up hurting my knee hundreds of times as the kites still got destroyed. Thankfully I could craft other toys with their sticks and strings.
+Ironically, i feel that’s still the life i live.`,
         tokenUri: '',
         image: {
           cachedUrl: '/new_series/3_The_Ground_Was_My_Teacher.jpg',
@@ -222,7 +223,8 @@ export async function requestNftsByCollection(
             createdBy: '',
             yearCreated: '2024',
             name: 'The Ground Was My Teacher',
-            description: 'Stories on Circles Collection',
+            description: `I enjoyed playing with kites in my childhood. Fun fact, most of them didn't even get to fly. I ended up hurting my knee hundreds of times as the kites still got destroyed. Thankfully I could craft other toys with their sticks and strings.
+Ironically, i feel that’s still the life i live.`,
             media: null,
             tags: []
           },
@@ -273,7 +275,7 @@ export async function requestNftsByCollection(
         token_id: '4',
         tokenType: 'ERC721',
         name: 'I Had Dreams About You',
-        description: 'Stories on Circles Collection',
+        description: 'I wish I could remember exactly.',
         tokenUri: '',
         image: {
           cachedUrl: '/new_series/4_I_Had_Dreams_About_You.jpg',
@@ -290,7 +292,7 @@ export async function requestNftsByCollection(
             createdBy: '',
             yearCreated: '2024',
             name: 'I Had Dreams About You',
-            description: 'Stories on Circles Collection',
+            description: 'I wish I could remember exactly.',
             media: null,
             tags: []
           },
