@@ -89,32 +89,34 @@ export function ArtLinks({
         </OfferModal>
       )}
 
-      {externalLinks?.map((externalLink, index) => (
-        <div
-          key={index}
-          className={cn(
-            'flex justify-between items-center border-t-[1px] border-secondary-100 text-sm h-16 px-4 font-bold',
-            'sm:px-8 last:border-b-[1px]'
-          )}
-        >
-          <a
-            href={externalLink.url}
-            target="_blank"
-            rel="noreferrer"
-            className="text-secondary-100 hover:text-primary-50"
+      {externalLinks
+        ?.filter((externalLink) => externalLink.url)
+        .map((externalLink, index) => (
+          <div
+            key={index}
+            className={cn(
+              'flex justify-between items-center border-t-[1px] border-secondary-100 text-sm h-16 px-4 font-bold',
+              'sm:px-8 last:border-b-[1px]'
+            )}
           >
-            VIEW ON {externalLink.name.toUpperCase()}
-          </a>
-          <a
-            href={views['explorer']}
-            target="_blank"
-            rel="noreferrer"
-            className="text-secondary-100 hover:text-primary-50"
-          >
-            <CustomIcons.ArrowUpRight />
-          </a>
-        </div>
-      ))}
+            <a
+              href={externalLink.url}
+              target="_blank"
+              rel="noreferrer"
+              className="text-secondary-100 hover:text-primary-50"
+            >
+              VIEW ON {externalLink.name.toUpperCase()}
+            </a>
+            <a
+              href={views['explorer']}
+              target="_blank"
+              rel="noreferrer"
+              className="text-secondary-100 hover:text-primary-50"
+            >
+              <CustomIcons.ArrowUpRight />
+            </a>
+          </div>
+        ))}
     </div>
   )
 }

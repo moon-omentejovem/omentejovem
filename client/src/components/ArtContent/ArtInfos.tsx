@@ -89,9 +89,12 @@ export function ArtInfos({
   let externalLinkName =
     selectedArt.chain?.toLowerCase() === 'tezos' ? 'Objkt' : 'OpenSea'
   let externalLinkUrl =
-    selectedArt.chain?.toLowerCase() === 'tezos'
-      ? `https://objkt.com/asset/${selectedArt.contract.address}/${selectedArt.token_id}`
-      : `https://opensea.io/assets/${selectedArt.chain?.toLowerCase()}/${selectedArt.contract.address}/${selectedArt.token_id}`
+    selectedArt.contract.address ===
+    '0x0000000000000000000000000000000000000000'
+      ? ``
+      : selectedArt.chain?.toLowerCase() === 'tezos'
+        ? `https://objkt.com/asset/${selectedArt.contract.address}/${selectedArt.token_id}`
+        : `https://opensea.io/assets/${selectedArt.chain?.toLowerCase()}/${selectedArt.contract.address}/${selectedArt.token_id}`
 
   let secondaryExternalLinkName = ''
   let secondaryExternalLinkUrl = ''
