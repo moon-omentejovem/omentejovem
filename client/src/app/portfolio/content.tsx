@@ -14,6 +14,8 @@ export default function PortfolioContent(): ReactElement {
     onChangeSelectedArtIndex
   } = usePortfolioContext()
 
+  console.log('!!!!', artImages)
+
   return (
     <ArtMainContent
       email={email}

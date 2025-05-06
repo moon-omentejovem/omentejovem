@@ -54,7 +54,7 @@ export function ArtMainContent({
           loading={loading}
           slides={artImages?.map((art) => ({
             name: art.name || '',
-            nftCompressedHdUrl: art.image.pngUrl || ''
+            nftCompressedHdUrl: art.image.pngUrl || art.image.cachedUrl || ''
           }))}
           redirectSource={source}
           onRedirect={onRedirect}
