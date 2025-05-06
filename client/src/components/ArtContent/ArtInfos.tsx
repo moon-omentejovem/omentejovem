@@ -312,21 +312,23 @@ export function ArtInfos({
             </div>
           </div>
 
-          <button
-            aria-label="Open art infos"
-            className="group relative flex items-center justify-center w-10 h-10" // Fixed width and height
-            onClick={() => {
-              setShowDetails(!showDetails)
-              artInfoButtonAnimation()
-            }}
-            disabled={isAnimating}
-          >
-            <CustomIcons.Plus
-              className={cn(
-                'art-info-button w-6 h-6 transition-all text-secondary-100 group-hover:text-primary-50' // Set size for the SVG
-              )}
-            />
-          </button>
+          {externalLinkUrl && (
+            <button
+              aria-label="Open art infos"
+              className="group relative flex items-center justify-center w-10 h-10" // Fixed width and height
+              onClick={() => {
+                setShowDetails(!showDetails)
+                artInfoButtonAnimation()
+              }}
+              disabled={isAnimating}
+            >
+              <CustomIcons.Plus
+                className={cn(
+                  'art-info-button w-6 h-6 transition-all text-secondary-100 group-hover:text-primary-50' // Set size for the SVG
+                )}
+              />
+            </button>
+          )}
         </div>
       ) : (
         <div className="flex flex-col w-full max-w-sm justify-end text-sm text-secondary-100 h-full">
