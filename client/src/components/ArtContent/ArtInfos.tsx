@@ -112,7 +112,7 @@ export function ArtInfos({
     )
   ) {
     externalLinkName = 'SuperRare'
-    externalLinkUrl = `https://superrare.co/artwork/eth/${selectedArt.contract.address}/${selectedArt.tokenId}`
+    externalLinkUrl = `https://superrare.com/artwork/eth/${selectedArt.contract.address}/${selectedArt.tokenId}`
   }
 
   if (

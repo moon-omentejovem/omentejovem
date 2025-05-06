@@ -36,7 +36,8 @@
     "split-type": "0.3.4",
     "swiper": "^11.0.6",
     "tailwind-merge": "2.2.0",
-    "uuid": "9.0.1"
+    "uuid": "9.0.1",
+    "viem": "^2.29.0"
   },
   "devDependencies": {
     "@types/js-cookie": "^3.0.6",
