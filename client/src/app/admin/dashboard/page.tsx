@@ -29,6 +29,16 @@ export default function AdminDashboard() {
   const [sortField, setSortField] = useState<keyof MintData>('mintDate')
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc')
   const [searchTerm, setSearchTerm] = useState('')
+  const [isAddingNew, setIsAddingNew] = useState(false)
+  const [newEntry, setNewEntry] = useState<Partial<MintData>>({
+    contractAddress: '',
+    tokenId: '',
+    mintDate: new Date().toISOString(),
+    imageUrl: null
+  })
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState<string | null>(null)
+  const [deletingId, setDeletingId] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchMintData = async () => {
@@ -86,6 +96,81 @@ export default function AdminDashboard() {
     return null
   }
 
+  const handleDelete = async (contractAddress: string, tokenId: string) => {
+    if (!confirm('Are you sure you want to delete this entry?')) {
+      return
+    }
+
+    setDeletingId(`${contractAddress}-${tokenId}`)
+    setError(null)
+    setSuccess(null)
+
+    try {
+      const response = await fetch('/api/admin/delete-mint-date', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ contractAddress, tokenId }),
+      })
+
+      if (!response.ok) {
+        const data = await response.json()
+        throw new Error(data.error || 'Failed to delete entry')
+      }
+
+      setSuccess('Entry deleted successfully')
+      
+      // Refresh the data
+      const updatedResponse = await fetch('/mint-dates.json')
+      const updatedData = await updatedResponse.json()
+      const validData = updatedData.filter((item: MintData | null) => item !== null)
+      setMintData(validData)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred')
+    } finally {
+      setDeletingId(null)
+    }
+  }
+
+  const handleAddNew = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError(null)
+    setSuccess(null)
+
+    try {
+      const response = await fetch('/api/admin/update-mint-dates', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newEntry),
+      })
+
+      if (!response.ok) {
+        const data = await response.json()
+        throw new Error(data.error || 'Failed to add new entry')
+      }
+
+      setSuccess('Entry added successfully')
+      setIsAddingNew(false)
+      setNewEntry({
+        contractAddress: '',
+        tokenId: '',
+        mintDate: new Date().toISOString(),
+        imageUrl: null
+      })
+      
+      // Refresh the data
+      const updatedResponse = await fetch('/mint-dates.json')
+      const updatedData = await updatedResponse.json()
+      const validData = updatedData.filter((item: MintData | null) => item !== null)
+      setMintData(validData)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred')
+    }
+  }
+
   const filteredAndSortedData = mintData
     .filter(item => 
       item.contractAddress.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -109,13 +194,96 @@ export default function AdminDashboard() {
     <div className="p-8">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-        <button
-          onClick={handleLogout}
-          className="bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 transition-colors"
-        >
-          Logout
-        </button>
+        <div className="space-x-4">
+          <button
+            onClick={() => setIsAddingNew(!isAddingNew)}
+            className="bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 transition-colors"
+          >
+            {isAddingNew ? 'Cancel' : 'Add New Entry'}
+          </button>
+          <button
+            onClick={handleLogout}
+            className="bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 transition-colors"
+          >
+            Logout
+          </button>
+        </div>
       </div>
+
+      {isAddingNew && (
+        <div className="bg-white p-6 rounded-lg shadow-md mb-6">
+          <h2 className="text-xl font-semibold mb-4">Add New Entry</h2>
+          <form onSubmit={handleAddNew} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="contractAddress" className="block text-sm font-medium text-gray-700 mb-1">
+                  Contract Address
+                </label>
+                <input
+                  type="text"
+                  id="contractAddress"
+                  value={newEntry.contractAddress}
+                  onChange={(e) => setNewEntry({ ...newEntry, contractAddress: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="tokenId" className="block text-sm font-medium text-gray-700 mb-1">
+                  Token ID
+                </label>
+                <input
+                  type="text"
+                  id="tokenId"
+                  value={newEntry.tokenId}
+                  onChange={(e) => setNewEntry({ ...newEntry, tokenId: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="mintDate" className="block text-sm font-medium text-gray-700 mb-1">
+                  Mint Date
+                </label>
+                <input
+                  type="datetime-local"
+                  id="mintDate"
+                  value={newEntry.mintDate?.slice(0, 16)}
+                  onChange={(e) => setNewEntry({ ...newEntry, mintDate: new Date(e.target.value).toISOString() })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="imageUrl" className="block text-sm font-medium text-gray-700 mb-1">
+                  Optimized Image URL (optional)
+                </label>
+                <input
+                  type="url"
+                  id="imageUrl"
+                  value={newEntry.imageUrl || ''}
+                  onChange={(e) => setNewEntry({ ...newEntry, imageUrl: e.target.value || null })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
+                />
+              </div>
+            </div>
+            {error && (
+              <p className="text-red-500 text-sm">{error}</p>
+            )}
+            {success && (
+              <p className="text-green-500 text-sm">{success}</p>
+            )}
+            <div className="flex justify-end">
+              <button
+                type="submit"
+                className="bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800 transition-colors"
+              >
+                Save Entry
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
 
       <div className="bg-white p-6 rounded-lg shadow-md">
         <div className="mb-6">
@@ -168,13 +336,17 @@ export default function AdminDashboard() {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Platform
                   </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {filteredAndSortedData.map((item, index) => {
                   const platform = getPlatform(item.contractAddress)
+                  const itemId = `${item.contractAddress}-${item.tokenId}`
                   return (
-                    <tr key={`${item.contractAddress}-${item.tokenId}-${index}`} className="hover:bg-gray-50">
+                    <tr key={itemId} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-mono">
                         {item.contractAddress}
                       </td>
@@ -204,6 +376,25 @@ export default function AdminDashboard() {
                             {platform}
                           </span>
                         )}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        <button
+                          onClick={() => handleDelete(item.contractAddress, item.tokenId)}
+                          disabled={deletingId === itemId}
+                          className="text-red-600 hover:text-red-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                          title="Delete entry"
+                        >
+                          {deletingId === itemId ? (
+                            <svg className="w-5 h-5 animate-spin" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                            </svg>
+                          ) : (
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          )}
+                        </button>
                       </td>
                     </tr>
                   )
