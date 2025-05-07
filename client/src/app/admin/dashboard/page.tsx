@@ -10,6 +10,18 @@ interface MintData {
   imageUrl: string | null
 }
 
+const PLATFORM_CONTRACTS = {
+  SUPERRARE: '0xb932a70a57673d89f4acffbe830e8ed7f75fb9e0',
+  POAP: '0x22c1f6050e56d2876009903609a2cc3fef83b415',
+  RARIBLE: '0x60f80121c31a0d46b5279700f9df786054aa5ee5'
+} as const
+
+const PLATFORM_STYLES = {
+  SUPERRARE: 'bg-purple-100 text-purple-800',
+  POAP: 'bg-green-100 text-green-800',
+  RARIBLE: 'bg-blue-100 text-blue-800'
+} as const
+
 export default function AdminDashboard() {
   const router = useRouter()
   const [mintData, setMintData] = useState<MintData[]>([])
@@ -64,6 +76,14 @@ export default function AdminDashboard() {
       hour: '2-digit',
       minute: '2-digit'
     })
+  }
+
+  const getPlatform = (contractAddress: string) => {
+    const address = contractAddress.toLowerCase()
+    if (address === PLATFORM_CONTRACTS.SUPERRARE.toLowerCase()) return 'SUPERRARE'
+    if (address === PLATFORM_CONTRACTS.POAP.toLowerCase()) return 'POAP'
+    if (address === PLATFORM_CONTRACTS.RARIBLE.toLowerCase()) return 'RARIBLE'
+    return null
   }
 
   const filteredAndSortedData = mintData
@@ -145,36 +165,49 @@ export default function AdminDashboard() {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Optimized Image
                   </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Platform
+                  </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {filteredAndSortedData.map((item, index) => (
-                  <tr key={`${item.contractAddress}-${item.tokenId}-${index}`} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-mono">
-                      {item.contractAddress}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm">
-                      {item.tokenId}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm">
-                      {formatDate(item.mintDate)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm">
-                      {item.imageUrl ? (
-                        <a 
-                          href={item.imageUrl} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="text-blue-600 hover:text-blue-800"
-                        >
-                          View Image
-                        </a>
-                      ) : (
-                        <span className="text-gray-400">No optimized image (will use full-res)</span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
+                {filteredAndSortedData.map((item, index) => {
+                  const platform = getPlatform(item.contractAddress)
+                  return (
+                    <tr key={`${item.contractAddress}-${item.tokenId}-${index}`} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-mono">
+                        {item.contractAddress}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        {item.tokenId}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        {formatDate(item.mintDate)}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        {item.imageUrl ? (
+                          <a 
+                            href={item.imageUrl} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:text-blue-800"
+                          >
+                            View Image
+                          </a>
+                        ) : (
+                          <span className="text-gray-400">No optimized image (will use full-res)</span>
+                        )}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        {platform && (
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${PLATFORM_STYLES[platform]}`}>
+                            {platform}
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
           </div>
