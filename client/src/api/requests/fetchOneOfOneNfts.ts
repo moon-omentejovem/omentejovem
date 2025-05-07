@@ -3,7 +3,11 @@
 import { api } from '../client'
 import { NFT } from '../resolver/types'
 import fetch from 'node-fetch'
-import { ALL_NFTS } from '@/utils/constants'
+import {
+  ALL_NFTS,
+  FAKE_TOKENS,
+  STORIES_ON_CIRCLES_COLLECTION_ADDRESS
+} from '@/utils/constants'
 import mintDates from '../../../public/mint-dates.json'
 
 interface MintDate {
@@ -39,11 +43,11 @@ export async function fetchOneOfOneNfts() {
   })
 
   const jsonData = (await data.json()) as { nfts: NFT[] }
-  ALL_DATA.nfts = jsonData.nfts
+  ALL_DATA.nfts = [...jsonData.nfts, ...FAKE_TOKENS]
 
   // Order by mint date newest first
   ALL_DATA.nfts.sort((a, b) => {
-    const aMintDate = mintDates.find(
+    let aMintDate = mintDates.find(
       (mint: MintDate | null) =>
         mint &&
         mint.contractAddress.toLowerCase() ===
@@ -51,13 +55,22 @@ export async function fetchOneOfOneNfts() {
         mint.tokenId === a.tokenId
     )?.mintDate
 
-    const bMintDate = mintDates.find(
+    let bMintDate = mintDates.find(
       (mint: MintDate | null) =>
         mint &&
         mint.contractAddress.toLowerCase() ===
           b.contract.address.toLowerCase() &&
         mint.tokenId === b.tokenId
     )?.mintDate
+
+    // If it is the fake tokens then get the date from mint.timestamp
+    if (a.contract.address === STORIES_ON_CIRCLES_COLLECTION_ADDRESS) {
+      aMintDate = a.mint.timestamp || ''
+    }
+
+    if (b.contract.address === STORIES_ON_CIRCLES_COLLECTION_ADDRESS) {
+      bMintDate = b.mint.timestamp || ''
+    }
 
     if (!aMintDate) return 1
     if (!bMintDate) return -1
