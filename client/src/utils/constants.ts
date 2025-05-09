@@ -363,6 +363,74 @@ Ironically, i feel that’s still the life i live.`,
     },
     owners: null,
     timeLastUpdated: new Date().toISOString()
+  },
+  {
+    nft_id: `${STORIES_ON_CIRCLES_COLLECTION_ADDRESS}:6`,
+    chain: 'ethereum',
+    contract: {
+      address: STORIES_ON_CIRCLES_COLLECTION_ADDRESS,
+      name: 'Stories on Circles',
+      symbol: 'SOC',
+      totalSupply: '6',
+      tokenType: 'ERC721',
+      contractDeployer: STORIES_ON_CIRCLES_COLLECTION_ADDRESS,
+      deployedBlockNumber: 1,
+      openSeaMetadata: {
+        floorPrice: 0,
+        collectionName: 'Stories on Circles',
+        collectionSlug: STORIES_ON_CIRCLES_SLUG,
+        safelistRequestStatus: 'verified',
+        imageUrl: '/new_series/4_I_Had_Dreams_About_You.jpg',
+        description: 'Stories on Circles Collection',
+        externalUrl: null,
+        twitterUsername: '',
+        discordUrl: '',
+        bannerImageUrl: '',
+        lastIngestedAt: new Date().toISOString()
+      },
+      isSpam: false,
+      spamClassifications: []
+    },
+    tokenId: '6',
+    tokenType: 'ERC721',
+    name: 'Playing Chess with Love',
+    description: `I held my heart like a king behind pawns, hoping the game would not end in loss.`,
+    tokenUri: '',
+    image: {
+      cachedUrl: '/new_series/5_Mapping_the_Unseen.jpg',
+      thumbnailUrl: '/new_series/5_Mapping_the_Unseen.jpg',
+      pngUrl: '/new_series/5_Mapping_the_Unseen.jpg',
+      contentType: 'image/jpeg',
+      size: 0,
+      originalUrl: '/new_series/5_Mapping_the_Unseen.jpg'
+    },
+    raw: {
+      tokenUri: '',
+      metadata: {
+        image: '/new_series/5_Mapping_the_Unseen.jpg',
+        createdBy: '',
+        yearCreated: '2024',
+        name: 'Playing Chess with Love',
+        description: `I held my heart like a king behind pawns, hoping the game would not end in loss.`,
+        media: null,
+        tags: []
+      },
+      error: null
+    },
+    collection: {
+      name: 'Stories on Circles',
+      slug: STORIES_ON_CIRCLES_SLUG,
+      externalUrl: null,
+      bannerImageUrl: ''
+    },
+    mint: {
+      mintAddress: null,
+      blockNumber: null,
+      timestamp: '2025-05-09T12:00:00.000Z',
+      transactionHash: null
+    },
+    owners: null,
+    timeLastUpdated: new Date().toISOString()
   }
 ]
 
