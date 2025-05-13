@@ -22,6 +22,8 @@ export async function fetchPortfolioNfts() {
   // Get the NFTs array first
   let nfts = await ALL_NFTS()
 
+  console.log('nfts', nfts)
+
   const formattedQuery = nfts
     .filter((nft: unknown) => typeof nft === 'string' && !nft.startsWith('KT'))
     .map((nft: string) => {

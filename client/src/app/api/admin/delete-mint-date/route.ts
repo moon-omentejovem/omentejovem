@@ -24,7 +24,7 @@ export async function POST(request: Request) {
 
     // Get the current mint-dates.json content
     const currentMintDatesResponse = await fetch(
-      `https://api.github.com/repos/${GITHUB_REPO}/contents/public/mint-dates.json`,
+      `https://api.github.com/repos/${GITHUB_REPO}/contents/client/public/mint-dates.json`,
       {
         headers: {
           Authorization: `token ${GITHUB_TOKEN}`,
@@ -56,7 +56,7 @@ export async function POST(request: Request) {
 
     // Get the current nfts.json content
     const currentNftsResponse = await fetch(
-      `https://api.github.com/repos/${GITHUB_REPO}/contents/public/nfts.json`,
+      `https://api.github.com/repos/${GITHUB_REPO}/contents/client/public/nfts.json`,
       {
         headers: {
           Authorization: `token ${GITHUB_TOKEN}`,
@@ -84,7 +84,7 @@ export async function POST(request: Request) {
 
     // Update mint-dates.json
     const updateMintDatesResponse = await fetch(
-      `https://api.github.com/repos/${GITHUB_REPO}/contents/public/mint-dates.json`,
+      `https://api.github.com/repos/${GITHUB_REPO}/contents/client/public/mint-dates.json`,
       {
         method: 'PUT',
         headers: {
@@ -109,7 +109,7 @@ export async function POST(request: Request) {
 
     // Update nfts.json
     const updateNftsResponse = await fetch(
-      `https://api.github.com/repos/${GITHUB_REPO}/contents/public/nfts.json`,
+      `https://api.github.com/repos/${GITHUB_REPO}/contents/client/public/nfts.json`,
       {
         method: 'PUT',
         headers: {
