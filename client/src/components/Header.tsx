@@ -70,7 +70,7 @@ export function Header() {
             key={index}
             href={tab.link}
             onClick={() => {
-              if (`/${segment}` === tab.link && segment !== 'collections') {
+              if (`/${segment}` === tab.link && segment !== 'series') {
                 window.location.reload()
               }
             }}
