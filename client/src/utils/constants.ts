@@ -503,9 +503,16 @@ Ironically, i feel that's still the life i live.`,
 ]
 
 export const ALL_NFTS = async () => {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/nfts.json`)
-  const data = await response.json()
-  return data.nfts
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/nfts.json`
+    )
+    const data = await response.json()
+    return data.nfts
+  } catch (error) {
+    console.error('Error fetching NFTs:', error)
+    return []
+  }
 }
 
 export const MANIFOLD_NFTS = [
