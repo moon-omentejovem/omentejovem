@@ -1,5 +1,6 @@
 import { EditionsContentProvider } from './provider'
 import { fetchEditionNfts } from '@/api/requests'
+import { NFT } from '@/api/resolver/types'
 import filters from '@/components/ArtFilter/filters'
 
 export default async function Editions() {
@@ -23,7 +24,7 @@ export default async function Editions() {
   let extraOwnershipQuantity = 0
 
   // Filter out '0x28a6f816eae721fea4ad34c000077b5fe525fc3c:6'
-  const filteredNFTs = _images.nfts.filter((art) => {
+  const filteredNFTs = _images.nfts.filter((art: NFT) => {
     if (!art || !art.contract || !art.contract.address) return true
 
     if (
