@@ -36,7 +36,7 @@ export async function POST(request: Request) {
     )
 
     if (!currentContentResponse.ok) {
-      throw new Error('Failed to fetch current file content')
+      throw new Error('Failed to fetch current file content.')
     }
 
     const { content, sha } = await currentContentResponse.json()
