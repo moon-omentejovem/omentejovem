@@ -19,16 +19,19 @@ interface MintDate {
 export async function fetchPortfolioNfts() {
   let ALL_DATA: { nfts: NFT[] } = { nfts: [] }
 
-  const formattedQuery = ALL_NFTS.filter((nft) => !nft.startsWith('KT')).map(
-    (nft) => {
+  // Get the NFTs array first
+  const nfts = await ALL_NFTS()
+
+  const formattedQuery = nfts
+    .filter((nft: unknown) => typeof nft === 'string' && !nft.startsWith('KT'))
+    .map((nft: string) => {
       const tokenAddress = nft.split(':')[0]
       const tokenId = nft.split(':')[1]
       return {
         contractAddress: `${tokenAddress}`,
         tokenId: tokenId
       }
-    }
-  )
+    })
 
   const data = await fetch(`${api.baseURL}`, {
     method: 'POST',

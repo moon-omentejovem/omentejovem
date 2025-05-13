@@ -503,7 +503,7 @@ Ironically, i feel that's still the life i live.`,
 ]
 
 export const ALL_NFTS = async () => {
-  const response = await fetch('/nfts.json')
+  const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/nfts.json`)
   const data = await response.json()
   return data.nfts
 }
