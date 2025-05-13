@@ -24,16 +24,20 @@ export async function POST(request: Request) {
       )
     }
 
+    console.log('hi', GITHUB_REPO, GITHUB_BRANCH)
+
     // Get the current file content
     const currentContentResponse = await fetch(
-      `https://api.github.com/repos/${GITHUB_REPO}/contents/public/mint-dates.json`,
+      `https://api.github.com/repos/${GITHUB_REPO}/contents/client/public/mint-dates.json`,
       {
         headers: {
-          'Authorization': `token ${GITHUB_TOKEN}`,
-          'Accept': 'application/vnd.github.v3+json'
+          Authorization: `token ${GITHUB_TOKEN}`,
+          Accept: 'application/vnd.github.v3+json'
         }
       }
     )
+
+    console.log('currentContentResponse', currentContentResponse)
 
     if (!currentContentResponse.ok) {
       throw new Error('Failed to fetch current file content')
@@ -47,17 +51,19 @@ export async function POST(request: Request) {
 
     // Update the file
     const updateResponse = await fetch(
-      `https://api.github.com/repos/${GITHUB_REPO}/contents/public/mint-dates.json`,
+      `https://api.github.com/repos/${GITHUB_REPO}/contents/client/public/mint-dates.json`,
       {
         method: 'PUT',
         headers: {
-          'Authorization': `token ${GITHUB_TOKEN}`,
-          'Accept': 'application/vnd.github.v3+json',
+          Authorization: `token ${GITHUB_TOKEN}`,
+          Accept: 'application/vnd.github.v3+json',
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           message: 'Update mint-dates.json',
-          content: Buffer.from(JSON.stringify(currentContent, null, 2)).toString('base64'),
+          content: Buffer.from(
+            JSON.stringify(currentContent, null, 2)
+          ).toString('base64'),
           sha,
           branch: GITHUB_BRANCH
         })
@@ -76,4 +82,4 @@ export async function POST(request: Request) {
       { status: 500 }
     )
   }
-} 
+}
