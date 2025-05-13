@@ -24,8 +24,6 @@ export async function POST(request: Request) {
       )
     }
 
-    console.log('hi', GITHUB_REPO, GITHUB_BRANCH)
-
     // Get the current file content
     const currentContentResponse = await fetch(
       `https://api.github.com/repos/${GITHUB_REPO}/contents/client/public/mint-dates.json`,
@@ -36,8 +34,6 @@ export async function POST(request: Request) {
         }
       }
     )
-
-    console.log('currentContentResponse', currentContentResponse)
 
     if (!currentContentResponse.ok) {
       throw new Error('Failed to fetch current file content')
