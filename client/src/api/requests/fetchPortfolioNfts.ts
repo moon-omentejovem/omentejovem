@@ -20,7 +20,7 @@ export async function fetchPortfolioNfts() {
   let ALL_DATA: { nfts: NFT[] } = { nfts: [] }
 
   // Get the NFTs array first
-  const nfts = await ALL_NFTS()
+  let nfts = await ALL_NFTS()
 
   const formattedQuery = nfts
     .filter((nft: unknown) => typeof nft === 'string' && !nft.startsWith('KT'))
@@ -46,10 +46,10 @@ export async function fetchPortfolioNfts() {
   })
 
   const jsonData = (await data.json()) as { nfts: NFT[] }
-  ALL_DATA.nfts = [...jsonData.nfts, ...FAKE_TOKENS]
+  nfts = [...jsonData.nfts, ...FAKE_TOKENS]
 
   // Order by mint date newest first
-  ALL_DATA.nfts.sort((a, b) => {
+  nfts.sort((a: NFT, b: NFT) => {
     let aMintDate = mintDates.find(
       (mint: MintDate | null) =>
         mint &&
@@ -85,7 +85,7 @@ export async function fetchPortfolioNfts() {
   })
 
   // Add the display URL if it's in the mintDates
-  ALL_DATA.nfts = ALL_DATA.nfts.map((nft) => {
+  nfts = nfts.map((nft: NFT) => {
     const mintDate = mintDates.find(
       (mint: MintDate | null) =>
         mint &&
@@ -102,11 +102,11 @@ export async function fetchPortfolioNfts() {
   })
 
   // Add the chain to the nft
-  ALL_DATA.nfts = ALL_DATA.nfts.map((nft) => {
+  nfts = nfts.map((nft: NFT) => {
     // @ts-ignore
     nft.chain = nft.contract.address.startsWith('KT') ? 'tezos' : 'ethereum'
     return nft
   })
 
-  return ALL_DATA
+  return { nfts }
 }

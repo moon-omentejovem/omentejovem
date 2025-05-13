@@ -17,7 +17,7 @@ export async function fetchEditionNfts() {
     let ALL_DATA: { nfts: NFT[] } = { nfts: [] }
 
     // Get the NFTs array first
-    const nfts = await ALL_NFTS()
+    let nfts = await ALL_NFTS()
 
     const formattedQuery = nfts
       .filter(
@@ -64,7 +64,7 @@ export async function fetchEditionNfts() {
     console.log('API Response received, processing NFTs...')
 
     // Order by mint date newest first
-    ALL_DATA.nfts = jsonData.nfts.sort((a, b) => {
+    nfts = jsonData.nfts.sort((a, b) => {
       const aMintDate = mintDates.find(
         (mint: MintDate | null) =>
           mint &&
@@ -91,7 +91,7 @@ export async function fetchEditionNfts() {
     })
 
     // Only return if contract.type === 'ERC721'
-    ALL_DATA.nfts = ALL_DATA.nfts.filter((nft) => {
+    nfts = nfts.filter((nft: NFT) => {
       if (nft.contract.address.startsWith('KT')) {
         return nft.tokenType !== 'ERC1155'
       }
@@ -99,13 +99,13 @@ export async function fetchEditionNfts() {
     })
 
     // Add the chain to the nft
-    ALL_DATA.nfts = ALL_DATA.nfts.map((nft) => {
+    nfts = nfts.map((nft: NFT) => {
       // @ts-ignore
       nft.chain = nft.contract.address.startsWith('KT') ? 'tezos' : 'ethereum'
       return nft
     })
 
-    return ALL_DATA
+    return { nfts }
   } catch (error) {
     console.error('Error in fetchEditionNfts:', error)
     return { nfts: [] }
