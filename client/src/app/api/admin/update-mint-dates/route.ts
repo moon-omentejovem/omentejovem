@@ -24,8 +24,8 @@ export async function POST(request: Request) {
       )
     }
 
-    // Get the current file content
-    const currentContentResponse = await fetch(
+    // Get the current mint-dates.json content
+    const currentMintDatesResponse = await fetch(
       `https://api.github.com/repos/${GITHUB_REPO}/contents/client/public/mint-dates.json`,
       {
         headers: {
@@ -35,18 +35,48 @@ export async function POST(request: Request) {
       }
     )
 
-    if (!currentContentResponse.ok) {
-      throw new Error('Failed to fetch current file content')
+    if (!currentMintDatesResponse.ok) {
+      throw new Error('Failed to fetch current mint-dates.json content')
     }
 
-    const { content, sha } = await currentContentResponse.json()
-    const currentContent = JSON.parse(Buffer.from(content, 'base64').toString())
+    const { content: mintDatesContent, sha: mintDatesSha } =
+      await currentMintDatesResponse.json()
+    const currentMintDates = JSON.parse(
+      Buffer.from(mintDatesContent, 'base64').toString()
+    )
 
-    // Add the new entry
-    currentContent.push(newEntry)
+    // Add the new entry to mint-dates.json
+    currentMintDates.push(newEntry)
 
-    // Update the file
-    const updateResponse = await fetch(
+    // Get the current nfts.json content
+    const currentNftsResponse = await fetch(
+      `https://api.github.com/repos/${GITHUB_REPO}/contents/client/public/nfts.json`,
+      {
+        headers: {
+          Authorization: `token ${GITHUB_TOKEN}`,
+          Accept: 'application/vnd.github.v3+json'
+        }
+      }
+    )
+
+    if (!currentNftsResponse.ok) {
+      throw new Error('Failed to fetch current nfts.json content')
+    }
+
+    const { content: nftsContent, sha: nftsSha } =
+      await currentNftsResponse.json()
+    const currentNfts = JSON.parse(
+      Buffer.from(nftsContent, 'base64').toString()
+    )
+
+    // Add the new NFT to nfts.json if it doesn't exist
+    const newNftId = `${newEntry.contractAddress}:${newEntry.tokenId}`
+    if (!currentNfts.nfts.includes(newNftId)) {
+      currentNfts.nfts.push(newNftId)
+    }
+
+    // Update mint-dates.json
+    const updateMintDatesResponse = await fetch(
       `https://api.github.com/repos/${GITHUB_REPO}/contents/client/public/mint-dates.json`,
       {
         method: 'PUT',
@@ -58,16 +88,41 @@ export async function POST(request: Request) {
         body: JSON.stringify({
           message: 'Update mint-dates.json',
           content: Buffer.from(
-            JSON.stringify(currentContent, null, 2)
+            JSON.stringify(currentMintDates, null, 2)
           ).toString('base64'),
-          sha,
+          sha: mintDatesSha,
           branch: GITHUB_BRANCH
         })
       }
     )
 
-    if (!updateResponse.ok) {
-      throw new Error('Failed to update file')
+    if (!updateMintDatesResponse.ok) {
+      throw new Error('Failed to update mint-dates.json')
+    }
+
+    // Update nfts.json
+    const updateNftsResponse = await fetch(
+      `https://api.github.com/repos/${GITHUB_REPO}/contents/client/public/nfts.json`,
+      {
+        method: 'PUT',
+        headers: {
+          Authorization: `token ${GITHUB_TOKEN}`,
+          Accept: 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          message: 'Update nfts.json',
+          content: Buffer.from(JSON.stringify(currentNfts, null, 2)).toString(
+            'base64'
+          ),
+          sha: nftsSha,
+          branch: GITHUB_BRANCH
+        })
+      }
+    )
+
+    if (!updateNftsResponse.ok) {
+      throw new Error('Failed to update nfts.json')
     }
 
     return NextResponse.json({ success: true })
