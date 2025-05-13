@@ -1,6 +1,6 @@
 import { PortfolioContentProvider } from './provider'
 import { fetchPortfolioNfts } from '@/api/requests/fetchPortfolioNfts'
-
+import { NFT } from '@/api/resolver/types'
 export default async function Portfolio() {
   let _images = await fetchPortfolioNfts()
 
@@ -14,7 +14,7 @@ export default async function Portfolio() {
   let extraOwnershipQuantity = 0
 
   // Filter out '0x28a6f816eae721fea4ad34c000077b5fe525fc3c:6'
-  const filteredNFTs = _images.nfts.filter((art) => {
+  const filteredNFTs = _images.nfts.filter((art: NFT) => {
     if (!art || !art.contract || !art.contract.address) return true
 
     if (
