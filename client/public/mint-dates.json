@@ -341,11 +341,5 @@
     "mintDate": "2020-09-21T01:35:11.000Z",
     "imageUrl": null
   },
-  null,
-  {
-    "contractAddress": "0x232a68a51d6e07357ae025d2a459c16077327102",
-    "tokenId": "13",
-    "mintDate": "2025-05-13T23:01:11.100Z",
-    "imageUrl": null
-  }
+  null
 ]
