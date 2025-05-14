@@ -1,114 +1,106 @@
 'use server'
 
-import { api } from '../client'
-import { NFT } from '../resolver/types'
-import fetch from 'node-fetch'
+import { NFT, Chain } from '../resolver/types'
 import {
-  ALL_NFTS,
   FAKE_TOKENS,
   STORIES_ON_CIRCLES_COLLECTION_ADDRESS
 } from '@/utils/constants'
 import mintDates from '../../../public/mint-dates.json'
+import tokenMetadata from '../../../public/token-metadata.json'
 
 interface MintDate {
   contractAddress: string
   tokenId: string
   mintDate: string
+  imageUrl: string | null
 }
 
 export async function fetchPortfolioNfts() {
-  let ALL_DATA: { nfts: NFT[] } = { nfts: [] }
-
-  // Get the NFTs array first
-  let nfts = await ALL_NFTS()
-
-  console.log('nfts', nfts)
-
-  const formattedQuery = nfts
-    .filter((nft: unknown) => typeof nft === 'string' && !nft.startsWith('KT'))
-    .map((nft: string) => {
-      const tokenAddress = nft.split(':')[0]
-      const tokenId = nft.split(':')[1]
-      return {
-        contractAddress: `${tokenAddress}`,
-        tokenId: tokenId
+  try {
+    // Add required fields to all NFTs and ensure all required fields are non-null
+    const nfts = tokenMetadata.map((nft) => ({
+      ...nft,
+      nft_id: `${nft.contract.address}:${nft.tokenId}`,
+      chain: 'ethereum' as Chain,
+      contract: {
+        ...nft.contract,
+        openSeaMetadata: {
+          ...nft.contract.openSeaMetadata,
+          twitterUsername: nft.contract.openSeaMetadata.twitterUsername || '',
+          discordUrl: nft.contract.openSeaMetadata.discordUrl || '',
+          externalUrl: nft.contract.openSeaMetadata.externalUrl || ''
+        }
       }
+    })) as NFT[]
+
+    console.log('Processing NFTs...')
+
+    // Add fake tokens
+    const allNfts = [...nfts, ...FAKE_TOKENS]
+
+    // Order by mint date newest first
+    allNfts.sort((a, b) => {
+      let aMintDate = (mintDates as MintDate[]).find(
+        (mint) =>
+          mint &&
+          mint.contractAddress.toLowerCase() ===
+            a.contract.address.toLowerCase() &&
+          mint.tokenId === a.tokenId
+      )?.mintDate
+
+      let bMintDate = (mintDates as MintDate[]).find(
+        (mint) =>
+          mint &&
+          mint.contractAddress.toLowerCase() ===
+            b.contract.address.toLowerCase() &&
+          mint.tokenId === b.tokenId
+      )?.mintDate
+
+      // If it is the fake tokens then get the date from mint.timestamp
+      if (a.contract.address === STORIES_ON_CIRCLES_COLLECTION_ADDRESS) {
+        aMintDate = a.mint.timestamp || ''
+      }
+
+      if (b.contract.address === STORIES_ON_CIRCLES_COLLECTION_ADDRESS) {
+        bMintDate = b.mint.timestamp || ''
+      }
+
+      if (!aMintDate) return 1
+      if (!bMintDate) return -1
+
+      a.mint.timestamp = aMintDate
+      b.mint.timestamp = bMintDate
+
+      return new Date(bMintDate).getTime() - new Date(aMintDate).getTime()
     })
 
-  const data = await fetch(`${api.baseURL}`, {
-    method: 'POST',
-    headers: {
-      'X-API-KEY': api.apiKey || '',
-      Accept: 'application/json',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      tokens: formattedQuery
+    // Add the display URL if it's in the mintDates
+    const nftsWithDisplayUrl = allNfts.map((nft) => {
+      const mintDate = (mintDates as MintDate[]).find(
+        (mint) =>
+          mint &&
+          mint.contractAddress.toLowerCase() ===
+            nft.contract.address.toLowerCase() &&
+          mint.tokenId === nft.tokenId
+      )
+
+      if (mintDate?.imageUrl) {
+        nft.image.displayUrl = mintDate.imageUrl
+      }
+
+      return nft
     })
-  })
 
-  const jsonData = (await data.json()) as { nfts: NFT[] }
-  nfts = [...jsonData.nfts, ...FAKE_TOKENS]
+    // Add the chain to the nft
+    const finalNfts = nftsWithDisplayUrl.map((nft) => {
+      // @ts-ignore
+      nft.chain = nft.contract.address.startsWith('KT') ? 'tezos' : 'ethereum'
+      return nft
+    })
 
-  // Order by mint date newest first
-  nfts.sort((a: NFT, b: NFT) => {
-    let aMintDate = mintDates.find(
-      (mint: MintDate | null) =>
-        mint &&
-        mint.contractAddress.toLowerCase() ===
-          a.contract.address.toLowerCase() &&
-        mint.tokenId === a.tokenId
-    )?.mintDate
-
-    let bMintDate = mintDates.find(
-      (mint: MintDate | null) =>
-        mint &&
-        mint.contractAddress.toLowerCase() ===
-          b.contract.address.toLowerCase() &&
-        mint.tokenId === b.tokenId
-    )?.mintDate
-
-    // If it is the fake tokens then get the date from mint.timestamp
-    if (a.contract.address === STORIES_ON_CIRCLES_COLLECTION_ADDRESS) {
-      aMintDate = a.mint.timestamp || ''
-    }
-
-    if (b.contract.address === STORIES_ON_CIRCLES_COLLECTION_ADDRESS) {
-      bMintDate = b.mint.timestamp || ''
-    }
-
-    if (!aMintDate) return 1
-    if (!bMintDate) return -1
-
-    a.mint.timestamp = aMintDate
-    b.mint.timestamp = bMintDate
-
-    return new Date(bMintDate).getTime() - new Date(aMintDate).getTime()
-  })
-
-  // Add the display URL if it's in the mintDates
-  nfts = nfts.map((nft: NFT) => {
-    const mintDate = mintDates.find(
-      (mint: MintDate | null) =>
-        mint &&
-        mint.contractAddress.toLowerCase() ===
-          nft.contract.address.toLowerCase() &&
-        mint.tokenId === nft.tokenId
-    )
-
-    if (mintDate) {
-      nft.image.displayUrl = mintDate.imageUrl || undefined
-    }
-
-    return nft
-  })
-
-  // Add the chain to the nft
-  nfts = nfts.map((nft: NFT) => {
-    // @ts-ignore
-    nft.chain = nft.contract.address.startsWith('KT') ? 'tezos' : 'ethereum'
-    return nft
-  })
-
-  return { nfts }
+    return { nfts: finalNfts }
+  } catch (error) {
+    console.error('Error in fetchPortfolioNfts:', error)
+    return { nfts: [] }
+  }
 }

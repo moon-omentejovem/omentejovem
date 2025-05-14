@@ -1,14 +1,12 @@
 'use server'
 
-import { api } from '../client'
-import { NFT } from '../resolver/types'
-import fetch from 'node-fetch'
+import { NFT, Chain } from '../resolver/types'
 import {
-  ALL_NFTS,
   FAKE_TOKENS,
   STORIES_ON_CIRCLES_COLLECTION_ADDRESS
 } from '@/utils/constants'
 import mintDates from '../../../public/mint-dates.json'
+import tokenMetadata from '../../../public/token-metadata.json'
 
 interface MintDate {
   contractAddress: string
@@ -18,58 +16,29 @@ interface MintDate {
 
 export async function fetchOneOfOneNfts() {
   try {
-    let ALL_DATA: { nfts: NFT[] } = { nfts: [] }
-
-    // Get the NFTs array first
-    let nfts = await ALL_NFTS()
-
-    const formattedQuery = nfts
-      .filter(
-        (nft: unknown) => typeof nft === 'string' && !nft.startsWith('KT')
-      )
-      .map((nft: string) => {
-        const [tokenAddress, tokenId] = nft.split(':')
-        return {
-          contractAddress: tokenAddress,
-          tokenId: tokenId
+    // Add required fields to all NFTs and ensure all required fields are non-null
+    const nfts = tokenMetadata.map((nft) => ({
+      ...nft,
+      nft_id: `${nft.contract.address}:${nft.tokenId}`,
+      chain: 'ethereum' as Chain,
+      contract: {
+        ...nft.contract,
+        openSeaMetadata: {
+          ...nft.contract.openSeaMetadata,
+          twitterUsername: nft.contract.openSeaMetadata.twitterUsername || '',
+          discordUrl: nft.contract.openSeaMetadata.discordUrl || '',
+          externalUrl: nft.contract.openSeaMetadata.externalUrl || ''
         }
-      })
+      }
+    })) as NFT[]
 
-    console.log('Fetching One of One NFTs:', formattedQuery)
+    console.log('Processing NFTs...')
 
-    const data = await fetch(`${api.baseURL}`, {
-      method: 'POST',
-      headers: {
-        'X-API-KEY': api.apiKey || '',
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        tokens: formattedQuery
-      })
-    })
-
-    if (!data.ok) {
-      const errorText = await data.text()
-      console.error('API Error Response:', errorText)
-      throw new Error(
-        `API request failed with status ${data.status}: ${errorText}`
-      )
-    }
-
-    const jsonData = (await data.json()) as { nfts: NFT[] }
-
-    if (!jsonData.nfts || !Array.isArray(jsonData.nfts)) {
-      console.error('Unexpected API response structure:', jsonData)
-      return { nfts: [] }
-    }
-
-    console.log('API Response received, processing NFTs...')
-
-    nfts = [...jsonData.nfts, ...FAKE_TOKENS]
+    // Add fake tokens
+    const allNfts = [...nfts, ...FAKE_TOKENS]
 
     // Order by mint date newest first
-    nfts.sort((a: NFT, b: NFT) => {
+    allNfts.sort((a, b) => {
       let aMintDate = mintDates.find(
         (mint: MintDate | null) =>
           mint &&
@@ -105,7 +74,7 @@ export async function fetchOneOfOneNfts() {
     })
 
     // Only return if contract.type === 'ERC721'
-    nfts = nfts.filter((nft: NFT) => {
+    const filteredNfts = allNfts.filter((nft) => {
       if (nft.contract.address.startsWith('KT')) {
         return nft.tokenType !== 'ERC1155'
       }
@@ -113,13 +82,13 @@ export async function fetchOneOfOneNfts() {
     })
 
     // Add the chain to the nft
-    nfts = nfts.map((nft: NFT) => {
+    const finalNfts = filteredNfts.map((nft) => {
       // @ts-ignore
       nft.chain = nft.contract.address.startsWith('KT') ? 'tezos' : 'ethereum'
       return nft
     })
 
-    return { nfts }
+    return { nfts: finalNfts }
   } catch (error) {
     console.error('Error in fetchOneOfOneNfts:', error)
     return { nfts: [] }
