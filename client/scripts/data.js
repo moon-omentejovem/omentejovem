@@ -214,4 +214,54 @@ async function processAllNFTs() {
   console.log('Results saved to mint-dates.json')
 }
 
-processAllNFTs().catch(console.error)
+async function processMetadata() {
+  const results = []
+
+  const formattedQuery = ALL_NFTS.filter(
+    (nft) => typeof nft === 'string' && !nft.startsWith('KT')
+  ).map((nft) => {
+    const [tokenAddress, tokenId] = nft.split(':')
+    return {
+      contractAddress: tokenAddress,
+      tokenId: tokenId
+    }
+  })
+
+  console.log('Fetching One of One NFTs:', formattedQuery)
+
+  try {
+    const response = await fetch(
+      'https://eth-mainnet.g.alchemy.com/nft/v3/SFakvdLOtDtTfVgZzdO_J4PoDOGPFPbP/getNFTMetadataBatch',
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          tokens: formattedQuery
+        })
+      }
+    )
+
+    const data = await response.json()
+    if (data.nfts) {
+      results.push(...data.nfts)
+    } else {
+      console.log('Unexpected response format:', data)
+    }
+  } catch (error) {
+    console.error('Error fetching metadata:', error)
+    console.error('Response data:', await response.text())
+  }
+
+  console.log('results', results)
+  // Save results to a file
+  await writeFile(
+    'public/token-metadata.json',
+    JSON.stringify(results, null, 2)
+  )
+  console.log('Metadata results saved to token-metadata.json')
+}
+
+Promise.all([processMetadata()]).catch(console.error)
