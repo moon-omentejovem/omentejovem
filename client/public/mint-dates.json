@@ -344,20 +344,8 @@
   null,
   {
     "contractAddress": "0x232a68a51d6e07357ae025d2a459c16077327102",
-    "tokenId": "14",
-    "mintDate": "2025-05-13T22:37:42.265Z",
-    "imageUrl": null
-  },
-  {
-    "contractAddress": "0x232a68a51d6e07357ae025d2a459c16077327102",
     "tokenId": "13",
     "mintDate": "2025-05-13T23:01:11.100Z",
-    "imageUrl": null
-  },
-  {
-    "contractAddress": "0x232a68a51d6e07357ae025d2a459c16077327102",
-    "tokenId": "14",
-    "mintDate": "2025-05-13T23:51:35.202Z",
     "imageUrl": null
   }
 ]
