@@ -433,7 +433,7 @@ Ironically, i feel that's still the life i live.`,
     timeLastUpdated: new Date().toISOString()
   },
   {
-    nft_id: `${STORIES_ON_CIRCLES_COLLECTION_ADDRESS}:6`,
+    nft_id: `${STORIES_ON_CIRCLES_COLLECTION_ADDRESS}:7`,
     chain: 'ethereum',
     contract: {
       address: STORIES_ON_CIRCLES_COLLECTION_ADDRESS,
@@ -459,7 +459,7 @@ Ironically, i feel that's still the life i live.`,
       isSpam: false,
       spamClassifications: []
     },
-    tokenId: '6',
+    tokenId: '7',
     tokenType: 'ERC721',
     name: 'All Time High Discovery',
     description: `Ideas, feelings, memories looping over themselves like waves. A homage to "All Time High in the City" artwork by the legend X-Copy, 2018.`,
@@ -495,6 +495,74 @@ Ironically, i feel that's still the life i live.`,
       mintAddress: null,
       blockNumber: null,
       timestamp: '2025-05-12T12:00:00.000Z',
+      transactionHash: null
+    },
+    owners: null,
+    timeLastUpdated: new Date().toISOString()
+  },
+  {
+    nft_id: `${STORIES_ON_CIRCLES_COLLECTION_ADDRESS}:8`,
+    chain: 'ethereum',
+    contract: {
+      address: STORIES_ON_CIRCLES_COLLECTION_ADDRESS,
+      name: 'Stories on Circles',
+      symbol: 'SOC',
+      totalSupply: '8',
+      tokenType: 'ERC721',
+      contractDeployer: STORIES_ON_CIRCLES_COLLECTION_ADDRESS,
+      deployedBlockNumber: 1,
+      openSeaMetadata: {
+        floorPrice: 0,
+        collectionName: 'Stories on Circles',
+        collectionSlug: STORIES_ON_CIRCLES_SLUG,
+        safelistRequestStatus: 'verified',
+        imageUrl: '/new_series/8_I_Am_Where_You_Arent.jpg',
+        description: 'Stories on Circles Collection',
+        externalUrl: null,
+        twitterUsername: '',
+        discordUrl: '',
+        bannerImageUrl: '',
+        lastIngestedAt: new Date().toISOString()
+      },
+      isSpam: false,
+      spamClassifications: []
+    },
+    tokenId: '8',
+    tokenType: 'ERC721',
+    name: `I Am Where You Aren’t`,
+    description: `Desire. The collector can choose on-chain between two sides of the same work. I worked on both positions in this piece.`,
+    tokenUri: '',
+    image: {
+      cachedUrl: '/new_series/8_I_Am_Where_You_Arent.jpg',
+      thumbnailUrl: '/new_series/8_I_Am_Where_You_Arent.jpg',
+      pngUrl: '/new_series/8_I_Am_Where_You_Arent.jpg',
+      contentType: 'image/jpeg',
+      size: 0,
+      originalUrl: '/new_series/8_I_Am_Where_You_Arent.jpg'
+    },
+    raw: {
+      tokenUri: '',
+      metadata: {
+        image: '/new_series/8_I_Am_Where_You_Arent.jpg',
+        createdBy: '',
+        yearCreated: '2024',
+        name: `I Am Where You Aren’t`,
+        description: `Desire. The collector can choose on-chain between two sides of the same work. I worked on both positions in this piece.`,
+        media: null,
+        tags: []
+      },
+      error: null
+    },
+    collection: {
+      name: 'Stories on Circles',
+      slug: STORIES_ON_CIRCLES_SLUG,
+      externalUrl: null,
+      bannerImageUrl: ''
+    },
+    mint: {
+      mintAddress: null,
+      blockNumber: null,
+      timestamp: '2025-05-14T12:00:00.000Z',
       transactionHash: null
     },
     owners: null,
