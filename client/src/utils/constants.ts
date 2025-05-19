@@ -635,6 +635,74 @@ Ironically, i feel that's still the life i live.`,
     },
     owners: null,
     timeLastUpdated: new Date().toISOString()
+  },
+  {
+    nft_id: `${STORIES_ON_CIRCLES_COLLECTION_ADDRESS}:10`,
+    chain: 'ethereum',
+    contract: {
+      address: STORIES_ON_CIRCLES_COLLECTION_ADDRESS,
+      name: 'Stories on Circles',
+      symbol: 'SOC',
+      totalSupply: '10',
+      tokenType: 'ERC721',
+      contractDeployer: STORIES_ON_CIRCLES_COLLECTION_ADDRESS,
+      deployedBlockNumber: 1,
+      openSeaMetadata: {
+        floorPrice: 0,
+        collectionName: 'Stories on Circles',
+        collectionSlug: STORIES_ON_CIRCLES_SLUG,
+        safelistRequestStatus: 'verified',
+        imageUrl: '/new_series/10_He_Left_as_a_Dot.jpg',
+        description: 'Stories on Circles Collection',
+        externalUrl: null,
+        twitterUsername: '',
+        discordUrl: '',
+        bannerImageUrl: '',
+        lastIngestedAt: new Date().toISOString()
+      },
+      isSpam: false,
+      spamClassifications: []
+    },
+    tokenId: '10',
+    tokenType: 'ERC721',
+    name: `He Left as a Dot`,
+    description: `Art, to me, is a mirror. You see through your memories, your longings, your shape. Despite sharing mine, and this series of artworks being a creation by myself, I have more fun hearing about what you think, what you see, what kind of emotion the work makes you feel... It is human. It gets us together, to know we are not alone in the wild and bittersweet journey of life. Not everyone will have a moment with these works, but if you allow yourself a moment, you might notice something unexpected: maybe not in the work, but in you. This is the last artwork in the collection. It doesn’t ask to be understood, but to be felt.`,
+    tokenUri: '',
+    image: {
+      cachedUrl: '/new_series/10_He_Left_as_a_Dot.jpg',
+      thumbnailUrl: '/new_series/10_He_Left_as_a_Dot.jpg',
+      pngUrl: '/new_series/10_He_Left_as_a_Dot.jpg',
+      contentType: 'image/jpeg',
+      size: 0,
+      originalUrl: '/new_series/10_He_Left_as_a_Dot.jpg'
+    },
+    raw: {
+      tokenUri: '',
+      metadata: {
+        image: '/new_series/10_He_Left_as_a_Dot.jpg',
+        createdBy: '',
+        yearCreated: '2024',
+        name: `He Left as a Dot`,
+        description: `Art, to me, is a mirror. You see through your memories, your longings, your shape. Despite sharing mine, and this series of artworks being a creation by myself, I have more fun hearing about what you think, what you see, what kind of emotion the work makes you feel... It is human. It gets us together, to know we are not alone in the wild and bittersweet journey of life. Not everyone will have a moment with these works, but if you allow yourself a moment, you might notice something unexpected: maybe not in the work, but in you. This is the last artwork in the collection. It doesn’t ask to be understood, but to be felt.`,
+        media: null,
+        tags: []
+      },
+      error: null
+    },
+    collection: {
+      name: 'Stories on Circles',
+      slug: STORIES_ON_CIRCLES_SLUG,
+      externalUrl: null,
+      bannerImageUrl: ''
+    },
+    mint: {
+      mintAddress: null,
+      blockNumber: null,
+      timestamp: '2025-05-19T12:00:00.000Z',
+      transactionHash: null
+    },
+    owners: null,
+    timeLastUpdated: new Date().toISOString()
   }
 ]
 
