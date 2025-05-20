@@ -175,6 +175,14 @@ export function ArtInfos({
   ) {
     mintedOn = '1 November, 2021'
   }
+
+  if (
+    selectedArt.contract.address.toLowerCase() ===
+    '0x0000000000000000000000000000000000000000'
+  ) {
+    mintedOn = ''
+  }
+
   return (
     <section
       className={cn(
