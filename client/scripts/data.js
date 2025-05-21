@@ -209,8 +209,10 @@ async function processAllNFTs() {
     await new Promise((resolve) => setTimeout(resolve, 100))
   }
 
+  console.log('results', results)
+
   // Save results to a file using ES modules
-  await writeFile('public/mint-dates.json', JSON.stringify(results, null, 2))
+  // await writeFile('public/mint-dates.json', JSON.stringify(results, null, 2))
   console.log('Results saved to mint-dates.json')
 }
 
@@ -264,4 +266,4 @@ async function processMetadata() {
   console.log('Metadata results saved to token-metadata.json')
 }
 
-Promise.all([processMetadata()]).catch(console.error)
+Promise.all([processAllNFTs()]).catch(console.error)
