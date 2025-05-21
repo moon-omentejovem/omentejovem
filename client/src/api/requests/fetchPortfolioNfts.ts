@@ -7,6 +7,7 @@ import {
 } from '@/utils/constants'
 import mintDates from '../../../public/mint-dates.json'
 import tokenMetadata from '../../../public/token-metadata.json'
+import tezosData from '../../../public/tezos-data.json'
 
 interface MintDate {
   contractAddress: string
@@ -18,7 +19,7 @@ interface MintDate {
 export async function fetchPortfolioNfts() {
   try {
     // Add required fields to all NFTs and ensure all required fields are non-null
-    const nfts = tokenMetadata.map((nft) => ({
+    const ethereumNfts = tokenMetadata.map((nft) => ({
       ...nft,
       nft_id: `${nft.contract.address}:${nft.tokenId}`,
       chain: 'ethereum' as Chain,
@@ -33,28 +34,118 @@ export async function fetchPortfolioNfts() {
       }
     })) as NFT[]
 
+    // Process Tezos NFTs
+    const tezosNfts = tezosData.map((nft) => ({
+      nft_id: `${nft.contract.address}:${nft.tokenId}`,
+      chain: 'tezos' as Chain,
+      contract: {
+        address: nft.contract.address,
+        name: nft.contract.name,
+        symbol: nft.contract.symbol,
+        totalSupply: nft.contract.totalSupply,
+        tokenType: nft.contract.tokenType,
+        contractDeployer: nft.contract.contractDeployer || '',
+        deployedBlockNumber: nft.contract.deployedBlockNumber || 0,
+        openSeaMetadata: {
+          floorPrice: nft.contract.openSeaMetadata.floorPrice || 0,
+          collectionName: nft.contract.openSeaMetadata.collectionName || '',
+          collectionSlug: nft.contract.openSeaMetadata.collectionSlug || '',
+          safelistRequestStatus:
+            nft.contract.openSeaMetadata.safelistRequestStatus || '',
+          imageUrl: nft.contract.openSeaMetadata.imageUrl || '',
+          description: nft.contract.openSeaMetadata.description || '',
+          externalUrl: nft.contract.openSeaMetadata.externalUrl || '',
+          twitterUsername: nft.contract.openSeaMetadata.twitterUsername || '',
+          discordUrl: nft.contract.openSeaMetadata.discordUrl || '',
+          bannerImageUrl: nft.contract.openSeaMetadata.bannerImageUrl || '',
+          lastIngestedAt: nft.contract.openSeaMetadata.lastIngestedAt || ''
+        },
+        isSpam: nft.contract.isSpam || false,
+        spamClassifications: nft.contract.spamClassifications || []
+      },
+      tokenId: nft.tokenId,
+      tokenType: nft.tokenType,
+      name: nft.name || '',
+      description: nft.description || '',
+      tokenUri: nft.tokenUri || '',
+      image: {
+        cachedUrl:
+          nft.image.cachedUrl ||
+          nft.image.pngUrl ||
+          nft.image.originalUrl ||
+          '',
+        thumbnailUrl:
+          nft.image.thumbnailUrl ||
+          nft.image.cachedUrl ||
+          nft.image.pngUrl ||
+          '',
+        pngUrl:
+          nft.image.pngUrl ||
+          nft.image.cachedUrl ||
+          nft.image.originalUrl ||
+          '',
+        contentType: nft.image.contentType || '',
+        size: nft.image.size || 0,
+        originalUrl:
+          nft.image.originalUrl || nft.image.cachedUrl || nft.image.pngUrl || ''
+      },
+      raw: {
+        tokenUri: nft.raw.tokenUri || '',
+        metadata: {
+          image: nft.raw.metadata.image || '',
+          createdBy: nft.raw.metadata.creators?.[0] || '',
+          yearCreated: nft.raw.metadata.date
+            ? new Date(nft.raw.metadata.date).getFullYear().toString()
+            : '',
+          name: nft.raw.metadata.name || '',
+          description: nft.raw.metadata.description || '',
+          media: nft.raw.metadata.formats || [],
+          tags: nft.raw.metadata.tags || []
+        },
+        error: nft.raw.error
+      },
+      collection: {
+        name: nft.collection.name || '',
+        slug: nft.collection.slug || '',
+        externalUrl: nft.collection.externalUrl || '',
+        bannerImageUrl: nft.collection.bannerImageUrl || ''
+      },
+      mint: {
+        mintAddress: nft.mint.mintAddress,
+        blockNumber: nft.mint.blockNumber,
+        timestamp: nft.mint.timestamp,
+        transactionHash: nft.mint.transactionHash
+      },
+      owners: nft.owners,
+      timeLastUpdated: nft.timeLastUpdated
+    })) as NFT[]
+
     console.log('Processing NFTs...')
 
     // Add fake tokens
-    const allNfts = [...nfts, ...FAKE_TOKENS]
+    const allNfts = [...ethereumNfts, ...tezosNfts, ...FAKE_TOKENS]
 
     // Order by mint date newest first
     allNfts.sort((a, b) => {
-      let aMintDate = (mintDates as MintDate[]).find(
-        (mint) =>
-          mint &&
-          mint.contractAddress.toLowerCase() ===
-            a.contract.address.toLowerCase() &&
-          mint.tokenId === a.tokenId
-      )?.mintDate
+      let aMintDate = a.contract.address.startsWith('KT')
+        ? a.mint.timestamp
+        : (mintDates as MintDate[]).find(
+            (mint) =>
+              mint &&
+              mint.contractAddress.toLowerCase() ===
+                a.contract.address.toLowerCase() &&
+              mint.tokenId === a.tokenId
+          )?.mintDate
 
-      let bMintDate = (mintDates as MintDate[]).find(
-        (mint) =>
-          mint &&
-          mint.contractAddress.toLowerCase() ===
-            b.contract.address.toLowerCase() &&
-          mint.tokenId === b.tokenId
-      )?.mintDate
+      let bMintDate = b.contract.address.startsWith('KT')
+        ? b.mint.timestamp
+        : (mintDates as MintDate[]).find(
+            (mint) =>
+              mint &&
+              mint.contractAddress.toLowerCase() ===
+                b.contract.address.toLowerCase() &&
+              mint.tokenId === b.tokenId
+          )?.mintDate
 
       // If it is the fake tokens then get the date from mint.timestamp
       if (a.contract.address === STORIES_ON_CIRCLES_COLLECTION_ADDRESS) {
@@ -91,14 +182,7 @@ export async function fetchPortfolioNfts() {
       return nft
     })
 
-    // Add the chain to the nft
-    const finalNfts = nftsWithDisplayUrl.map((nft) => {
-      // @ts-ignore
-      nft.chain = nft.contract.address.startsWith('KT') ? 'tezos' : 'ethereum'
-      return nft
-    })
-
-    return { nfts: finalNfts }
+    return { nfts: nftsWithDisplayUrl }
   } catch (error) {
     console.error('Error in fetchPortfolioNfts:', error)
     return { nfts: [] }

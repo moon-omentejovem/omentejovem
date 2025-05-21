@@ -1,6 +1,5 @@
 'use server'
 
-import { CollectionRes } from '../resolver/types'
 import tokenMetadata from '../../../public/token-metadata.json'
 
 const THE_CYCLE_COLLECTION = {
