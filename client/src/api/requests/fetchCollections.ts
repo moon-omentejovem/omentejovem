@@ -43,6 +43,14 @@ export async function fetchCollections() {
           nft.image.pngUrl || nft.image.cachedUrl || nft.image.originalUrl || ''
         )
       }
+      if (
+        nft.contract.address?.toLowerCase() ===
+        '0xDE3229D33cB8513ffb717f870efd71c0C5ddbcF7'.toLowerCase()
+      ) {
+        STORIES_ON_CIRCLES_COLLECTION.nftImageUrls.push(
+          nft.image.pngUrl || nft.image.cachedUrl || nft.image.originalUrl || ''
+        )
+      }
     })
 
     // Return collections in the desired order

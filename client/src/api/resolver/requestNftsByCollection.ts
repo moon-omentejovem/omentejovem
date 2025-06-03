@@ -1,6 +1,5 @@
 import { NFT } from './types'
 import { api } from '../client'
-import { FAKE_TOKENS } from '@/utils/constants'
 
 const ALL_NFTS = [
   '0x826b11a95a9393e8a3cc0c2a7dfc9accb4ff4e43:5',
@@ -15,7 +14,17 @@ const ALL_NFTS = [
   '0x2b3bbde45422d65ab3fb5cdc5427944db0729b50:7',
   '0x2b3bbde45422d65ab3fb5cdc5427944db0729b50:8',
   '0x2b3bbde45422d65ab3fb5cdc5427944db0729b50:9',
-  '0x2b3bbde45422d65ab3fb5cdc5427944db0729b50:10'
+  '0x2b3bbde45422d65ab3fb5cdc5427944db0729b50:10',
+  '0xDE3229D33cB8513ffb717f870efd71c0C5ddbcF7:1',
+  '0xDE3229D33cB8513ffb717f870efd71c0C5ddbcF7:2',
+  '0xDE3229D33cB8513ffb717f870efd71c0C5ddbcF7:3',
+  '0xDE3229D33cB8513ffb717f870efd71c0C5ddbcF7:4',
+  '0xDE3229D33cB8513ffb717f870efd71c0C5ddbcF7:5',
+  '0xDE3229D33cB8513ffb717f870efd71c0C5ddbcF7:6',
+  '0xDE3229D33cB8513ffb717f870efd71c0C5ddbcF7:7',
+  '0xDE3229D33cB8513ffb717f870efd71c0C5ddbcF7:8',
+  '0xDE3229D33cB8513ffb717f870efd71c0C5ddbcF7:9',
+  '0xDE3229D33cB8513ffb717f870efd71c0C5ddbcF7:10'
 ]
 
 const THE_CYCLE_COLLECTION_ADDRESS =
@@ -23,7 +32,7 @@ const THE_CYCLE_COLLECTION_ADDRESS =
 const SHAPES_AND_COLORS_COLLECTION_ADDRESS =
   '0x2b3bbde45422d65ab3fb5cdc5427944db0729b50'
 const STORIES_ON_CIRCLES_COLLECTION_ADDRESS =
-  '0x0000000000000000000000000000000000000000'
+  '0xDE3229D33cB8513ffb717f870efd71c0C5ddbcF7'
 
 const THE_CYCLE_SLUG = 'the3cycle'
 const SHAPES_AND_COLORS_SLUG = 'shapesncolors'
@@ -37,15 +46,6 @@ interface RequestCollectionNftsResponse {
 export async function requestNftsByCollection(
   slug: string
 ): Promise<RequestCollectionNftsResponse> {
-  if (slug === STORIES_ON_CIRCLES_SLUG) {
-    // Return fake tokens for Stories on Circles collection
-
-    return {
-      email: 'fake',
-      images: FAKE_TOKENS
-    }
-  }
-
   const formattedQuery = ALL_NFTS?.filter((nft) => {
     const tokenAddress = nft.split(':')[0]
     if (slug === THE_CYCLE_SLUG) {
@@ -53,6 +53,9 @@ export async function requestNftsByCollection(
     }
     if (slug === SHAPES_AND_COLORS_SLUG) {
       return tokenAddress === SHAPES_AND_COLORS_COLLECTION_ADDRESS
+    }
+    if (slug === STORIES_ON_CIRCLES_SLUG) {
+      return tokenAddress === STORIES_ON_CIRCLES_COLLECTION_ADDRESS
     }
     return false
   }).map((nft) => {
