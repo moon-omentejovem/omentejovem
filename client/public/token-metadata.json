@@ -2608,12 +2608,7 @@
           "uri": "https://ipfs.pixura.io/ipfs/QmRsCiKUaZonwUreg6xLoBdxvvEUnJvgbtgSg8QduWD8xm/AZuL.jpg",
           "dimensions": "4096x3072"
         },
-        "tags": [
-          "abstract",
-          "omentejovem",
-          "AZuL",
-          "2022"
-        ]
+        "tags": ["abstract", "omentejovem", "AZuL", "2022"]
       },
       "error": null
     },
@@ -2690,12 +2685,7 @@
           "uri": "https://ipfs.pixura.io/ipfs/QmesYA1dNqGUDh4ptPQYni2Kwjz4Hvf42jeM75b5kJ5gXH/rodeo.jpg",
           "dimensions": "4096x3072"
         },
-        "tags": [
-          "abstract",
-          "omentejovem",
-          "rodeo",
-          "2022"
-        ]
+        "tags": ["abstract", "omentejovem", "rodeo", "2022"]
       },
       "error": null
     },
@@ -2855,12 +2845,7 @@
           "uri": "https://ipfs.pixura.io/ipfs/QmerLy5XE6wBHAuJawA84LFBpE6mzFEzvPdsthTc9YFdfU/cat.jpg",
           "dimensions": "4096x3072"
         },
-        "tags": [
-          "abstract",
-          "omentejovem",
-          "cat",
-          "2022"
-        ]
+        "tags": ["abstract", "omentejovem", "cat", "2022"]
       },
       "error": null
     },
@@ -2937,12 +2922,7 @@
           "uri": "https://ipfs.pixura.io/ipfs/QmbzL74JAgSoVuW91SvL2gS4j5wadtrS5sfeqAAyoDkDGU/starfish_among_shoals.jpg",
           "dimensions": "4096x3072"
         },
-        "tags": [
-          "abstract",
-          "omentejovem",
-          "starfishamongshoals",
-          "2022"
-        ]
+        "tags": ["abstract", "omentejovem", "starfishamongshoals", "2022"]
       },
       "error": null
     },
@@ -3019,12 +2999,7 @@
           "uri": "https://ipfs.pixura.io/ipfs/QmWae9UYvCRVF8p95Shf6H5JsxPXSc9uwA9NxWBG3MTrtn/smoking_my_thoughts.jpg",
           "dimensions": "3072x4096"
         },
-        "tags": [
-          "abstract",
-          "omentejovem",
-          "smokingmythoughts",
-          "2022"
-        ]
+        "tags": ["abstract", "omentejovem", "smokingmythoughts", "2022"]
       },
       "error": null
     },
@@ -3101,12 +3076,7 @@
           "uri": "https://ipfs.pixura.io/ipfs/QmaLfu8fgzF6LfP6LtMUqTVUsMYmzpyDykSByPpUt1WQHs/the_day_i_met_you.jpg",
           "dimensions": "3072x4096"
         },
-        "tags": [
-          "abstract",
-          "omentejovem",
-          "thedayimetyou",
-          "2022"
-        ]
+        "tags": ["abstract", "omentejovem", "thedayimetyou", "2022"]
       },
       "error": null
     },
@@ -3183,12 +3153,7 @@
           "uri": "https://ipfs.pixura.io/ipfs/QmeHbRmK6GPRuGfM8hJoZYTsxd3f4J8LMq5P7wRRqZSYrU/Lugares.png",
           "dimensions": "4096x3072"
         },
-        "tags": [
-          "abstract",
-          "omentejovem",
-          "lugares",
-          "2022"
-        ]
+        "tags": ["abstract", "omentejovem", "lugares", "2022"]
       },
       "error": null
     },
@@ -5254,10 +5219,7 @@
             "trait_type": "eventURL"
           }
         ],
-        "tags": [
-          "poap",
-          "event"
-        ]
+        "tags": ["poap", "event"]
       },
       "error": null
     },
@@ -5767,5 +5729,755 @@
     },
     "owners": null,
     "timeLastUpdated": "2025-05-12T18:53:35.650Z"
+  },
+  {
+    "contract": {
+      "address": "0xDE3229D33cB8513ffb717f870efd71c0C5ddbcF7",
+      "name": "Stories on Circles",
+      "symbol": "SoC",
+      "totalSupply": null,
+      "tokenType": "ERC721",
+      "contractDeployer": "0x116723a14C7Ee8ac3647D37BB5E9F193c29B3489",
+      "deployedBlockNumber": 22592646,
+      "openSeaMetadata": {
+        "floorPrice": null,
+        "collectionName": "Stories on Circles",
+        "collectionSlug": "stories-on-circles",
+        "safelistRequestStatus": "not_requested",
+        "imageUrl": "https://i.seadn.io/s/raw/files/3c509c719182a234c57443ad8fd88faa.jpg?w=500&auto=format",
+        "description": "Stories on Circles is a reflection on how limitations can become a source of liberation. It is the first-ever collection presented under SILK, born from the belief that structure can spark something deeply personal.\n\nCircles have defined boundaries but invite infinite interpretations. In contemporary practice, artists frequently choose circular frameworks to test limits, probing how constraints can inspire innovation. Think of Leonardo da Vinci's 'Vitruvian Man' or Hilma af Klints spiritual abstractions. Omentejovem's collection embraces this paradox, emphasizing creativity sparked by constraint rather than hindered by it.\n\nEach piece of omentejovem’s Stories on Circles collection unfolds within the strict boundary of a circle, yet each tells a different narrative, transcending the fine-line borders through an emotional depth.",
+        "externalUrl": null,
+        "twitterUsername": null,
+        "discordUrl": null,
+        "bannerImageUrl": null,
+        "lastIngestedAt": "2025-05-30T03:03:12.000Z"
+      },
+      "isSpam": false,
+      "spamClassifications": []
+    },
+    "tokenId": "1",
+    "tokenType": "ERC721",
+    "name": "Sitting at the Edge",
+    "description": "In the middle of the seen and unseen.",
+    "tokenUri": "https://alchemy.mypinata.cloud/ipfs/bafkreidrqesms6yzcpt322zc4pib2eue4pq4bavfunsbfjr3dgcuwolcvq",
+    "image": {
+      "cachedUrl": "https://nft-cdn.alchemy.com/eth-mainnet/8ce97ba57339757088a54d68d52b3aad",
+      "thumbnailUrl": "https://res.cloudinary.com/alchemyapi/image/upload/thumbnailv2/eth-mainnet/8ce97ba57339757088a54d68d52b3aad",
+      "pngUrl": "https://res.cloudinary.com/alchemyapi/image/upload/convert-png/eth-mainnet/8ce97ba57339757088a54d68d52b3aad",
+      "contentType": "image/jpeg",
+      "size": 4131778,
+      "originalUrl": "https://ipfs.io/ipfs/bafybeiccb7a5l5wyrpvcte2ierisbc5ptfkfjztmdrrb74ohiaiudbzlea"
+    },
+    "animation": {
+      "cachedUrl": null,
+      "contentType": null,
+      "size": null,
+      "originalUrl": null
+    },
+    "raw": {
+      "tokenUri": "ipfs://bafkreidrqesms6yzcpt322zc4pib2eue4pq4bavfunsbfjr3dgcuwolcvq",
+      "metadata": {
+        "image": "ipfs://bafybeiccb7a5l5wyrpvcte2ierisbc5ptfkfjztmdrrb74ohiaiudbzlea",
+        "tokenStandard": "ERC-721",
+        "fileSize": "3.94 MB",
+        "blockchain": "Ethereum",
+        "name": "Sitting at the Edge",
+        "icon": "ipfs://bafkreihl3hrcknncpqfy4quz3e732h52smpxdmh23yog2bxdqsuza3je4q",
+        "description": "In the middle of the seen and unseen.",
+        "contractAddress": "0xa6df4a2e889d36105757ee86e7905bffab588a8b",
+        "medium": "Image (JPEG)",
+        "dimensions": "3072x4096"
+      },
+      "error": null
+    },
+    "collection": {
+      "name": "Stories on Circles",
+      "slug": "stories-on-circles",
+      "externalUrl": null,
+      "bannerImageUrl": null
+    },
+    "mint": {
+      "mintAddress": "0x116723a14c7ee8ac3647d37bb5e9f193c29b3489",
+      "blockNumber": 22592650,
+      "timestamp": "2025-05-30T02:43:59Z",
+      "transactionHash": "0x1adb1514333ffce2547f680e07c51fce20525eaf4dc6bc0123088d4949a57d39"
+    },
+    "owners": null,
+    "timeLastUpdated": "2025-05-30T02:44:04.384Z"
+  },
+  {
+    "contract": {
+      "address": "0xDE3229D33cB8513ffb717f870efd71c0C5ddbcF7",
+      "name": "Stories on Circles",
+      "symbol": "SoC",
+      "totalSupply": null,
+      "tokenType": "ERC721",
+      "contractDeployer": "0x116723a14C7Ee8ac3647D37BB5E9F193c29B3489",
+      "deployedBlockNumber": 22592646,
+      "openSeaMetadata": {
+        "floorPrice": null,
+        "collectionName": "Stories on Circles",
+        "collectionSlug": "stories-on-circles",
+        "safelistRequestStatus": "not_requested",
+        "imageUrl": "https://i.seadn.io/s/raw/files/3c509c719182a234c57443ad8fd88faa.jpg?w=500&auto=format",
+        "description": "Stories on Circles is a reflection on how limitations can become a source of liberation. It is the first-ever collection presented under SILK, born from the belief that structure can spark something deeply personal.\n\nCircles have defined boundaries but invite infinite interpretations. In contemporary practice, artists frequently choose circular frameworks to test limits, probing how constraints can inspire innovation. Think of Leonardo da Vinci's 'Vitruvian Man' or Hilma af Klints spiritual abstractions. Omentejovem's collection embraces this paradox, emphasizing creativity sparked by constraint rather than hindered by it.\n\nEach piece of omentejovem’s Stories on Circles collection unfolds within the strict boundary of a circle, yet each tells a different narrative, transcending the fine-line borders through an emotional depth.",
+        "externalUrl": null,
+        "twitterUsername": null,
+        "discordUrl": null,
+        "bannerImageUrl": null,
+        "lastIngestedAt": "2025-05-30T03:03:12.000Z"
+      },
+      "isSpam": false,
+      "spamClassifications": []
+    },
+    "tokenId": "2",
+    "tokenType": "ERC721",
+    "name": "Two Voices, One Circles",
+    "description": "One speaks, the other feels.",
+    "tokenUri": "https://ipfs.io/ipfs/bafkreia7nlgbcin5sstzbmvrocdukfos3nosjs2kyozmcgekvlcksaa2sy",
+    "image": {
+      "cachedUrl": "https://nft-cdn.alchemy.com/eth-mainnet/12132818c5f029bf701aeed6e7bd3d1f",
+      "thumbnailUrl": "https://res.cloudinary.com/alchemyapi/image/upload/thumbnailv2/eth-mainnet/12132818c5f029bf701aeed6e7bd3d1f",
+      "pngUrl": "https://res.cloudinary.com/alchemyapi/image/upload/convert-png/eth-mainnet/12132818c5f029bf701aeed6e7bd3d1f",
+      "contentType": "image/jpeg",
+      "size": 2562908,
+      "originalUrl": "https://ipfs.io/ipfs/bafybeibdxn6r6u5u5i75zqrdj3abe2p3oxyv6d7k34jeyac5ipnf65dyta"
+    },
+    "animation": {
+      "cachedUrl": null,
+      "contentType": null,
+      "size": null,
+      "originalUrl": null
+    },
+    "raw": {
+      "tokenUri": "ipfs://bafkreia7nlgbcin5sstzbmvrocdukfos3nosjs2kyozmcgekvlcksaa2sy",
+      "metadata": {
+        "image": "ipfs://bafybeibdxn6r6u5u5i75zqrdj3abe2p3oxyv6d7k34jeyac5ipnf65dyta",
+        "tokenStandard": "ERC-721",
+        "fileSize": "2.44 MB",
+        "blockchain": "Ethereum",
+        "name": "Two Voices, One Circles",
+        "icon": "ipfs://bafkreiewyfrcfl7lidfpbkclofgfyf4jnrjdg2rjse6pfxdaerv7n2sbcq",
+        "description": "One speaks, the other feels.",
+        "contractAddress": "0xa6df4a2e889d36105757ee86e7905bffab588a8b",
+        "medium": "Image (JPEG)",
+        "dimensions": "4096x3072"
+      },
+      "error": null
+    },
+    "collection": {
+      "name": "Stories on Circles",
+      "slug": "stories-on-circles",
+      "externalUrl": null,
+      "bannerImageUrl": null
+    },
+    "mint": {
+      "mintAddress": "0x116723a14c7ee8ac3647d37bb5e9f193c29b3489",
+      "blockNumber": 22592650,
+      "timestamp": "2025-05-30T02:43:59Z",
+      "transactionHash": "0x1adb1514333ffce2547f680e07c51fce20525eaf4dc6bc0123088d4949a57d39"
+    },
+    "owners": null,
+    "timeLastUpdated": "2025-06-03T10:21:54.598Z"
+  },
+  {
+    "contract": {
+      "address": "0xDE3229D33cB8513ffb717f870efd71c0C5ddbcF7",
+      "name": "Stories on Circles",
+      "symbol": "SoC",
+      "totalSupply": null,
+      "tokenType": "ERC721",
+      "contractDeployer": "0x116723a14C7Ee8ac3647D37BB5E9F193c29B3489",
+      "deployedBlockNumber": 22592646,
+      "openSeaMetadata": {
+        "floorPrice": null,
+        "collectionName": "Stories on Circles",
+        "collectionSlug": "stories-on-circles",
+        "safelistRequestStatus": "not_requested",
+        "imageUrl": "https://i.seadn.io/s/raw/files/3c509c719182a234c57443ad8fd88faa.jpg?w=500&auto=format",
+        "description": "Stories on Circles is a reflection on how limitations can become a source of liberation. It is the first-ever collection presented under SILK, born from the belief that structure can spark something deeply personal.\n\nCircles have defined boundaries but invite infinite interpretations. In contemporary practice, artists frequently choose circular frameworks to test limits, probing how constraints can inspire innovation. Think of Leonardo da Vinci's 'Vitruvian Man' or Hilma af Klints spiritual abstractions. Omentejovem's collection embraces this paradox, emphasizing creativity sparked by constraint rather than hindered by it.\n\nEach piece of omentejovem’s Stories on Circles collection unfolds within the strict boundary of a circle, yet each tells a different narrative, transcending the fine-line borders through an emotional depth.",
+        "externalUrl": null,
+        "twitterUsername": null,
+        "discordUrl": null,
+        "bannerImageUrl": null,
+        "lastIngestedAt": "2025-05-30T03:03:12.000Z"
+      },
+      "isSpam": false,
+      "spamClassifications": []
+    },
+    "tokenId": "3",
+    "tokenType": "ERC721",
+    "name": "The Ground Was My Teacher",
+    "description": "In childhood, omentejovem found joy in playing with kites – though, more often than not, they never made it to the sky. The attempts often ended in scraped knees and shattered frames. Yet, even in defeat, there was invention: broken kites became raw material for new toys, crafted from salvaged sticks and tangled strings. The artist reflects that, in many ways, that pattern still shapes his life today.",
+    "tokenUri": "https://alchemy.mypinata.cloud/ipfs/bafkreieboo2p7jupfnlfqnknfkthggg37zz3xy4ort3s3uqkp2xagetb44",
+    "image": {
+      "cachedUrl": "https://nft-cdn.alchemy.com/eth-mainnet/c3f5bbb5902451c528719b6336278d56",
+      "thumbnailUrl": "https://res.cloudinary.com/alchemyapi/image/upload/thumbnailv2/eth-mainnet/c3f5bbb5902451c528719b6336278d56",
+      "pngUrl": "https://res.cloudinary.com/alchemyapi/image/upload/convert-png/eth-mainnet/c3f5bbb5902451c528719b6336278d56",
+      "contentType": "image/jpeg",
+      "size": 3840082,
+      "originalUrl": "https://ipfs.io/ipfs/bafybeidyv3lv6vcgiir3u6onstyjddfr336vqg4bnxwl2dp7luxthblht4"
+    },
+    "animation": {
+      "cachedUrl": null,
+      "contentType": null,
+      "size": null,
+      "originalUrl": null
+    },
+    "raw": {
+      "tokenUri": "ipfs://bafkreieboo2p7jupfnlfqnknfkthggg37zz3xy4ort3s3uqkp2xagetb44",
+      "metadata": {
+        "image": "ipfs://bafybeidyv3lv6vcgiir3u6onstyjddfr336vqg4bnxwl2dp7luxthblht4",
+        "tokenStandard": "ERC-721",
+        "fileSize": "3.66 MB",
+        "blockchain": "Ethereum",
+        "name": "The Ground Was My Teacher",
+        "icon": "ipfs://bafkreibksrwb64bbujuxth7pzqs7bsyc3btya3lfdx5ra5xq3gib4vsuw4",
+        "description": "In childhood, omentejovem found joy in playing with kites – though, more often than not, they never made it to the sky. The attempts often ended in scraped knees and shattered frames. Yet, even in defeat, there was invention: broken kites became raw material for new toys, crafted from salvaged sticks and tangled strings. The artist reflects that, in many ways, that pattern still shapes his life today.",
+        "contractAddress": "0xa6df4a2e889d36105757ee86e7905bffab588a8b",
+        "medium": "Image (JPEG)",
+        "dimensions": "3072x4096"
+      },
+      "error": null
+    },
+    "collection": {
+      "name": "Stories on Circles",
+      "slug": "stories-on-circles",
+      "externalUrl": null,
+      "bannerImageUrl": null
+    },
+    "mint": {
+      "mintAddress": "0x116723a14c7ee8ac3647d37bb5e9f193c29b3489",
+      "blockNumber": 22592650,
+      "timestamp": "2025-05-30T02:43:59Z",
+      "transactionHash": "0x1adb1514333ffce2547f680e07c51fce20525eaf4dc6bc0123088d4949a57d39"
+    },
+    "owners": null,
+    "timeLastUpdated": "2025-05-30T02:44:04.411Z"
+  },
+  {
+    "contract": {
+      "address": "0xDE3229D33cB8513ffb717f870efd71c0C5ddbcF7",
+      "name": "Stories on Circles",
+      "symbol": "SoC",
+      "totalSupply": null,
+      "tokenType": "ERC721",
+      "contractDeployer": "0x116723a14C7Ee8ac3647D37BB5E9F193c29B3489",
+      "deployedBlockNumber": 22592646,
+      "openSeaMetadata": {
+        "floorPrice": null,
+        "collectionName": "Stories on Circles",
+        "collectionSlug": "stories-on-circles",
+        "safelistRequestStatus": "not_requested",
+        "imageUrl": "https://i.seadn.io/s/raw/files/3c509c719182a234c57443ad8fd88faa.jpg?w=500&auto=format",
+        "description": "Stories on Circles is a reflection on how limitations can become a source of liberation. It is the first-ever collection presented under SILK, born from the belief that structure can spark something deeply personal.\n\nCircles have defined boundaries but invite infinite interpretations. In contemporary practice, artists frequently choose circular frameworks to test limits, probing how constraints can inspire innovation. Think of Leonardo da Vinci's 'Vitruvian Man' or Hilma af Klints spiritual abstractions. Omentejovem's collection embraces this paradox, emphasizing creativity sparked by constraint rather than hindered by it.\n\nEach piece of omentejovem’s Stories on Circles collection unfolds within the strict boundary of a circle, yet each tells a different narrative, transcending the fine-line borders through an emotional depth.",
+        "externalUrl": null,
+        "twitterUsername": null,
+        "discordUrl": null,
+        "bannerImageUrl": null,
+        "lastIngestedAt": "2025-05-30T03:03:12.000Z"
+      },
+      "isSpam": false,
+      "spamClassifications": []
+    },
+    "tokenId": "4",
+    "tokenType": "ERC721",
+    "name": "I Had Dreams About You",
+    "description": "Though I wish I could remember exactly what I dreamed.",
+    "tokenUri": "https://alchemy.mypinata.cloud/ipfs/bafkreie4ypg7yomtghe3aodjlojmkzp3vo4dof2r5wv4lcflng4ajyauay",
+    "image": {
+      "cachedUrl": "https://nft-cdn.alchemy.com/eth-mainnet/0f35ecfa572b828682afe16b3139d2c6",
+      "thumbnailUrl": "https://res.cloudinary.com/alchemyapi/image/upload/thumbnailv2/eth-mainnet/0f35ecfa572b828682afe16b3139d2c6",
+      "pngUrl": "https://res.cloudinary.com/alchemyapi/image/upload/convert-png/eth-mainnet/0f35ecfa572b828682afe16b3139d2c6",
+      "contentType": "image/jpeg",
+      "size": 3876348,
+      "originalUrl": "https://ipfs.io/ipfs/bafybeibfmqi4lort2662jr7mjh6tv2qj6m37vf42unyrh4lor3wifqu36y"
+    },
+    "animation": {
+      "cachedUrl": null,
+      "contentType": null,
+      "size": null,
+      "originalUrl": null
+    },
+    "raw": {
+      "tokenUri": "ipfs://bafkreie4ypg7yomtghe3aodjlojmkzp3vo4dof2r5wv4lcflng4ajyauay",
+      "metadata": {
+        "image": "ipfs://bafybeibfmqi4lort2662jr7mjh6tv2qj6m37vf42unyrh4lor3wifqu36y",
+        "tokenStandard": "ERC-721",
+        "fileSize": "3.70 MB",
+        "blockchain": "Ethereum",
+        "name": "I Had Dreams About You",
+        "icon": "ipfs://bafkreia3wvgcqbbx4iiuaqrzmjepq3zheoq4chvkot23egf3nwh7a6bxsy",
+        "description": "Though I wish I could remember exactly what I dreamed.",
+        "contractAddress": "0xa6df4a2e889d36105757ee86e7905bffab588a8b",
+        "medium": "Image (JPEG)",
+        "dimensions": "4096x3072"
+      },
+      "error": null
+    },
+    "collection": {
+      "name": "Stories on Circles",
+      "slug": "stories-on-circles",
+      "externalUrl": null,
+      "bannerImageUrl": null
+    },
+    "mint": {
+      "mintAddress": "0x116723a14c7ee8ac3647d37bb5e9f193c29b3489",
+      "blockNumber": 22592650,
+      "timestamp": "2025-05-30T02:43:59Z",
+      "transactionHash": "0x1adb1514333ffce2547f680e07c51fce20525eaf4dc6bc0123088d4949a57d39"
+    },
+    "owners": null,
+    "timeLastUpdated": "2025-05-30T02:44:04.563Z"
+  },
+  {
+    "contract": {
+      "address": "0xDE3229D33cB8513ffb717f870efd71c0C5ddbcF7",
+      "name": "Stories on Circles",
+      "symbol": "SoC",
+      "totalSupply": null,
+      "tokenType": "ERC721",
+      "contractDeployer": "0x116723a14C7Ee8ac3647D37BB5E9F193c29B3489",
+      "deployedBlockNumber": 22592646,
+      "openSeaMetadata": {
+        "floorPrice": null,
+        "collectionName": "Stories on Circles",
+        "collectionSlug": "stories-on-circles",
+        "safelistRequestStatus": "not_requested",
+        "imageUrl": "https://i.seadn.io/s/raw/files/3c509c719182a234c57443ad8fd88faa.jpg?w=500&auto=format",
+        "description": "Stories on Circles is a reflection on how limitations can become a source of liberation. It is the first-ever collection presented under SILK, born from the belief that structure can spark something deeply personal.\n\nCircles have defined boundaries but invite infinite interpretations. In contemporary practice, artists frequently choose circular frameworks to test limits, probing how constraints can inspire innovation. Think of Leonardo da Vinci's 'Vitruvian Man' or Hilma af Klints spiritual abstractions. Omentejovem's collection embraces this paradox, emphasizing creativity sparked by constraint rather than hindered by it.\n\nEach piece of omentejovem’s Stories on Circles collection unfolds within the strict boundary of a circle, yet each tells a different narrative, transcending the fine-line borders through an emotional depth.",
+        "externalUrl": null,
+        "twitterUsername": null,
+        "discordUrl": null,
+        "bannerImageUrl": null,
+        "lastIngestedAt": "2025-05-30T03:03:12.000Z"
+      },
+      "isSpam": false,
+      "spamClassifications": []
+    },
+    "tokenId": "5",
+    "tokenType": "ERC721",
+    "name": "Mapping the Unseen",
+    "description": "For omentejovem, Mapping the Unseen emerged through a process just as elusive as the title suggests. While the result may appear enigmatic, its creation was guided by instinct rather than calculation. At a certain point, the work – and the Stories on Circles collection as a whole – came to a standstill just before it was final for the artist. Too much emphasis had drifted toward conscious control, wanting to achieve a certain level, and something vital then fell out of reach. Only by letting go, by stepping back into moments of unstructured observation and quiet reflection, did the process regain momentum. This piece holds that shift: a subtle record of release and reconnection with the subconscious currents that shape the work beneath the surface.",
+    "tokenUri": "https://ipfs.io/ipfs/bafkreih4h2vna6xfcocqe4lgifg5czwa7rf3jyj6skaczeslqasgwnzusu",
+    "image": {
+      "cachedUrl": "https://nft-cdn.alchemy.com/eth-mainnet/410dbc8a1bcaa7e4957c987a28736f01",
+      "thumbnailUrl": "https://res.cloudinary.com/alchemyapi/image/upload/thumbnailv2/eth-mainnet/410dbc8a1bcaa7e4957c987a28736f01",
+      "pngUrl": "https://res.cloudinary.com/alchemyapi/image/upload/convert-png/eth-mainnet/410dbc8a1bcaa7e4957c987a28736f01",
+      "contentType": "image/jpeg",
+      "size": 2432776,
+      "originalUrl": "https://ipfs.io/ipfs/bafybeifxephwmr7j63hn66btheqb4qvhqpwcwboqixhvl5he5dhqw4rvxi"
+    },
+    "animation": {
+      "cachedUrl": null,
+      "contentType": null,
+      "size": null,
+      "originalUrl": null
+    },
+    "raw": {
+      "tokenUri": "ipfs://bafkreih4h2vna6xfcocqe4lgifg5czwa7rf3jyj6skaczeslqasgwnzusu",
+      "metadata": {
+        "image": "ipfs://bafybeifxephwmr7j63hn66btheqb4qvhqpwcwboqixhvl5he5dhqw4rvxi",
+        "tokenStandard": "ERC-721",
+        "fileSize": "2.32 MB",
+        "blockchain": "Ethereum",
+        "name": "Mapping the Unseen",
+        "icon": "ipfs://bafkreibtywl2oabevg4pqyhqoafprftpf6epqekxfxj4yx2x7ihp37ub6y",
+        "description": "For omentejovem, Mapping the Unseen emerged through a process just as elusive as the title suggests. While the result may appear enigmatic, its creation was guided by instinct rather than calculation. At a certain point, the work – and the Stories on Circles collection as a whole – came to a standstill just before it was final for the artist. Too much emphasis had drifted toward conscious control, wanting to achieve a certain level, and something vital then fell out of reach. Only by letting go, by stepping back into moments of unstructured observation and quiet reflection, did the process regain momentum. This piece holds that shift: a subtle record of release and reconnection with the subconscious currents that shape the work beneath the surface.",
+        "contractAddress": "0xa6df4a2e889d36105757ee86e7905bffab588a8b",
+        "medium": "Image (JPEG)",
+        "dimensions": "3072x4096"
+      },
+      "error": null
+    },
+    "collection": {
+      "name": "Stories on Circles",
+      "slug": "stories-on-circles",
+      "externalUrl": null,
+      "bannerImageUrl": null
+    },
+    "mint": {
+      "mintAddress": "0x116723a14c7ee8ac3647d37bb5e9f193c29b3489",
+      "blockNumber": 22592650,
+      "timestamp": "2025-05-30T02:43:59Z",
+      "transactionHash": "0x1adb1514333ffce2547f680e07c51fce20525eaf4dc6bc0123088d4949a57d39"
+    },
+    "owners": null,
+    "timeLastUpdated": "2025-05-30T02:44:04.553Z"
+  },
+  {
+    "contract": {
+      "address": "0xDE3229D33cB8513ffb717f870efd71c0C5ddbcF7",
+      "name": "Stories on Circles",
+      "symbol": "SoC",
+      "totalSupply": null,
+      "tokenType": "ERC721",
+      "contractDeployer": "0x116723a14C7Ee8ac3647D37BB5E9F193c29B3489",
+      "deployedBlockNumber": 22592646,
+      "openSeaMetadata": {
+        "floorPrice": null,
+        "collectionName": "Stories on Circles",
+        "collectionSlug": "stories-on-circles",
+        "safelistRequestStatus": "not_requested",
+        "imageUrl": "https://i.seadn.io/s/raw/files/3c509c719182a234c57443ad8fd88faa.jpg?w=500&auto=format",
+        "description": "Stories on Circles is a reflection on how limitations can become a source of liberation. It is the first-ever collection presented under SILK, born from the belief that structure can spark something deeply personal.\n\nCircles have defined boundaries but invite infinite interpretations. In contemporary practice, artists frequently choose circular frameworks to test limits, probing how constraints can inspire innovation. Think of Leonardo da Vinci's 'Vitruvian Man' or Hilma af Klints spiritual abstractions. Omentejovem's collection embraces this paradox, emphasizing creativity sparked by constraint rather than hindered by it.\n\nEach piece of omentejovem’s Stories on Circles collection unfolds within the strict boundary of a circle, yet each tells a different narrative, transcending the fine-line borders through an emotional depth.",
+        "externalUrl": null,
+        "twitterUsername": null,
+        "discordUrl": null,
+        "bannerImageUrl": null,
+        "lastIngestedAt": "2025-05-30T03:03:12.000Z"
+      },
+      "isSpam": false,
+      "spamClassifications": []
+    },
+    "tokenId": "6",
+    "tokenType": "ERC721",
+    "name": "Playing Chess with Love",
+    "description": "I held my heart like a king behind fragile pawns, each move a negotiation between caution and surrender. Love, like the game, offered no promises of victory.",
+    "tokenUri": "https://alchemy.mypinata.cloud/ipfs/bafkreidwhkkxlwodybzbgztnulzn7feeydwyr76dnabp4hk2plnjrapxzq",
+    "image": {
+      "cachedUrl": "https://nft-cdn.alchemy.com/eth-mainnet/62b9a24544ac45d90f5453c0dcb49ebe",
+      "thumbnailUrl": "https://res.cloudinary.com/alchemyapi/image/upload/thumbnailv2/eth-mainnet/62b9a24544ac45d90f5453c0dcb49ebe",
+      "pngUrl": "https://res.cloudinary.com/alchemyapi/image/upload/convert-png/eth-mainnet/62b9a24544ac45d90f5453c0dcb49ebe",
+      "contentType": "image/jpeg",
+      "size": 2753441,
+      "originalUrl": "https://ipfs.io/ipfs/bafybeifelvho7c2ajid625r3yf7cucqks55mhi6ollzaegkupw4bscnomy"
+    },
+    "animation": {
+      "cachedUrl": null,
+      "contentType": null,
+      "size": null,
+      "originalUrl": null
+    },
+    "raw": {
+      "tokenUri": "ipfs://bafkreidwhkkxlwodybzbgztnulzn7feeydwyr76dnabp4hk2plnjrapxzq",
+      "metadata": {
+        "image": "ipfs://bafybeifelvho7c2ajid625r3yf7cucqks55mhi6ollzaegkupw4bscnomy",
+        "tokenStandard": "ERC-721",
+        "fileSize": "2.63 MB",
+        "blockchain": "Ethereum",
+        "name": "Playing Chess with Love",
+        "icon": "ipfs://bafkreieqljj7c2k5ktznkqn2l7p5b5lmhv2kfdwgziy57vjxk3qbnhtnz4",
+        "description": "I held my heart like a king behind fragile pawns, each move a negotiation between caution and surrender. Love, like the game, offered no promises of victory.",
+        "contractAddress": "0xa6df4a2e889d36105757ee86e7905bffab588a8b",
+        "medium": "Image (JPEG)",
+        "dimensions": "4096x3072"
+      },
+      "error": null
+    },
+    "collection": {
+      "name": "Stories on Circles",
+      "slug": "stories-on-circles",
+      "externalUrl": null,
+      "bannerImageUrl": null
+    },
+    "mint": {
+      "mintAddress": "0x116723a14c7ee8ac3647d37bb5e9f193c29b3489",
+      "blockNumber": 22592650,
+      "timestamp": "2025-05-30T02:43:59Z",
+      "transactionHash": "0x1adb1514333ffce2547f680e07c51fce20525eaf4dc6bc0123088d4949a57d39"
+    },
+    "owners": null,
+    "timeLastUpdated": "2025-05-30T02:44:04.290Z"
+  },
+  {
+    "contract": {
+      "address": "0xDE3229D33cB8513ffb717f870efd71c0C5ddbcF7",
+      "name": "Stories on Circles",
+      "symbol": "SoC",
+      "totalSupply": null,
+      "tokenType": "ERC721",
+      "contractDeployer": "0x116723a14C7Ee8ac3647D37BB5E9F193c29B3489",
+      "deployedBlockNumber": 22592646,
+      "openSeaMetadata": {
+        "floorPrice": null,
+        "collectionName": "Stories on Circles",
+        "collectionSlug": "stories-on-circles",
+        "safelistRequestStatus": "not_requested",
+        "imageUrl": "https://i.seadn.io/s/raw/files/3c509c719182a234c57443ad8fd88faa.jpg?w=500&auto=format",
+        "description": "Stories on Circles is a reflection on how limitations can become a source of liberation. It is the first-ever collection presented under SILK, born from the belief that structure can spark something deeply personal.\n\nCircles have defined boundaries but invite infinite interpretations. In contemporary practice, artists frequently choose circular frameworks to test limits, probing how constraints can inspire innovation. Think of Leonardo da Vinci's 'Vitruvian Man' or Hilma af Klints spiritual abstractions. Omentejovem's collection embraces this paradox, emphasizing creativity sparked by constraint rather than hindered by it.\n\nEach piece of omentejovem’s Stories on Circles collection unfolds within the strict boundary of a circle, yet each tells a different narrative, transcending the fine-line borders through an emotional depth.",
+        "externalUrl": null,
+        "twitterUsername": null,
+        "discordUrl": null,
+        "bannerImageUrl": null,
+        "lastIngestedAt": "2025-05-30T03:03:12.000Z"
+      },
+      "isSpam": false,
+      "spamClassifications": []
+    },
+    "tokenId": "7",
+    "tokenType": "ERC721",
+    "name": "All Time High Discovery",
+    "description": "Ideas, feelings, and memories fold and collide, looping endlessly in perpetual motion, just like waves.\nThis work is a homage to All Time High in the City (2018) by XCOPY.",
+    "tokenUri": "https://alchemy.mypinata.cloud/ipfs/bafkreidrg5aqpqt4cykhi3wc4ycocx5irg3eboee5qj2qxf3okvfdq3cdi",
+    "image": {
+      "cachedUrl": "https://nft-cdn.alchemy.com/eth-mainnet/8ab0d34dad6e828a24c30816a2fc735f",
+      "thumbnailUrl": "https://res.cloudinary.com/alchemyapi/image/upload/thumbnailv2/eth-mainnet/8ab0d34dad6e828a24c30816a2fc735f",
+      "pngUrl": "https://res.cloudinary.com/alchemyapi/image/upload/convert-png/eth-mainnet/8ab0d34dad6e828a24c30816a2fc735f",
+      "contentType": "image/jpeg",
+      "size": 2718546,
+      "originalUrl": "https://ipfs.io/ipfs/bafybeiajit3tivuni3vbqs4w7us7ua3bk6lcemff66dhldv4wvkawal6ka"
+    },
+    "animation": {
+      "cachedUrl": null,
+      "contentType": null,
+      "size": null,
+      "originalUrl": null
+    },
+    "raw": {
+      "tokenUri": "ipfs://bafkreidrg5aqpqt4cykhi3wc4ycocx5irg3eboee5qj2qxf3okvfdq3cdi",
+      "metadata": {
+        "image": "ipfs://bafybeiajit3tivuni3vbqs4w7us7ua3bk6lcemff66dhldv4wvkawal6ka",
+        "tokenStandard": "ERC-721",
+        "fileSize": "2.59 MB",
+        "blockchain": "Ethereum",
+        "name": "All Time High Discovery",
+        "icon": "ipfs://bafkreid4wrj6vxklapfp4eivwanian5rortc3k3r5cu52w3zd6lqjvmxbe",
+        "description": "Ideas, feelings, and memories fold and collide, looping endlessly in perpetual motion, just like waves.\nThis work is a homage to All Time High in the City (2018) by XCOPY.",
+        "contractAddress": "0xa6df4a2e889d36105757ee86e7905bffab588a8b",
+        "medium": "Image (JPEG)",
+        "dimensions": "3072x4096"
+      },
+      "error": null
+    },
+    "collection": {
+      "name": "Stories on Circles",
+      "slug": "stories-on-circles",
+      "externalUrl": null,
+      "bannerImageUrl": null
+    },
+    "mint": {
+      "mintAddress": "0x116723a14c7ee8ac3647d37bb5e9f193c29b3489",
+      "blockNumber": 22592650,
+      "timestamp": "2025-05-30T02:43:59Z",
+      "transactionHash": "0x1adb1514333ffce2547f680e07c51fce20525eaf4dc6bc0123088d4949a57d39"
+    },
+    "owners": null,
+    "timeLastUpdated": "2025-05-30T02:44:04.075Z"
+  },
+  {
+    "contract": {
+      "address": "0xDE3229D33cB8513ffb717f870efd71c0C5ddbcF7",
+      "name": "Stories on Circles",
+      "symbol": "SoC",
+      "totalSupply": null,
+      "tokenType": "ERC721",
+      "contractDeployer": "0x116723a14C7Ee8ac3647D37BB5E9F193c29B3489",
+      "deployedBlockNumber": 22592646,
+      "openSeaMetadata": {
+        "floorPrice": null,
+        "collectionName": "Stories on Circles",
+        "collectionSlug": "stories-on-circles",
+        "safelistRequestStatus": "not_requested",
+        "imageUrl": "https://i.seadn.io/s/raw/files/3c509c719182a234c57443ad8fd88faa.jpg?w=500&auto=format",
+        "description": "Stories on Circles is a reflection on how limitations can become a source of liberation. It is the first-ever collection presented under SILK, born from the belief that structure can spark something deeply personal.\n\nCircles have defined boundaries but invite infinite interpretations. In contemporary practice, artists frequently choose circular frameworks to test limits, probing how constraints can inspire innovation. Think of Leonardo da Vinci's 'Vitruvian Man' or Hilma af Klints spiritual abstractions. Omentejovem's collection embraces this paradox, emphasizing creativity sparked by constraint rather than hindered by it.\n\nEach piece of omentejovem’s Stories on Circles collection unfolds within the strict boundary of a circle, yet each tells a different narrative, transcending the fine-line borders through an emotional depth.",
+        "externalUrl": null,
+        "twitterUsername": null,
+        "discordUrl": null,
+        "bannerImageUrl": null,
+        "lastIngestedAt": "2025-05-30T03:03:12.000Z"
+      },
+      "isSpam": false,
+      "spamClassifications": []
+    },
+    "tokenId": "8",
+    "tokenType": "ERC721",
+    "name": "I Am Where You Aren’t",
+    "description": "For omentejovem, the concept of ‘desire’ underpins this work. I Am Where You Aren’t offers the collector a choice between two perspectives of the same piece, to be switched on-chain.\nChoosing between the mirrored versions, the artist wants you to explore the tension between longing for something and not having control over that, and being present somewhere whilst also wanting to be in another, distant place. Each carrying its own absence, omentejovem purposely shaped both sides, reflecting opposing yet connected positions.\n\ncode made by Andrew Mitchell (@uncut_hems)\n\nHow to Flip: https://www.silkarthouse.com/collections/stories-on-circles/how-to-flip",
+    "tokenUri": "https://alchemy.mypinata.cloud/ipfs/bafkreia7a545hnvq46loavg7hzwb7azp3eljx6p2c7rnhfpbc7nujxuy7e",
+    "image": {
+      "cachedUrl": "https://nft-cdn.alchemy.com/eth-mainnet/5ebf9d20e94b6b79a858a71b1489cd6a",
+      "thumbnailUrl": "https://res.cloudinary.com/alchemyapi/image/upload/thumbnailv2/eth-mainnet/5ebf9d20e94b6b79a858a71b1489cd6a",
+      "pngUrl": "https://res.cloudinary.com/alchemyapi/image/upload/convert-png/eth-mainnet/5ebf9d20e94b6b79a858a71b1489cd6a",
+      "contentType": "image/jpeg",
+      "size": 4029830,
+      "originalUrl": "https://ipfs.io/ipfs/bafybeic2pj4fs6jbnqjxpgckridm62krwykz4sdkao26prokzsrliuo4ia"
+    },
+    "animation": {
+      "cachedUrl": null,
+      "contentType": null,
+      "size": null,
+      "originalUrl": null
+    },
+    "raw": {
+      "tokenUri": "ipfs://bafkreia7a545hnvq46loavg7hzwb7azp3eljx6p2c7rnhfpbc7nujxuy7e",
+      "metadata": {
+        "image": "ipfs://bafybeic2pj4fs6jbnqjxpgckridm62krwykz4sdkao26prokzsrliuo4ia",
+        "tokenStandard": "ERC-721",
+        "fileSize": "3.84 MB",
+        "blockchain": "Ethereum",
+        "name": "I Am Where You Aren’t",
+        "icon": "ipfs://bafkreicowrhc6e4reaghvtm4jkrb5l4ty4ygf3hj47vhxcgwqkuwsjdw2q",
+        "description": "For omentejovem, the concept of ‘desire’ underpins this work. I Am Where You Aren’t offers the collector a choice between two perspectives of the same piece, to be switched on-chain.\nChoosing between the mirrored versions, the artist wants you to explore the tension between longing for something and not having control over that, and being present somewhere whilst also wanting to be in another, distant place. Each carrying its own absence, omentejovem purposely shaped both sides, reflecting opposing yet connected positions.\n\ncode made by Andrew Mitchell (@uncut_hems)\n\nHow to Flip: https://www.silkarthouse.com/collections/stories-on-circles/how-to-flip",
+        "contractAddress": "0x7B6fa58d4BaEa8E40F28A2431B07aB9294703657",
+        "medium": "Image (JPEG)",
+        "dimensions": "4096x3072"
+      },
+      "error": null
+    },
+    "collection": {
+      "name": "Stories on Circles",
+      "slug": "stories-on-circles",
+      "externalUrl": null,
+      "bannerImageUrl": null
+    },
+    "mint": {
+      "mintAddress": "0x116723a14c7ee8ac3647d37bb5e9f193c29b3489",
+      "blockNumber": 22592650,
+      "timestamp": "2025-05-30T02:43:59Z",
+      "transactionHash": "0x1adb1514333ffce2547f680e07c51fce20525eaf4dc6bc0123088d4949a57d39"
+    },
+    "owners": null,
+    "timeLastUpdated": "2025-05-30T02:44:03.289Z"
+  },
+  {
+    "contract": {
+      "address": "0xDE3229D33cB8513ffb717f870efd71c0C5ddbcF7",
+      "name": "Stories on Circles",
+      "symbol": "SoC",
+      "totalSupply": null,
+      "tokenType": "ERC721",
+      "contractDeployer": "0x116723a14C7Ee8ac3647D37BB5E9F193c29B3489",
+      "deployedBlockNumber": 22592646,
+      "openSeaMetadata": {
+        "floorPrice": null,
+        "collectionName": "Stories on Circles",
+        "collectionSlug": "stories-on-circles",
+        "safelistRequestStatus": "not_requested",
+        "imageUrl": "https://i.seadn.io/s/raw/files/3c509c719182a234c57443ad8fd88faa.jpg?w=500&auto=format",
+        "description": "Stories on Circles is a reflection on how limitations can become a source of liberation. It is the first-ever collection presented under SILK, born from the belief that structure can spark something deeply personal.\n\nCircles have defined boundaries but invite infinite interpretations. In contemporary practice, artists frequently choose circular frameworks to test limits, probing how constraints can inspire innovation. Think of Leonardo da Vinci's 'Vitruvian Man' or Hilma af Klints spiritual abstractions. Omentejovem's collection embraces this paradox, emphasizing creativity sparked by constraint rather than hindered by it.\n\nEach piece of omentejovem’s Stories on Circles collection unfolds within the strict boundary of a circle, yet each tells a different narrative, transcending the fine-line borders through an emotional depth.",
+        "externalUrl": null,
+        "twitterUsername": null,
+        "discordUrl": null,
+        "bannerImageUrl": null,
+        "lastIngestedAt": "2025-05-30T03:03:12.000Z"
+      },
+      "isSpam": false,
+      "spamClassifications": []
+    },
+    "tokenId": "9",
+    "tokenType": "ERC721",
+    "name": "Before Birth",
+    "description": "Something is waiting in the quiet.",
+    "tokenUri": "https://ipfs.io/ipfs/bafkreic2fers5lsv6ej2sdxvatugohxwe65cupswpfktr7p7ybzpv5e3mi",
+    "image": {
+      "cachedUrl": "https://nft-cdn.alchemy.com/eth-mainnet/173b27ca5b7f14d2cd7d3fa9fa669b01",
+      "thumbnailUrl": "https://res.cloudinary.com/alchemyapi/image/upload/thumbnailv2/eth-mainnet/173b27ca5b7f14d2cd7d3fa9fa669b01",
+      "pngUrl": "https://res.cloudinary.com/alchemyapi/image/upload/convert-png/eth-mainnet/173b27ca5b7f14d2cd7d3fa9fa669b01",
+      "contentType": "image/jpeg",
+      "size": 3410874,
+      "originalUrl": "https://ipfs.io/ipfs/bafybeicqqqvqnytaifhnmnyrlcdrs7mhw7fjj4hscrg4kvvyzu4j25kt3i"
+    },
+    "animation": {
+      "cachedUrl": null,
+      "contentType": null,
+      "size": null,
+      "originalUrl": null
+    },
+    "raw": {
+      "tokenUri": "ipfs://bafkreic2fers5lsv6ej2sdxvatugohxwe65cupswpfktr7p7ybzpv5e3mi",
+      "metadata": {
+        "image": "ipfs://bafybeicqqqvqnytaifhnmnyrlcdrs7mhw7fjj4hscrg4kvvyzu4j25kt3i",
+        "tokenStandard": "ERC-721",
+        "fileSize": "3.25 MB",
+        "blockchain": "Ethereum",
+        "name": "Before Birth",
+        "icon": "ipfs://bafkreigsc2tw26pa7bovvd5wrbr477l4g3yn7d7cbbvkhfqptsodbwzc4a",
+        "description": "Something is waiting in the quiet.",
+        "contractAddress": "0x073B1637d4B7E15030c1f73F84a174633DFb9AeB",
+        "medium": "Image (JPEG)",
+        "dimensions": "3072x4096"
+      },
+      "error": null
+    },
+    "collection": {
+      "name": "Stories on Circles",
+      "slug": "stories-on-circles",
+      "externalUrl": null,
+      "bannerImageUrl": null
+    },
+    "mint": {
+      "mintAddress": "0x116723a14c7ee8ac3647d37bb5e9f193c29b3489",
+      "blockNumber": 22592650,
+      "timestamp": "2025-05-30T02:43:59Z",
+      "transactionHash": "0x1adb1514333ffce2547f680e07c51fce20525eaf4dc6bc0123088d4949a57d39"
+    },
+    "owners": null,
+    "timeLastUpdated": "2025-06-03T10:38:38.623Z"
+  },
+  {
+    "contract": {
+      "address": "0xDE3229D33cB8513ffb717f870efd71c0C5ddbcF7",
+      "name": "Stories on Circles",
+      "symbol": "SoC",
+      "totalSupply": null,
+      "tokenType": "ERC721",
+      "contractDeployer": "0x116723a14C7Ee8ac3647D37BB5E9F193c29B3489",
+      "deployedBlockNumber": 22592646,
+      "openSeaMetadata": {
+        "floorPrice": null,
+        "collectionName": "Stories on Circles",
+        "collectionSlug": "stories-on-circles",
+        "safelistRequestStatus": "not_requested",
+        "imageUrl": "https://i.seadn.io/s/raw/files/3c509c719182a234c57443ad8fd88faa.jpg?w=500&auto=format",
+        "description": "Stories on Circles is a reflection on how limitations can become a source of liberation. It is the first-ever collection presented under SILK, born from the belief that structure can spark something deeply personal.\n\nCircles have defined boundaries but invite infinite interpretations. In contemporary practice, artists frequently choose circular frameworks to test limits, probing how constraints can inspire innovation. Think of Leonardo da Vinci's 'Vitruvian Man' or Hilma af Klints spiritual abstractions. Omentejovem's collection embraces this paradox, emphasizing creativity sparked by constraint rather than hindered by it.\n\nEach piece of omentejovem’s Stories on Circles collection unfolds within the strict boundary of a circle, yet each tells a different narrative, transcending the fine-line borders through an emotional depth.",
+        "externalUrl": null,
+        "twitterUsername": null,
+        "discordUrl": null,
+        "bannerImageUrl": null,
+        "lastIngestedAt": "2025-05-30T03:03:12.000Z"
+      },
+      "isSpam": false,
+      "spamClassifications": []
+    },
+    "tokenId": "10",
+    "tokenType": "ERC721",
+    "name": "He Left as a Dot",
+    "description": "For omentejovem, art is a mirror. One that reflects the artist’s intentions, but also shows the viewer’s own memories and desires; your mental shape. Though the whole ‘Stories on Circles’ series carries the imprint of personal creation, the artist finds greater meaning in how others receive it: in what they notice, feel, or quietly project onto the work. This exchange feels profoundly human for him, and a necessary way of bringing us all together, to know we are not alone in the wild and bittersweet journey of life. If you allow yourself a moment to linger, just noticing the work, something unexpected may emerge; perhaps less in the artwork itself, but actually more within you. “This is the last artwork in the collection. It doesn’t ask to be understood, but to be felt.”",
+    "tokenUri": "https://alchemy.mypinata.cloud/ipfs/bafkreidgazlpmgbpwfqpbmotlcfgn7vkrfghe2rb7rggace2pqxscukchi",
+    "image": {
+      "cachedUrl": "https://nft-cdn.alchemy.com/eth-mainnet/fc678dd245d9f1baf55933435a4a73ed",
+      "thumbnailUrl": "https://res.cloudinary.com/alchemyapi/image/upload/thumbnailv2/eth-mainnet/fc678dd245d9f1baf55933435a4a73ed",
+      "pngUrl": "https://res.cloudinary.com/alchemyapi/image/upload/convert-png/eth-mainnet/fc678dd245d9f1baf55933435a4a73ed",
+      "contentType": "image/jpeg",
+      "size": 2200126,
+      "originalUrl": "https://ipfs.io/ipfs/bafybeib226x3ysxf63jhisaw53czupz2uoxodmuw5qca4pyzrb2ooejvsy"
+    },
+    "animation": {
+      "cachedUrl": null,
+      "contentType": null,
+      "size": null,
+      "originalUrl": null
+    },
+    "raw": {
+      "tokenUri": "ipfs://bafkreidgazlpmgbpwfqpbmotlcfgn7vkrfghe2rb7rggace2pqxscukchi",
+      "metadata": {
+        "image": "ipfs://bafybeib226x3ysxf63jhisaw53czupz2uoxodmuw5qca4pyzrb2ooejvsy",
+        "tokenStandard": "ERC-721",
+        "fileSize": "2.10 MB",
+        "blockchain": "Ethereum",
+        "name": "He Left as a Dot",
+        "icon": "ipfs://bafkreibcshhy2mhbulsqtc25gq4xslhlg5wlepfdlapmrrvbzg6joametm",
+        "description": "For omentejovem, art is a mirror. One that reflects the artist’s intentions, but also shows the viewer’s own memories and desires; your mental shape. Though the whole ‘Stories on Circles’ series carries the imprint of personal creation, the artist finds greater meaning in how others receive it: in what they notice, feel, or quietly project onto the work. This exchange feels profoundly human for him, and a necessary way of bringing us all together, to know we are not alone in the wild and bittersweet journey of life. If you allow yourself a moment to linger, just noticing the work, something unexpected may emerge; perhaps less in the artwork itself, but actually more within you. “This is the last artwork in the collection. It doesn’t ask to be understood, but to be felt.”",
+        "contractAddress": "0x7B6fa58d4BaEa8E40F28A2431B07aB9294703657",
+        "medium": "Image (JPEG)",
+        "dimensions": "4096x3072"
+      },
+      "error": null
+    },
+    "collection": {
+      "name": "Stories on Circles",
+      "slug": "stories-on-circles",
+      "externalUrl": null,
+      "bannerImageUrl": null
+    },
+    "mint": {
+      "mintAddress": "0x116723a14c7ee8ac3647d37bb5e9f193c29b3489",
+      "blockNumber": 22592650,
+      "timestamp": "2025-05-30T02:43:59Z",
+      "transactionHash": "0x1adb1514333ffce2547f680e07c51fce20525eaf4dc6bc0123088d4949a57d39"
+    },
+    "owners": null,
+    "timeLastUpdated": "2025-05-30T02:44:04.134Z"
   }
 ]
