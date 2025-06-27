@@ -54,6 +54,7 @@ export default function AdminDashboard() {
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [modalImage, setModalImage] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchMintData = async () => {
@@ -204,6 +205,14 @@ export default function AdminDashboard() {
     } finally {
       setDeletingId(null)
     }
+  }
+
+  const openImageModal = (imageUrl: string) => {
+    setModalImage(imageUrl)
+  }
+
+  const closeImageModal = () => {
+    setModalImage(null)
   }
 
   const handleAddNew = async (e: React.FormEvent) => {
@@ -491,24 +500,19 @@ export default function AdminDashboard() {
                     <tr key={itemId} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap text-sm">
                         {item.tokenImage ? (
-                          <div className="flex items-center space-x-2">
+                          <button
+                            onClick={() => openImageModal(item.tokenImage!)}
+                            className="block hover:opacity-80 transition-opacity"
+                          >
                             <img
                               src={item.tokenImage}
                               alt={item.tokenName || 'Token'}
-                              className="w-8 h-8 rounded object-cover"
+                              className="w-12 h-12 rounded object-cover"
                               onError={(e) => {
                                 e.currentTarget.style.display = 'none'
                               }}
                             />
-                            <a
-                              href={item.tokenImage}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-600 hover:text-blue-800"
-                            >
-                              View
-                            </a>
-                          </div>
+                          </button>
                         ) : (
                           <span className="text-gray-400">
                             No image available
@@ -606,6 +610,23 @@ export default function AdminDashboard() {
           </div>
         )}
       </div>
+
+      {/* Image Modal */}
+      {modalImage && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50"
+          onClick={closeImageModal}
+        >
+          <div className="relative max-w-6xl max-h-full p-8">
+            <img
+              src={modalImage}
+              alt="Full size token"
+              className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
+        </div>
+      )}
     </div>
   )
 }
