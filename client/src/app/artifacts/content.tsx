@@ -41,8 +41,10 @@ export function ArtifactsContent(): ReactElement {
           Collectible Crates
         </h3>
         <p className="mt-8 text-secondary-100 opacity-70 font-body">
-          Collectors can now claim the “S&C Package”.
-          Each set includes a unique wooden collectible, accompanied by a 48x48cm individually signed fine art print. Claim is made once by the collector that owns it by the release of the artifact.
+          Collectors can now claim the “S&C Package”. Each set includes a unique
+          wooden collectible, accompanied by a 48x48cm individually signed fine
+          art print. Claim is made once by the collector that owns it by the
+          release of the artifact.
         </p>
         <a
           href="https://www.youtube.com/playlist?list=PLk9K75kTXfFMkh0yLeJTlHWAjfS3zeSDw"

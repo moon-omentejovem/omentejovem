@@ -1,1 +1,0 @@
-{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"service_resources","Source":"../../modules/service_resources","Dir":"../../modules/service_resources"},{"Key":"service_resources.database_mongodb_password","Source":"../random_keyvault_secret","Dir":"../../modules/random_keyvault_secret"}]}

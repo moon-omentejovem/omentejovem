@@ -10,14 +10,14 @@ export default function AdminPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     try {
       const response = await fetch('/api/admin/auth', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ password })
       })
 
       if (response.ok) {
@@ -36,7 +36,10 @@ export default function AdminPage() {
         <h1 className="text-2xl font-bold mb-6 text-center">Admin Access</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Password
             </label>
             <input
@@ -48,9 +51,7 @@ export default function AdminPage() {
               required
             />
           </div>
-          {error && (
-            <p className="text-red-500 text-sm mt-1">{error}</p>
-          )}
+          {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
           <button
             type="submit"
             className="w-full bg-black text-white py-2.5 px-4 rounded-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 transition-all duration-200 ease-in-out"
@@ -61,4 +62,4 @@ export default function AdminPage() {
       </div>
     </div>
   )
-} 
+}

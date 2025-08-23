@@ -1,6 +1,6 @@
 import { Icons } from '@/types'
 
-export default ({ title, className }: Icons) => (
+const IconFlipVertical = ({ title, className }: Icons) => (
   <svg
     width="19"
     height="22"
@@ -30,3 +30,5 @@ export default ({ title, className }: Icons) => (
     </defs>
   </svg>
 )
+
+export default IconFlipVertical

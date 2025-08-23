@@ -7,9 +7,7 @@
     "next/core-web-vitals",
     "eslint-config-next",
     "plugin:react/recommended",
-    "plugin:jsx-a11y/recommended",
-    "plugin:react-hooks/recommended",
-    "plugin:prettier/recommended"
+    "plugin:jsx-a11y/recommended"
   ],
   "plugins": ["react"],
   "overrides": [

@@ -5,7 +5,6 @@ import { ReactElement, useEffect, useState } from 'react'
 import { ArtDetails } from '@/components/ArtDetails'
 import { ArtLinks } from '@/components/ArtLinks'
 import { ArtOwnership } from '@/components/ArtOwnership/ArtOwnership'
-import { addHours, format, fromUnixTime } from 'date-fns'
 import { Chain, NFT } from './types'
 import { cn } from '@/lib/utils'
 import { CustomIcons } from '@/assets/icons'
@@ -16,15 +15,9 @@ import {
 } from '@/animations'
 import { HorizontalInCarousel } from '../Carousels/HorizontalInCarousel/HorizontalInCarousel'
 import './styles.css'
-import { getNftLinks } from './utils'
-import {
-  GRAILS_NFTS,
-  MANIFOLD_NFTS,
-  OVERRIDE_EXTERNAL_LINKS,
-  POAP_NFTS,
-  SUPERRARE_NFTS,
-  TRANSIENT_NFTS
-} from '@/utils/constants'
+import { ArtDescription } from './ArtDescription'
+import { VideoProcessModal } from '@/components/Modals/VideoProcessModal'
+import { getNftLinks, resolveExternalLinks, getMintedOn } from './utils'
 import { Icons } from '@/components/Icons'
 
 interface ArtInfosProperties {
@@ -43,32 +36,18 @@ export function ArtInfos({
   onChangeSlideIndex
 }: ArtInfosProperties): ReactElement {
   const [isOpenVideo, setIsOpenVideo] = useState(false)
-  const [isOpenInfos, setIsOpenInfos] = useState(false)
   const [isAnimating, setIsAnimating] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
-  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
 
-  console.log('selectedArt', selectedArt)
-
-  // This only really applies to tokens in the public/new_series (the FAKE_TOKENS)...
-  // find the video with the same name but with .mp4 extension
   const hasVideo =
     selectedArt.contract.address.toLowerCase() ===
     '0x0000000000000000000000000000000000000000'
-
-  console.log('hasVideo', hasVideo)
 
   const onChangeToOtherSlide = (index: number) => {
     onChangeSlideIndex(index)
     setShowDetails(false)
     resetButtonInfo()
   }
-
-  // function animateInfos(isOpen: boolean) {
-  // 	if (window.screen.width >= 1280) {
-  // 		artInfosAnimation(true, setIsAnimating)
-  // 	}
-  // }
 
   function handleMoreSlides() {
     // Busca mais slides
@@ -78,13 +57,9 @@ export function ArtInfos({
     return true // TODO!!nft.mintedEvent
   }
 
-  const truncate = (input: string) =>
-    input?.length > 600 ? `${input.substring(0, 250)}...` : input
-
   useEffect(() => {
     if (selectedArt && window.screen.width >= 1280) {
       setIsOpenVideo(false)
-      setIsOpenInfos(false)
       setIsAnimating(false)
       resetArtInfo()
       setShowDetails(false)
@@ -96,102 +71,25 @@ export function ArtInfos({
     throw new Error('Image does not exists')
   }
 
-  let externalLinkName =
-    selectedArt.chain?.toLowerCase() === 'tezos' ? 'Objkt' : 'OpenSea'
-  let externalLinkUrl =
-    selectedArt.contract.address ===
-    '0x0000000000000000000000000000000000000000'
-      ? ``
-      : selectedArt.chain?.toLowerCase() === 'tezos'
-        ? `https://objkt.com/asset/${selectedArt.contract.address}/${selectedArt.tokenId}`
-        : `https://opensea.io/assets/${selectedArt.chain?.toLowerCase()}/${selectedArt.contract.address}/${selectedArt.tokenId}`
+  const {
+    externalLinkName,
+    externalLinkUrl,
+    secondaryExternalLinkName,
+    secondaryExternalLinkUrl
+  } = resolveExternalLinks(selectedArt)
 
-  let secondaryExternalLinkName = ''
-  let secondaryExternalLinkUrl = ''
+  const mintedOn = getMintedOn(selectedArt)
 
-  // If the token is on manifold, show it on superrare
-  if (
-    MANIFOLD_NFTS.map((nft) => nft.toLowerCase()).includes(
-      selectedArt.contract.address.toLowerCase()
-    ) ||
-    SUPERRARE_NFTS.map((nft) => nft.toLowerCase()).includes(
-      selectedArt.contract.address.toLowerCase()
-    ) ||
-    TRANSIENT_NFTS.map((nft) => nft.toLowerCase()).includes(
-      selectedArt.contract.address.toLowerCase()
-    )
-  ) {
-    externalLinkName = 'SuperRare'
-    externalLinkUrl = `https://superrare.com/artwork/eth/${selectedArt.contract.address}/${selectedArt.tokenId}`
-  }
+  const imageUrl =
+    selectedArt.image.pngUrl ||
+    selectedArt.image.cachedUrl ||
+    selectedArt.image.originalUrl ||
+    ''
 
-  if (
-    GRAILS_NFTS.map((nft) => nft.toLowerCase()).includes(
-      selectedArt.contract.address.toLowerCase()
-    )
-  ) {
-    externalLinkName = 'Grails'
-    externalLinkUrl = `https://www.proof.xyz/grails/season-5/a-black-dot-with-a-white-dot-on-a-green-background`
-  }
-
-  if (
-    POAP_NFTS.map((nft) => nft.toLowerCase()).includes(
-      selectedArt.contract.address.toLowerCase()
-    )
-  ) {
-    externalLinkName = 'OpenSea'
-    externalLinkUrl = `https://opensea.io/collection/poap-v2?search%5Bquery%5D=garden%25%20bidder`
-  }
-
-  if (
-    selectedArt.contract.address.toLowerCase() ===
-      '0x495f947276749ce646f68ac8c248420045cb7b5e' &&
-    selectedArt.tokenId ===
-      '7871549583317194720263843996823387702908660152655034722079186002726342361098'
-  ) {
-    externalLinkName = 'OpenSea'
-    externalLinkUrl = `https://opensea.io/assets/ethereum/0x28a6f816eae721fea4ad34c000077b5fe525fc3c/6`
-    secondaryExternalLinkName = 'OpenSea (old token)'
-    secondaryExternalLinkUrl = `https://opensea.io/assets/ethereum/0x495f947276749ce646f68ac8c248420045cb7b5e/7871549583317194720263843996823387702908660152655034722079186002726342361098`
-  }
-
-  if (
-    OVERRIDE_EXTERNAL_LINKS[
-      `${selectedArt.contract.address.toLowerCase()}:${selectedArt.tokenId}`
-    ]
-  ) {
-    externalLinkName =
-      OVERRIDE_EXTERNAL_LINKS[
-        `${selectedArt.contract.address.toLowerCase()}:${selectedArt.tokenId}`
-      ].name
-    externalLinkUrl =
-      OVERRIDE_EXTERNAL_LINKS[
-        `${selectedArt.contract.address.toLowerCase()}:${selectedArt.tokenId}`
-      ].link
-  }
-
-  let mintedOn = selectedArt.mint.timestamp
-    ? format(
-        addHours(selectedArt.mint.timestamp || new Date(), 3),
-        'd LLLL, yyyy'
-      )
-    : ''
-
-  if (
-    selectedArt.contract.address.toLowerCase() ===
-      '0x495f947276749ce646f68ac8c248420045cb7b5e' &&
-    selectedArt.tokenId ===
-      '7871549583317194720263843996823387702908660152655034722079186002726342361098'
-  ) {
-    mintedOn = '1 November, 2021'
-  }
-
-  if (
-    selectedArt.contract.address.toLowerCase() ===
-    '0x0000000000000000000000000000000000000000'
-  ) {
-    mintedOn = ''
-  }
+  const videoUrl =
+    selectedArt.image.originalUrl
+      ?.replace('/new_series/', '/new_series/videos/')
+      .replace('.jpg', '.mp4') || ''
 
   return (
     <>
@@ -203,18 +101,8 @@ export function ArtInfos({
         <div className="md:flex-1 min-w-[200px] xl:min-w-[350px] flex flex-col max-h-full">
           <div className="xl:art-detail-inner-container overflow-hidden flex flex-1 justify-start xl:justify-end">
             <ArtDetails
-              detailedImage={
-                selectedArt.image.pngUrl ||
-                selectedArt.image.cachedUrl ||
-                selectedArt.image.originalUrl ||
-                ''
-              }
-              image={
-                selectedArt.image.pngUrl ||
-                selectedArt.image.cachedUrl ||
-                selectedArt.image.originalUrl ||
-                ''
-              }
+              detailedImage={imageUrl}
+              image={imageUrl}
               name={selectedArt.name || ''}
             />
           </div>
@@ -248,37 +136,11 @@ export function ArtInfos({
                 showDetails ? 'overflow-y-auto' : ''
               )}
             >
-              <div
-                id="art-description"
-                className={cn(
-                  'h-fit flex flex-col-reverse gap-4 w-full text-sm text-secondary-100',
-                  'xl:flex-col xl:max-w-sm xl:mt-auto'
-                )}
-              >
-                <p id="art-description-text" className="break-words">
-                  {isDescriptionExpanded
-                    ? selectedArt.description
-                    : truncate(selectedArt.description || '')}
-                  {(selectedArt?.description?.length || 0) > 600 && (
-                    <span>
-                      <button
-                        onClick={() =>
-                          setIsDescriptionExpanded(!isDescriptionExpanded)
-                        }
-                        className="text-primary-50 font-extrabold"
-                      >
-                        {isDescriptionExpanded ? '-' : '+'}
-                      </button>
-                    </span>
-                  )}
-                </p>
-                <div>
-                  <p className="text-primary-50 underline mt-4">
-                    {selectedArt.name}
-                  </p>
-                  {mintedOn && <p>minted on {mintedOn}</p>}
-                </div>
-              </div>
+              <ArtDescription
+                description={selectedArt.description || ''}
+                name={selectedArt.name || ''}
+                mintedOn={mintedOn}
+              />
 
               {/* Conditional rendering with fade animation */}
               <div
@@ -388,27 +250,11 @@ export function ArtInfos({
           )}
         </div>
       </section>
-
-      {isOpenVideo && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
-          onClick={() => setIsOpenVideo(false)}
-        >
-          <div
-            className="relative w-full max-w-4xl mx-4 max-h-[90vh]"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <video
-              className="w-auto h-auto max-w-full max-h-[90vh] rounded-lg"
-              controls
-              autoPlay
-              src={`${selectedArt.image.originalUrl.replace('/new_series/', '/new_series/videos/').replace('.jpg', '.mp4')}`}
-            >
-              Your browser does not support the video tag.
-            </video>
-          </div>
-        </div>
-      )}
+      <VideoProcessModal
+        open={isOpenVideo}
+        setOpen={setIsOpenVideo}
+        videoUrl={videoUrl}
+      />
     </>
   )
 }

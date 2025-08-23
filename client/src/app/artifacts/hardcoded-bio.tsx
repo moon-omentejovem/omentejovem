@@ -29,8 +29,8 @@ const HardCodedBio = () => (
     <br />
 
     <h3 className="text-primary-50 text-2xl">
-      "I personally love it when someone sees something entirely different in my
-      work than I did myself. Then the artwork really comes to life.”
+      &quot;I personally love it when someone sees something entirely different
+      in my work than I did myself. Then the artwork really comes to life.&quot;
     </h3>
     <br />
     <br />

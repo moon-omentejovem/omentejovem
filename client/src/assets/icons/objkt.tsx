@@ -1,4 +1,4 @@
-export default () => (
+const Objkt = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     id="c"
@@ -16,3 +16,5 @@ export default () => (
     />
   </svg>
 )
+
+export default Objkt

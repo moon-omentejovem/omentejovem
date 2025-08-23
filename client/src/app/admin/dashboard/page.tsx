@@ -215,6 +215,18 @@ export default function AdminDashboard() {
     setModalImage(null)
   }
 
+  const handleOverlayKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Escape') {
+      closeImageModal()
+    }
+  }
+
+  const handleOverlayClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (event.target === event.currentTarget) {
+      closeImageModal()
+    }
+  }
+
   const handleAddNew = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
@@ -615,14 +627,17 @@ export default function AdminDashboard() {
       {modalImage && (
         <div
           className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50"
-          onClick={closeImageModal}
+          role="button"
+          tabIndex={0}
+          onClick={handleOverlayClick}
+          onKeyDown={handleOverlayKeyDown}
         >
           <div className="relative max-w-6xl max-h-full p-8">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={modalImage}
               alt="Full size token"
               className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
-              onClick={(e) => e.stopPropagation()}
             />
           </div>
         </div>

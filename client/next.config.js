@@ -11,9 +11,9 @@ const nextConfig = {
   },
   webpack(config, { dev }) {
     if (dev) {
-      config.devtool = 'source-map'; // Ensure source maps are generated
+      config.devtool = 'source-map' // Ensure source maps are generated
     }
-    return config;
+    return config
   },
   headers: () => [
     {
@@ -25,8 +25,7 @@ const nextConfig = {
         }
       ]
     }
-  ],
-  
+  ]
 }
 
 module.exports = nextConfig

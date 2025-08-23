@@ -1,6 +1,6 @@
 import { Icons } from '@/types'
 
-export default ({ title, className }: Icons) => (
+const IconPlus = ({ title, className }: Icons) => (
   <svg
     width="24"
     height="24"
@@ -14,3 +14,5 @@ export default ({ title, className }: Icons) => (
     <path d="M0 12.2217L24 12.2217" stroke="currentColor" />
   </svg>
 )
+
+export default IconPlus

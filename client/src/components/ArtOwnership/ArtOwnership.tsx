@@ -148,6 +148,7 @@ export function ArtOwnership({
           <ul className="list-none max-h-[320px] overflow-y-auto">
             {transfers?.map((transfer) => (
               <ArtTransaction
+                key={transfer.transaction}
                 chain={nftChain === 'ethereum' ? 'ethereum' : 'tezos'}
                 transaction={transfer}
                 collectionsMode={collectionsMode}

@@ -1,6 +1,6 @@
 import { Icons } from '@/types'
 
-export default ({ title, className }: Icons) => (
+const IconCamera = ({ title, className }: Icons) => (
   <svg
     width="22"
     height="13"
@@ -18,3 +18,5 @@ export default ({ title, className }: Icons) => (
     />
   </svg>
 )
+
+export default IconCamera

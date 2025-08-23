@@ -1,5 +1,5 @@
-import { NFT } from './types'
 import { api } from '../client'
+import { NFT } from './types'
 
 const ALL_NFTS = [
   '0x826b11a95a9393e8a3cc0c2a7dfc9accb4ff4e43:5',
@@ -67,6 +67,11 @@ export async function requestNftsByCollection(
     }
   })
 
+  console.log(
+    JSON.stringify({
+      tokens: formattedQuery
+    })
+  )
   const data = await fetch(`${api.baseURL}`, {
     method: 'POST',
     headers: {
@@ -79,9 +84,13 @@ export async function requestNftsByCollection(
     })
   })
 
-  const jsonData = await data.json()
-  const DATA_MAPPED = jsonData as { nfts: NFT[] }
-
+  let DATA_MAPPED: { nfts: NFT[] } = { nfts: [] }
+  try {
+    const jsonData = await data.json()
+    DATA_MAPPED = jsonData as { nfts: NFT[] }
+  } catch (e) {
+    console.error(e)
+  }
   return {
     email: 'fake',
     images: DATA_MAPPED.nfts

@@ -27,7 +27,8 @@ async function requestGetAboutInfo() {
       press: [
         {
           title: {
-            rendered: `The Cycles of Creation: 'Ups and Downs' and the Art of Embracing Change`
+            rendered:
+              "The Cycles of Creation: 'Ups and Downs' and the Art of Embracing Change"
           },
           acf: {
             link: 'https://aotm.gallery/the-cycles-of-creation-omentejovems-ups-and-downs-and-the-art-of-embracing-change/'
@@ -35,7 +36,7 @@ async function requestGetAboutInfo() {
         },
         {
           title: {
-            rendered: `Exploring omentejovem's Poignant Perspective`
+            rendered: "Exploring omentejovem's Poignant Perspective"
           },
           acf: {
             link: 'https://aotm.gallery/abstract-visuals-concrete-truths-exploring-omentejovems-poignant-perspective/'
@@ -43,7 +44,7 @@ async function requestGetAboutInfo() {
         },
         {
           title: {
-            rendered: `omentejovem's Interview`
+            rendered: "omentejovem's Interview"
           },
           acf: {
             link: 'https://www.dalosdov.com/writing/omentejovem-interview'
@@ -51,7 +52,7 @@ async function requestGetAboutInfo() {
         },
         {
           title: {
-            rendered: `World of WEB3 Summit (Dubai)`
+            rendered: 'World of WEB3 Summit (Dubai)'
           },
           acf: {
             link: 'https://superrare.com/features'
@@ -59,7 +60,7 @@ async function requestGetAboutInfo() {
         },
         {
           title: {
-            rendered: `Exhibition in honor of Hispanic Heritage Month`
+            rendered: 'Exhibition in honor of Hispanic Heritage Month'
           },
           acf: {
             link: 'https://x.com/crypt_gallery/status/1709610052716282185'
@@ -69,7 +70,7 @@ async function requestGetAboutInfo() {
       exhibitions: [
         {
           title: {
-            rendered: `Omente Orange Exhibition (2022)`
+            rendered: 'Omente Orange Exhibition (2022)'
           },
           acf: {
             link: 'https://oncyber.io/spaces/piAkYMyCUXm6DGrTAH5U?coords=-6.90x2.90x15.31x-3.11'
@@ -77,7 +78,7 @@ async function requestGetAboutInfo() {
         },
         {
           title: {
-            rendered: `The Day I Found Out`
+            rendered: 'The Day I Found Out'
           },
           acf: {
             link: 'https://oncyber.io/omentejovemaotm'
@@ -85,7 +86,7 @@ async function requestGetAboutInfo() {
         },
         {
           title: {
-            rendered: `Des/Conectados`
+            rendered: 'Des/Conectados'
           },
           acf: {
             link: 'https://oncyber.io/desconectados'

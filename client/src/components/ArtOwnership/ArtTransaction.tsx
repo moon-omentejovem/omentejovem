@@ -61,7 +61,7 @@ export function ArtTransaction({
               className="text-primary-50 hover:underline"
               aria-label={`${transaction.minted_to} seller profile`}
             >
-              {formatOwnerAddress(transaction.minted_to)}ayo
+              {formatOwnerAddress(transaction.minted_to)}
             </a>
           </p>
           <p>{formattedDate(transaction.timestamp)}</p>
