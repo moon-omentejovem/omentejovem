@@ -18,10 +18,6 @@ export default function SeriesPage() {
   const [loading, setLoading] = useState(true)
   const router = useRouter()
 
-  useEffect(() => {
-    fetchSeries()
-  }, [])
-
   const fetchSeries = async () => {
     try {
       setLoading(true)
@@ -37,12 +33,20 @@ export default function SeriesPage() {
     }
   }
 
+  useEffect(() => {
+    fetchSeries()
+  }, [])
+
   const handleEdit = (seriesItem: SeriesRow) => {
     router.push(`/admin/series/${seriesItem.id}`)
   }
 
   const handleDelete = async (seriesItem: SeriesRow) => {
-    if (confirm(`Are you sure you want to delete "${seriesItem.name}"?`)) {
+    if (
+      confirm(
+        `Are you sure you want to delete "${seriesItem.name}"? This action cannot be undone.`
+      )
+    ) {
       try {
         const response = await fetch(`/api/admin/series/${seriesItem.id}`, {
           method: 'DELETE'
@@ -50,9 +54,15 @@ export default function SeriesPage() {
 
         if (response.ok) {
           fetchSeries() // Refresh the list
+          alert('Series deleted successfully!')
+        } else {
+          const error = await response.json()
+          console.error('Error deleting series:', error)
+          alert('Failed to delete series: ' + (error.error || 'Unknown error'))
         }
       } catch (error) {
         console.error('Error deleting series:', error)
+        alert('Failed to delete series')
       }
     }
   }

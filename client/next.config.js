@@ -3,7 +3,7 @@ const nextConfig = {
   reactStrictMode: false,
   eslint: {
     // Disable ESLint during builds to prevent CRLF/LF conflicts in CI/CD
-    ignoreDuringBuilds: process.env.NODE_ENV === 'production',
+    // ignoreDuringBuilds: process.env.NODE_ENV === 'production',
   },
   images: {
     unoptimized: true,

@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase-admin'
 import { UpdateSeriesSchema } from '@/types/schemas'
 import { revalidateTag } from 'next/cache'
 import { NextRequest, NextResponse } from 'next/server'
@@ -9,7 +9,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('series')
       .select(
         `
@@ -43,7 +43,7 @@ export async function PUT(
     const validatedData = UpdateSeriesSchema.parse(body)
 
     // Update series
-    const { data: series, error } = await supabase
+    const { data: series, error } = await supabaseAdmin
       .from('series')
       .update({
         ...validatedData,
@@ -58,7 +58,10 @@ export async function PUT(
     // Handle artwork relationships if provided
     if (body.artworks !== undefined) {
       // Remove existing relationships
-      await supabase.from('series_artworks').delete().eq('series_id', params.id)
+      await supabaseAdmin
+        .from('series_artworks')
+        .delete()
+        .eq('series_id', params.id)
 
       // Add new relationships
       if (body.artworks.length > 0) {
@@ -67,7 +70,7 @@ export async function PUT(
           artwork_id: artworkId
         }))
 
-        const { error: relationError } = await supabase
+        const { error: relationError } = await supabaseAdmin
           .from('series_artworks')
           .insert(artworkRelations)
 
@@ -102,7 +105,10 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const { error } = await supabase.from('series').delete().eq('id', params.id)
+    const { error } = await supabaseAdmin
+      .from('series')
+      .delete()
+      .eq('id', params.id)
 
     if (error) throw error
 

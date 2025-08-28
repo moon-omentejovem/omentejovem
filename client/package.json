@@ -26,7 +26,7 @@
     "classnames": "2.3.2",
     "clsx": "2.0.0",
     "date-fns": "3.0.5",
-    "dotenv": "16.3.1",
+    "dotenv": "^17.2.1",
     "graphql": "^16.11.0",
     "graphql-request": "6.1.0",
     "gsap": "3.12.2",

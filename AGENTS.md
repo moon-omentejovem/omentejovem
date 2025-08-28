@@ -437,6 +437,210 @@ Com esse **descriptor**, o mesmo esqueleto serve para **Series** e **Artifacts**
 5. Proxy/cache de imagens ✅
 6. Sync OpenSea (opcional) 🎯
 
+**Pronto para replicar**: qualquer novo conteúdo segue o mesmo padrão — definir tabela, gerar descriptor, apontar AdminTable/AdminForm, criar página pública com queries padrão, e (opcional) adicionar pipeline de cache/sync.
+
 ---
 
-**Pronto para replicar**: qualquer novo conteúdo segue o mesmo padrão — definir tabela, gerar descriptor, apontar AdminTable/AdminForm, criar página pública com queries padrão, e (opcional) adicionar pipeline de cache/sync.
+# 16) PR Guidelines & Agent Instructions
+
+## 16.1 PR Standards & Formatting
+
+### Título Padrão (Inglês)
+
+```
+<type>: <concise description in English>
+```
+
+**Tipos aceitos:**
+
+- `feat`: nova funcionalidade
+- `fix`: correção de bug
+- `refactor`: refatoração sem mudança de funcionalidade
+- `style`: mudanças de formatação/estilo
+- `docs`: documentação
+- `chore`: tarefas de manutenção
+- `perf`: melhorias de performance
+- `test`: testes
+
+**Exemplos de títulos:**
+
+- `feat: add complete CRUD operations for artifacts and series`
+- `fix: resolve image caching issues in OpenSea integration`
+- `refactor: standardize admin form validation patterns`
+
+### Conteúdo da PR (Português)
+
+Estrutura obrigatória em Markdown:
+
+```markdown
+## 📋 Resumo das Alterações
+
+[Descrição concisa das mudanças principais]
+
+## ✨ Principais Funcionalidades
+
+### 🆕 Novas Funcionalidades
+
+- **Feature Name**: [`/path/to/file`](relative-path) - Descrição
+
+### 🔧 Melhorias Existentes
+
+- **Component/Feature**: Descrição das melhorias
+
+## 🔄 Mudanças Técnicas
+
+### 📦 Atualizações de Dependências
+
+- Package: versão anterior → nova versão
+
+### 🗃️ Mudanças no Banco de Dados
+
+- Descrição das alterações de schema/queries
+
+### 🛡️ Melhorias de Validação
+
+- Ajustes em schemas, tipos, validações
+
+## 🎯 Experiência do Usuário
+
+### ✅ Feedback Visual
+
+- Melhorias na interface e interações
+
+### 🔍 Melhorias na Interface
+
+- Descrição das melhorias de UX/UI
+
+### 🧹 Limpeza de Código
+
+- Arquivos removidos ou refatorados
+
+## 🔗 Arquivos Modificados
+
+### Novas funcionalidades
+
+- [`path/to/file`](relative-path) - Descrição
+
+### Arquivos aprimorados
+
+- [`path/to/file`](relative-path) - Descrição das melhorias
+
+## ✅ Impacto
+
+[Resumo do impacto geral das mudanças no projeto]
+```
+
+---
+
+## 16.2 PR Creation Agent
+
+### Função
+
+Analise commits e mudanças no código para gerar PRs padronizadas automaticamente.
+
+### Input
+
+```
+- Git diff/commits desde último merge
+- Lista de arquivos modificados/adicionados/removidos
+- Contexto do projeto (AGENTS.md)
+```
+
+### Output
+
+```
+- Título da PR em inglês padronizado
+- Conteúdo completo da PR em português seguindo template
+- Categorização automática das mudanças
+- Links relativos para arquivos modificados
+```
+
+### Prompt Template
+
+```
+Analise as mudanças desde o commit {commit_hash} e crie uma PR seguindo os padrões:
+
+1. TÍTULO: Use formato "type: description" em inglês
+2. CONTEÚDO: Em português, seguindo template com seções:
+   - Resumo das Alterações
+   - Principais Funcionalidades (🆕 Novas / 🔧 Melhorias)
+   - Mudanças Técnicas (📦 Deps / 🗃️ DB / 🛡️ Validação)
+   - Experiência do Usuário (✅ Feedback / 🔍 Interface / 🧹 Limpeza)
+   - Arquivos Modificados (separar novos vs aprimorados)
+   - Impacto
+
+3. LINKS: usar formato [`file.ext`](relative-path) para todos os arquivos
+4. EMOJIS: usar consistentemente conforme template
+5. FOCO: destacar valor para o cliente e usuários finais
+```
+
+### Critérios de Qualidade
+
+- **Clareza**: linguagem clara e direta para documentação com cliente
+- **Completude**: todas as mudanças relevantes documentadas
+- **Organização**: mudanças categorizadas logicamente
+- **Rastreabilidade**: links para todos os arquivos importantes
+- **Impacto**: valor de negócio explícito
+
+---
+
+## 16.3 Code Review Agent
+
+### Função
+
+Revisar PRs antes do merge para garantir conformidade com padrões.
+
+### Checklist Automático
+
+```
+- [ ] Título segue padrão "type: description"
+- [ ] Conteúdo em português com todas as seções obrigatórias
+- [ ] Links relativos funcionando
+- [ ] Emojis consistentes com template
+- [ ] Impacto de negócio claramente descrito
+- [ ] Mudanças técnicas explicadas
+- [ ] UX improvements documentadas
+```
+
+### Prompt Template
+
+```
+Revise esta PR conforme checklist:
+
+1. ESTRUTURA: Verificar se segue template completo
+2. CONTEÚDO: Avaliar clareza e completude das descrições
+3. LINKS: Validar se todos os arquivos importantes estão linkados
+4. IMPACTO: Confirmar se valor para cliente está claro
+5. TÉCNICO: Verificar se mudanças técnicas estão bem explicadas
+
+Forneça feedback específico para melhorias necessárias.
+```
+
+---
+
+## 16.4 Documentation Sync Agent
+
+### Função
+
+Manter AGENTS.md atualizado com padrões de PR e instruções para novos agentes.
+
+### Responsabilidades
+
+- Atualizar exemplos de PR quando padrões mudarem
+- Sincronizar instruções com práticas reais do projeto
+- Documentar novos tipos de mudanças/padrões identificados
+- Manter templates atualizados
+
+### Prompt Template
+
+```
+Analise as últimas 5 PRs e identifique:
+1. Padrões emergentes não documentados
+2. Seções do template pouco utilizadas
+3. Novos tipos de mudanças frequentes
+4. Melhorias nos exemplos/templates
+
+Sugira atualizações para AGENTS.md seção 16.
+```
+
+---

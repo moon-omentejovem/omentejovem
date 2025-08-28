@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase-admin'
 import { CreateArtifactSchema } from '@/types/schemas'
 import { revalidateTag } from 'next/cache'
 import { NextRequest, NextResponse } from 'next/server'
@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from 'next/server'
 // GET /api/admin/artifacts - List all artifacts
 export async function GET() {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('artifacts')
       .select('*')
       .order('created_at', { ascending: false })
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     const validatedData = CreateArtifactSchema.parse(body)
 
     // Insert artifact
-    const { data: artifact, error } = await supabase
+    const { data: artifact, error } = await supabaseAdmin
       .from('artifacts')
       .insert(validatedData)
       .select()

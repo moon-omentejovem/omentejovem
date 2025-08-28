@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase-admin'
 import { UpdateAboutPageSchema } from '@/types/schemas'
 import { revalidateTag } from 'next/cache'
 import { NextRequest, NextResponse } from 'next/server'
@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from 'next/server'
 // GET /api/admin/about - Get about page content
 export async function GET() {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('about_page')
       .select('*')
       .limit(1)
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
     const validatedData = UpdateAboutPageSchema.parse(body)
 
     // Check if about page exists
-    const { data: existing } = await supabase
+    const { data: existing } = await supabaseAdmin
       .from('about_page')
       .select('id')
       .limit(1)
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
 
     if (existing) {
       // Update existing
-      const { data, error } = await supabase
+      const { data, error } = await supabaseAdmin
         .from('about_page')
         .update({
           ...validatedData,
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
       result = data
     } else {
       // Create new
-      const { data, error } = await supabase
+      const { data, error } = await supabaseAdmin
         .from('about_page')
         .insert(validatedData)
         .select()

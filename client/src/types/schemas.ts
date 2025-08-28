@@ -10,20 +10,16 @@ export const ArtworkSchema = z.object({
   title: z.string().min(1),
   description: RichTextSchema.nullish(),
   token_id: z.string().min(1).optional().nullable(),
-  mint_date: z
-    .string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/)
-    .optional()
-    .nullable(),
+  mint_date: z.string().optional().nullable(),
   mint_link: z.string().url().optional().nullable(),
   type: z.string().min(1), // Changed from enum to match DB
   editions_total: z.number().int().positive().nullable().optional(),
   image_url: z.string().min(1), // Required field to match DB
   is_featured: z.boolean().nullable().optional(),
   is_one_of_one: z.boolean().nullable().optional(),
-  posted_at: z.string().datetime().nullable().optional(),
-  created_at: z.string().datetime().nullable().optional(),
-  updated_at: z.string().datetime().nullable().optional()
+  posted_at: z.string().nullable().optional(),
+  created_at: z.string().nullable().optional(),
+  updated_at: z.string().nullable().optional()
 })
 
 // Series Schema
@@ -33,15 +29,15 @@ export const SeriesSchema = z.object({
   name: z.string().min(1),
   cover_image_url: z.string().url().optional().nullable(),
   cover_image_cached_path: z.string().optional().nullable(),
-  created_at: z.string().datetime().optional(),
-  updated_at: z.string().datetime().optional()
+  created_at: z.string().optional(),
+  updated_at: z.string().optional()
 })
 
 // Series-Artwork relationship Schema
 export const SeriesArtworkSchema = z.object({
   series_id: z.string().uuid(),
   artwork_id: z.string().uuid(),
-  created_at: z.string().datetime().optional()
+  created_at: z.string().optional()
 })
 
 // Artifact Schema
@@ -52,15 +48,15 @@ export const ArtifactSchema = z.object({
   highlight_video_url: z.string().url().optional().nullable(),
   link_url: z.string().url().optional().nullable(),
   image_url: z.string().url().optional().nullable(),
-  created_at: z.string().datetime().optional(),
-  updated_at: z.string().datetime().optional()
+  created_at: z.string().optional(),
+  updated_at: z.string().optional()
 })
 
 // About Page Schema
 export const AboutPageSchema = z.object({
   id: z.string().uuid().optional(),
   content: RichTextSchema,
-  updated_at: z.string().datetime().optional()
+  updated_at: z.string().optional()
 })
 
 // Form schemas for create/update operations

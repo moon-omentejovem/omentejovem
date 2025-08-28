@@ -110,6 +110,30 @@ export default function AdminTable<T extends Record<string, any>>({
         )
 
       case 'clamp':
+        // Handle Tiptap JSON content
+        if (value && typeof value === 'object' && value.type === 'doc') {
+          // Extract text content from Tiptap JSON
+          const extractText = (node: any): string => {
+            if (node.type === 'text') return node.text || ''
+            if (node.content) {
+              return node.content.map(extractText).join('')
+            }
+            return ''
+          }
+
+          const textContent = value.content
+            ? value.content.map(extractText).join(' ')
+            : ''
+
+          return (
+            <div className="max-w-xs">
+              <div className="truncate" title={textContent}>
+                {textContent || '-'}
+              </div>
+            </div>
+          )
+        }
+
         return (
           <div className="max-w-xs">
             <div className="truncate" title={String(value || '')}>

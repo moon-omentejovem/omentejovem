@@ -1,4 +1,5 @@
-import { supabase } from '@/lib/supabase'
+import { handleApiError } from '@/lib/api-utils'
+import { supabaseAdmin } from '@/lib/supabase-admin'
 import { UpdateArtworkSchema } from '@/types/schemas'
 import type { Database } from '@/types/supabase'
 import { revalidateTag } from 'next/cache'
@@ -10,7 +11,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('artworks')
       .select(
         `
@@ -44,7 +45,7 @@ export async function PUT(
     const validatedData = UpdateArtworkSchema.parse(body)
 
     // Update artwork
-    const { data: artwork, error } = await supabase
+    const { data: artwork, error } = await supabaseAdmin
       .from('artworks')
       .update({
         ...validatedData,
@@ -59,7 +60,7 @@ export async function PUT(
     // Handle series relationships if provided
     if (body.series !== undefined) {
       // Remove existing relationships
-      await supabase
+      await supabaseAdmin
         .from('series_artworks')
         .delete()
         .eq('artwork_id', params.id)
@@ -71,7 +72,7 @@ export async function PUT(
           artwork_id: params.id
         }))
 
-        const { error: relationError } = await supabase
+        const { error: relationError } = await supabaseAdmin
           .from('series_artworks')
           .insert(seriesRelations)
 
@@ -86,19 +87,7 @@ export async function PUT(
 
     return NextResponse.json(artwork)
   } catch (error) {
-    console.error('Error updating artwork:', error)
-
-    if (error instanceof Error && error.name === 'ZodError') {
-      return NextResponse.json(
-        { error: 'Invalid input data', details: error.message },
-        { status: 400 }
-      )
-    }
-
-    return NextResponse.json(
-      { error: 'Failed to update artwork' },
-      { status: 500 }
-    )
+    return handleApiError(error)
   }
 }
 
@@ -108,7 +97,7 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from('artworks')
       .delete()
       .eq('id', params.id)

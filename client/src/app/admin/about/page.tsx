@@ -44,7 +44,7 @@ export default function AboutPage() {
       setLoading(true)
 
       const response = await fetch('/api/admin/about', {
-        method: 'POST',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },

@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase-admin'
 import { CreateArtworkSchema } from '@/types/schemas'
 import type { Database } from '@/types/supabase'
 import { revalidateTag } from 'next/cache'
@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic'
 // GET /api/admin/artworks - List all artworks
 export async function GET() {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('artworks')
       .select(
         `
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
     const validatedData = CreateArtworkSchema.parse(body)
 
     // Insert artwork
-    const { data: artwork, error } = await supabase
+    const { data: artwork, error } = await supabaseAdmin
       .from('artworks')
       .insert({
         ...validatedData,
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
         artwork_id: artwork.id
       }))
 
-      const { error: relationError } = await supabase
+      const { error: relationError } = await supabaseAdmin
         .from('series_artworks')
         .insert(seriesRelations)
 

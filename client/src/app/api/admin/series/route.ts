@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase-admin'
 import { CreateSeriesSchema } from '@/types/schemas'
 import { revalidateTag } from 'next/cache'
 import { NextRequest, NextResponse } from 'next/server'
@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from 'next/server'
 // GET /api/admin/series - List all series
 export async function GET() {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('series')
       .select(
         `
@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
     const validatedData = CreateSeriesSchema.parse(body)
 
     // Insert series
-    const { data: series, error } = await supabase
+    const { data: series, error } = await supabaseAdmin
       .from('series')
       .insert(validatedData)
       .select()
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
         artwork_id: artworkId
       }))
 
-      const { error: relationError } = await supabase
+      const { error: relationError } = await supabaseAdmin
         .from('series_artworks')
         .insert(artworkRelations)
 

@@ -1,0 +1,97 @@
+import { supabaseAdmin } from '@/lib/supabase-admin'
+import { UpdateArtifactSchema } from '@/types/schemas'
+import type { Database } from '@/types/supabase'
+import { revalidateTag } from 'next/cache'
+import { NextRequest, NextResponse } from 'next/server'
+
+// GET /api/admin/artifacts/[id] - Get single artifact
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const { data, error } = await supabaseAdmin
+      .from('artifacts')
+      .select('*')
+      .eq('id', params.id)
+      .single()
+
+    if (error) throw error
+
+    return NextResponse.json(data)
+  } catch (error) {
+    console.error('Error fetching artifact:', error)
+    return NextResponse.json({ error: 'Artifact not found' }, { status: 404 })
+  }
+}
+
+// PUT /api/admin/artifacts/[id] - Update artifact
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const body = await request.json()
+
+    // Validate input
+    const validatedData = UpdateArtifactSchema.parse(body)
+
+    // Update artifact
+    const { data: artifact, error } = await supabaseAdmin
+      .from('artifacts')
+      .update({
+        ...validatedData,
+        updated_at: new Date().toISOString()
+      } as Database['public']['Tables']['artifacts']['Update'])
+      .eq('id', params.id)
+      .select()
+      .single()
+
+    if (error) throw error
+
+    // Revalidate cache
+    revalidateTag('artifacts')
+
+    return NextResponse.json(artifact)
+  } catch (error) {
+    console.error('Error updating artifact:', error)
+
+    if (error instanceof Error && error.name === 'ZodError') {
+      return NextResponse.json(
+        { error: 'Invalid input data', details: error.message },
+        { status: 400 }
+      )
+    }
+
+    return NextResponse.json(
+      { error: 'Failed to update artifact' },
+      { status: 500 }
+    )
+  }
+}
+
+// DELETE /api/admin/artifacts/[id] - Delete artifact
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const { error } = await supabaseAdmin
+      .from('artifacts')
+      .delete()
+      .eq('id', params.id)
+
+    if (error) throw error
+
+    // Revalidate cache
+    revalidateTag('artifacts')
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error('Error deleting artifact:', error)
+    return NextResponse.json(
+      { error: 'Failed to delete artifact' },
+      { status: 500 }
+    )
+  }
+}

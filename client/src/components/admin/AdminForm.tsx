@@ -3,6 +3,7 @@
 import type { FormField, ResourceDescriptor } from '@/types/descriptors'
 import { SaveIcon, XIcon } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
+import RelationPicker from './RelationPicker'
 import TiptapEditor from './TiptapEditor'
 
 interface AdminFormProps<T = any> {
@@ -376,17 +377,14 @@ export default function AdminForm<T extends Record<string, any>>({
         )
 
       case 'relation-multi':
-        // TODO: Implement relation picker
         return (
-          <div key={field.key} className="space-y-2">
-            <label className="block text-sm font-medium text-neutral-300">
-              {field.label || field.key}
-              {field.required && <span className="text-red-400 ml-1">*</span>}
-            </label>
-            <p className="text-sm text-neutral-500">
-              Multi-relation picker coming soon...
-            </p>
-          </div>
+          <RelationPicker
+            key={field.key}
+            field={field}
+            value={Array.isArray(value) ? value : []}
+            onChange={(newValue) => handleInputChange(field.key, newValue)}
+            error={error}
+          />
         )
 
       default:

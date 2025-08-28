@@ -14,10 +14,6 @@ export default function ArtworksPage() {
   const [loading, setLoading] = useState(true)
   const router = useRouter()
 
-  useEffect(() => {
-    fetchArtworks()
-  }, [])
-
   const fetchArtworks = async () => {
     try {
       setLoading(true)
@@ -33,20 +29,26 @@ export default function ArtworksPage() {
     }
   }
 
+  useEffect(() => {
+    fetchArtworks()
+  }, [])
+
   const handleEdit = (artwork: ArtworkRow) => {
     router.push(`/admin/artworks/${artwork.id}`)
   }
 
   const handleDuplicate = async (artwork: ArtworkRow) => {
     try {
-      // Create a copy without id and with modified title
+      // Create a copy without id and with modified title and slug
+      const timestamp = Date.now()
       const duplicateData = {
         ...artwork,
         id: undefined,
         title: `${artwork.title} (Copy)`,
-        slug: `${artwork.slug}-copy`,
+        slug: `${artwork.slug}-copy-${timestamp}`,
         created_at: undefined,
-        updated_at: undefined
+        updated_at: undefined,
+        posted_at: new Date().toISOString()
       }
 
       const response = await fetch('/api/admin/artworks', {
@@ -59,14 +61,26 @@ export default function ArtworksPage() {
 
       if (response.ok) {
         fetchArtworks() // Refresh the list
+        alert('Artwork duplicated successfully!')
+      } else {
+        const error = await response.json()
+        console.error('Error duplicating artwork:', error)
+        alert(
+          'Failed to duplicate artwork: ' + (error.error || 'Unknown error')
+        )
       }
     } catch (error) {
       console.error('Error duplicating artwork:', error)
+      alert('Failed to duplicate artwork')
     }
   }
 
   const handleDelete = async (artwork: ArtworkRow) => {
-    if (confirm(`Are you sure you want to delete "${artwork.title}"?`)) {
+    if (
+      confirm(
+        `Are you sure you want to delete "${artwork.title}"? This action cannot be undone.`
+      )
+    ) {
       try {
         const response = await fetch(`/api/admin/artworks/${artwork.id}`, {
           method: 'DELETE'
@@ -74,9 +88,15 @@ export default function ArtworksPage() {
 
         if (response.ok) {
           fetchArtworks() // Refresh the list
+          alert('Artwork deleted successfully!')
+        } else {
+          const error = await response.json()
+          console.error('Error deleting artwork:', error)
+          alert('Failed to delete artwork: ' + (error.error || 'Unknown error'))
         }
       } catch (error) {
         console.error('Error deleting artwork:', error)
+        alert('Failed to delete artwork')
       }
     }
   }
