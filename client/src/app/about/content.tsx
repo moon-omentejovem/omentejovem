@@ -48,7 +48,7 @@ export function AboutContent({
         interviewName: decodeRenderedString(interview.title.rendered),
         interviewUrl: interview.acf.link
       })),
-    []
+    [press]
   )
 
   const parsedExhibitions = useMemo<FooterProperties['exhibitions']>(
@@ -57,7 +57,7 @@ export function AboutContent({
         exhibitionName: decodeRenderedString(exhibition.title.rendered),
         exhibitionUrl: exhibition.acf.link
       })),
-    []
+    [exhibitions]
   )
 
   const renderAboutInfo = useCallback((aboutString: string): ReactElement => {

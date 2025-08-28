@@ -89,7 +89,7 @@ export function CalloutParallax({
     return () => {
       window.removeEventListener('mousemove', shiftBackground)
     }
-  }, [])
+  }, [calloutImages, shiftBackground])
 
   return (
     <div

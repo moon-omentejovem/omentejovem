@@ -1,10 +1,10 @@
 'use client'
 
-import { ReactElement, useEffect, useMemo, useState } from 'react'
+import { ReactElement, useCallback, useEffect, useState } from 'react'
 import { Icons } from './Icons'
 import { filterAnimations } from '@/animations'
 import { cn } from '@/lib/utils'
-import { ChainedFilter, getLastFilterHistoryParent } from './ArtFilter/filters'
+import { ChainedFilter } from './ArtFilter/filters'
 
 export interface Filter {
   name: string
@@ -28,19 +28,19 @@ export function Filter({
   const [filters, setFilters] = useState([] as ChainedFilter[])
   const [selected, setSelected] = useState<string>('')
 
+  const refreshFilters = useCallback(() => {
+    setFilters(availableFilters)
+  }, [availableFilters])
+
   useEffect(() => {
     refreshFilters()
-  }, [filterHistory])
+  }, [filterHistory, refreshFilters])
 
   useEffect(() => {
     if (filters.length > 0 && open) {
       filterAnimations(false)
     }
-  }, [filters])
-
-  function getFilters(): ChainedFilter[] {
-    return availableFilters
-  }
+  }, [filters, open])
 
   function updateFilters(content: ChainedFilter) {
     if (!content.children?.length) {
@@ -55,11 +55,6 @@ export function Filter({
       setSelected('')
     }
     onChangeFilter()
-  }
-
-  function refreshFilters() {
-    const currFilters = getFilters()
-    setFilters(currFilters)
   }
 
   function clickX() {

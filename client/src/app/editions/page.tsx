@@ -1,7 +1,7 @@
-import { EditionsContentProvider } from './provider'
 import { fetchEditionNfts } from '@/api/requests'
 import { NFT } from '@/api/resolver/types'
 import filters from '@/components/ArtFilter/filters'
+import { EditionsContentProvider } from './provider'
 
 export default async function Editions() {
   let _images = await fetchEditionNfts()
@@ -20,7 +20,7 @@ export default async function Editions() {
   }
 
   // Special case because he minted a token twice... once on opensea and once on manifold
-  let extraOwnershipData: any[] = []
+  let extraOwnershipData: NFT[] = []
   let extraOwnershipQuantity = 0
 
   // Filter out '0x28a6f816eae721fea4ad34c000077b5fe525fc3c:6'

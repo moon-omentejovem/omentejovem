@@ -46,7 +46,7 @@ export function ArtMainContent({
         source={source}
       />
     )
-  }, [selectedArtIndex])
+  }, [artImages, email, onChangeSelectedArtIndex, selectedArtIndex, source])
 
   if (selectedArtIndex === -1) {
     return (

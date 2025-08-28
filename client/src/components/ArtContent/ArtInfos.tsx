@@ -65,7 +65,7 @@ export function ArtInfos({
       setShowDetails(false)
       resetButtonInfo()
     }
-  }, [onChangeSlideIndex])
+  }, [onChangeSlideIndex, selectedArt])
 
   if (!selectedArt) {
     throw new Error('Image does not exists')

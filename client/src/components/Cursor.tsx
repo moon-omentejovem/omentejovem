@@ -47,7 +47,7 @@ export function Cursor(): ReactElement {
       window.removeEventListener('mousemove', changeCursor)
       window.removeEventListener('click', handleMouseClick)
     }
-  }, [mouseX, mouseY])
+  }, [changeCursor, handleMouseClick, mouseX, mouseY])
 
   return (
     <div

@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { CustomIcons } from '@/assets/icons'
 import * as Dialog from '@radix-ui/react-dialog'
 import { cn } from '@/lib/utils'
@@ -21,7 +21,7 @@ export function ImageModal({
   const [scaleY, setScaleY] = useState(1)
   const [rotation, setRotation] = useState(0)
 
-  function flipImage() {
+  const flipImage = useCallback(() => {
     const imageElement = document.querySelector<HTMLImageElement>(
       '#modal-wrapper #active-image'
     )
@@ -29,9 +29,9 @@ export function ImageModal({
     if (imageElement) {
       imageElement.style.scale = `${scaleX} ${scaleY}`
     }
-  }
+  }, [scaleX, scaleY])
 
-  function rotateImage() {
+  const rotateImage = useCallback(() => {
     const imageElement = document.querySelector<HTMLImageElement>(
       '#modal-wrapper #active-image'
     )
@@ -39,7 +39,7 @@ export function ImageModal({
     if (imageElement) {
       imageElement.style.rotate = `${rotation}deg`
     }
-  }
+  }, [rotation])
 
   function removeOverflowHidden() {
     const modalWrapper = document.querySelector<HTMLImageElement>(
@@ -51,7 +51,7 @@ export function ImageModal({
     }
   }
 
-  function updateContainerSize() {
+  const updateContainerSize = useCallback(() => {
     const imageElement = document.querySelector<HTMLImageElement>(
       '#modal-wrapper #active-image'
     )
@@ -67,16 +67,16 @@ export function ImageModal({
         container.style.maxHeight = '70vh'
       }
     }
-  }
+  }, [rotation])
 
   useEffect(() => {
     flipImage()
-  }, [scaleX, scaleY])
+  }, [flipImage])
 
   useEffect(() => {
     rotateImage()
     updateContainerSize()
-  }, [rotation])
+  }, [rotateImage, updateContainerSize])
 
   return (
     <Dialog.Root

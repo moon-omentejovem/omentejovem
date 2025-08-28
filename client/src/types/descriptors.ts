@@ -1,0 +1,316 @@
+import type { Database } from '@/types/supabase'
+
+// Types for descriptors
+type FieldType =
+  | 'text'
+  | 'url'
+  | 'email'
+  | 'number'
+  | 'date'
+  | 'datetime'
+  | 'textarea'
+  | 'select'
+  | 'switch'
+  | 'tiptap'
+  | 'slug'
+  | 'relation-single'
+  | 'relation-multi'
+  | 'image-url'
+
+type RenderType =
+  | 'text'
+  | 'image'
+  | 'clamp'
+  | 'date'
+  | 'datetime'
+  | 'link'
+  | 'badge'
+  | 'number'
+  | 'boolean'
+
+export interface ListColumn {
+  key: string
+  label: string
+  render: RenderType
+  width?: string
+  className?: string
+}
+
+export interface FormField {
+  key: string
+  label?: string
+  type: FieldType
+  required?: boolean
+  placeholder?: string
+  options?: string[] | { value: string; label: string }[]
+  when?: Record<string, any>
+  from?: string // for slug generation
+  relation?: {
+    table: string
+    labelKey: string
+    valueKey?: string
+  }
+  validation?: {
+    min?: number
+    max?: number
+    pattern?: RegExp
+  }
+}
+
+export interface ResourceDescriptor {
+  table: keyof Database['public']['Tables']
+  title: string
+  list: ListColumn[]
+  form: FormField[]
+  defaultSort?: {
+    key: string
+    direction: 'asc' | 'desc'
+  }
+  searchFields?: string[]
+  actions?: {
+    create?: boolean
+    edit?: boolean
+    duplicate?: boolean
+    delete?: boolean
+  }
+}
+
+// Artworks Descriptor
+export const artworksDescriptor: ResourceDescriptor = {
+  table: 'artworks',
+  title: 'Artworks',
+  list: [
+    { key: 'title', label: 'Title', render: 'text' },
+    { key: 'image_url', label: 'Image', render: 'image', width: '80px' },
+    { key: 'description', label: 'Description', render: 'clamp' },
+    { key: 'mint_date', label: 'Mint Date', render: 'date' },
+    { key: 'mint_link', label: 'Mint Link', render: 'link' },
+    { key: 'type', label: 'Type', render: 'badge' },
+    { key: 'editions_total', label: 'Number of Editions', render: 'number' }
+  ],
+  form: [
+    {
+      key: 'title',
+      label: 'Title',
+      type: 'text',
+      required: true,
+      placeholder: 'Enter artwork title'
+    },
+    {
+      key: 'slug',
+      label: 'Slug',
+      type: 'slug',
+      from: 'title',
+      required: true,
+      placeholder: 'auto-generated-from-title'
+    },
+    {
+      key: 'token_id',
+      label: 'Token ID',
+      type: 'text',
+      required: false,
+      placeholder: 'e.g., 1234'
+    },
+    {
+      key: 'mint_date',
+      label: 'Mint Date',
+      type: 'date'
+    },
+    {
+      key: 'mint_link',
+      label: 'Mint Link',
+      type: 'url',
+      placeholder: 'https://opensea.io/assets/...'
+    },
+    {
+      key: 'type',
+      label: 'Type',
+      type: 'select',
+      options: [
+        { value: 'single', label: '1/1 (Single)' },
+        { value: 'edition', label: 'Edition' }
+      ],
+      required: true
+    },
+    {
+      key: 'editions_total',
+      label: 'Number of Editions',
+      type: 'number',
+      when: { type: 'edition' },
+      validation: { min: 1 }
+    },
+    {
+      key: 'image_url',
+      label: 'Image URL',
+      type: 'image-url',
+      required: true,
+      placeholder: 'https://opensea.io/image.png'
+    },
+    {
+      key: 'is_featured',
+      label: 'Featured on Home',
+      type: 'switch'
+    },
+    {
+      key: 'is_one_of_one',
+      label: '1/1 Collection',
+      type: 'switch'
+    },
+    {
+      key: 'description',
+      label: 'Description',
+      type: 'tiptap'
+    },
+    {
+      key: 'series',
+      label: 'Series',
+      type: 'relation-multi',
+      relation: {
+        table: 'series',
+        labelKey: 'name',
+        valueKey: 'id'
+      }
+    }
+  ],
+  defaultSort: {
+    key: 'posted_at',
+    direction: 'desc'
+  },
+  searchFields: ['title', 'token_id'],
+  actions: {
+    create: true,
+    edit: true,
+    duplicate: true,
+    delete: true
+  }
+}
+
+// Series Descriptor
+export const seriesDescriptor: ResourceDescriptor = {
+  table: 'series',
+  title: 'Series',
+  list: [
+    { key: 'name', label: 'Name', render: 'text' },
+    {
+      key: 'cover_image_url',
+      label: 'Cover Image',
+      render: 'image',
+      width: '80px'
+    },
+    { key: 'artworks', label: 'Artworks', render: 'text' } // Will show count or names
+  ],
+  form: [
+    {
+      key: 'name',
+      label: 'Name',
+      type: 'text',
+      required: true,
+      placeholder: 'Enter series name'
+    },
+    {
+      key: 'slug',
+      label: 'Slug',
+      type: 'slug',
+      from: 'name',
+      required: true,
+      placeholder: 'auto-generated-from-name'
+    },
+    {
+      key: 'cover_image_url',
+      label: 'Cover Image URL',
+      type: 'image-url',
+      placeholder: 'https://opensea.io/image.png'
+    },
+    {
+      key: 'artworks',
+      label: 'Artworks',
+      type: 'relation-multi',
+      relation: {
+        table: 'artworks',
+        labelKey: 'title',
+        valueKey: 'id'
+      }
+    }
+  ],
+  defaultSort: {
+    key: 'created_at',
+    direction: 'desc'
+  },
+  searchFields: ['name'],
+  actions: {
+    create: true,
+    edit: true,
+    duplicate: false,
+    delete: true
+  }
+}
+
+// Artifacts Descriptor
+export const artifactsDescriptor: ResourceDescriptor = {
+  table: 'artifacts',
+  title: 'Artifacts',
+  list: [
+    { key: 'title', label: 'Title', render: 'text' },
+    { key: 'image_url', label: 'Image', render: 'image', width: '80px' },
+    { key: 'description', label: 'Description', render: 'clamp' },
+    { key: 'link_url', label: 'Link', render: 'link' }
+  ],
+  form: [
+    {
+      key: 'title',
+      label: 'Title',
+      type: 'text',
+      required: true,
+      placeholder: 'Enter artifact title'
+    },
+    {
+      key: 'description',
+      label: 'Description',
+      type: 'textarea',
+      placeholder: 'Brief description of the artifact'
+    },
+    {
+      key: 'highlight_video_url',
+      label: 'Highlight Video URL',
+      type: 'url',
+      placeholder: 'https://youtube.com/watch?v=...'
+    },
+    {
+      key: 'link_url',
+      label: 'Link URL',
+      type: 'url',
+      placeholder: 'https://...'
+    },
+    {
+      key: 'image_url',
+      label: 'Image URL',
+      type: 'image-url',
+      placeholder: 'https://example.com/image.png'
+    }
+  ],
+  defaultSort: {
+    key: 'created_at',
+    direction: 'desc'
+  },
+  searchFields: ['title'],
+  actions: {
+    create: true,
+    edit: true,
+    duplicate: true,
+    delete: true
+  }
+}
+
+// About Page Descriptor (special case - singleton)
+export const aboutPageDescriptor = {
+  table: 'about_page' as const,
+  title: 'About Page',
+  form: [
+    {
+      key: 'content',
+      label: 'Content',
+      type: 'tiptap' as const,
+      required: true
+    }
+  ]
+}

@@ -30,7 +30,7 @@
   "rules": {
     "unicorn/filename-case": "off",
     "react/jsx-indent": "off",
-    "linebreak-style": ["error", "unix"],
+    "linebreak-style": "off",
     "quotes": ["error", "single", { "avoidEscape": true }],
     "react/react-in-jsx-scope": "off",
     "react/display-name": "off"

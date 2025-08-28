@@ -1,0 +1,19 @@
+# Build outputs
+.next/
+out/
+build/
+dist/
+
+# Dependencies
+node_modules/
+
+# Generated files
+*.d.ts
+!src/**/*.d.ts
+
+# Config files
+next-env.d.ts
+tsconfig.tsbuildinfo
+
+# Public assets
+public/

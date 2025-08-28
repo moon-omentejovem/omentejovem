@@ -1,5 +1,5 @@
 import type { ReactElement, ReactNode } from 'react'
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 import { NFT } from '@/api/resolver/types'
 import {
@@ -21,13 +21,13 @@ export function PortfolioProvider({
   const [artImages, setArtImages] = useState<NFT[]>(images)
   const [selectedArtIndex, setSelectedArtIndex] = useState(-1)
 
-  function onChangeSelectedArtIndex(index: number): void {
+  const onChangeSelectedArtIndex = useCallback((index: number): void => {
     setSelectedArtIndex(index)
-  }
+  }, [])
 
-  function onChangeArtImages(images: NFT[]): void {
+  const onChangeArtImages = useCallback((images: NFT[]): void => {
     setArtImages([...images])
-  }
+  }, [])
 
   // function onChangeTotalPages(newTotal: number): void {
   // 	setArtTotalPages(newTotal)
@@ -42,7 +42,14 @@ export function PortfolioProvider({
       selectedArtIndex,
       onChangeSelectedArtIndex
     }),
-    [images, selectedArtIndex, artImages]
+    [
+      email,
+      images,
+      selectedArtIndex,
+      artImages,
+      onChangeArtImages,
+      onChangeSelectedArtIndex
+    ]
   )
 
   return (

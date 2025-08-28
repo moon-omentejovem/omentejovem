@@ -1,112 +1,58 @@
+import { createClient } from '@/utils/supabase/server'
+import { AboutData, PressTalk } from './@types/wordpress'
 import { AboutContent } from './content'
-import { AboutData } from './@types/wordpress'
 
-async function requestGetAboutInfo() {
-  try {
-    const data = {
-      title: 'omentejovem',
-      subtitle: '',
-      subtitle_art: '',
-      bio: '',
-      social_media: {
-        twitter: 'https://x.com/omentejovem',
-        instagram: 'https://www.instagram.com/omentejovem',
-        aotm: 'https://aotm.gallery/artist/omentejovem',
-        superrare: 'https://superrare.com/omentejovem',
-        foundation: 'https://foundation.app/@omentejovem',
-        opensea: 'https://opensea.io/omentejovem',
-        objkt: 'https://objkt.com/@omentejovem'
-      },
-      contact: {
-        'e-mail': 'moon@omentejovem.com'
-      }
-    } as AboutData
+async function getAboutData() {
+  const supabase = await createClient()
 
-    return {
-      ...data,
-      press: [
-        {
-          title: {
-            rendered:
-              "The Cycles of Creation: 'Ups and Downs' and the Art of Embracing Change"
-          },
-          acf: {
-            link: 'https://aotm.gallery/the-cycles-of-creation-omentejovems-ups-and-downs-and-the-art-of-embracing-change/'
-          }
-        },
-        {
-          title: {
-            rendered: "Exploring omentejovem's Poignant Perspective"
-          },
-          acf: {
-            link: 'https://aotm.gallery/abstract-visuals-concrete-truths-exploring-omentejovems-poignant-perspective/'
-          }
-        },
-        {
-          title: {
-            rendered: "omentejovem's Interview"
-          },
-          acf: {
-            link: 'https://www.dalosdov.com/writing/omentejovem-interview'
-          }
-        },
-        {
-          title: {
-            rendered: 'World of WEB3 Summit (Dubai)'
-          },
-          acf: {
-            link: 'https://superrare.com/features'
-          }
-        },
-        {
-          title: {
-            rendered: 'Exhibition in honor of Hispanic Heritage Month'
-          },
-          acf: {
-            link: 'https://x.com/crypt_gallery/status/1709610052716282185'
-          }
-        }
-      ],
-      exhibitions: [
-        {
-          title: {
-            rendered: 'Omente Orange Exhibition (2022)'
-          },
-          acf: {
-            link: 'https://oncyber.io/spaces/piAkYMyCUXm6DGrTAH5U?coords=-6.90x2.90x15.31x-3.11'
-          }
-        },
-        {
-          title: {
-            rendered: 'The Day I Found Out'
-          },
-          acf: {
-            link: 'https://oncyber.io/omentejovemaotm'
-          }
-        },
-        {
-          title: {
-            rendered: 'Des/Conectados'
-          },
-          acf: {
-            link: 'https://oncyber.io/desconectados'
-          }
-        }
-      ]
+  // For now, we'll use static data since we don't have WordPress integration
+  // In the future, this could be fetched from a CMS or stored in Supabase
+
+  const aboutData: AboutData = {
+    title: 'Thales Machado',
+    subtitle: 'omentejovem',
+    subtitle_art: '',
+    bio: '',
+    social_media: {
+      twitter: 'https://twitter.com/omentejovem',
+      instagram: 'https://instagram.com/omentejovem',
+      aotm: 'https://aotm.gallery/artist/omentejovem',
+      superrare: 'https://superrare.com/omentejovem',
+      foundation: 'https://foundation.app/@omentejovem',
+      opensea: 'https://opensea.io/omentejovem',
+      objkt: 'https://objkt.com/@omentejovem'
+    },
+    contact: {
+      'e-mail': 'contact@omentejovem.com'
     }
-  } catch (error) {
-    console.log('#ERROR:', error)
+  }
+
+  const press: PressTalk[] = []
+  const exhibitions: PressTalk[] = []
+
+  return {
+    aboutData,
+    press,
+    exhibitions,
+    error: null
   }
 }
 
-export default async function About() {
-  const data = await requestGetAboutInfo()
+export default async function AboutPage() {
+  const { aboutData, press, exhibitions, error } = await getAboutData()
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-neutral-950 text-white flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold mb-4">Error Loading About</h1>
+          <p className="text-neutral-400">{error}</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
-    <AboutContent
-      data={data}
-      press={data?.press ?? []}
-      exhibitions={data?.exhibitions ?? []}
-    />
+    <AboutContent data={aboutData} press={press} exhibitions={exhibitions} />
   )
 }

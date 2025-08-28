@@ -1,5 +1,5 @@
 import type { ReactElement, ReactNode } from 'react'
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 import { NFT } from '@/api/resolver/types'
 import { Filter } from '@/components/Filter'
@@ -28,17 +28,17 @@ export function CollectionsProvider({
   const [artTotalPages, setArtTotalPages] = useState(totalPages)
   const [selectedArtIndex, setSelectedArtIndex] = useState(-1)
 
-  function onChangeSelectedArtIndex(index: number): void {
+  const onChangeSelectedArtIndex = useCallback((index: number): void => {
     setSelectedArtIndex(index)
-  }
+  }, [])
 
-  function onChangeArtImages(images: NFT[]): void {
+  const onChangeArtImages = useCallback((images: NFT[]): void => {
     setArtImages([...images])
-  }
+  }, [])
 
-  function onChangeTotalPages(newTotal: number): void {
+  const onChangeTotalPages = useCallback((newTotal: number): void => {
     setArtTotalPages(newTotal)
-  }
+  }, [])
 
   const values = useMemo<CollectionsContextProperties>(
     () => ({
@@ -54,12 +54,16 @@ export function CollectionsProvider({
       onChangeTotalPages
     }),
     [
+      email,
       images,
       filters,
       selectedArtIndex,
       artImages,
+      artTotalPages,
       onChangeArtImages,
-      onChangeSelectedArtIndex
+      onChangeSelectedArtIndex,
+      onChangeTotalPages,
+      totalPages
     ]
   )
 

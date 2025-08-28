@@ -32,7 +32,7 @@ export function ArtFilter({
     const lastFilter = filterHistory[filterHistory.length - 1]
     const currentImages = lastFilter.filteredImages
     onChangeArtImages(currentImages)
-  }, [filterHistory])
+  }, [filterHistory, onChangeArtImages])
 
   function getSliceCount() {
     let count = 1

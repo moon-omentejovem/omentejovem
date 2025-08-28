@@ -1,5 +1,5 @@
 import type { ReactElement, ReactNode } from 'react'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { Filter } from '@/components/Filter'
 import { NFT } from '@/api/resolver/types'
@@ -28,17 +28,17 @@ export function EditionsProvider({
   const [artTotalPages, setArtTotalPages] = useState(totalPages)
   const [selectedArtIndex, setSelectedArtIndex] = useState(-1)
 
-  function onChangeSelectedArtIndex(index: number): void {
+  const onChangeSelectedArtIndex = useCallback((index: number): void => {
     setSelectedArtIndex(index)
-  }
+  }, [])
 
-  function onChangeArtImages(images: NFT[]): void {
+  const onChangeArtImages = useCallback((images: NFT[]): void => {
     setArtImages([...images])
-  }
+  }, [])
 
-  function onChangeTotalPages(newTotal: number): void {
+  const onChangeTotalPages = useCallback((newTotal: number): void => {
     setArtTotalPages(newTotal)
-  }
+  }, [])
 
   const values = useMemo<EditionsContextProperties>(
     () => ({
@@ -53,7 +53,18 @@ export function EditionsProvider({
       artTotalPages,
       onChangeTotalPages
     }),
-    [images, filters, selectedArtIndex, artImages, totalPages, artTotalPages]
+    [
+      email,
+      images,
+      filters,
+      selectedArtIndex,
+      artImages,
+      artTotalPages,
+      onChangeArtImages,
+      onChangeSelectedArtIndex,
+      onChangeTotalPages,
+      totalPages
+    ]
   )
 
   return (

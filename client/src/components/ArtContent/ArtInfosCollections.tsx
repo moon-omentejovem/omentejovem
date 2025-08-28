@@ -64,7 +64,7 @@ export function ArtInfosCollections({
       setIsAnimating(false)
       // resetArtInfo()
     }
-  }, [onChangeSlideIndex])
+  }, [onChangeSlideIndex, selectedArt])
 
   if (!selectedArt) {
     throw new Error('Image does not exists')
@@ -80,7 +80,7 @@ export function ArtInfosCollections({
         source="collections"
       />
     )
-  }, [currentImageIndex])
+  }, [email, onChangeSlideIndex, selectedArt, slides])
 
   return (
     <main className="flex flex-col px-6 2xl:pb-16 2xl:px-20 2xl:pb-8 xl:h-screenMinusHeader">
