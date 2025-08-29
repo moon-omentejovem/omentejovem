@@ -1,15 +1,12 @@
-const getBaseUrl = () => {
-  // Sempre usar variável de ambiente se disponível
+export const getBaseUrl = () => {
   if (process.env.NEXT_PUBLIC_BASE_URL) {
     return process.env.NEXT_PUBLIC_BASE_URL
   }
 
-  // Fallback para desenvolvimento
   if (process.env.NODE_ENV === 'development') {
     return 'http://localhost:3000'
   }
 
-  // Se não tem nada configurado, força erro
   throw new Error('NEXT_PUBLIC_BASE_URL must be set')
 }
 
