@@ -16,6 +16,21 @@
 - **Jobs**: rotas `app/api/*` para sincronizar metadados do OpenSea e otimizar imagens (proxy/caching).
 - **Design System**: componentes reutilizáveis (tabelas, formulários, pickers, rich text, upload).
 
+### Boas práticas atuais
+
+- Notificações unificadas com [`sonner`](https://sonner.emilkowal.ski/); use `toast.success`/`toast.error` para feedback instantâneo.
+- Formulários via `AdminForm` com campo de imagem único (URL ou upload direto para Supabase Storage).
+- Utilizar `createClient` dos utilitários Supabase para operações no navegador.
+- Seguir convenções do Next.js 14 (App Router) e manter componentes client apenas quando necessário.
+- Deploy na Vercel com variáveis `NEXT_PUBLIC_*` e storage no bucket `media`.
+
+### Plano de ação consolidado
+
+1. Manter **AdminForm** e **AdminTable** como blocos modulares reutilizáveis.
+2. Garantir feedback de todas as ações do painel via `toast`.
+3. Centralizar uploads de imagem no bucket `media` do Supabase.
+4. Evoluir UX continuamente, priorizando simplicidade e consistência visual.
+
 ---
 
 ## 2) Modelo de Dados (ERD verbal)

@@ -15,7 +15,7 @@ type FieldType =
   | 'slug'
   | 'relation-single'
   | 'relation-multi'
-  | 'image-url'
+  | 'image'
 
 type RenderType =
   | 'text'
@@ -141,8 +141,8 @@ export const artworksDescriptor: ResourceDescriptor = {
     },
     {
       key: 'image_url',
-      label: 'Image URL',
-      type: 'image-url',
+      label: 'Image',
+      type: 'image',
       required: true,
       placeholder: 'https://opensea.io/image.png'
     },
@@ -217,8 +217,8 @@ export const seriesDescriptor: ResourceDescriptor = {
     },
     {
       key: 'cover_image_url',
-      label: 'Cover Image URL',
-      type: 'image-url',
+      label: 'Cover Image',
+      type: 'image',
       placeholder: 'https://opensea.io/image.png'
     },
     {
@@ -283,8 +283,8 @@ export const artifactsDescriptor: ResourceDescriptor = {
     },
     {
       key: 'image_url',
-      label: 'Image URL',
-      type: 'image-url',
+      label: 'Image',
+      type: 'image',
       placeholder: 'https://example.com/image.png'
     }
   ],

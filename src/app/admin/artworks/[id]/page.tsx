@@ -7,6 +7,7 @@ import type { UpdateArtwork } from '@/types/schemas'
 import type { Database } from '@/types/supabase'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 
 type ArtworkRow = Database['public']['Tables']['artworks']['Row']
 
@@ -34,10 +35,12 @@ export default function EditArtworkPage({
         setArtwork(data)
       } else {
         console.error('Artwork not found')
+        toast.error('Artwork not found')
         router.push('/admin/artworks')
       }
     } catch (error) {
       console.error('Error fetching artwork:', error)
+      toast.error('Error fetching artwork')
       router.push('/admin/artworks')
     } finally {
       setFetchLoading(false)
@@ -57,15 +60,18 @@ export default function EditArtworkPage({
       })
 
       if (response.ok) {
+        toast.success('Artwork updated successfully')
         router.push('/admin/artworks')
       } else {
         const error = await response.json()
         console.error('Error updating artwork:', error)
-        alert('Failed to update artwork: ' + (error.error || 'Unknown error'))
+        toast.error(
+          'Failed to update artwork: ' + (error.error || 'Unknown error')
+        )
       }
     } catch (error) {
       console.error('Error updating artwork:', error)
-      alert('Failed to update artwork')
+      toast.error('Failed to update artwork')
     } finally {
       setLoading(false)
     }

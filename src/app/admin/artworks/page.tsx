@@ -6,6 +6,7 @@ import { artworksDescriptor } from '@/types/descriptors'
 import type { Database } from '@/types/supabase'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 
 type ArtworkRow = Database['public']['Tables']['artworks']['Row']
 
@@ -21,9 +22,12 @@ export default function ArtworksPage() {
       if (response.ok) {
         const data = await response.json()
         setArtworks(data)
+      } else {
+        toast.error('Failed to load artworks')
       }
     } catch (error) {
       console.error('Error fetching artworks:', error)
+      toast.error('Failed to load artworks')
     } finally {
       setLoading(false)
     }
@@ -61,17 +65,17 @@ export default function ArtworksPage() {
 
       if (response.ok) {
         fetchArtworks() // Refresh the list
-        alert('Artwork duplicated successfully!')
+        toast.success('Artwork duplicated successfully!')
       } else {
         const error = await response.json()
         console.error('Error duplicating artwork:', error)
-        alert(
+        toast.error(
           'Failed to duplicate artwork: ' + (error.error || 'Unknown error')
         )
       }
     } catch (error) {
       console.error('Error duplicating artwork:', error)
-      alert('Failed to duplicate artwork')
+      toast.error('Failed to duplicate artwork')
     }
   }
 
@@ -88,15 +92,15 @@ export default function ArtworksPage() {
 
         if (response.ok) {
           fetchArtworks() // Refresh the list
-          alert('Artwork deleted successfully!')
+          toast.success('Artwork deleted successfully!')
         } else {
           const error = await response.json()
           console.error('Error deleting artwork:', error)
-          alert('Failed to delete artwork: ' + (error.error || 'Unknown error'))
+          toast.error('Failed to delete artwork: ' + (error.error || 'Unknown error'))
         }
       } catch (error) {
         console.error('Error deleting artwork:', error)
-        alert('Failed to delete artwork')
+        toast.error('Failed to delete artwork')
       }
     }
   }

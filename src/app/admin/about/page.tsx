@@ -5,6 +5,7 @@ import TiptapEditor from '@/components/admin/TiptapEditor'
 import type { Database } from '@/types/supabase'
 import { SaveIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 
 type AboutPageRow = Database['public']['Tables']['about_page']['Row']
 
@@ -31,9 +32,12 @@ export default function AboutPage() {
           }
         )
         setLastSaved(data.updated_at)
+      } else {
+        toast.error('Failed to load about page')
       }
     } catch (error) {
       console.error('Error fetching about page:', error)
+      toast.error('Failed to load about page')
     } finally {
       setFetchLoading(false)
     }
@@ -54,15 +58,15 @@ export default function AboutPage() {
       if (response.ok) {
         const data = await response.json()
         setLastSaved(data.updated_at)
-        alert('About page saved successfully!')
+        toast.success('About page saved successfully!')
       } else {
         const error = await response.json()
         console.error('Error saving about page:', error)
-        alert('Failed to save about page: ' + (error.error || 'Unknown error'))
+        toast.error('Failed to save about page: ' + (error.error || 'Unknown error'))
       }
     } catch (error) {
       console.error('Error saving about page:', error)
-      alert('Failed to save about page')
+      toast.error('Failed to save about page')
     } finally {
       setLoading(false)
     }

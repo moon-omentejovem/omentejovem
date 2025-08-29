@@ -6,6 +6,7 @@ import { artifactsDescriptor } from '@/types/descriptors'
 import type { Database } from '@/types/supabase'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
+import { toast } from 'sonner'
 
 type ArtifactRow = Database['public']['Tables']['artifacts']['Row']
 
@@ -32,13 +33,11 @@ export default function ArtifactsPage() {
         setArtifacts(data)
       } else {
         console.error('Failed to fetch artifacts:', response.statusText)
-        // TODO: Replace with proper toast notification
-        alert('Failed to load artifacts. Please try again.')
+        toast.error('Failed to load artifacts. Please try again.')
       }
     } catch (error) {
       console.error('Error fetching artifacts:', error)
-      // TODO: Replace with proper toast notification
-      alert('Failed to load artifacts. Please check your connection.')
+      toast.error('Failed to load artifacts. Please check your connection.')
     } finally {
       setLoading(false)
     }
@@ -76,20 +75,17 @@ export default function ArtifactsPage() {
 
       if (response.ok) {
         await fetchArtifacts()
-        // TODO: Replace with proper toast notification
-        alert('Artifact duplicated successfully!')
+        toast.success('Artifact duplicated successfully!')
       } else {
         const errorData = await response.json()
         console.error('Error duplicating artifact:', errorData)
-        // TODO: Replace with proper toast notification
-        alert(
+        toast.error(
           `Failed to duplicate artifact: ${errorData.error || 'Unknown error'}`
         )
       }
     } catch (error) {
       console.error('Error duplicating artifact:', error)
-      // TODO: Replace with proper toast notification
-      alert(
+      toast.error(
         error instanceof Error
           ? `Failed to duplicate artifact: ${error.message}`
           : 'Failed to duplicate artifact'
@@ -117,20 +113,17 @@ export default function ArtifactsPage() {
 
       if (response.ok) {
         await fetchArtifacts()
-        // TODO: Replace with proper toast notification
-        alert('Artifact deleted successfully!')
+        toast.success('Artifact deleted successfully!')
       } else {
         const errorData = await response.json()
         console.error('Error deleting artifact:', errorData)
-        // TODO: Replace with proper toast notification
-        alert(
+        toast.error(
           `Failed to delete artifact: ${errorData.error || 'Unknown error'}`
         )
       }
     } catch (error) {
       console.error('Error deleting artifact:', error)
-      // TODO: Replace with proper toast notification
-      alert(
+      toast.error(
         error instanceof Error
           ? `Failed to delete artifact: ${error.message}`
           : 'Failed to delete artifact'

@@ -7,6 +7,7 @@ import type { UpdateSeries } from '@/types/schemas'
 import type { Database } from '@/types/supabase'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 
 type SeriesRow = Database['public']['Tables']['series']['Row'] & {
   series_artworks?: {
@@ -30,10 +31,12 @@ export default function EditSeriesPage({ params }: { params: { id: string } }) {
           setSeries(data)
         } else {
           console.error('Series not found')
+          toast.error('Series not found')
           router.push('/admin/series')
         }
       } catch (error) {
         console.error('Error fetching series:', error)
+        toast.error('Error fetching series')
         router.push('/admin/series')
       } finally {
         setFetchLoading(false)
@@ -58,15 +61,16 @@ export default function EditSeriesPage({ params }: { params: { id: string } }) {
       })
 
       if (response.ok) {
+        toast.success('Series updated successfully')
         router.push('/admin/series')
       } else {
         const error = await response.json()
         console.error('Error updating series:', error)
-        alert('Failed to update series: ' + (error.error || 'Unknown error'))
+        toast.error('Failed to update series: ' + (error.error || 'Unknown error'))
       }
     } catch (error) {
       console.error('Error updating series:', error)
-      alert('Failed to update series')
+      toast.error('Failed to update series')
     } finally {
       setLoading(false)
     }

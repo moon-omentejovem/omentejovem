@@ -7,6 +7,7 @@ import type { UpdateArtifact } from '@/types/schemas'
 import type { Database } from '@/types/supabase'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 
 type ArtifactRow = Database['public']['Tables']['artifacts']['Row']
 
@@ -30,10 +31,12 @@ export default function EditArtifactPage({
           setArtifact(data)
         } else {
           console.error('Artifact not found')
+          toast.error('Artifact not found')
           router.push('/admin/artifacts')
         }
       } catch (error) {
         console.error('Error fetching artifact:', error)
+        toast.error('Error fetching artifact')
         router.push('/admin/artifacts')
       } finally {
         setFetchLoading(false)
@@ -58,15 +61,18 @@ export default function EditArtifactPage({
       })
 
       if (response.ok) {
+        toast.success('Artifact updated successfully')
         router.push('/admin/artifacts')
       } else {
         const error = await response.json()
         console.error('Error updating artifact:', error)
-        alert('Failed to update artifact: ' + (error.error || 'Unknown error'))
+        toast.error(
+          'Failed to update artifact: ' + (error.error || 'Unknown error')
+        )
       }
     } catch (error) {
       console.error('Error updating artifact:', error)
-      alert('Failed to update artifact')
+      toast.error('Failed to update artifact')
     } finally {
       setLoading(false)
     }

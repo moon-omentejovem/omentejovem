@@ -6,6 +6,7 @@ import { seriesDescriptor } from '@/types/descriptors'
 import type { Database } from '@/types/supabase'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 
 type SeriesRow = Database['public']['Tables']['series']['Row'] & {
   series_artworks?: {
@@ -25,9 +26,12 @@ export default function SeriesPage() {
       if (response.ok) {
         const data = await response.json()
         setSeries(data)
+      } else {
+        toast.error('Failed to load series')
       }
     } catch (error) {
       console.error('Error fetching series:', error)
+      toast.error('Failed to load series')
     } finally {
       setLoading(false)
     }
@@ -54,15 +58,15 @@ export default function SeriesPage() {
 
         if (response.ok) {
           fetchSeries() // Refresh the list
-          alert('Series deleted successfully!')
+          toast.success('Series deleted successfully!')
         } else {
           const error = await response.json()
           console.error('Error deleting series:', error)
-          alert('Failed to delete series: ' + (error.error || 'Unknown error'))
+          toast.error('Failed to delete series: ' + (error.error || 'Unknown error'))
         }
       } catch (error) {
         console.error('Error deleting series:', error)
-        alert('Failed to delete series')
+        toast.error('Failed to delete series')
       }
     }
   }

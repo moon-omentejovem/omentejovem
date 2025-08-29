@@ -6,6 +6,7 @@ import { seriesDescriptor } from '@/types/descriptors'
 import type { CreateSeries } from '@/types/schemas'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { toast } from 'sonner'
 
 export default function NewSeriesPage() {
   const [loading, setLoading] = useState(false)
@@ -24,15 +25,16 @@ export default function NewSeriesPage() {
       })
 
       if (response.ok) {
+        toast.success('Series created successfully')
         router.push('/admin/series')
       } else {
         const error = await response.json()
         console.error('Error creating series:', error)
-        alert('Failed to create series: ' + (error.error || 'Unknown error'))
+        toast.error('Failed to create series: ' + (error.error || 'Unknown error'))
       }
     } catch (error) {
       console.error('Error creating series:', error)
-      alert('Failed to create series')
+      toast.error('Failed to create series')
     } finally {
       setLoading(false)
     }

@@ -6,6 +6,8 @@ import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import RelationPicker from './RelationPicker'
 import TiptapEditor from './TiptapEditor'
+import { createClient } from '@/utils/supabase/client'
+import { toast } from 'sonner'
 
 interface AdminFormProps<T = any> {
   descriptor: ResourceDescriptor
@@ -24,6 +26,7 @@ export default function AdminForm<T extends Record<string, any>>({
 }: AdminFormProps<T>) {
   const [formData, setFormData] = useState<Record<string, any>>({})
   const [errors, setErrors] = useState<Record<string, string>>({})
+  const supabase = createClient()
 
   useEffect(() => {
     if (data) {
@@ -100,7 +103,10 @@ export default function AdminForm<T extends Record<string, any>>({
         fieldValue !== null &&
         fieldValue !== ''
       ) {
-        if (field.type === 'url' && !isValidUrl(fieldValue)) {
+        if (
+          (field.type === 'url' || field.type === 'image') &&
+          !isValidUrl(fieldValue)
+        ) {
           newErrors[field.key] = 'Please enter a valid URL'
         }
         if (field.type === 'email' && !isValidEmail(fieldValue)) {
@@ -158,6 +164,7 @@ export default function AdminForm<T extends Record<string, any>>({
       await onSubmit(formData as T)
     } catch (error) {
       console.error('Form submission error:', error)
+      toast.error('Failed to submit form')
     }
   }
 
@@ -347,20 +354,54 @@ export default function AdminForm<T extends Record<string, any>>({
           </div>
         )
 
-      case 'image-url':
+      case 'image': {
+        const handleFileChange = async (
+          e: React.ChangeEvent<HTMLInputElement>
+        ) => {
+          const file = e.target.files?.[0]
+          if (!file) return
+
+          await toast.promise(
+            (async () => {
+              const filePath = `${descriptor.table}/${Date.now()}-${file.name}`
+              const { error: uploadError } = await supabase.storage
+                .from('media')
+                .upload(filePath, file)
+              if (uploadError) throw uploadError
+              const {
+                data: { publicUrl }
+              } = supabase.storage.from('media').getPublicUrl(filePath)
+              handleInputChange(field.key, publicUrl)
+            })(),
+            {
+              loading: 'Uploading image...',
+              success: 'Image uploaded',
+              error: 'Failed to upload image'
+            }
+          )
+        }
+
         return (
           <div key={field.key} className="space-y-2">
             <label className="block text-sm font-medium text-neutral-300">
               {field.label || field.key}
               {field.required && <span className="text-red-400 ml-1">*</span>}
             </label>
-            <input
-              type="url"
-              value={value}
-              onChange={(e) => handleInputChange(field.key, e.target.value)}
-              placeholder={field.placeholder}
-              className={baseClasses}
-            />
+            <div className="flex items-center gap-2">
+              <input
+                type="url"
+                value={value}
+                onChange={(e) => handleInputChange(field.key, e.target.value)}
+                placeholder={field.placeholder}
+                className={baseClasses}
+              />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="text-sm text-neutral-400"
+              />
+            </div>
             {value && (
               <div className="mt-2">
                 <Image
@@ -376,6 +417,7 @@ export default function AdminForm<T extends Record<string, any>>({
             {error && <p className="text-red-400 text-sm">{error}</p>}
           </div>
         )
+      }
 
       case 'relation-multi':
         return (

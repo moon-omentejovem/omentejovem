@@ -6,6 +6,7 @@ import { artworksDescriptor } from '@/types/descriptors'
 import type { CreateArtwork } from '@/types/schemas'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { toast } from 'sonner'
 
 export default function NewArtworkPage() {
   const [loading, setLoading] = useState(false)
@@ -24,15 +25,16 @@ export default function NewArtworkPage() {
       })
 
       if (response.ok) {
+        toast.success('Artwork created successfully')
         router.push('/admin/artworks')
       } else {
         const error = await response.json()
         console.error('Error creating artwork:', error)
-        alert('Failed to create artwork: ' + (error.error || 'Unknown error'))
+        toast.error('Failed to create artwork: ' + (error.error || 'Unknown error'))
       }
     } catch (error) {
       console.error('Error creating artwork:', error)
-      alert('Failed to create artwork')
+      toast.error('Failed to create artwork')
     } finally {
       setLoading(false)
     }

@@ -6,6 +6,7 @@ import { artifactsDescriptor } from '@/types/descriptors'
 import type { CreateArtifact } from '@/types/schemas'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { toast } from 'sonner'
 
 export default function NewArtifactPage() {
   const [loading, setLoading] = useState(false)
@@ -24,15 +25,16 @@ export default function NewArtifactPage() {
       })
 
       if (response.ok) {
+        toast.success('Artifact created successfully')
         router.push('/admin/artifacts')
       } else {
         const error = await response.json()
         console.error('Error creating artifact:', error)
-        alert('Failed to create artifact: ' + (error.error || 'Unknown error'))
+        toast.error('Failed to create artifact: ' + (error.error || 'Unknown error'))
       }
     } catch (error) {
       console.error('Error creating artifact:', error)
-      alert('Failed to create artifact')
+      toast.error('Failed to create artifact')
     } finally {
       setLoading(false)
     }
