@@ -9,16 +9,16 @@
 
 ## 📋 Overview
 
-Omentejovem is a comprehensive NFT portfolio and content management system that migrates from a git-based model to a modern CMS architecture. The platform features a public portfolio showcasing digital artworks and NFT collections, alongside a powerful admin dashboard for content management.
+Omentejovem is a comprehensive NFT portfolio and content management system designed for digital artists. The platform features a public portfolio showcasing digital artworks and NFT collections, alongside a powerful admin dashboard for content management.
 
 ### 🌟 Key Features
 
 - **🎨 NFT Portfolio**: Curated showcase of digital artworks and NFT collections
 - **📱 Responsive Design**: Mobile-first approach with modern UI/UX
 - **🔐 Admin Dashboard**: Complete CMS for managing artworks, series, and content
-- **� User Management**: Admin invitation system with magic link authentication
+- **👥 User Management**: Admin invitation system with magic link authentication
 - **🛠️ Auto-Seeding**: Automatic database population on deployment
-- **�🖼️ Image Optimization**: Automatic caching and optimization of artwork images
+- **🖼️ Image Optimization**: Automatic caching and optimization of artwork images
 - **📝 Rich Text Editor**: Tiptap-powered editor for artwork descriptions
 - **🔗 OpenSea Integration**: Sync metadata and images from OpenSea marketplace
 - **🏷️ Collection Management**: Organize artworks into series and collections
@@ -67,19 +67,13 @@ Omentejovem is a comprehensive NFT portfolio and content management system that 
    cd omentejovem-project
    ```
 
-2. **Navigate to client directory**
-
-   ```bash
-   cd client
-   ```
-
-3. **Install dependencies**
+2. **Install dependencies**
 
    ```bash
    yarn install
    ```
 
-4. **Environment setup**
+3. **Environment setup**
 
    ```bash
    # Copy environment variables
@@ -89,24 +83,26 @@ Omentejovem is a comprehensive NFT portfolio and content management system that 
    NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
    SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
-   NEXT_PUBLIC_BASE_URL=http://localhost:3000
    ```
 
-5. **Database setup**
+4. **Database setup**
 
    ```bash
+   # Run the setup SQL in your Supabase project
+   # File: supabase-setup.sql
+
    # Database will be automatically seeded on first deployment
    # Or run manual seed: POST /api/admin/seed
    # See docs/SEED-SYSTEM.md for details
    ```
 
-6. **Start development server**
+5. **Start development server**
 
    ```bash
    yarn dev
    ```
 
-7. **Open the application**
+6. **Open the application**
 
    Navigate to [http://localhost:3000](http://localhost:3000) to see the public portfolio.
 
@@ -116,30 +112,34 @@ Omentejovem is a comprehensive NFT portfolio and content management system that 
 
 ```
 omentejovem-project/
-├── client/                          # Next.js application
-│   ├── src/
-│   │   ├── app/                     # App Router pages and layouts
-│   │   │   ├── api/                 # API routes
-│   │   │   ├── admin/               # Admin dashboard pages
-│   │   │   ├── portfolio/           # Public portfolio pages
-│   │   │   ├── series/              # NFT series pages
-│   │   │   └── artifacts/           # Artifacts showcase
-│   │   ├── components/              # Reusable React components
-│   │   │   ├── admin/               # Admin-specific components
-│   │   │   ├── ArtContent/          # Artwork display components
-│   │   │   ├── Carousels/           # Image carousel components
-│   │   │   └── Modals/              # Modal components
-│   │   ├── lib/                     # Utilities and configurations
-│   │   │   ├── supabase.ts          # Supabase client setup
-│   │   │   ├── api-utils.ts         # API utilities
-│   │   │   └── utils.ts             # General utilities
-│   │   ├── types/                   # TypeScript type definitions
-│   │   └── hooks/                   # Custom React hooks
-│   ├── public/                      # Static assets
-│   ├── scripts/                     # Database and deployment scripts
-│   └── supabase/                    # Supabase configuration
-├── docs/                            # Documentation
-└── README.md                        # This file
+├── src/
+│   ├── app/                     # App Router pages and layouts
+│   │   ├── api/                 # API routes
+│   │   ├── admin/               # Admin dashboard pages
+│   │   ├── portfolio/           # Public portfolio pages
+│   │   ├── series/              # NFT series pages
+│   │   └── artifacts/           # Artifacts showcase
+│   ├── components/              # Reusable React components
+│   │   ├── admin/               # Admin-specific components
+│   │   ├── ArtContent/          # Artwork display components
+│   │   ├── Carousels/           # Image carousel components
+│   │   └── Modals/              # Modal components
+│   ├── lib/                     # Utilities and configurations
+│   │   ├── supabase.ts          # Supabase helper functions
+│   │   ├── supabase-config.ts   # Supabase configuration
+│   │   ├── api-utils.ts         # API utilities
+│   │   └── utils.ts             # General utilities
+│   ├── types/                   # TypeScript type definitions
+│   └── hooks/                   # Custom React hooks
+├── utils/supabase/              # Supabase client configurations
+│   ├── client.ts                # Browser client
+│   ├── server.ts                # Server client
+│   └── middleware.ts            # Session middleware
+├── public/                      # Static assets
+├── scripts/                     # Database and deployment scripts
+├── supabase/                    # Supabase configuration
+├── docs/                        # Documentation
+└── README.md                    # This file
 ```
 
 ## 🎯 Usage
@@ -208,11 +208,14 @@ yarn build:staging         # Build for staging environment
 ### Database Management
 
 ```bash
-# Seed database with initial data
-# Run scripts/seed-database.sql in Supabase
+# Setup database schema
+# Run supabase-setup.sql in your Supabase project
 
 # Generate TypeScript types from Supabase schema
 supabase gen types typescript --project-id YOUR_PROJECT_ID > src/types/supabase.ts
+
+# Seed database (automatic on first deployment)
+# See scripts/vercel-seed.js
 ```
 
 ### Adding New Content Types
@@ -231,23 +234,36 @@ Follow the modular CMS approach:
 ### Vercel Deployment (Recommended)
 
 1. **Connect your repository** to Vercel
-2. **Configure environment variables** in Vercel dashboard
+2. **Configure environment variables** in Vercel dashboard:
+
+   ```bash
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+   ```
+
 3. **Set build settings**:
+
    - Framework: Next.js
    - Build Command: `yarn build`
    - Output Directory: `.next`
+   - Install Command: `yarn install`
+
 4. **Deploy** - automatic deployments on git push
 
-### Environment Variables
+### Post-Deployment Setup
 
-Ensure all environment variables are configured in your deployment platform:
+1. **Database Seeding**: The postbuild script will automatically seed your database
+2. **Admin Access**: Use magic link authentication with your admin email
+3. **Image Optimization**: Images will be cached automatically from external sources
+4. **Cache Warming**: Initial page loads will populate the cache
 
-```bash
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
-NEXT_PUBLIC_BASE_URL=https://your-domain.com
-```
+## 📚 Documentation
+
+- **[Supabase Integration](docs/SUPABASE-INTEGRATION.md)**: Complete guide for Supabase setup and best practices
+- **[Magic Link Auth](docs/MAGIC-LINK-AUTH.md)**: Authentication system documentation
+- **[Seed System](docs/SEED-SYSTEM.md)**: Database seeding and data management
+- **[AGENTS.md](AGENTS.md)**: Complete project specifications and architecture
 
 ## 🤝 Contributing
 

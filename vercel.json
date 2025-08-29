@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "src/app/api/cache-image/route.ts": {
+      "maxDuration": 15
+    }
+  }
+}

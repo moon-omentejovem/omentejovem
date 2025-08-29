@@ -1,7 +1,0 @@
-
-.env
-.env.local
-
-.next
-.yarn
-node_modules/
