@@ -16,7 +16,9 @@ Omentejovem is a comprehensive NFT portfolio and content management system that 
 - **🎨 NFT Portfolio**: Curated showcase of digital artworks and NFT collections
 - **📱 Responsive Design**: Mobile-first approach with modern UI/UX
 - **🔐 Admin Dashboard**: Complete CMS for managing artworks, series, and content
-- **🖼️ Image Optimization**: Automatic caching and optimization of artwork images
+- **� User Management**: Admin invitation system with magic link authentication
+- **🛠️ Auto-Seeding**: Automatic database population on deployment
+- **�🖼️ Image Optimization**: Automatic caching and optimization of artwork images
 - **📝 Rich Text Editor**: Tiptap-powered editor for artwork descriptions
 - **🔗 OpenSea Integration**: Sync metadata and images from OpenSea marketplace
 - **🏷️ Collection Management**: Organize artworks into series and collections
@@ -45,6 +47,7 @@ Omentejovem is a comprehensive NFT portfolio and content management system that 
 - series_artworks (N:N relationship)
 - artifacts (additional content pieces)
 - about_page (static content)
+- user_roles (admin access management)
 ```
 
 ## 🚀 Getting Started
@@ -86,13 +89,15 @@ Omentejovem is a comprehensive NFT portfolio and content management system that 
    NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
    SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+   NEXT_PUBLIC_BASE_URL=http://localhost:3000
    ```
 
 5. **Database setup**
 
    ```bash
-   # Run the database schema and seed scripts
-   # Execute scripts/seed-database.sql in your Supabase SQL editor
+   # Database will be automatically seeded on first deployment
+   # Or run manual seed: POST /api/admin/seed
+   # See docs/SEED-SYSTEM.md for details
    ```
 
 6. **Start development server**
@@ -156,10 +161,12 @@ Protected admin interface featuring:
 
 - **Artwork Management**: CRUD operations for NFT pieces
 - **Series Management**: Create and manage artwork collections
+- **User Management**: Invite and manage admin users via magic link
 - **Rich Text Editing**: Tiptap-powered content editor
 - **Image Optimization**: Automatic caching and optimization
 - **OpenSea Sync**: Import metadata from OpenSea
 - **Content Publishing**: Draft and publish content
+- **Auto-Seeding**: Automatic database population system
 
 ### API Endpoints
 
@@ -173,6 +180,8 @@ GET /api/public/about             # Get about page content
 # Admin API (protected)
 POST /api/admin/artworks          # Create/update artwork
 POST /api/admin/series            # Create/update series
+POST /api/admin/users             # Manage admin users
+POST /api/admin/users/invite      # Invite new admin users
 POST /api/admin/seed              # Import seed data
 POST /api/cache-image             # Cache external images
 ```
@@ -237,6 +246,7 @@ Ensure all environment variables are configured in your deployment platform:
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+NEXT_PUBLIC_BASE_URL=https://your-domain.com
 ```
 
 ## 🤝 Contributing

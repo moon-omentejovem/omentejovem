@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
 import './globals.css'
 
-import { Header } from '@/components/Header'
 import { Cursor } from '@/components/Cursor'
-import { NeueMachina, FraktionMono } from './fonts'
+import { Header } from '@/components/Header'
 import { Providers } from '@/lib/query-provider'
+import { Toaster } from 'sonner'
+import { FraktionMono, NeueMachina } from './fonts'
 
 export const metadata: Metadata = {
   title: 'omentejovem',
@@ -27,6 +28,12 @@ export default function RootLayout({
             <Header />
             {children}
           </div>
+          <Toaster
+            theme="dark"
+            position="bottom-right"
+            richColors
+            closeButton
+          />
         </Providers>
       </body>
     </html>

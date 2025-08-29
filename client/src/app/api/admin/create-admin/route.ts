@@ -1,3 +1,4 @@
+import { supabaseAdmin } from '@/lib/supabase-admin'
 import { createClient } from '@/utils/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -13,7 +14,7 @@ export async function POST(request: NextRequest) {
 
     // Get the user by email from auth.users table
     const { data: authUsers, error: authError } =
-      await supabase.auth.admin.listUsers()
+      await supabaseAdmin.auth.admin.listUsers()
 
     if (authError) {
       console.error('Error fetching auth users:', authError)
@@ -109,7 +110,7 @@ export async function GET() {
 
     // Get auth users for comparison
     const { data: authUsers, error: authError } =
-      await supabase.auth.admin.listUsers()
+      await supabaseAdmin.auth.admin.listUsers()
 
     if (authError) {
       return NextResponse.json(

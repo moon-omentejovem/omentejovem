@@ -1,6 +1,6 @@
 'use client'
 
-import { createClient } from '@/utils/supabase/client'
+import { signInWithMagicLink } from '@/utils/auth'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Suspense, useEffect, useState } from 'react'
@@ -12,7 +12,6 @@ function AdminPageContent() {
   const [error, setError] = useState('')
   const router = useRouter()
   const searchParams = useSearchParams()
-  const supabase = createClient()
 
   useEffect(() => {
     // Check for access denied error from middleware
@@ -21,6 +20,8 @@ function AdminPageContent() {
       setError(
         'Access denied. You need admin permissions to access the admin panel.'
       )
+    } else if (errorParam === 'auth_failed') {
+      setError('Authentication failed. Please try again.')
     }
   }, [searchParams])
 
@@ -31,12 +32,7 @@ function AdminPageContent() {
     setMessage('')
 
     try {
-      const { error } = await supabase.auth.signInWithOtp({
-        email,
-        options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback?next=/admin/artworks`
-        }
-      })
+      const { error } = await signInWithMagicLink(email, '/admin/artworks')
 
       if (error) {
         setError(error.message)

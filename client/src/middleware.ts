@@ -46,13 +46,59 @@ export async function middleware(request: NextRequest) {
       url.pathname = '/admin'
       return NextResponse.redirect(url)
     }
+
+    // Check if user has admin role
+    try {
+      const { data: roleData, error: roleError } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', user.id)
+        .single()
+
+      // If there's an error or user is not admin, redirect with error
+      if (roleError || roleData?.role !== 'admin') {
+        const url = request.nextUrl.clone()
+        url.pathname = '/admin'
+        url.searchParams.set('error', 'access_denied')
+        return NextResponse.redirect(url)
+      }
+    } catch (error) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/admin'
+      url.searchParams.set('error', 'access_denied')
+      return NextResponse.redirect(url)
+    }
   }
 
-  // If user is logged in and tries to access admin login page, redirect to dashboard
+  // If user is logged in and tries to access admin login page, check if they're admin
   if (request.nextUrl.pathname === '/admin' && user) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/admin/artworks'
-    return NextResponse.redirect(url)
+    try {
+      const { data: roleData, error: roleError } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', user.id)
+        .single()
+
+      // If user is admin, redirect to dashboard
+      if (!roleError && roleData?.role === 'admin') {
+        const url = request.nextUrl.clone()
+        url.pathname = '/admin/artworks'
+        return NextResponse.redirect(url)
+      }
+      // If user is not admin, stay on login page with error
+      if (roleError || roleData?.role !== 'admin') {
+        const url = request.nextUrl.clone()
+        url.pathname = '/admin'
+        url.searchParams.set('error', 'access_denied')
+        return NextResponse.redirect(url)
+      }
+    } catch (error) {
+      // On error, show access denied
+      const url = request.nextUrl.clone()
+      url.pathname = '/admin'
+      url.searchParams.set('error', 'access_denied')
+      return NextResponse.redirect(url)
+    }
   }
 
   return supabaseResponse

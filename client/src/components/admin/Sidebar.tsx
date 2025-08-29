@@ -9,7 +9,8 @@ const navItems = [
   { href: '/admin/artworks', label: 'Artworks', icon: '🎨' },
   { href: '/admin/series', label: 'Series', icon: '📚' },
   { href: '/admin/artifacts', label: 'Artifacts', icon: '🏺' },
-  { href: '/admin/about', label: 'About Page', icon: '📄' }
+  { href: '/admin/about', label: 'About Page', icon: '📄' },
+  { href: '/admin/users', label: 'Users', icon: '👥' }
 ]
 
 export default function Sidebar() {
