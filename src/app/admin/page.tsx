@@ -2,7 +2,7 @@
 
 import { signInWithMagicLink } from '@/utils/auth'
 import Link from 'next/link'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { Suspense, useEffect, useState } from 'react'
 
 function AdminPageContent() {
@@ -10,13 +10,16 @@ function AdminPageContent() {
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
-  const router = useRouter()
   const searchParams = useSearchParams()
 
   useEffect(() => {
     // Check for access denied error from middleware
     const errorParam = searchParams.get('error')
-    if (errorParam === 'access_denied') {
+    if (
+      errorParam === 'access_denied' ||
+      errorParam === 'auth_failed' ||
+      errorParam === 'session_failed'
+    ) {
       setError(
         'Access denied. You need admin permissions to access the admin panel.'
       )

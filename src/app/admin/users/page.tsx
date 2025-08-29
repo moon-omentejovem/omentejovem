@@ -1,7 +1,6 @@
 'use client'
 
 import AdminLayout from '@/components/admin/AdminLayout'
-import { getBaseUrl } from '@/utils/auth'
 import { createClient } from '@/utils/supabase/client'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
@@ -57,13 +56,12 @@ export default function UsersPage() {
 
     setInviting(true)
 
-    const baseUrl = getBaseUrl()
     try {
       // First, send magic link to the user
       const { error: authError } = await supabase.auth.signInWithOtp({
         email: inviteEmail.trim(),
         options: {
-          emailRedirectTo: `${baseUrl}/auth/callback?next=/admin/setup`
+          emailRedirectTo: `${window.location.origin}/auth/callback?next=/admin/setup`
         }
       })
 
