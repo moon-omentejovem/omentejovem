@@ -11,17 +11,23 @@ import { toast } from 'sonner'
 type ArtworkRow = Database['public']['Tables']['artworks']['Row']
 
 export default function ArtworksPage() {
+  const PAGE_SIZE = 10
   const [artworks, setArtworks] = useState<ArtworkRow[]>([])
   const [loading, setLoading] = useState(true)
+  const [hasMore, setHasMore] = useState(true)
   const router = useRouter()
 
-  const fetchArtworks = async () => {
+  const fetchArtworks = async (reset = false) => {
     try {
       setLoading(true)
-      const response = await fetch('/api/admin/artworks')
+      const from = reset ? 0 : artworks.length
+      const response = await fetch(
+        `/api/admin/artworks?from=${from}&limit=${PAGE_SIZE}`
+      )
       if (response.ok) {
         const data = await response.json()
-        setArtworks(data)
+        setArtworks((prev) => (reset ? data : [...prev, ...data]))
+        setHasMore(data.length === PAGE_SIZE)
       } else {
         toast.error('Failed to load artworks')
       }
@@ -34,7 +40,8 @@ export default function ArtworksPage() {
   }
 
   useEffect(() => {
-    fetchArtworks()
+    fetchArtworks(true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleEdit = (artwork: ArtworkRow) => {
@@ -64,7 +71,7 @@ export default function ArtworksPage() {
       })
 
       if (response.ok) {
-        fetchArtworks() // Refresh the list
+        fetchArtworks(true) // Refresh the list
         toast.success('Artwork duplicated successfully!')
       } else {
         const error = await response.json()
@@ -91,12 +98,14 @@ export default function ArtworksPage() {
         })
 
         if (response.ok) {
-          fetchArtworks() // Refresh the list
+          fetchArtworks(true) // Refresh the list
           toast.success('Artwork deleted successfully!')
         } else {
           const error = await response.json()
           console.error('Error deleting artwork:', error)
-          toast.error('Failed to delete artwork: ' + (error.error || 'Unknown error'))
+          toast.error(
+            'Failed to delete artwork: ' + (error.error || 'Unknown error')
+          )
         }
       } catch (error) {
         console.error('Error deleting artwork:', error)
@@ -116,6 +125,8 @@ export default function ArtworksPage() {
         onDelete={handleDelete}
         onSearch={() => {}} // TODO: Implement search
         onSort={() => {}} // TODO: Implement sorting
+        onLoadMore={() => fetchArtworks()}
+        hasMore={hasMore}
       />
     </AdminLayout>
   )

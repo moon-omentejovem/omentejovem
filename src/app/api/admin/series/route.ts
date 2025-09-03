@@ -3,9 +3,14 @@ import { CreateSeriesSchema } from '@/types/schemas'
 import { revalidateTag } from 'next/cache'
 import { NextRequest, NextResponse } from 'next/server'
 
-// GET /api/admin/series - List all series
-export async function GET() {
+// GET /api/admin/series - List series with pagination
+export async function GET(request: NextRequest) {
   try {
+    const { searchParams } = request.nextUrl
+    const from = parseInt(searchParams.get('from') || '0')
+    const limit = parseInt(searchParams.get('limit') || '20')
+    const to = from + limit - 1
+
     const { data, error } = await supabaseAdmin
       .from('series')
       .select(
@@ -17,6 +22,7 @@ export async function GET() {
       `
       )
       .order('created_at', { ascending: false })
+      .range(from, to)
 
     if (error) throw error
 

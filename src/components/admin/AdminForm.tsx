@@ -1,13 +1,13 @@
 'use client'
 
 import type { FormField, ResourceDescriptor } from '@/types/descriptors'
+import { createClient } from '@/utils/supabase/client'
 import { SaveIcon, XIcon } from 'lucide-react'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 import RelationPicker from './RelationPicker'
 import TiptapEditor from './TiptapEditor'
-import { createClient } from '@/utils/supabase/client'
-import { toast } from 'sonner'
 
 interface AdminFormProps<T = any> {
   descriptor: ResourceDescriptor
@@ -407,6 +407,8 @@ export default function AdminForm<T extends Record<string, any>>({
                 <Image
                   src={value}
                   alt="Preview"
+                  width={0}
+                  height={0}
                   className="w-32 h-32 object-cover rounded-md"
                   onError={(e) => {
                     e.currentTarget.style.display = 'none'

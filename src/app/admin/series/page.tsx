@@ -15,17 +15,23 @@ type SeriesRow = Database['public']['Tables']['series']['Row'] & {
 }
 
 export default function SeriesPage() {
+  const PAGE_SIZE = 10
   const [series, setSeries] = useState<SeriesRow[]>([])
   const [loading, setLoading] = useState(true)
+  const [hasMore, setHasMore] = useState(true)
   const router = useRouter()
 
-  const fetchSeries = async () => {
+  const fetchSeries = async (reset = false) => {
     try {
       setLoading(true)
-      const response = await fetch('/api/admin/series')
+      const from = reset ? 0 : series.length
+      const response = await fetch(
+        `/api/admin/series?from=${from}&limit=${PAGE_SIZE}`
+      )
       if (response.ok) {
         const data = await response.json()
-        setSeries(data)
+        setSeries((prev) => (reset ? data : [...prev, ...data]))
+        setHasMore(data.length === PAGE_SIZE)
       } else {
         toast.error('Failed to load series')
       }
@@ -38,7 +44,8 @@ export default function SeriesPage() {
   }
 
   useEffect(() => {
-    fetchSeries()
+    fetchSeries(true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleEdit = (seriesItem: SeriesRow) => {
@@ -57,12 +64,14 @@ export default function SeriesPage() {
         })
 
         if (response.ok) {
-          fetchSeries() // Refresh the list
+          fetchSeries(true) // Refresh the list
           toast.success('Series deleted successfully!')
         } else {
           const error = await response.json()
           console.error('Error deleting series:', error)
-          toast.error('Failed to delete series: ' + (error.error || 'Unknown error'))
+          toast.error(
+            'Failed to delete series: ' + (error.error || 'Unknown error')
+          )
         }
       } catch (error) {
         console.error('Error deleting series:', error)
@@ -110,6 +119,8 @@ export default function SeriesPage() {
         onSearch={() => {}} // TODO: Implement search
         onSort={() => {}} // TODO: Implement sorting
         renderCell={renderCell}
+        onLoadMore={() => fetchSeries()}
+        hasMore={hasMore}
       />
     </AdminLayout>
   )

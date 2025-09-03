@@ -6,9 +6,14 @@ import { NextRequest, NextResponse } from 'next/server'
 
 export const dynamic = 'force-dynamic'
 
-// GET /api/admin/artworks - List all artworks
-export async function GET() {
+// GET /api/admin/artworks - List artworks with pagination
+export async function GET(request: NextRequest) {
   try {
+    const { searchParams } = request.nextUrl
+    const from = parseInt(searchParams.get('from') || '0')
+    const limit = parseInt(searchParams.get('limit') || '20')
+    const to = from + limit - 1
+
     const { data, error } = await supabaseAdmin
       .from('artworks')
       .select(
@@ -20,6 +25,7 @@ export async function GET() {
       `
       )
       .order('posted_at', { ascending: false })
+      .range(from, to)
 
     if (error) throw error
 

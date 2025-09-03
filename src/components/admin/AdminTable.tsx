@@ -4,7 +4,7 @@ import type { ListColumn, ResourceDescriptor } from '@/types/descriptors'
 import { ChevronDownIcon, ChevronUpIcon, PlusIcon } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 
 interface AdminTableProps<T = any> {
   descriptor: ResourceDescriptor
@@ -16,6 +16,8 @@ interface AdminTableProps<T = any> {
   onSearch?: (term: string) => void
   onSort?: (field: string, direction: 'asc' | 'desc') => void
   renderCell?: (item: T, column: ListColumn) => React.ReactNode
+  onLoadMore?: () => void
+  hasMore?: boolean
 }
 
 export default function AdminTable<T extends Record<string, any>>({
@@ -27,13 +29,31 @@ export default function AdminTable<T extends Record<string, any>>({
   onDelete,
   onSearch,
   onSort,
-  renderCell
+  renderCell,
+  onLoadMore,
+  hasMore = false
 }: AdminTableProps<T>) {
   const [searchTerm, setSearchTerm] = useState('')
   const [sortField, setSortField] = useState(descriptor.defaultSort?.key || '')
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>(
     descriptor.defaultSort?.direction || 'desc'
   )
+
+  const loadMoreRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    if (!onLoadMore || !hasMore) return
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && !loading) {
+        onLoadMore()
+      }
+    })
+    const el = loadMoreRef.current
+    if (el) observer.observe(el)
+    return () => {
+      if (el) observer.unobserve(el)
+    }
+  }, [onLoadMore, hasMore, loading])
 
   // Filter data based on search term
   const filteredData = useMemo(() => {
@@ -227,7 +247,7 @@ export default function AdminTable<T extends Record<string, any>>({
       )}
 
       {/* Table */}
-      {loading ? (
+      {loading && data.length === 0 ? (
         <div className="text-center py-8 text-neutral-400">Loading...</div>
       ) : (
         <div className="overflow-x-auto bg-neutral-900 rounded-lg">
@@ -328,6 +348,11 @@ export default function AdminTable<T extends Record<string, any>>({
               )}
             </tbody>
           </table>
+        </div>
+      )}
+      {hasMore && data.length > 0 && (
+        <div ref={loadMoreRef} className="py-4 text-center text-neutral-400">
+          {loading ? 'Loading...' : ''}
         </div>
       )}
     </div>

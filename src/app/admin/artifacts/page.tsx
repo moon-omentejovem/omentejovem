@@ -5,7 +5,7 @@ import AdminTable from '@/components/admin/AdminTable'
 import { artifactsDescriptor } from '@/types/descriptors'
 import type { Database } from '@/types/supabase'
 import { useRouter } from 'next/navigation'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 type ArtifactRow = Database['public']['Tables']['artifacts']['Row']
@@ -16,21 +16,27 @@ interface OperationState {
 }
 
 export default function ArtifactsPage() {
+  const PAGE_SIZE = 10
   const [artifacts, setArtifacts] = useState<ArtifactRow[]>([])
   const [loading, setLoading] = useState(true)
+  const [hasMore, setHasMore] = useState(true)
   const [operations, setOperations] = useState<OperationState>({
     duplicating: null,
     deleting: null
   })
   const router = useRouter()
 
-  const fetchArtifacts = useCallback(async () => {
+  const fetchArtifacts = async (reset = false) => {
     try {
       setLoading(true)
-      const response = await fetch('/api/admin/artifacts')
+      const from = reset ? 0 : artifacts.length
+      const response = await fetch(
+        `/api/admin/artifacts?from=${from}&limit=${PAGE_SIZE}`
+      )
       if (response.ok) {
         const data = await response.json()
-        setArtifacts(data)
+        setArtifacts((prev) => (reset ? data : [...prev, ...data]))
+        setHasMore(data.length === PAGE_SIZE)
       } else {
         console.error('Failed to fetch artifacts:', response.statusText)
         toast.error('Failed to load artifacts. Please try again.')
@@ -41,11 +47,12 @@ export default function ArtifactsPage() {
     } finally {
       setLoading(false)
     }
-  }, [])
+  }
 
   useEffect(() => {
-    fetchArtifacts()
-  }, [fetchArtifacts])
+    fetchArtifacts(true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleEdit = (artifact: ArtifactRow) => {
     router.push(`/admin/artifacts/${artifact.id}`)
@@ -74,7 +81,7 @@ export default function ArtifactsPage() {
       })
 
       if (response.ok) {
-        await fetchArtifacts()
+        await fetchArtifacts(true)
         toast.success('Artifact duplicated successfully!')
       } else {
         const errorData = await response.json()
@@ -112,7 +119,7 @@ export default function ArtifactsPage() {
       })
 
       if (response.ok) {
-        await fetchArtifacts()
+        await fetchArtifacts(true)
         toast.success('Artifact deleted successfully!')
       } else {
         const errorData = await response.json()
@@ -144,6 +151,8 @@ export default function ArtifactsPage() {
         onDelete={handleDelete}
         onSearch={() => {}} // TODO: Implement search functionality
         onSort={() => {}} // TODO: Implement sort functionality
+        onLoadMore={() => fetchArtifacts()}
+        hasMore={hasMore}
       />
     </AdminLayout>
   )
