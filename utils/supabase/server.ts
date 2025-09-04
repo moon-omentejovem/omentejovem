@@ -12,23 +12,15 @@
  * - Middleware
  */
 
+import { supabaseConfig } from '@/lib/supabase/config'
 import type { Database } from '@/types/supabase'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 
 export async function createClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-
-  if (!supabaseUrl || !supabaseKey) {
-    throw new Error(
-      'Missing Supabase environment variables. Please check your .env file.'
-    )
-  }
-
   const cookieStore = await cookies()
 
-  return createServerClient<Database>(supabaseUrl, supabaseKey, {
+  return createServerClient<Database>(supabaseConfig.url, supabaseConfig.anonKey, {
     cookies: {
       getAll() {
         return cookieStore.getAll()
@@ -56,8 +48,8 @@ export async function createServerActionClient() {
   const cookieStore = await cookies()
 
   return createServerClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseConfig.url,
+    supabaseConfig.anonKey,
     {
       cookies: {
         getAll() {

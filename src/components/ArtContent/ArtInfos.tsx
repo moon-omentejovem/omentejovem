@@ -80,14 +80,21 @@ export function ArtInfos({
 
   const mintedOn = getMintedOn(selectedArt)
 
-  const imageUrl =
-    selectedArt.image.pngUrl ||
+  const optimizedImageUrl =
     selectedArt.image.cachedUrl ||
+    selectedArt.image.pngUrl ||
+    selectedArt.image.displayUrl ||
+    selectedArt.image.thumbnailUrl ||
     selectedArt.image.originalUrl ||
     ''
 
+  const rawImageUrl =
+    selectedArt.raw?.metadata.image ||
+    selectedArt.image.originalUrl ||
+    optimizedImageUrl
+
   const videoUrl =
-    selectedArt.image.originalUrl
+    rawImageUrl
       ?.replace('/new_series/', '/new_series/videos/')
       .replace('.jpg', '.mp4') || ''
 
@@ -101,8 +108,8 @@ export function ArtInfos({
         <div className="md:flex-1 min-w-[200px] xl:min-w-[350px] flex flex-col max-h-full">
           <div className="xl:art-detail-inner-container overflow-hidden flex flex-1 justify-start xl:justify-end">
             <ArtDetails
-              detailedImage={imageUrl}
-              image={imageUrl}
+              detailedImage={rawImageUrl}
+              image={source === 'portfolio' ? optimizedImageUrl : rawImageUrl}
               name={selectedArt.name || ''}
             />
           </div>

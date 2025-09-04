@@ -12,7 +12,7 @@ utils/supabase/
 
 src/lib/
 ├── supabase.ts        # Helper functions para queries
-└── supabase-config.ts # Configurações e constantes
+└── supabase/config.ts # Configurações e constantes
 ```
 
 ## 🔧 Configuração

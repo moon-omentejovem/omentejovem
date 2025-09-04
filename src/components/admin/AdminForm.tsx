@@ -1,6 +1,8 @@
 'use client'
 
+import { STORAGE_BUCKETS, STORAGE_FOLDERS } from '@/lib/supabase/config'
 import type { FormField, ResourceDescriptor } from '@/types/descriptors'
+import { optimizeImageFile } from '@/utils/optimize-image'
 import { createClient } from '@/utils/supabase/client'
 import { SaveIcon, XIcon } from 'lucide-react'
 import Image from 'next/image'
@@ -363,14 +365,30 @@ export default function AdminForm<T extends Record<string, any>>({
 
           await toast.promise(
             (async () => {
-              const filePath = `${descriptor.table}/${Date.now()}-${file.name}`
-              const { error: uploadError } = await supabase.storage
-                .from('media')
-                .upload(filePath, file)
-              if (uploadError) throw uploadError
+              const timestamp = Date.now()
+              const baseName = file.name.replace(/\.[^/.]+$/, '')
+              const bucket = STORAGE_BUCKETS.MEDIA
+              const rawPath = `${descriptor.table}/${STORAGE_FOLDERS.RAW}/${timestamp}-${file.name}`
+              const optimizedPath = `${descriptor.table}/${STORAGE_FOLDERS.OPTIMIZED}/${timestamp}-${baseName}.webp`
+
+              // Upload original file
+              const { error: rawError } = await supabase.storage
+                .from(bucket)
+                .upload(rawPath, file, { contentType: file.type })
+              if (rawError) throw rawError
+
+              // Optimize and upload processed image
+              const optimized = await optimizeImageFile(file)
+              const { error: optError } = await supabase.storage
+                .from(bucket)
+                .upload(optimizedPath, optimized, {
+                  contentType: 'image/webp'
+                })
+              if (optError) throw optError
+
               const {
                 data: { publicUrl }
-              } = supabase.storage.from('media').getPublicUrl(filePath)
+              } = supabase.storage.from(bucket).getPublicUrl(optimizedPath)
               handleInputChange(field.key, publicUrl)
             })(),
             {

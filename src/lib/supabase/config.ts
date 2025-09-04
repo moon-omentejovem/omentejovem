@@ -1,6 +1,6 @@
 /**
  * Supabase Configuration
- * Centralized configuration for Supabase client instances
+ * Centralized configuration and constants for Supabase
  */
 
 export const supabaseConfig = {
@@ -55,6 +55,12 @@ export const TABLES = {
 export const STORAGE_BUCKETS = {
   MEDIA: 'media',
   CACHED_IMAGES: 'cached-images'
+} as const
+
+// Storage folder names for media variants
+export const STORAGE_FOLDERS = {
+  RAW: 'raw',
+  OPTIMIZED: 'optimized'
 } as const
 
 // RLS policies

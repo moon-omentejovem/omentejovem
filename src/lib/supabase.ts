@@ -9,7 +9,7 @@
 
 import type { Database } from '@/types/supabase'
 import { createClient } from '@/utils/supabase/client'
-import { TABLES } from './supabase-config'
+import { TABLES } from '@/lib/supabase/config'
 
 // Client-side helper functions - use only in client components
 const supabase = createClient()

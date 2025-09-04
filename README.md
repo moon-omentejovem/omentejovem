@@ -126,7 +126,7 @@ omentejovem-project/
 │   │   └── Modals/              # Modal components
 │   ├── lib/                     # Utilities and configurations
 │   │   ├── supabase.ts          # Supabase helper functions
-│   │   ├── supabase-config.ts   # Supabase configuration
+│   │   ├── supabase/config.ts   # Supabase configuration
 │   │   ├── api-utils.ts         # API utilities
 │   │   └── utils.ts             # General utilities
 │   ├── types/                   # TypeScript type definitions

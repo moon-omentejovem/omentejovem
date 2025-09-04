@@ -260,26 +260,46 @@ CREATE POLICY "Admins can manage about_page"
   WITH CHECK (public.is_admin());
 
 -- =====================================================
--- STORAGE BUCKET FOR IMAGE CACHE
+-- STORAGE BUCKETS
 -- =====================================================
+
+-- Create storage bucket for media uploads
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('media', 'media', true)
+ON CONFLICT (id) DO NOTHING;
+
+-- Allow public access to media files
+DROP POLICY IF EXISTS "Public can view media" ON storage.objects;
+CREATE POLICY "Public can view media"
+  ON storage.objects FOR SELECT
+  USING (bucket_id = 'media');
+
+-- Allow authenticated users to manage media files
+DROP POLICY IF EXISTS "Authenticated users can manage media" ON storage.objects;
+CREATE POLICY "Authenticated users can manage media"
+  ON storage.objects FOR ALL
+  USING (
+    bucket_id = 'media'
+    AND auth.role() = 'authenticated'
+  );
 
 -- Create storage bucket for image cache
 INSERT INTO storage.buckets (id, name, public)
-VALUES ('image-cache', 'image-cache', true)
+VALUES ('cached-images', 'cached-images', true)
 ON CONFLICT (id) DO NOTHING;
 
 -- Allow public access to cached images
 DROP POLICY IF EXISTS "Public can view cached images" ON storage.objects;
 CREATE POLICY "Public can view cached images"
   ON storage.objects FOR SELECT
-  USING (bucket_id = 'image-cache');
+  USING (bucket_id = 'cached-images');
 
 -- Allow authenticated users to manage cached images
 DROP POLICY IF EXISTS "Authenticated users can manage cached images" ON storage.objects;
 CREATE POLICY "Authenticated users can manage cached images"
   ON storage.objects FOR ALL
   USING (
-    bucket_id = 'image-cache'
+    bucket_id = 'cached-images'
     AND auth.role() = 'authenticated'
   );
 

@@ -8,6 +8,10 @@ type Series = Database['public']['Tables']['series']['Row']
 type SeriesArtwork = Database['public']['Tables']['series_artworks']['Row']
 
 interface ArtworkWithSeries extends Artwork {
+  /**
+   * Optimized image path stored on Supabase (optional while schema evolves)
+   */
+  image_cached_path?: string | null
   series_artworks: (SeriesArtwork & {
     series: Series
   })[]
@@ -24,6 +28,8 @@ interface PortfolioPageProps {
 
 // Convert Supabase artwork to NFT format for compatibility
 function convertArtworkToNFT(artwork: ArtworkWithSeries): NFT {
+  const optimizedImage = artwork.image_cached_path || artwork.image_url || ''
+
   return {
     nft_id: `${artwork.slug}`,
     chain: 'ethereum' as const,
@@ -40,13 +46,13 @@ function convertArtworkToNFT(artwork: ArtworkWithSeries): NFT {
         collectionName: artwork.title,
         collectionSlug: artwork.slug,
         safelistRequestStatus: 'verified',
-        imageUrl: artwork.image_url || '',
+        imageUrl: optimizedImage,
         description:
           typeof artwork.description === 'string' ? artwork.description : '',
         externalUrl: artwork.mint_link,
         twitterUsername: 'omentejovem',
         discordUrl: '',
-        bannerImageUrl: artwork.image_url || '',
+        bannerImageUrl: optimizedImage,
         lastIngestedAt: artwork.updated_at || artwork.created_at || ''
       },
       isSpam: false,
@@ -59,13 +65,13 @@ function convertArtworkToNFT(artwork: ArtworkWithSeries): NFT {
       typeof artwork.description === 'string' ? artwork.description : '',
     tokenUri: artwork.image_url || '',
     image: {
-      cachedUrl: artwork.image_url || '',
-      thumbnailUrl: artwork.image_url || '',
-      pngUrl: artwork.image_url || '',
+      cachedUrl: optimizedImage,
+      thumbnailUrl: optimizedImage,
+      pngUrl: optimizedImage,
       contentType: 'image/jpeg',
       size: 0,
       originalUrl: artwork.image_url || '',
-      displayUrl: artwork.image_url || ''
+      displayUrl: optimizedImage
     },
     raw: {
       tokenUri: artwork.image_url || '',
@@ -88,7 +94,7 @@ function convertArtworkToNFT(artwork: ArtworkWithSeries): NFT {
         artwork.series_artworks?.[0]?.series.name || 'Omentejovem Collection',
       slug: artwork.series_artworks?.[0]?.series.slug || 'omentejovem',
       externalUrl: null,
-      bannerImageUrl: artwork.image_url || ''
+      bannerImageUrl: optimizedImage
     },
     mint: {
       mintAddress: artwork.token_id || null,
