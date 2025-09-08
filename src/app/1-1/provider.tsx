@@ -3,29 +3,21 @@
 import { ReactElement } from 'react'
 import { OneOfOneProvider } from './context/OneOfOneProvider'
 import OneOfOneContent from './content'
-import { Filter } from '@/components/Filter'
-import { ChainedFilter } from '@/components/ArtFilter/filters'
-import { NFT } from '@/api/resolver/types'
+import { ProcessedArtwork } from '@/types/artwork'
 
 interface OneOfOneContentProviderProperties {
   email: string
-  images: NFT[]
-  filters: ChainedFilter[]
-  totalPages: number
+  artworks: ProcessedArtwork[]
 }
 
 export function OneOfOneContentProvider({
   email,
-  filters,
-  images,
-  totalPages
+  artworks
 }: OneOfOneContentProviderProperties): ReactElement {
   return (
     <OneOfOneProvider
       email={email}
-      images={images}
-      filters={filters}
-      totalPages={totalPages}
+      artworks={artworks}
     >
       <OneOfOneContent />
     </OneOfOneProvider>

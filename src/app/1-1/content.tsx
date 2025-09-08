@@ -7,26 +7,22 @@ import { useOneOfOneContext } from './context/useOneOfOneContext'
 export default function OneOfOneContent(): ReactElement {
   const {
     email,
-    artImages,
-    selectedArtIndex,
-    filters,
-    unfilteredImages,
-    onChangeArtImages,
-    onChangeSelectedArtIndex,
-    artTotalPages,
-    onChangeTotalPages
+    artworks,
+    selectedArtworkIndex,
+    unfilteredArtworks,
+    onChangeArtworks,
+    onChangeSelectedArtworkIndex
   } = useOneOfOneContext()
 
   return (
     <ArtMainContent
       email={email}
       source="1-1"
-      artImages={artImages}
-      filters={filters}
-      onChangeArtImages={onChangeArtImages}
-      onChangeSelectedArtIndex={onChangeSelectedArtIndex}
-      selectedArtIndex={selectedArtIndex}
-      unfilteredImages={unfilteredImages}
+      artworks={artworks}
+      onChangeArtworks={onChangeArtworks}
+      onChangeSelectedArtworkIndex={onChangeSelectedArtworkIndex}
+      selectedArtworkIndex={selectedArtworkIndex}
+      unfilteredArtworks={unfilteredArtworks}
     />
   )
 }
