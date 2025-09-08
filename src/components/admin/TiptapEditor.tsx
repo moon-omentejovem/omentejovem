@@ -45,7 +45,7 @@ export default function TiptapEditor({
       Image,
       CodeBlock.configure({
         HTMLAttributes: {
-          class: 'bg-neutral-800 p-4 rounded-md text-sm'
+          class: 'bg-gray-100 p-4 rounded-md text-sm'
         }
       })
     ],
@@ -87,15 +87,15 @@ export default function TiptapEditor({
   if (!editor) return null
 
   return (
-    <div className="border border-neutral-700 rounded-lg bg-neutral-900 overflow-hidden">
+    <div className="border border-gray-300 rounded-lg bg-white overflow-hidden">
       {/* Toolbar */}
-      <div className="border-b border-neutral-700 p-2 flex items-center space-x-1 flex-wrap gap-1">
+      <div className="border-b border-gray-200 p-2 flex items-center space-x-1 flex-wrap gap-1">
         <button
           onClick={() => editor.chain().focus().toggleBold().run()}
-          className={`p-2 rounded hover:bg-neutral-700 ${
+          className={`p-2 rounded hover:bg-gray-100 ${
             editor.isActive('bold')
-              ? 'bg-neutral-700 text-orange-400'
-              : 'text-neutral-400'
+              ? 'bg-gray-200 text-orange-600'
+              : 'text-gray-600'
           }`}
           title="Bold"
         >
@@ -104,24 +104,24 @@ export default function TiptapEditor({
 
         <button
           onClick={() => editor.chain().focus().toggleItalic().run()}
-          className={`p-2 rounded hover:bg-neutral-700 ${
+          className={`p-2 rounded hover:bg-gray-100 ${
             editor.isActive('italic')
-              ? 'bg-neutral-700 text-orange-400'
-              : 'text-neutral-400'
+              ? 'bg-gray-200 text-orange-600'
+              : 'text-gray-600'
           }`}
           title="Italic"
         >
           <ItalicIcon className="w-4 h-4" />
         </button>
 
-        <div className="w-px h-6 bg-neutral-700 mx-1" />
+        <div className="w-px h-6 bg-gray-200 mx-1" />
 
         <button
           onClick={addLink}
-          className={`p-2 rounded hover:bg-neutral-700 ${
+          className={`p-2 rounded hover:bg-gray-100 ${
             editor.isActive('link')
-              ? 'bg-neutral-700 text-orange-400'
-              : 'text-neutral-400'
+              ? 'bg-gray-200 text-orange-600'
+              : 'text-gray-600'
           }`}
           title="Add Link"
         >
@@ -130,20 +130,20 @@ export default function TiptapEditor({
 
         <button
           onClick={addImage}
-          className="p-2 rounded hover:bg-neutral-700 text-neutral-400"
+          className="p-2 rounded hover:bg-gray-100 text-gray-600"
           title="Add Image"
         >
           <ImageIcon className="w-4 h-4" />
         </button>
 
-        <div className="w-px h-6 bg-neutral-700 mx-1" />
+        <div className="w-px h-6 bg-gray-200 mx-1" />
 
         <button
           onClick={() => editor.chain().focus().toggleBulletList().run()}
-          className={`p-2 rounded hover:bg-neutral-700 ${
+          className={`p-2 rounded hover:bg-gray-100 ${
             editor.isActive('bulletList')
-              ? 'bg-neutral-700 text-orange-400'
-              : 'text-neutral-400'
+              ? 'bg-gray-200 text-orange-600'
+              : 'text-gray-600'
           }`}
           title="Bullet List"
         >
@@ -152,24 +152,24 @@ export default function TiptapEditor({
 
         <button
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          className={`p-2 rounded hover:bg-neutral-700 ${
+          className={`p-2 rounded hover:bg-gray-100 ${
             editor.isActive('orderedList')
-              ? 'bg-neutral-700 text-orange-400'
-              : 'text-neutral-400'
+              ? 'bg-gray-200 text-orange-600'
+              : 'text-gray-600'
           }`}
           title="Numbered List"
         >
           <ListOrderedIcon className="w-4 h-4" />
         </button>
 
-        <div className="w-px h-6 bg-neutral-700 mx-1" />
+        <div className="w-px h-6 bg-gray-200 mx-1" />
 
         <button
           onClick={() => editor.chain().focus().toggleCode().run()}
-          className={`p-2 rounded hover:bg-neutral-700 ${
+          className={`p-2 rounded hover:bg-gray-100 ${
             editor.isActive('code')
-              ? 'bg-neutral-700 text-orange-400'
-              : 'text-neutral-400'
+              ? 'bg-gray-200 text-orange-600'
+              : 'text-gray-600'
           }`}
           title="Inline Code"
         >
@@ -178,22 +178,22 @@ export default function TiptapEditor({
 
         <button
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
-          className={`p-2 rounded hover:bg-neutral-700 ${
+          className={`p-2 rounded hover:bg-gray-100 ${
             editor.isActive('blockquote')
-              ? 'bg-neutral-700 text-orange-400'
-              : 'text-neutral-400'
+              ? 'bg-gray-200 text-orange-600'
+              : 'text-gray-600'
           }`}
           title="Quote"
         >
           <QuoteIcon className="w-4 h-4" />
         </button>
 
-        <div className="w-px h-6 bg-neutral-700 mx-1" />
+        <div className="w-px h-6 bg-gray-200 mx-1" />
 
         <button
           onClick={() => editor.chain().focus().undo().run()}
           disabled={!editor.can().undo()}
-          className="p-2 rounded hover:bg-neutral-700 text-neutral-400 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="p-2 rounded hover:bg-gray-100 text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
           title="Undo"
         >
           <UndoIcon className="w-4 h-4" />
@@ -202,7 +202,7 @@ export default function TiptapEditor({
         <button
           onClick={() => editor.chain().focus().redo().run()}
           disabled={!editor.can().redo()}
-          className="p-2 rounded hover:bg-neutral-700 text-neutral-400 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="p-2 rounded hover:bg-gray-100 text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
           title="Redo"
         >
           <RedoIcon className="w-4 h-4" />
@@ -213,11 +213,11 @@ export default function TiptapEditor({
       <div className="relative">
         <EditorContent
           editor={editor}
-          className="text-neutral-200 min-h-[200px]"
+          className="text-gray-800 min-h-[200px]"
         />
 
         {editor.isEmpty && (
-          <div className="absolute top-4 left-4 text-neutral-500 pointer-events-none">
+          <div className="absolute top-4 left-4 text-gray-400 pointer-events-none">
             {placeholder}
           </div>
         )}

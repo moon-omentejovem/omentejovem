@@ -3,6 +3,7 @@
 import { signInWithMagicLink } from '@/utils/auth'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
+import { Alert, Button, Card, Label, TextInput } from 'flowbite-react'
 import { Suspense, useEffect, useState } from 'react'
 
 function AdminPageContent() {
@@ -50,28 +51,24 @@ function AdminPageContent() {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-white flex items-center justify-center">
-      <div className="bg-neutral-900 p-8 rounded-lg shadow-xl w-96">
-        <h1 className="text-2xl font-bold mb-6 text-center">Admin Access</h1>
-        <p className="text-neutral-400 text-sm text-center mb-6">
+    <div className="min-h-screen bg-gray-50 text-gray-900 flex items-center justify-center">
+      <Card className="w-96">
+        <h1 className="text-2xl font-bold mb-6 text-center">
+          Admin Access
+        </h1>
+        <p className="text-gray-500 text-sm text-center mb-6">
           Enter your email to receive a magic link for secure access to the
           admin panel.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-neutral-300 mb-1"
-            >
-              Email Address
-            </label>
-            <input
+            <Label htmlFor="email" value="Email Address" />
+            <TextInput
               type="email"
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2.5 text-white bg-neutral-800 border border-neutral-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ease-in-out"
               placeholder="admin@example.com"
               required
               disabled={loading}
@@ -79,35 +76,30 @@ function AdminPageContent() {
           </div>
 
           {error && (
-            <div className="bg-red-900/50 border border-red-700 text-red-300 px-4 py-2 rounded-md text-sm">
-              {error}
-            </div>
+            <Alert color="failure">{error}</Alert>
           )}
 
-          {message && (
-            <div className="bg-green-900/50 border border-green-700 text-green-300 px-4 py-2 rounded-md text-sm">
-              {message}
-            </div>
-          )}
+          {message && <Alert color="success">{message}</Alert>}
 
-          <button
+          <Button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-2.5 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-neutral-900 transition-all duration-200 ease-in-out"
+            isProcessing={loading}
+            className="w-full"
           >
-            {loading ? 'Sending Magic Link...' : 'Send Magic Link'}
-          </button>
+            Send Magic Link
+          </Button>
         </form>
 
-        <div className="mt-6 pt-6 border-t border-neutral-800 text-center">
+        <div className="mt-6 pt-6 border-t border-gray-200 text-center">
           <Link
             href="/"
-            className="text-neutral-400 hover:text-white transition-colors text-sm"
+            className="text-gray-500 hover:text-gray-700 transition-colors text-sm"
           >
             ← Back to Website
           </Link>
         </div>
-      </div>
+      </Card>
     </div>
   )
 }
@@ -116,13 +108,13 @@ export default function AdminPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-neutral-950 text-white flex items-center justify-center">
-          <div className="bg-neutral-900 p-8 rounded-lg shadow-xl w-96">
+        <div className="min-h-screen bg-gray-50 text-gray-900 flex items-center justify-center">
+          <div className="bg-white p-8 rounded-lg shadow w-96 border border-gray-200">
             <div className="animate-pulse">
-              <div className="h-8 bg-neutral-700 rounded mb-6"></div>
-              <div className="h-4 bg-neutral-700 rounded mb-6"></div>
-              <div className="h-12 bg-neutral-700 rounded mb-4"></div>
-              <div className="h-12 bg-neutral-700 rounded"></div>
+              <div className="h-8 bg-gray-200 rounded mb-6"></div>
+              <div className="h-4 bg-gray-200 rounded mb-6"></div>
+              <div className="h-12 bg-gray-200 rounded mb-4"></div>
+              <div className="h-12 bg-gray-200 rounded"></div>
             </div>
           </div>
         </div>

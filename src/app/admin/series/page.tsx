@@ -88,14 +88,14 @@ export default function SeriesPage() {
     if (column.key === 'artworks') {
       const artworks = item.series_artworks?.map((sa) => sa.artworks) || []
       if (artworks.length === 0) {
-        return <span className="text-neutral-500">No artworks</span>
+        return <span className="text-gray-500">No artworks</span>
       }
       return (
         <div>
-          <div className="text-sm text-neutral-400 mb-1">
+          <div className="text-sm text-gray-500 mb-1">
             {artworks.length} artwork{artworks.length !== 1 ? 's' : ''}
           </div>
-          <div className="text-xs text-neutral-500 max-w-xs truncate">
+          <div className="text-xs text-gray-400 max-w-xs truncate">
             {artworks
               .slice(0, 3)
               .map((a) => a.title)

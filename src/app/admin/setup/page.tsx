@@ -79,7 +79,7 @@ export default function SetupAdminPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-neutral-950 text-white flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 text-gray-900 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-pulse text-lg">Loading...</div>
         </div>
@@ -88,37 +88,37 @@ export default function SetupAdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-white flex items-center justify-center">
-      <div className="bg-neutral-900 p-8 rounded-lg shadow-xl w-96">
+    <div className="min-h-screen bg-gray-50 text-gray-900 flex items-center justify-center">
+      <div className="bg-white p-8 rounded-lg shadow w-96 border border-gray-200">
         <h1 className="text-2xl font-bold mb-6 text-center">Admin Setup</h1>
 
         {user && (
-          <div className="mb-6 p-4 bg-neutral-800 rounded">
+          <div className="mb-6 p-4 bg-gray-100 rounded">
             <h3 className="font-semibold mb-2">Current User</h3>
-            <p className="text-sm text-neutral-400">Email: {user.email}</p>
-            <p className="text-sm text-neutral-400">ID: {user.id}</p>
+            <p className="text-sm text-gray-500">Email: {user.email}</p>
+            <p className="text-sm text-gray-500">ID: {user.id}</p>
           </div>
         )}
 
         {roleStatus && (
-          <div className="mb-6 p-4 bg-neutral-800 rounded">
+          <div className="mb-6 p-4 bg-gray-100 rounded">
             <h3 className="font-semibold mb-2">Role Status</h3>
             {roleStatus.role ? (
-              <p className="text-green-400">✅ Role: {roleStatus.role.role}</p>
+              <p className="text-green-600">✅ Role: {roleStatus.role.role}</p>
             ) : (
-              <p className="text-yellow-400">⚠️ No admin role found</p>
+              <p className="text-yellow-600">⚠️ No admin role found</p>
             )}
           </div>
         )}
 
         {error && (
-          <div className="bg-red-900/50 border border-red-700 text-red-300 px-4 py-2 rounded-md text-sm mb-4">
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded-md text-sm mb-4">
             {error}
           </div>
         )}
 
         {success && (
-          <div className="bg-green-900/50 border border-green-700 text-green-300 px-4 py-2 rounded-md text-sm mb-4">
+          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-2 rounded-md text-sm mb-4">
             {success}
           </div>
         )}
@@ -145,7 +145,7 @@ export default function SetupAdminPage() {
         <div className="text-center">
           <button
             onClick={() => router.push('/admin')}
-            className="text-neutral-400 hover:text-white transition-colors text-sm"
+            className="text-gray-500 hover:text-gray-700 transition-colors text-sm"
           >
             ← Back to Login
           </button>

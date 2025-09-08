@@ -84,7 +84,7 @@ export default function EditSeriesPage({ params }: { params: { id: string } }) {
     return (
       <AdminLayout>
         <div className="flex items-center justify-center h-64">
-          <div className="text-neutral-400">Loading series...</div>
+          <div className="text-gray-500">Loading series...</div>
         </div>
       </AdminLayout>
     )
@@ -94,7 +94,7 @@ export default function EditSeriesPage({ params }: { params: { id: string } }) {
     return (
       <AdminLayout>
         <div className="flex items-center justify-center h-64">
-          <div className="text-red-400">Series not found</div>
+          <div className="text-red-600">Series not found</div>
         </div>
       </AdminLayout>
     )

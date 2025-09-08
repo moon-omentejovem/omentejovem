@@ -142,11 +142,11 @@ export default function UsersPage() {
     return (
       <AdminLayout>
         <div className="animate-pulse">
-          <div className="h-8 bg-neutral-800 rounded w-48 mb-6"></div>
-          <div className="bg-neutral-900 rounded-lg p-6">
+          <div className="h-8 bg-gray-200 rounded w-48 mb-6"></div>
+          <div className="bg-white rounded-lg p-6 border border-gray-200">
             <div className="space-y-4">
               {[...Array(3)].map((_, i) => (
-                <div key={i} className="h-16 bg-neutral-800 rounded"></div>
+                <div key={i} className="h-16 bg-gray-200 rounded"></div>
               ))}
             </div>
           </div>
@@ -161,7 +161,7 @@ export default function UsersPage() {
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold">User Management</h1>
-            <p className="text-neutral-400 mt-2">
+            <p className="text-gray-500 mt-2">
               Manage admin access and user roles
             </p>
           </div>
@@ -176,24 +176,24 @@ export default function UsersPage() {
         {/* Stats */}
         {stats && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-neutral-900 p-6 rounded-lg">
-              <h3 className="text-lg font-semibold text-neutral-400">
+            <div className="bg-white p-6 rounded-lg border border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-600">
                 Total Users
               </h3>
-              <p className="text-3xl font-bold text-white">{stats.total}</p>
+              <p className="text-3xl font-bold text-gray-900">{stats.total}</p>
             </div>
-            <div className="bg-neutral-900 p-6 rounded-lg">
-              <h3 className="text-lg font-semibold text-neutral-400">Admins</h3>
-              <p className="text-3xl font-bold text-green-400">
+            <div className="bg-white p-6 rounded-lg border border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-600">Admins</h3>
+              <p className="text-3xl font-bold text-green-600">
                 {stats.admins}
               </p>
             </div>
-            <div className="bg-neutral-900 p-6 rounded-lg">
-              <h3 className="text-lg font-semibold text-neutral-400">
+            <div className="bg-white p-6 rounded-lg border border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-600">
                 Regular Users
               </h3>
-              <p className="text-3xl font-bold text-neutral-400">0</p>
-              <p className="text-sm text-neutral-500 mt-1">
+              <p className="text-3xl font-bold text-gray-500">0</p>
+              <p className="text-sm text-gray-400 mt-1">
                 All CMS users are admins
               </p>
             </div>
@@ -202,7 +202,7 @@ export default function UsersPage() {
 
         {/* Invite Form */}
         {showInviteForm && (
-          <div className="bg-neutral-900 rounded-lg p-6 mb-8">
+          <div className="bg-white rounded-lg p-6 mb-8 border border-gray-200">
             <h2 className="text-xl font-semibold mb-4">Invite New Admin</h2>
             <form onSubmit={handleInviteUser} className="flex gap-4">
               <div className="flex-1">
@@ -211,7 +211,7 @@ export default function UsersPage() {
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
                   placeholder="admin@example.com"
-                  className="w-full px-4 py-2 bg-neutral-800 border border-neutral-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
                   disabled={inviting}
                 />
@@ -219,7 +219,7 @@ export default function UsersPage() {
               <button
                 type="submit"
                 disabled={inviting || !inviteEmail.trim()}
-                className="px-6 py-2 bg-green-600 hover:bg-green-700 disabled:bg-neutral-700 disabled:cursor-not-allowed rounded-lg font-medium transition-colors"
+                className="px-6 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed rounded-lg font-medium transition-colors"
               >
                 {inviting ? 'Inviting...' : 'Send Invite'}
               </button>
@@ -229,12 +229,12 @@ export default function UsersPage() {
                   setShowInviteForm(false)
                   setInviteEmail('')
                 }}
-                className="px-6 py-2 bg-neutral-700 hover:bg-neutral-600 rounded-lg font-medium transition-colors"
+                className="px-6 py-2 bg-gray-300 hover:bg-gray-400 rounded-lg font-medium transition-colors"
               >
                 Cancel
               </button>
             </form>
-            <p className="text-sm text-neutral-400 mt-2">
+            <p className="text-sm text-gray-500 mt-2">
               A magic link will be sent to the user, and they will automatically
               have admin access to the CMS.
             </p>
@@ -242,24 +242,24 @@ export default function UsersPage() {
         )}
 
         {/* Users List */}
-        <div className="bg-neutral-900 rounded-lg overflow-hidden">
-          <div className="px-6 py-4 border-b border-neutral-800">
+        <div className="bg-white rounded-lg overflow-hidden border border-gray-200">
+          <div className="px-6 py-4 border-b border-gray-200">
             <h2 className="text-xl font-semibold">CMS Administrators</h2>
           </div>
-          <div className="divide-y divide-neutral-800">
+          <div className="divide-y divide-gray-200">
             {users.length === 0 ? (
-              <div className="px-6 py-8 text-center text-neutral-400">
+              <div className="px-6 py-8 text-center text-gray-500">
                 No users found
               </div>
             ) : (
               users.map((user) => (
                 <div
                   key={user.id}
-                  className="px-6 py-4 flex items-center justify-between hover:bg-neutral-800/50 transition-colors"
+                  className="px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
                 >
                   <div className="flex-1">
                     <div className="font-medium">{user.email}</div>
-                    <div className="text-sm text-neutral-400">
+                    <div className="text-sm text-gray-500">
                       Joined{' '}
                       {new Date(user.created_at).toLocaleDateString('en-US', {
                         year: 'numeric',
@@ -269,12 +269,12 @@ export default function UsersPage() {
                     </div>
                   </div>
                   <div className="flex items-center gap-4">
-                    <div className="px-3 py-1 rounded-full text-xs font-medium bg-green-900/50 text-green-300">
+                    <div className="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
                       Admin
                     </div>
                     <button
                       onClick={() => handleRemoveUser(user.id, user.email)}
-                      className="px-3 py-1 text-xs font-medium text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded transition-colors"
+                      className="px-3 py-1 text-xs font-medium text-red-600 hover:text-red-800 hover:bg-red-100 rounded transition-colors"
                     >
                       Remove
                     </button>

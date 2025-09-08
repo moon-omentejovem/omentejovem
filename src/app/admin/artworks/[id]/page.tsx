@@ -85,7 +85,7 @@ export default function EditArtworkPage({
     return (
       <AdminLayout>
         <div className="flex items-center justify-center h-64">
-          <div className="text-neutral-400">Loading artwork...</div>
+          <div className="text-gray-500">Loading artwork...</div>
         </div>
       </AdminLayout>
     )
@@ -95,7 +95,7 @@ export default function EditArtworkPage({
     return (
       <AdminLayout>
         <div className="flex items-center justify-center h-64">
-          <div className="text-red-400">Artwork not found</div>
+          <div className="text-red-600">Artwork not found</div>
         </div>
       </AdminLayout>
     )

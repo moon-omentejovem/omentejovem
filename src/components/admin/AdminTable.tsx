@@ -124,7 +124,7 @@ export default function AdminTable<T extends Record<string, any>>({
             }}
           />
         ) : (
-          <div className="w-16 h-16 bg-neutral-800 rounded flex items-center justify-center text-xs text-neutral-500">
+          <div className="w-16 h-16 bg-gray-100 rounded flex items-center justify-center text-xs text-gray-500">
             No image
           </div>
         )
@@ -219,13 +219,13 @@ export default function AdminTable<T extends Record<string, any>>({
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-white">
+        <h1 className="text-2xl font-semibold text-gray-900">
           {descriptor.title}
         </h1>
         {descriptor.actions?.create && (
           <Link
             href={`/admin/${descriptor.table}/new`}
-            className="inline-flex items-center px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-400 transition-colors"
+            className="inline-flex items-center px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors"
           >
             <PlusIcon className="w-4 h-4 mr-2" />
             Add {descriptor.title.slice(0, -1)}
@@ -241,25 +241,25 @@ export default function AdminTable<T extends Record<string, any>>({
             placeholder={`Search by ${descriptor.searchFields.join(', ')}...`}
             value={searchTerm}
             onChange={handleSearchChange}
-            className="w-full px-4 py-2 bg-neutral-800 border border-neutral-700 rounded-md text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+            className="w-full px-4 py-2 bg-white border border-gray-300 rounded-md text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
           />
         </div>
       )}
 
       {/* Table */}
       {loading && data.length === 0 ? (
-        <div className="text-center py-8 text-neutral-400">Loading...</div>
+        <div className="text-center py-8 text-gray-500">Loading...</div>
       ) : (
-        <div className="overflow-x-auto bg-neutral-900 rounded-lg">
+        <div className="overflow-x-auto bg-white border border-gray-200 rounded-lg">
           <table className="min-w-full text-sm">
-            <thead className="border-b border-neutral-800">
+            <thead className="border-b border-gray-200 bg-gray-50">
               <tr>
                 {descriptor.list.map((column) => (
                   <th
                     key={column.key}
-                    className={`py-3 px-4 text-left text-neutral-400 font-medium ${
+                    className={`py-3 px-4 text-left text-gray-600 font-medium ${
                       sortField === column.key
-                        ? 'cursor-pointer hover:text-neutral-300'
+                        ? 'cursor-pointer hover:text-gray-800'
                         : ''
                     }`}
                     style={{ width: column.width }}
@@ -280,18 +280,18 @@ export default function AdminTable<T extends Record<string, any>>({
                   </th>
                 ))}
                 {hasActions && (
-                  <th className="py-3 px-4 text-right text-neutral-400 font-medium">
+                  <th className="py-3 px-4 text-right text-gray-600 font-medium">
                     Actions
                   </th>
                 )}
               </tr>
             </thead>
-            <tbody className="divide-y divide-neutral-800">
+            <tbody className="divide-y divide-gray-200">
               {sortedData.length === 0 ? (
                 <tr>
                   <td
                     colSpan={descriptor.list.length + (hasActions ? 1 : 0)}
-                    className="py-8 px-4 text-center text-neutral-500"
+                    className="py-8 px-4 text-center text-gray-500"
                   >
                     {searchTerm
                       ? 'No results found'
@@ -302,12 +302,12 @@ export default function AdminTable<T extends Record<string, any>>({
                 sortedData.map((item, index) => (
                   <tr
                     key={item.id || index}
-                    className="hover:bg-neutral-800/50"
+                    className="hover:bg-gray-50"
                   >
                     {descriptor.list.map((column) => (
                       <td
                         key={column.key}
-                        className={`py-4 px-4 text-neutral-200 ${column.className || ''}`}
+                        className={`py-4 px-4 text-gray-700 ${column.className || ''}`}
                       >
                         {defaultRenderCell(item, column)}
                       </td>
@@ -317,7 +317,7 @@ export default function AdminTable<T extends Record<string, any>>({
                         {descriptor.actions?.edit && onEdit && (
                           <button
                             onClick={() => onEdit(item)}
-                            className="text-blue-400 hover:text-blue-300"
+                            className="text-blue-600 hover:text-blue-800"
                             title="Edit"
                           >
                             Edit
@@ -326,7 +326,7 @@ export default function AdminTable<T extends Record<string, any>>({
                         {descriptor.actions?.duplicate && onDuplicate && (
                           <button
                             onClick={() => onDuplicate(item)}
-                            className="text-green-400 hover:text-green-300 ml-2"
+                            className="text-green-600 hover:text-green-800 ml-2"
                             title="Duplicate"
                           >
                             Duplicate
@@ -335,7 +335,7 @@ export default function AdminTable<T extends Record<string, any>>({
                         {descriptor.actions?.delete && onDelete && (
                           <button
                             onClick={() => onDelete(item)}
-                            className="text-red-400 hover:text-red-300 ml-2"
+                            className="text-red-600 hover:text-red-800 ml-2"
                             title="Delete"
                           >
                             Delete
@@ -351,7 +351,7 @@ export default function AdminTable<T extends Record<string, any>>({
         </div>
       )}
       {hasMore && data.length > 0 && (
-        <div ref={loadMoreRef} className="py-4 text-center text-neutral-400">
+        <div ref={loadMoreRef} className="py-4 text-center text-gray-500">
           {loading ? 'Loading...' : ''}
         </div>
       )}

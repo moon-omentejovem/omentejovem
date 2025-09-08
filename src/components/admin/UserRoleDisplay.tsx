@@ -36,22 +36,22 @@ export default function UserRoleDisplay() {
   }
 
   if (loading) {
-    return <div className="text-xs text-neutral-500">Loading...</div>
+    return <div className="text-xs text-gray-500">Loading...</div>
   }
 
   if (!roleInfo) {
-    return <div className="text-xs text-red-400">No role info available</div>
+    return <div className="text-xs text-red-600">No role info available</div>
   }
 
   return (
-    <div className="text-xs text-neutral-400 space-y-1">
+    <div className="text-xs text-gray-500 space-y-1">
       <div>
-        Logged in as: <span className="text-white">{roleInfo.user.email}</span>
+        Logged in as: <span className="text-gray-900">{roleInfo.user.email}</span>
       </div>
       <div>
         Role:{' '}
         <span
-          className={`font-semibold ${roleInfo.isAdmin ? 'text-green-400' : 'text-yellow-400'}`}
+          className={`font-semibold ${roleInfo.isAdmin ? 'text-green-600' : 'text-yellow-600'}`}
         >
           {roleInfo.role}
         </span>

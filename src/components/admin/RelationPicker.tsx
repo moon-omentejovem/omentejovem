@@ -125,9 +125,9 @@ export default function RelationPicker({
 
   return (
     <div className="space-y-2">
-      <label className="block text-sm font-medium text-neutral-300">
+      <label className="block text-sm font-medium text-gray-700">
         {field.label || field.key}
-        {field.required && <span className="text-red-400 ml-1">*</span>}
+        {field.required && <span className="text-red-600 ml-1">*</span>}
       </label>
 
       {/* Selected Items */}
@@ -136,13 +136,13 @@ export default function RelationPicker({
           {selectedOptions.map((item) => (
             <span
               key={item.id}
-              className="inline-flex items-center px-3 py-1 bg-orange-500/20 text-orange-400 rounded-full text-sm"
+              className="inline-flex items-center px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm"
             >
               {item.label}
               <button
                 type="button"
                 onClick={() => handleRemoveItem(item.id)}
-                className="ml-2 text-orange-300 hover:text-orange-200"
+                className="ml-2 text-orange-600 hover:text-orange-800"
               >
                 <XIcon className="w-3 h-3" />
               </button>
@@ -157,15 +157,15 @@ export default function RelationPicker({
           type="button"
           onClick={() => setIsOpen(!isOpen)}
           disabled={loading || availableOptions.length === 0}
-          className={`w-full px-3 py-2 bg-neutral-800 border ${
-            error ? 'border-red-500' : 'border-neutral-700'
-          } rounded-md text-white text-left focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent flex items-center justify-between ${
+          className={`w-full px-3 py-2 bg-white border ${
+            error ? 'border-red-500' : 'border-gray-300'
+          } rounded-md text-gray-700 text-left focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 flex items-center justify-between ${
             loading || availableOptions.length === 0
               ? 'opacity-50 cursor-not-allowed'
-              : 'hover:border-neutral-600'
+              : 'hover:border-gray-400'
           }`}
         >
-          <span className="text-neutral-400">
+          <span className="text-gray-500">
             {loading
               ? 'Loading...'
               : availableOptions.length === 0
@@ -178,13 +178,13 @@ export default function RelationPicker({
         </button>
 
         {isOpen && availableOptions.length > 0 && (
-          <div className="absolute z-10 w-full mt-1 bg-neutral-800 border border-neutral-700 rounded-md shadow-lg max-h-60 overflow-y-auto">
+          <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
             {availableOptions.map((option) => (
               <button
                 key={option.id}
                 type="button"
                 onClick={() => handleToggleItem(option)}
-                className="w-full px-3 py-2 text-left text-neutral-200 hover:bg-neutral-700 focus:outline-none focus:bg-neutral-700"
+                className="w-full px-3 py-2 text-left text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
               >
                 {option.label}
               </button>
@@ -193,7 +193,7 @@ export default function RelationPicker({
         )}
       </div>
 
-      {error && <p className="text-red-400 text-sm">{error}</p>}
+      {error && <p className="text-red-600 text-sm">{error}</p>}
     </div>
   )
 }

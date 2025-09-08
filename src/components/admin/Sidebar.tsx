@@ -17,14 +17,14 @@ export default function Sidebar() {
   const pathname = usePathname()
 
   return (
-    <aside className="w-64 bg-neutral-900 text-sm flex flex-col">
+    <aside className="w-64 bg-white text-sm flex flex-col border-r border-gray-200">
       {/* Header */}
-      <div className="p-6 border-b border-neutral-800">
+      <div className="p-6 border-b border-gray-200">
         <div className="flex items-center space-x-3">
           <div className="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center">
             <span className="text-white font-semibold text-sm">O</span>
           </div>
-          <span className="text-white font-medium">Omentejovem CMS</span>
+          <span className="font-medium text-gray-900">Omentejovem CMS</span>
         </div>
       </div>
 
@@ -38,8 +38,8 @@ export default function Sidebar() {
               className={clsx(
                 'flex items-center space-x-3 px-3 py-2.5 rounded-md transition-colors',
                 pathname.startsWith(item.href)
-                  ? 'bg-orange-500/10 text-orange-400 border-r-2 border-orange-500'
-                  : 'text-neutral-400 hover:text-white hover:bg-neutral-800'
+                  ? 'bg-orange-100 text-orange-700 border-l-4 border-orange-500'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
               )}
             >
               <span className="text-lg">{item.icon}</span>
@@ -50,13 +50,13 @@ export default function Sidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="p-4 border-t border-neutral-800 space-y-3">
+      <div className="p-4 border-t border-gray-200 space-y-3">
         {/* User Role Info */}
         <UserRoleDisplay />
 
         <Link
           href="/admin/logout"
-          className="flex items-center space-x-3 px-3 py-2 text-neutral-400 hover:text-red-400 rounded-md transition-colors"
+          className="flex items-center space-x-3 px-3 py-2 text-gray-600 hover:text-red-600 rounded-md transition-colors"
         >
           <span>🚪</span>
           <span>Logout</span>

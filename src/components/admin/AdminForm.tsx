@@ -8,6 +8,15 @@ import { SaveIcon, XIcon } from 'lucide-react'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
+import {
+  Button,
+  FileInput,
+  Label,
+  Select,
+  TextInput,
+  Textarea,
+  ToggleSwitch
+} from 'flowbite-react'
 import RelationPicker from './RelationPicker'
 import TiptapEditor from './TiptapEditor'
 
@@ -176,21 +185,15 @@ export default function AdminForm<T extends Record<string, any>>({
     const value = formData[field.key] || ''
     const error = errors[field.key]
 
-    const baseClasses = `w-full px-3 py-2 bg-neutral-800 border ${
-      error ? 'border-red-500' : 'border-neutral-700'
-    } rounded-md text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent`
-
     switch (field.type) {
       case 'text':
       case 'email':
       case 'url':
         return (
           <div key={field.key} className="space-y-2">
-            <label className="block text-sm font-medium text-neutral-300">
-              {field.label || field.key}
-              {field.required && <span className="text-red-400 ml-1">*</span>}
-            </label>
-            <input
+            <Label htmlFor={field.key} value={field.label || field.key} />
+            <TextInput
+              id={field.key}
               type={
                 field.type === 'email'
                   ? 'email'
@@ -201,38 +204,34 @@ export default function AdminForm<T extends Record<string, any>>({
               value={value}
               onChange={(e) => handleInputChange(field.key, e.target.value)}
               placeholder={field.placeholder}
-              className={baseClasses}
-            />
-            {error && <p className="text-red-400 text-sm">{error}</p>}
+              color={error ? 'failure' : undefined}
+                helperText={error}
+              />
           </div>
         )
 
       case 'slug':
         return (
           <div key={field.key} className="space-y-2">
-            <label className="block text-sm font-medium text-neutral-300">
-              {field.label || field.key}
-              {field.required && <span className="text-red-400 ml-1">*</span>}
-            </label>
-            <input
+            <Label htmlFor={field.key} value={field.label || field.key} />
+            <TextInput
+              id={field.key}
               type="text"
               value={value}
               onChange={(e) => handleInputChange(field.key, e.target.value)}
               placeholder={field.placeholder}
-              className={baseClasses}
-            />
-            {error && <p className="text-red-400 text-sm">{error}</p>}
+              color={error ? 'failure' : undefined}
+                helperText={error}
+              />
           </div>
         )
 
       case 'number':
         return (
           <div key={field.key} className="space-y-2">
-            <label className="block text-sm font-medium text-neutral-300">
-              {field.label || field.key}
-              {field.required && <span className="text-red-400 ml-1">*</span>}
-            </label>
-            <input
+            <Label htmlFor={field.key} value={field.label || field.key} />
+            <TextInput
+              id={field.key}
               type="number"
               value={value}
               onChange={(e) =>
@@ -241,63 +240,56 @@ export default function AdminForm<T extends Record<string, any>>({
               placeholder={field.placeholder}
               min={field.validation?.min}
               max={field.validation?.max}
-              className={baseClasses}
-            />
-            {error && <p className="text-red-400 text-sm">{error}</p>}
+              color={error ? 'failure' : undefined}
+                helperText={error}
+              />
           </div>
         )
 
       case 'date':
         return (
           <div key={field.key} className="space-y-2">
-            <label className="block text-sm font-medium text-neutral-300">
-              {field.label || field.key}
-              {field.required && <span className="text-red-400 ml-1">*</span>}
-            </label>
-            <input
+            <Label htmlFor={field.key} value={field.label || field.key} />
+            <TextInput
+              id={field.key}
               type="date"
               value={value ? value.split('T')[0] : ''}
               onChange={(e) => {
-                // Only set value if it's not empty, otherwise set null
                 const dateValue = e.target.value || null
                 handleInputChange(field.key, dateValue)
               }}
-              className={baseClasses}
-            />
-            {error && <p className="text-red-400 text-sm">{error}</p>}
+              color={error ? 'failure' : undefined}
+                helperText={error}
+              />
           </div>
         )
 
       case 'textarea':
         return (
           <div key={field.key} className="space-y-2">
-            <label className="block text-sm font-medium text-neutral-300">
-              {field.label || field.key}
-              {field.required && <span className="text-red-400 ml-1">*</span>}
-            </label>
-            <textarea
+            <Label htmlFor={field.key} value={field.label || field.key} />
+            <Textarea
+              id={field.key}
               value={value}
               onChange={(e) => handleInputChange(field.key, e.target.value)}
               placeholder={field.placeholder}
-              rows={4}
-              className={baseClasses}
-            />
-            {error && <p className="text-red-400 text-sm">{error}</p>}
+                rows={4}
+                color={error ? 'failure' : undefined}
+              />
+              {error && <p className="text-red-600 text-sm">{error}</p>}
           </div>
         )
 
       case 'select':
         return (
           <div key={field.key} className="space-y-2">
-            <label className="block text-sm font-medium text-neutral-300">
-              {field.label || field.key}
-              {field.required && <span className="text-red-400 ml-1">*</span>}
-            </label>
-            <select
+            <Label htmlFor={field.key} value={field.label || field.key} />
+            <Select
+              id={field.key}
               value={value}
               onChange={(e) => handleInputChange(field.key, e.target.value)}
-              className={baseClasses}
-            >
+                color={error ? 'failure' : undefined}
+              >
               <option value="">Select an option</option>
               {field.options?.map((option) => {
                 const optValue =
@@ -310,43 +302,27 @@ export default function AdminForm<T extends Record<string, any>>({
                   </option>
                 )
               })}
-            </select>
-            {error && <p className="text-red-400 text-sm">{error}</p>}
+            </Select>
+              {error && <p className="text-red-600 text-sm">{error}</p>}
           </div>
         )
 
       case 'switch':
         return (
-          <div
-            key={field.key}
-            className="flex items-center justify-between py-2"
-          >
-            <label className="block text-sm font-medium text-neutral-300">
-              {field.label || field.key}
-            </label>
-            <button
-              type="button"
-              onClick={() => handleInputChange(field.key, !value)}
-              className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 ${
-                value ? 'bg-orange-500' : 'bg-neutral-700'
-              }`}
-            >
-              <span
-                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                  value ? 'translate-x-5' : 'translate-x-0'
-                }`}
-              />
-            </button>
+          <div key={field.key} className="py-2">
+            <ToggleSwitch
+              checked={!!value}
+              label={field.label || field.key}
+              onChange={(val) => handleInputChange(field.key, val)}
+            />
+            {error && <p className="text-red-400 text-sm mt-1">{error}</p>}
           </div>
         )
 
       case 'tiptap':
         return (
           <div key={field.key} className="space-y-2">
-            <label className="block text-sm font-medium text-neutral-300">
-              {field.label || field.key}
-              {field.required && <span className="text-red-400 ml-1">*</span>}
-            </label>
+            <Label htmlFor={field.key} value={field.label || field.key} />
             <TiptapEditor
               content={value}
               onChange={(content) => handleInputChange(field.key, content)}
@@ -401,24 +377,17 @@ export default function AdminForm<T extends Record<string, any>>({
 
         return (
           <div key={field.key} className="space-y-2">
-            <label className="block text-sm font-medium text-neutral-300">
-              {field.label || field.key}
-              {field.required && <span className="text-red-400 ml-1">*</span>}
-            </label>
+            <Label htmlFor={field.key} value={field.label || field.key} />
             <div className="flex items-center gap-2">
-              <input
+              <TextInput
+                id={field.key}
                 type="url"
                 value={value}
                 onChange={(e) => handleInputChange(field.key, e.target.value)}
                 placeholder={field.placeholder}
-                className={baseClasses}
-              />
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="text-sm text-neutral-400"
-              />
+                color={error ? 'failure' : undefined}
+                />
+              <FileInput accept="image/*" onChange={handleFileChange} />
             </div>
             {value && (
               <div className="mt-2">
@@ -434,7 +403,7 @@ export default function AdminForm<T extends Record<string, any>>({
                 />
               </div>
             )}
-            {error && <p className="text-red-400 text-sm">{error}</p>}
+              {error && <p className="text-red-600 text-sm">{error}</p>}
           </div>
         )
       }
@@ -456,38 +425,40 @@ export default function AdminForm<T extends Record<string, any>>({
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-semibold text-white">
-          {data ? 'Edit' : 'Create'} {descriptor.title.slice(0, -1)}
-        </h1>
-      </div>
-
-      <form
-        onSubmit={handleSubmit}
-        className="space-y-6 bg-neutral-900 p-6 rounded-lg"
-      >
-        {descriptor.form.map(renderField)}
-
-        <div className="flex justify-end space-x-4 pt-6 border-t border-neutral-700">
-          <button
-            type="button"
-            onClick={onCancel}
-            className="px-4 py-2 text-neutral-400 hover:text-neutral-300 flex items-center space-x-2"
-          >
-            <XIcon className="w-4 h-4" />
-            <span>Cancel</span>
-          </button>
-          <button
-            type="submit"
-            disabled={loading}
-            className="px-6 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-400 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
-          >
-            <SaveIcon className="w-4 h-4" />
-            <span>{loading ? 'Saving...' : 'Save'}</span>
-          </button>
+      <div className="max-w-4xl mx-auto">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-semibold text-gray-900">
+            {data ? 'Edit' : 'Create'} {descriptor.title.slice(0, -1)}
+          </h1>
         </div>
-      </form>
-    </div>
-  )
-}
+
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-6 bg-white p-6 rounded-lg border border-gray-200"
+        >
+          {descriptor.form.map(renderField)}
+
+          <div className="flex justify-end space-x-4 pt-6 border-t border-gray-200">
+            <Button
+              type="button"
+              onClick={onCancel}
+              color="gray"
+              className="flex items-center space-x-2"
+            >
+              <XIcon className="w-4 h-4" />
+              <span>Cancel</span>
+            </Button>
+            <Button
+              type="submit"
+              disabled={loading}
+              isProcessing={loading}
+              className="flex items-center space-x-2 bg-orange-500 hover:bg-orange-600 disabled:opacity-50"
+            >
+              <SaveIcon className="w-4 h-4" />
+              <span>{loading ? 'Saving...' : 'Save'}</span>
+            </Button>
+          </div>
+        </form>
+      </div>
+    )
+  }
