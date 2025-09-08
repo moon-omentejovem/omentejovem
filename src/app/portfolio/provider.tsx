@@ -3,19 +3,19 @@
 import { ReactElement } from 'react'
 import { PortfolioProvider } from './context/PortfolioProvider'
 import PortfolioContent from './content'
-import { NFT } from '@/components/ArtContent/types'
+import { ProcessedArtwork } from '@/types/artwork'
 
 interface PortfolioContentProviderProperties {
   email: string
-  images: NFT[]
+  artworks: ProcessedArtwork[]
 }
 
 export function PortfolioContentProvider({
   email,
-  images
+  artworks
 }: PortfolioContentProviderProperties): ReactElement {
   return (
-    <PortfolioProvider email={email} images={images}>
+    <PortfolioProvider email={email} artworks={artworks}>
       <PortfolioContent />
     </PortfolioProvider>
   )
