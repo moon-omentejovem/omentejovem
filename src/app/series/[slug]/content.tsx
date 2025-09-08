@@ -1,43 +1,38 @@
 'use client'
 
-import { NFT } from '@/api/resolver/types'
-import { ArtInfosCollections } from '@/components/ArtContent/ArtInfosCollections'
+import { ProcessedArtwork } from '@/types/artwork'
 import { ArtMainContent } from '@/components/ArtContent/ArtMainContent'
-import { HorizontalInCarousel } from '@/components/Carousels/HorizontalInCarousel/HorizontalInCarousel'
-import { ReactElement, useState } from 'react'
+import { ReactElement } from 'react'
 import { useCollectionsContext } from './context/useCollectionsContext'
 
 interface InnerCollectionContentProperties {
   email: string
   slug: string
-  images: Omit<NFT, 'contracts'>[]
+  artworks: ProcessedArtwork[]
 }
 
 export default function InnerCollectionContent({
   email,
   slug,
-  images
+  artworks
 }: InnerCollectionContentProperties): ReactElement {
   const {
-    artImages,
-    selectedArtIndex,
-    filters,
-    unfilteredImages,
-    onChangeArtImages,
-    onChangeSelectedArtIndex,
-    artTotalPages,
-    onChangeTotalPages
+    artworks: currentArtworks,
+    selectedArtworkIndex,
+    unfilteredArtworks,
+    onChangeArtworks,
+    onChangeSelectedArtworkIndex
   } = useCollectionsContext()
 
   return (
     <ArtMainContent
       email={email}
       source={`series/${slug}`}
-      artImages={images}
-      onChangeArtImages={onChangeArtImages}
-      onChangeSelectedArtIndex={onChangeSelectedArtIndex}
-      selectedArtIndex={selectedArtIndex}
-      unfilteredImages={unfilteredImages}
+      artworks={currentArtworks}
+      onChangeArtworks={onChangeArtworks}
+      onChangeSelectedArtworkIndex={onChangeSelectedArtworkIndex}
+      selectedArtworkIndex={selectedArtworkIndex}
+      unfilteredArtworks={unfilteredArtworks}
     />
   )
 }

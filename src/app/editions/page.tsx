@@ -1,71 +1,56 @@
-import { fetchEditionNfts } from '@/api/requests'
-import { NFT } from '@/api/resolver/types'
-import filters from '@/components/ArtFilter/filters'
+import type { Database } from '@/types/supabase'
+import { createClient } from '@/utils/supabase/server'
 import { EditionsContentProvider } from './provider'
+import { ArtworkWithSeries, processArtwork, ProcessedArtwork } from '@/types/artwork'
 
-export default async function Editions() {
-  let _images = await fetchEditionNfts()
-  const _totalPages = 3
+async function getEditionsData() {
+  const supabase = await createClient()
 
-  // Ensure _images and nfts exist
-  if (!_images || !_images.nfts) {
+  const { data: artworks, error } = await supabase
+    .from('artworks')
+    .select(
+      `
+      *,
+      series_artworks(
+        *,
+        series(*)
+      )
+    `
+    )
+    .eq('type', 'edition')
+    .order('posted_at', { ascending: false })
+
+  if (error) {
+    console.error('Error fetching edition artworks:', error)
+  }
+
+  // Convert artworks to ProcessedArtwork format
+  const processedArtworks: ProcessedArtwork[] = (artworks as ArtworkWithSeries[] || []).map(processArtwork)
+
+  return {
+    artworks: processedArtworks,
+    error
+  }
+}
+
+export default async function EditionsPage() {
+  const { artworks, error } = await getEditionsData()
+
+  if (error) {
     return (
-      <EditionsContentProvider
-        email="email"
-        filters={filters}
-        images={[]}
-        totalPages={_totalPages}
-      />
+      <div className="min-h-screen bg-neutral-950 text-white flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold mb-4">Error Loading Editions</h1>
+          <p className="text-neutral-400">{error.message}</p>
+        </div>
+      </div>
     )
   }
 
-  // Special case because he minted a token twice... once on opensea and once on manifold
-  let extraOwnershipData: NFT[] = []
-  let extraOwnershipQuantity = 0
-
-  // Filter out '0x28a6f816eae721fea4ad34c000077b5fe525fc3c:6'
-  const filteredNFTs = _images.nfts.filter((art: NFT) => {
-    if (!art || !art.contract || !art.contract.address) return true
-
-    if (
-      art.contract.address.toLowerCase() ===
-        '0x28a6f816eae721fea4ad34c000077b5fe525fc3c' &&
-      art.tokenId === '6'
-    ) {
-      extraOwnershipData = art.owners || []
-      extraOwnershipQuantity = art.owners?.length || 0
-      return false
-    }
-    return true
-  })
-
-  // Modify the filteredNFTs array to include the extra ownership data
-  for (let i = 0; i < filteredNFTs.length; i++) {
-    const nft = filteredNFTs[i]
-    if (!nft || !nft.contract || !nft.contract.address) continue
-
-    if (
-      nft.contract.address.toLowerCase() ===
-        '0x495f947276749ce646f68ac8c248420045cb7b5e' &&
-      nft.tokenId ===
-        '7871549583317194720263843996823387702908660152655034722079186002726342361098'
-    ) {
-      nft.owners = [...(nft.owners || []), ...extraOwnershipData]
-      if (nft.owners) {
-        nft.owners.length += extraOwnershipQuantity
-      }
-      break
-    }
-  }
-
-  _images.nfts = filteredNFTs
-
   return (
     <EditionsContentProvider
-      email="email"
-      filters={filters}
-      images={_images.nfts}
-      totalPages={_totalPages}
+      email="contact@omentejovem.com"
+      artworks={artworks}
     />
   )
 }

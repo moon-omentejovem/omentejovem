@@ -1,35 +1,31 @@
 'use client'
 
 import { ReactElement } from 'react'
-import InnerCollectionContent from './content'
-import { Filter } from '@/components/Filter'
-import { ChainedFilter } from '@/components/ArtFilter/filters'
-import { NFT } from '@/api/resolver/types'
 import { CollectionsProvider } from './context/CollectionsProvider'
+import InnerCollectionContent from './content'
+import { ProcessedArtwork } from '@/types/artwork'
 
 interface CollectionsContentProviderProperties {
   email: string
-  images: NFT[]
-  filters: ChainedFilter[]
-  totalPages: number
   slug: string
+  artworks: ProcessedArtwork[]
 }
 
 export function CollectionsContentProvider({
   email,
-  filters,
-  images,
-  totalPages,
-  slug
+  slug,
+  artworks
 }: CollectionsContentProviderProperties): ReactElement {
   return (
     <CollectionsProvider
       email={email}
-      images={images}
-      filters={filters}
-      totalPages={totalPages}
+      artworks={artworks}
     >
-      <InnerCollectionContent email={email} images={images} slug={slug} />
+      <InnerCollectionContent 
+        email={email} 
+        slug={slug} 
+        artworks={artworks} 
+      />
     </CollectionsProvider>
   )
 }

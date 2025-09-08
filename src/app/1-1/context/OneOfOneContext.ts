@@ -1,19 +1,13 @@
-import { Filter } from '@/components/Filter'
 import { createContext } from 'react'
-import { NFT } from '@/api/resolver/types'
-import { ChainedFilter } from '@/components/ArtFilter/filters'
+import { ProcessedArtwork } from '@/types/artwork'
 
 export interface OneOfOneContextProperties {
   email: string
-  unfilteredImages: NFT[]
-  artImages: NFT[]
-  onChangeArtImages: (images: NFT[]) => void
-  filters: ChainedFilter[]
-  selectedArtIndex: number
-  onChangeSelectedArtIndex: (index: number) => void
-  totalPages: number
-  artTotalPages: number
-  onChangeTotalPages: (newTotal: number) => void
+  unfilteredArtworks: ProcessedArtwork[]
+  artworks: ProcessedArtwork[]
+  onChangeArtworks: (artworks: ProcessedArtwork[]) => void
+  selectedArtworkIndex: number
+  onChangeSelectedArtworkIndex: (index: number) => void
 }
 
 export const OneOfOneContext = createContext<
