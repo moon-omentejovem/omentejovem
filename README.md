@@ -16,7 +16,7 @@ Omentejovem is a comprehensive NFT portfolio and content management system desig
 - **🎨 NFT Portfolio**: Curated showcase of digital artworks and NFT collections
 - **📱 Responsive Design**: Mobile-first approach with modern UI/UX
 - **🔐 Admin Dashboard**: Complete CMS for managing artworks, series, and content
-- **👥 User Management**: Admin invitation system with magic link authentication
+- **👥 User Management**: Admin invitation system with Google OAuth or magic link authentication
 - **🛠️ Auto-Seeding**: Automatic database population on deployment
 - **🖼️ Image Optimization**: Automatic caching and optimization of artwork images
 - **📝 Rich Text Editor**: Tiptap-powered editor for artwork descriptions
@@ -161,7 +161,7 @@ Protected admin interface featuring:
 
 - **Artwork Management**: CRUD operations for NFT pieces
 - **Series Management**: Create and manage artwork collections
-- **User Management**: Invite and manage admin users via magic link
+- **User Management**: Invite and manage admin users via Google OAuth or magic link
 - **Rich Text Editing**: Tiptap-powered content editor
 - **Image Optimization**: Automatic caching and optimization
 - **OpenSea Sync**: Import metadata from OpenSea
@@ -254,7 +254,7 @@ Follow the modular CMS approach:
 ### Post-Deployment Setup
 
 1. **Database Seeding**: The postbuild script will automatically seed your database
-2. **Admin Access**: Use magic link authentication with your admin email
+2. **Admin Access**: Sign in with Google using your admin email or request a magic link
 3. **Image Optimization**: Images will be cached automatically from external sources
 4. **Cache Warming**: Initial page loads will populate the cache
 

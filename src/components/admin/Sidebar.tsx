@@ -17,7 +17,7 @@ export default function Sidebar() {
   const pathname = usePathname()
 
   return (
-    <aside className="w-64 bg-white text-sm flex flex-col border-r border-gray-200">
+    <aside className="w-64 bg-white text-sm flex flex-col border-r border-gray-200  sticky top-32 max-h-screen">
       {/* Header */}
       <div className="p-6 border-b border-gray-200">
         <div className="flex items-center space-x-3">
@@ -50,7 +50,7 @@ export default function Sidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="p-4 border-t border-gray-200 space-y-3">
+      <div className="p-4 border-t border-gray-200 space-y-3 sticky bottom-0 bg-white">
         {/* User Role Info */}
         <UserRoleDisplay />
 
