@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url)
-  const imageUrl = searchParams.get('src')
+  const url = new URL(request.url)
+  const imageUrl = url.searchParams.get('src')
 
   if (!imageUrl) {
     return new NextResponse('Missing src parameter', { status: 400 })
@@ -10,8 +12,8 @@ export async function GET(request: NextRequest) {
 
   try {
     // Validate URL to prevent SSRF attacks
-    const url = new URL(imageUrl)
-    if (!url.protocol.startsWith('http')) {
+    const imageUrlObj = new URL(imageUrl)
+    if (!imageUrlObj.protocol.startsWith('http')) {
       return new NextResponse('Invalid URL protocol', { status: 400 })
     }
 
