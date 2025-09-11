@@ -1,13 +1,13 @@
 'use client'
 
-import { useSelectedLayoutSegment } from 'next/navigation'
-import { useEffect, useState } from 'react'
 import { headerAnimations } from '@/animations'
 import { logo } from '@/assets/images'
 import { cn } from '@/lib/utils'
-import Link from 'next/link'
-import { Icons } from './Icons'
 import Image from 'next/image'
+import Link from 'next/link'
+import { useSelectedLayoutSegment } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { Icons } from './Icons'
 
 const tabs = [
   {
@@ -69,11 +69,6 @@ export function Header() {
           <Link
             key={index}
             href={tab.link}
-            onClick={() => {
-              if (`/${segment}` === tab.link && segment !== 'series') {
-                window.location.reload()
-              }
-            }}
             className="header-tab min-w-fit overflow-hidden"
           >
             <p

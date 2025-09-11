@@ -56,7 +56,10 @@ export async function fetchArtworks(options?: {
   oneOfOne?: boolean
   limit?: number
   seriesSlug?: string
+  type?: 'single' | 'edition'
 }) {
+  const { ArtworkWithSeries, processArtwork } = await import('@/types/artwork')
+  
   let query = supabase.from(TABLES.ARTWORKS).select(`
       *,
       series_artworks(
@@ -73,9 +76,31 @@ export async function fetchArtworks(options?: {
     query = query.eq('is_one_of_one', true)
   }
 
+  if (options?.type) {
+    query = query.eq('type', options.type)
+  }
+
   if (options?.seriesSlug) {
     query = query.eq('series_artworks.series.slug', options.seriesSlug)
   }
+
+  // Apply ordering and limit
+  query = query.order('posted_at', { ascending: false })
+
+  if (options?.limit) {
+    query = query.limit(options.limit)
+  }
+
+  const { data, error } = await query
+
+  if (error) {
+    console.error('Error fetching artworks:', error)
+    throw new Error(`Failed to fetch artworks: ${error.message}`)
+  }
+
+  // Process raw data to ProcessedArtwork format
+  return ((data as any[]) || []).map(processArtwork)
+}
 
   // Apply ordering and limit
   query = query.order('posted_at', { ascending: false })

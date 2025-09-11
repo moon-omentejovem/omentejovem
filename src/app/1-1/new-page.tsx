@@ -1,7 +1,10 @@
-import type { Database } from '@/types/supabase'
+import {
+  ArtworkWithSeries,
+  processArtwork,
+  ProcessedArtwork
+} from '@/types/artwork'
 import { createClient } from '@/utils/supabase/server'
 import { OneOfOneContentProvider } from './provider'
-import { ArtworkWithSeries, processArtwork, ProcessedArtwork } from '@/types/artwork'
 
 async function getOneOfOneData() {
   const supabase = await createClient()
@@ -26,7 +29,9 @@ async function getOneOfOneData() {
   }
 
   // Convert artworks to ProcessedArtwork format
-  const processedArtworks: ProcessedArtwork[] = (artworks as ArtworkWithSeries[] || []).map(processArtwork)
+  const processedArtworks: ProcessedArtwork[] = (
+    (artworks as ArtworkWithSeries[]) || []
+  ).map(processArtwork)
 
   return {
     artworks: processedArtworks,
@@ -39,7 +44,7 @@ export default async function OneOfOnePage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-neutral-950 text-white flex items-center justify-center">
+      <div className="min-h-screen  flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-4xl font-bold mb-4">
             Error Loading 1/1 Artworks

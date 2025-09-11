@@ -1,7 +1,7 @@
+import { ArtworkWithSeries, processArtwork } from '@/types/artwork'
 import type { Database } from '@/types/supabase'
 import { createClient } from '@/utils/supabase/server'
-import { PortfolioContentProvider } from './provider'
-import { ArtworkWithSeries, processArtwork } from '@/types/artwork'
+import PortfolioContent from './content'
 
 type Artwork = Database['public']['Tables']['artworks']['Row']
 type Series = Database['public']['Tables']['series']['Row']
@@ -81,7 +81,7 @@ export default async function PortfolioPage({
 
   if (error) {
     return (
-      <div className="min-h-screen bg-neutral-950 text-white flex items-center justify-center">
+      <div className="min-h-screen  flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-4xl font-bold mb-4">Error Loading Portfolio</h1>
           <p className="text-neutral-400">{error.message}</p>
@@ -94,9 +94,10 @@ export default async function PortfolioPage({
   const processedArtworks = artworks.map(processArtwork)
 
   return (
-    <PortfolioContentProvider
+    <PortfolioContent
       email="contact@omentejovem.com"
-      artworks={processedArtworks}
+      initialArtworks={processedArtworks}
+      searchParams={searchParams}
     />
   )
 }

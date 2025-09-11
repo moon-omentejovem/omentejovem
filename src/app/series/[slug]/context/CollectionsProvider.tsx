@@ -18,7 +18,8 @@ export function CollectionsProvider({
   artworks,
   children
 }: CollectionsProviderProperties): ReactElement {
-  const [currentArtworks, setCurrentArtworks] = useState<ProcessedArtwork[]>(artworks)
+  const [currentArtworks, setCurrentArtworks] =
+    useState<ProcessedArtwork[]>(artworks)
   const [selectedArtworkIndex, setSelectedArtworkIndex] = useState(-1)
 
   const onChangeSelectedArtworkIndex = useCallback((index: number): void => {

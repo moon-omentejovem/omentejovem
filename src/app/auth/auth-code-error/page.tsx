@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 export default function AuthCodeError() {
   return (
-    <div className="min-h-screen bg-neutral-950 text-white flex items-center justify-center">
+    <div className="min-h-screen  flex items-center justify-center">
       <div className="bg-neutral-900 p-8 rounded-lg shadow-xl w-96 text-center">
         <div className="text-red-500 text-6xl mb-4">⚠️</div>
         <h1 className="text-2xl font-bold mb-4">Authentication Error</h1>
