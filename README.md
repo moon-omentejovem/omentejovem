@@ -261,7 +261,6 @@ Follow the modular CMS approach:
 ## 📚 Documentation
 
 - **[Supabase Integration](docs/SUPABASE-INTEGRATION.md)**: Complete guide for Supabase setup and best practices
-- **[Magic Link Auth](docs/MAGIC-LINK-AUTH.md)**: Authentication system documentation
 - **[Seed System](docs/SEED-SYSTEM.md)**: Database seeding and data management
 - **[AGENTS.md](AGENTS.md)**: Complete project specifications and architecture
 
@@ -296,9 +295,8 @@ This project is private and proprietary. All rights reserved.
 
 ## 🔗 Links
 
-- **Production**: [Live Site URL](https://your-domain.com) (when deployed)
-- **Staging**: [Staging URL](https://your-staging-domain.com) (when available)
-- **Supabase Dashboard**: [Your Supabase Project](https://app.supabase.com)
+- **Production**: [Live Site URL](https://www.omentejovem.com/) (when deployed)
+- **Staging**: [Staging URL](https://omentejovem-staging.vercel.app/) (when available)
 
 ## 📞 Support
 
