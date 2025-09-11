@@ -244,7 +244,7 @@ const HardCodedBio = () => (
 
     <br />
     <CachedImage
-      src={AboutImage1}
+      src={AboutImage1.src}
       alt="Omentejovem Artwork"
       width={500}
       height={300}
@@ -329,7 +329,7 @@ const HardCodedBio = () => (
     <br />
 
     <CachedImage
-      src={AboutImage2}
+      src={AboutImage2.src}
       alt="Omentejovem Artwork"
       width={500}
       height={300}
