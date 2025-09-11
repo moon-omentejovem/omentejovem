@@ -20,3 +20,19 @@ export const signInWithMagicLink = async (
 
   return { error }
 }
+
+export const signInWithGoogle = async (
+  redirectPath = '/admin/artworks'
+) => {
+  const baseUrl = getBaseUrl()
+  const redirectTo = `${baseUrl}/auth/callback?next=${redirectPath}`
+
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo
+    }
+  })
+
+  return { error }
+}

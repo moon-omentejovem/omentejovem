@@ -1,6 +1,6 @@
 'use client'
 
-import { signInWithMagicLink } from '@/utils/auth'
+import { signInWithMagicLink, signInWithGoogle } from '@/utils/auth'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { Alert, Button, Card, Label, TextInput } from 'flowbite-react'
@@ -50,6 +50,24 @@ function AdminPageContent() {
     }
   }
 
+  const handleGoogleSignIn = async () => {
+    setLoading(true)
+    setError('')
+    setMessage('')
+
+    try {
+      const { error } = await signInWithGoogle('/admin/artworks')
+
+      if (error) {
+        setError(error.message)
+      }
+    } catch (err) {
+      setError('An error occurred')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 flex items-center justify-center">
       <Card className="w-96">
@@ -57,9 +75,18 @@ function AdminPageContent() {
           Admin Access
         </h1>
         <p className="text-gray-500 text-sm text-center mb-6">
-          Enter your email to receive a magic link for secure access to the
+          Sign in with Google or receive a magic link for secure access to the
           admin panel.
         </p>
+
+        <Button
+          onClick={handleGoogleSignIn}
+          disabled={loading}
+          isProcessing={loading}
+          className="w-full mb-4"
+        >
+          Continue with Google
+        </Button>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
