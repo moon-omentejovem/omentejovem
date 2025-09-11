@@ -1,7 +1,7 @@
+import { CachedImage } from '@/components/CachedImage'
 import type { Database } from '@/types/supabase'
 import { getBestImageUrl, getResponsiveImageSources } from '@/utils/images'
 import { createClient } from '@/utils/supabase/server'
-import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
@@ -199,16 +199,17 @@ export default async function ArtworkPage({ params }: ArtworkPageProps) {
           {/* Image */}
           <div className="relative">
             <div className="aspect-square relative overflow-hidden rounded-lg bg-neutral-900">
-              <Image
+              <CachedImage
                 src={getBestImageUrl(artwork.image_url || '', {
                   width: 800,
                   height: 800
                 })}
                 alt={artwork.title}
-                fill
-                className="object-cover"
-                priority
-                sizes="(max-width: 768px) 100vw, 50vw"
+                width={800}
+                height={800}
+                className="object-cover w-full h-full"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                priority={true}
               />
             </div>
           </div>
@@ -322,14 +323,17 @@ export default async function ArtworkPage({ params }: ArtworkPageProps) {
                   className="group block"
                 >
                   <div className="relative aspect-square overflow-hidden rounded-lg bg-neutral-900">
-                    <Image
+                    <CachedImage
                       src={getBestImageUrl(related.image_url || '', {
                         width: 300,
                         height: 300
                       })}
                       alt={related.title}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      width={300}
+                      height={300}
+                      className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+                      sizes="(max-width: 768px) 50vw, (max-width: 1024px) 25vw, 300px"
+                      priority={false}
                     />
 
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">

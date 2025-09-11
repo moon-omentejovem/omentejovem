@@ -3,10 +3,10 @@
 import { headerAnimations } from '@/animations'
 import { logo } from '@/assets/images'
 import { cn } from '@/lib/utils'
-import Image from 'next/image'
 import Link from 'next/link'
 import { useSelectedLayoutSegment } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { CachedImage } from './CachedImage'
 import { Icons } from './Icons'
 
 const tabs = [
@@ -50,14 +50,16 @@ export function Header() {
           document.cookie = 'newsletter_dismissed=true; path=/; max-age=3600' // 1 hour expiry
         }}
       >
-        <Image
+        <CachedImage
           src={logo}
           className={cn(
             'opacity-20 hover:opacity-100',
             !segment && 'opacity-100'
           )}
           alt="Omentejovem Artwork"
+          width={0}
           height={23}
+          priority={true}
         />
       </Link>
 

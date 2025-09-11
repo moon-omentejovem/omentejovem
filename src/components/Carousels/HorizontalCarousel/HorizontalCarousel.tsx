@@ -4,18 +4,17 @@ import 'swiper/css'
 import 'swiper/css/pagination'
 import './style.css'
 
-import Image from 'next/image'
-import Link from 'next/link'
-import { FreeMode, Mousewheel, Pagination } from 'swiper/modules'
-import { Swiper, SwiperSlide } from 'swiper/react'
-import { useEffect } from 'react'
 import {
-  carouselFigcaptionAnimation,
-  carouselActiveSlideAnimation
+  carouselActiveSlideAnimation,
+  carouselFigcaptionAnimation
 } from '@/animations'
 import { cn } from '@/lib/utils'
+import Link from 'next/link'
+import { useEffect } from 'react'
+import { FreeMode, Mousewheel, Pagination } from 'swiper/modules'
+import { Swiper, SwiperSlide } from 'swiper/react'
 import { Swiper as SwiperType } from 'swiper/types'
-import { addLoadedClass } from '@/utils/lazyLoading'
+import { CachedImage } from '../../CachedImage'
 
 interface HorizontalCarouselProperties {
   currentPage: number
@@ -115,14 +114,14 @@ export function HorizontalCarousel({
                       </p>
                     </figcaption>
 
-                    <Image
+                    <CachedImage
                       src={slide.nftCompressedHdUrl}
                       alt={slide.name}
-                      width={0}
-                      height={0}
+                      width={352}
+                      height={400}
                       className="h-full w-48 object-cover sm:w-64 2xl:w-[22rem] lazy-load-img"
-                      loading="lazy"
-                      onLoad={addLoadedClass}
+                      sizes="(max-width: 640px) 192px, (max-width: 1536px) 256px, 352px"
+                      priority={false}
                     />
                   </div>
 

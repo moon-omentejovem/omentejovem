@@ -1,10 +1,9 @@
-import { ReactNode } from 'react'
-import { useCallback, useEffect, useState } from 'react'
 import { CustomIcons } from '@/assets/icons'
-import * as Dialog from '@radix-ui/react-dialog'
 import { cn } from '@/lib/utils'
-import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'
-import Image from 'next/image'
+import * as Dialog from '@radix-ui/react-dialog'
+import { ReactNode, useCallback, useEffect, useState } from 'react'
+import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
+import { CachedImage } from '../CachedImage'
 
 interface ImageModalProperties {
   children: ReactNode
@@ -109,13 +108,13 @@ export function ImageModal({
                   )}
                 >
                   {!!detailedImage ? (
-                    <Image
+                    <CachedImage
                       src={detailedImage}
-                      width={0}
-                      height={0}
+                      width={800}
+                      height={600}
                       alt={'High resolution'}
                       className="w-auto h-auto object-contain"
-                      id="active-image"
+                      priority={true}
                     />
                   ) : (
                     children

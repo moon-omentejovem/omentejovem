@@ -1,10 +1,10 @@
 'use client'
 
-import Image from 'next/image'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { CachedImage } from './CachedImage'
 
-import { HomeImage } from '@/types/home'
 import { calloutAnimation } from '@/animations'
+import { HomeImage } from '@/types/home'
 
 interface CalloutParallaxProperties {
   title: string
@@ -118,19 +118,13 @@ export function CalloutParallax({
 
         {calloutImages[currentImageIndex] && (
           <div id="callout-element" className="flex flex-col items-center">
-            <Image
+            <CachedImage
               src={calloutImages[currentImageIndex].imageUrl}
-              width={0}
-              height={0}
+              width={600}
+              height={600}
               alt={'omentejovem'}
               className="md:h-[32rem] w-auto object-contain invisible 2xl:h-[600px]"
-              onClick={() =>
-                setCurrentImageIndex(
-                  currentImageIndex >= calloutImages.length - 1
-                    ? 0
-                    : currentImageIndex + 1
-                )
-              }
+              priority={true}
             />
             <p className="text-sm text-secondary-100 self-start invisible">
               {new Date(

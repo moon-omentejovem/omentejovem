@@ -4,12 +4,11 @@ import 'swiper/css'
 import 'swiper/css/pagination'
 import './style.css'
 
-import Image from 'next/image'
+import { cn } from '@/lib/utils'
 import { Mousewheel, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Swiper as SwiperType } from 'swiper/types'
-import { cn } from '@/lib/utils'
-import { addLoadedClass } from '@/utils/lazyLoading'
+import { CachedImage } from '../../CachedImage'
 
 interface VerticalCarouselProperties {
   slideIndex?: number
@@ -74,14 +73,12 @@ export function VerticalCarousel({
               aria-label={art.name}
               className="flex h-[150px] w-[150px] lazy-load-img-wrapper"
             >
-              <Image
+              <CachedImage
                 src={art.nftCompressedHdUrl}
                 alt={art.name}
-                width={0}
-                height={0}
+                width={150}
+                height={150}
                 className="h-full w-full object-cover lazy-load-img"
-                loading="lazy"
-                onLoad={addLoadedClass}
               />
             </div>
           </SwiperSlide>

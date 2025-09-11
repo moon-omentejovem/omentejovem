@@ -1,6 +1,6 @@
 'use client'
 
-import Image from 'next/image'
+import { CachedImage } from '@/components/CachedImage'
 import type { ReactElement } from 'react'
 import { AboutData, PressTalk } from './@types/wordpress'
 
@@ -11,8 +11,8 @@ import { decodeRenderedString } from '@/utils/decodeRenderedString'
 import { useCallback, useEffect, useMemo } from 'react'
 
 import parse from 'html-react-parser'
-import './style.css'
 import HardCodedBio from './hardcoded-bio'
+import './style.css'
 
 interface AboutContentProperties {
   data: AboutData | undefined
@@ -158,13 +158,15 @@ export function AboutContent({
         </p>
 
         <div className="flex">
-          <Image
+          <CachedImage
             id="about-spans"
             src={AboutArt}
             alt={'omentejovem'}
-            layout="responsive"
-            objectFit="contain"
+            width={800}
+            height={600}
             className="flex w-full h-auto invisible"
+            sizes="100vw"
+            priority={false}
           />
         </div>
       </div>

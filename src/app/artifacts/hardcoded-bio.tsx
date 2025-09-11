@@ -1,5 +1,5 @@
 import { AboutImage1, AboutImage2 } from '@/assets/images'
-import Image from 'next/image'
+import { CachedImage } from '@/components/CachedImage'
 
 const HardCodedBio = () => (
   <div className="max-w-[65ch] text-base">
@@ -247,11 +247,13 @@ const HardCodedBio = () => (
     <p className="text-xl underline">Creative Workaholic</p>
 
     <br />
-    <Image
+    <CachedImage
       src={AboutImage1}
       alt="Omentejovem Artwork"
       width={500}
       height={300}
+      sizes="(max-width: 768px) 100vw, 500px"
+      priority={false}
     />
     <br />
 
@@ -330,11 +332,13 @@ const HardCodedBio = () => (
     <p className="text-xl underline">Late Night Love</p>
     <br />
 
-    <Image
+    <CachedImage
       src={AboutImage2}
       alt="Omentejovem Artwork"
       width={500}
       height={300}
+      sizes="(max-width: 768px) 100vw, 500px"
+      priority={false}
     />
     <br />
 

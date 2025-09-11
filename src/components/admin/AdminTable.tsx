@@ -2,9 +2,9 @@
 
 import type { ListColumn, ResourceDescriptor } from '@/types/descriptors'
 import { ChevronDownIcon, ChevronUpIcon, PlusIcon } from 'lucide-react'
-import Image from 'next/image'
 import Link from 'next/link'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { CachedImage } from '../CachedImage'
 
 interface AdminTableProps<T = any> {
   descriptor: ResourceDescriptor
@@ -113,15 +113,14 @@ export default function AdminTable<T extends Record<string, any>>({
     switch (column.render) {
       case 'image':
         return value ? (
-          <Image
+          <CachedImage
             src={value}
             alt={item.title || item.name || 'Image'}
             width={64}
             height={64}
             className="rounded object-cover"
-            onError={(e) => {
-              e.currentTarget.style.display = 'none'
-            }}
+            sizes="64px"
+            priority={false}
           />
         ) : (
           <div className="w-16 h-16 bg-gray-100 rounded flex items-center justify-center text-xs text-gray-500">
@@ -300,10 +299,7 @@ export default function AdminTable<T extends Record<string, any>>({
                 </tr>
               ) : (
                 sortedData.map((item, index) => (
-                  <tr
-                    key={item.id || index}
-                    className="hover:bg-gray-50"
-                  >
+                  <tr key={item.id || index} className="hover:bg-gray-50">
                     {descriptor.list.map((column) => (
                       <td
                         key={column.key}

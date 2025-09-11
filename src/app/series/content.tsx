@@ -1,8 +1,8 @@
 'use client'
 
 import { CollectionsResponse } from '@/api/resolver/types'
+import { CachedImage } from '@/components/CachedImage'
 import { CollectionLink } from '@/components/CollectionLink'
-import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 
 export default function CollectionsContent(data: CollectionsResponse) {
@@ -65,12 +65,14 @@ export default function CollectionsContent(data: CollectionsResponse) {
           className="pointer-events-none absolute flex items-center justify-center sm:group-hover/collection:z-[1000]"
           ref={moveRef}
         >
-          <Image
+          <CachedImage
             src={collectionPreviewImages[currentImageIndex]}
             width={400}
             height={300}
             alt="Collections"
             className="z-10 overflow-x-hidden max-w-[40vw] max-h-[60vh] aspect-auto sm:group-hover/collection:h-full sm:group-hover/collection:w-full"
+            sizes="(max-width: 768px) 40vw, 400px"
+            priority={true}
           />
         </div>
       )}

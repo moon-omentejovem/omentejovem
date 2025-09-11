@@ -4,8 +4,8 @@ import { gsap } from 'gsap'
 import type { ReactElement } from 'react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import { cursorLoop, cursorClick } from '@/assets/cursor'
-import Image from 'next/image'
+import { cursorClick, cursorLoop } from '@/assets/cursor'
+import { CachedImage } from './CachedImage'
 
 export function Cursor(): ReactElement {
   const cursor = useRef<HTMLDivElement>(null)
@@ -54,12 +54,14 @@ export function Cursor(): ReactElement {
       ref={cursor}
       className="cursor pointer-events-none fixed z-[999] invisible lg:visible"
     >
-      <Image
+      <CachedImage
         width={32}
         height={32}
         alt={'Animated cursor'}
         src={imageSource}
         className="min-h-fit min-w-fit"
+        sizes="32px"
+        priority={true}
       />
     </div>
   )

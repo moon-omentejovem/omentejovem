@@ -3,12 +3,12 @@
 import 'swiper/css'
 import 'swiper/css/pagination'
 
-import Image from 'next/image'
+import { NFT } from '@/api/resolver/types'
+import { useEffect } from 'react'
 import { Mousewheel } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Swiper as SwiperType } from 'swiper/types'
-import { useEffect } from 'react'
-import { NFT } from '@/api/resolver/types'
+import { CachedImage } from '../../CachedImage'
 
 interface HorizontalInCarouselProperties {
   slideIndex?: number
@@ -63,7 +63,7 @@ export function HorizontalInCarousel({
               aria-label={art.name}
               className="flex h-24 w-24 xl:h-[120px] xl:w-[120px]"
             >
-              <Image
+              <CachedImage
                 src={
                   art.image.pngUrl ||
                   art.image.cachedUrl ||
@@ -71,11 +71,13 @@ export function HorizontalInCarousel({
                   ''
                 }
                 alt={art.name || ''}
-                width={100}
-                height={100}
+                width={120}
+                height={120}
                 className={`h-full w-full object-cover transition-opacity duration-300 ${
                   slideIndex === index ? 'opacity-100' : 'opacity-40'
                 }`}
+                sizes="120px"
+                priority={slideIndex === index}
               />
             </div>
           </SwiperSlide>

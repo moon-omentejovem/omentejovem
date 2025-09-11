@@ -2,6 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Cache-optimized animations */
+@keyframes pulse-fast {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse-fast {
+  animation: pulse-fast 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
 * {
   cursor: none;
 }
@@ -101,13 +116,13 @@ div.line:has(.bio-link) {
   background-color: theme('colors.secondary.200');
 } */
 
-.lazy-load-img {
+/* .lazy-load-img {
   opacity: 0;
 }
 
 .lazy-load-img.loaded {
   opacity: 1;
-}
+} */
 
 /* @media (min-width: 768px) {
 	#header-tabs {
