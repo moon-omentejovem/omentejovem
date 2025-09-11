@@ -29,7 +29,7 @@ export default function PortfolioContent({
   } = useArtworks({
     featured: searchParams.featured === 'true',
     oneOfOne: searchParams.one_of_one === 'true',
-    seriesSlug: searchParams.series,
+    type: searchParams.type,
     enabled: true
   })
 
@@ -46,12 +46,19 @@ export default function PortfolioContent({
     setSelectedArtworkIndex(index)
   }, [])
 
-  // Update filtered artworks when data changes
+  // Update filtered artworks when data changes or series filter changes
   useEffect(() => {
-    if (artworks && artworks !== filteredArtworks) {
-      setFilteredArtworks(artworks)
+    let filtered = artworks
+
+    // Filter by series if specified
+    if (searchParams.series) {
+      filtered = artworks.filter((artwork) =>
+        artwork.series.some((series) => series.slug === searchParams.series)
+      )
     }
-  }, [artworks, filteredArtworks])
+
+    setFilteredArtworks(filtered)
+  }, [artworks, searchParams.series])
 
   // Filter options for the portfolio filter component
   const filterGroups = [

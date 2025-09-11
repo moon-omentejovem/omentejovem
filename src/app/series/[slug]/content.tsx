@@ -1,9 +1,14 @@
 'use client'
 
-import { ProcessedArtwork } from '@/types/artwork'
 import { ArtMainContent } from '@/components/ArtContent/ArtMainContent'
-import { ReactElement } from 'react'
-import { useCollectionsContext } from './context/useCollectionsContext'
+import { useSeriesArtworks } from '@/hooks/useSeriesArtworks'
+import { ProcessedArtwork } from '@/types/artwork'
+import { ReactElement, useCallback, useState } from 'react'
+
+interface SeriesContentWrapperProperties {
+  email: string
+  slug: string
+}
 
 interface InnerCollectionContentProperties {
   email: string
@@ -11,18 +16,22 @@ interface InnerCollectionContentProperties {
   artworks: ProcessedArtwork[]
 }
 
-export default function InnerCollectionContent({
+function InnerCollectionContent({
   email,
   slug,
   artworks
 }: InnerCollectionContentProperties): ReactElement {
-  const {
-    artworks: currentArtworks,
-    selectedArtworkIndex,
-    unfilteredArtworks,
-    onChangeArtworks,
-    onChangeSelectedArtworkIndex
-  } = useCollectionsContext()
+  const [currentArtworks, setCurrentArtworks] =
+    useState<ProcessedArtwork[]>(artworks)
+  const [selectedArtworkIndex, setSelectedArtworkIndex] = useState(-1)
+
+  const onChangeArtworks = useCallback((newArtworks: ProcessedArtwork[]) => {
+    setCurrentArtworks([...newArtworks])
+  }, [])
+
+  const onChangeSelectedArtworkIndex = useCallback((index: number) => {
+    setSelectedArtworkIndex(index)
+  }, [])
 
   return (
     <ArtMainContent
@@ -32,7 +41,62 @@ export default function InnerCollectionContent({
       onChangeArtworks={onChangeArtworks}
       onChangeSelectedArtworkIndex={onChangeSelectedArtworkIndex}
       selectedArtworkIndex={selectedArtworkIndex}
-      unfilteredArtworks={unfilteredArtworks}
+      unfilteredArtworks={artworks}
     />
+  )
+}
+
+export default function SeriesContentWrapper({
+  email,
+  slug
+}: SeriesContentWrapperProperties): ReactElement {
+  const {
+    data: artworks = [],
+    isLoading,
+    error
+  } = useSeriesArtworks({
+    seriesSlug: slug,
+    enabled: true
+  })
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-neutral-900 mx-auto mb-4"></div>
+          <p className="text-neutral-600">Loading series artworks...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold mb-4">Error Loading Artworks</h1>
+          <p className="text-neutral-400">
+            {error instanceof Error ? error.message : 'Failed to load artworks'}
+          </p>
+        </div>
+      </div>
+    )
+  }
+
+  if (artworks.length === 0) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold mb-4">No Artworks Found</h1>
+          <p className="text-neutral-400">
+            This series doesn&apos;t have any artworks yet.
+          </p>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <InnerCollectionContent email={email} slug={slug} artworks={artworks} />
   )
 }
