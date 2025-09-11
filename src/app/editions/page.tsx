@@ -1,7 +1,10 @@
-import type { Database } from '@/types/supabase'
+import {
+  ArtworkWithSeries,
+  processArtwork,
+  ProcessedArtwork
+} from '@/types/artwork'
 import { createClient } from '@/utils/supabase/server'
-import { EditionsContentProvider } from './provider'
-import { ArtworkWithSeries, processArtwork, ProcessedArtwork } from '@/types/artwork'
+import EditionsContent from './content'
 
 async function getEditionsData() {
   const supabase = await createClient()
@@ -25,7 +28,9 @@ async function getEditionsData() {
   }
 
   // Convert artworks to ProcessedArtwork format
-  const processedArtworks: ProcessedArtwork[] = (artworks as ArtworkWithSeries[] || []).map(processArtwork)
+  const processedArtworks: ProcessedArtwork[] = (
+    (artworks as ArtworkWithSeries[]) || []
+  ).map(processArtwork)
 
   return {
     artworks: processedArtworks,
@@ -38,7 +43,7 @@ export default async function EditionsPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-neutral-950 text-white flex items-center justify-center">
+      <div className="min-h-screen  flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-4xl font-bold mb-4">Error Loading Editions</h1>
           <p className="text-neutral-400">{error.message}</p>
@@ -48,9 +53,9 @@ export default async function EditionsPage() {
   }
 
   return (
-    <EditionsContentProvider
+    <EditionsContent
       email="contact@omentejovem.com"
-      artworks={artworks}
+      initialArtworks={artworks}
     />
   )
 }

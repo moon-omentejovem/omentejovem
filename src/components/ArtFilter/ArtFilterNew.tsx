@@ -1,7 +1,6 @@
 'use client'
 
 import { ProcessedArtwork } from '@/types/artwork'
-import { useEffect } from 'react'
 
 interface ArtFilterProperties {
   currentPage: number
@@ -14,12 +13,10 @@ export function ArtFilterNew({
   artImages,
   onChangeArtImages
 }: ArtFilterProperties) {
-  
   // For now, just pass through the artImages without filtering
   // TODO: Implement proper filtering for ProcessedArtwork
-  useEffect(() => {
-    onChangeArtImages(artImages)
-  }, [artImages, onChangeArtImages])
+  // Removed useEffect that was causing infinite loop
+  // The filtering should be done based on user interaction, not on every render
 
   return (
     <div className="flex justify-center py-4">

@@ -1,7 +1,7 @@
+import { CollectionsResponse } from '@/api/resolver/types'
 import type { Database } from '@/types/supabase'
 import { createClient } from '@/utils/supabase/server'
 import CollectionsContent from './content'
-import { CollectionsResponse } from '@/api/resolver/types'
 
 type Series = Database['public']['Tables']['series']['Row']
 type SeriesArtwork = Database['public']['Tables']['series_artworks']['Row']
@@ -18,12 +18,14 @@ async function getSeriesData() {
 
   const { data: series, error } = await supabase
     .from('series')
-    .select(`
+    .select(
+      `
       *,
       series_artworks(
         artworks(*)
       )
-    `)
+    `
+    )
     .order('name')
 
   if (error) {
@@ -32,11 +34,15 @@ async function getSeriesData() {
 
   // Convert to CollectionsResponse format
   const collectionsData: CollectionsResponse = {
-    collections: (series as SeriesWithArtworks[] || []).map((seriesItem) => ({
+    collections: ((series as SeriesWithArtworks[]) || []).map((seriesItem) => ({
       name: seriesItem.name,
-      year: seriesItem.created_at ? new Date(seriesItem.created_at).getFullYear().toString() : '',
+      year: seriesItem.created_at
+        ? new Date(seriesItem.created_at).getFullYear().toString()
+        : '',
       slug: seriesItem.slug,
-      nftImageUrls: seriesItem.series_artworks?.map((sa) => sa.artworks.image_url || '') || []
+      nftImageUrls:
+        seriesItem.series_artworks?.map((sa) => sa.artworks.image_url || '') ||
+        []
     }))
   }
 
@@ -48,7 +54,7 @@ export default async function SeriesPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-neutral-950 text-white flex items-center justify-center">
+      <div className="min-h-screen  flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-4xl font-bold mb-4">Error Loading Series</h1>
           <p className="text-neutral-400">{error.message}</p>

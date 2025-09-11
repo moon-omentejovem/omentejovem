@@ -178,7 +178,7 @@ export default async function ArtworkPage({ params }: ArtworkPageProps) {
   const responsiveImages = getResponsiveImageSources(artwork.image_url || '')
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-white">
+    <div className="min-h-screen ">
       <div className="max-w-7xl mx-auto px-4 py-12">
         {/* Breadcrumb */}
         <nav className="mb-8">
