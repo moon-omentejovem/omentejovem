@@ -2,492 +2,224 @@
 
 > **Objetivo**
 >
-> Migrar do modelo git‑based para um CMS simples, modular e replicável usando **Supabase** + **Next.js**. Manter o portfólio de NFTs (artes) com tipagem sólida, UI de gestão conforme os _prints_ anexos, e páginas públicas: **Home (destaques)**, **Portfolio (últimas artes)**, **1/1 (peças únicas)**, **Series (grupos)**, **Artifacts** e **Sobre** (texto longo com editor inteligente via Tiptap).
+> CMS modular e replicável usando **Supabase** + **Next.js 14** para portfólio de NFTs (arte digital). Painel admin para gestão e páginas públicas: **Home**, **Portfolio**, **1/1**, **Series**, **Artifacts** e **Sobre**.
 
 ---
 
-## 1) Arquitetura em alto nível
+## 1) Stack Técnica
 
-- **App Web**: Next.js (TypeScript) – site público + painel `/admin`.
-- **Banco**: Supabase Postgres + RLS.
-- **Auth**: Supabase Auth (email magic link) para o painel.
-- **Storage**: Supabase Storage (bucket `media`) para _cache_ das imagens vindas do OpenSea quando necessário.
-- **Editor**: Tiptap para campos de texto rico (descrição de NFT e página Sobre).
-- **Jobs**: rotas `app/api/*` para sincronizar metadados do OpenSea e otimizar imagens (proxy/caching).
-- **Design System**: componentes reutilizáveis (tabelas, formulários, pickers, rich text, upload).
+**✅ Implementado**
 
-### Boas práticas atuais
+- **Frontend**: Next.js 14 (App Router), TypeScript, Tailwind CSS
+- **Banco**: Supabase Postgres + RLS
+- **Auth**: Supabase Auth (magic link) + middleware de proteção
+- **Storage**: Supabase Storage (`media`, `cached-images`)
+- **Editor**: Tiptap para rich text (descrições, página Sobre)
+- **UI**: Flowbite React, Sonner (notificações)
+- **Forms**: AdminForm + AdminTable reutilizáveis via descriptors
 
-- Notificações unificadas com [`sonner`](https://sonner.emilkowal.ski/); use `toast.success`/`toast.error` para feedback instantâneo.
-- Formulários via `AdminForm` com campo de imagem único (URL ou upload direto para Supabase Storage).
-- Utilizar `createClient` dos utilitários Supabase para operações no navegador.
-- Seguir convenções do Next.js 14 (App Router) e manter componentes client apenas quando necessário.
-- Deploy na Vercel com variáveis `NEXT_PUBLIC_*` e storage no bucket `media`.
+**Padrões Estabelecidos**
 
-### Plano de ação consolidado
-
-1. Manter **AdminForm** e **AdminTable** como blocos modulares reutilizáveis.
-2. Garantir feedback de todas as ações do painel via `toast`.
-3. Centralizar uploads de imagem no bucket `media` do Supabase.
-4. Evoluir UX continuamente, priorizando simplicidade e consistência visual.
+- Notificações: `toast.success`/`toast.error` (Sonner)
+- Cliente Supabase: `createClient` para browser/server
+- Upload de imagens: Storage bucket `media` com otimização
+- Admin protection: middleware + RLS policies
 
 ---
 
-## 2) Modelo de Dados (ERD verbal)
+## 2) Schema do Banco
 
-- **artworks** (NFTs)
-  - `id` (uuid, pk)
-  - `slug` (text, unique)
-  - `title` (text)
-  - `description` (jsonb, tiptap)
-  - `token_id` (text) — id/numero do token no marketplace
-  - `mint_date` (date)
-  - `mint_link` (text) — URL (OpenSea/contract)
-  - `type` (enum: `single`, `edition`) — para 1/1 vs edition
-  - `editions_total` (int, null) — quando `edition`
-  - `image_url` (text) — URL original (OpenSea)
-  - `image_cached_path` (text, null) — caminho no Storage quando cacheado
-  - `is_featured` (bool) — para Home
-  - `is_one_of_one` (bool) — para página 1/1
-  - `posted_at` (timestamptz) — ordenação do Portfolio
-  - `created_at`, `updated_at`
-
-- **series**
-  - `id` (uuid, pk)
-  - `slug` (text, unique)
-  - `name` (text)
-  - `cover_image_url` (text)
-  - `cover_image_cached_path` (text, null)
-  - `created_at`, `updated_at`
-
-- **series_artworks** (N\:N)
-  - `series_id` (fk → series.id)
-  - `artwork_id` (fk → artworks.id)
-  - pk composta (`series_id`, `artwork_id`)
-
-- **artifacts**
-  - `id` (uuid, pk)
-  - `title` (text)
-  - `description` (text)
-  - `highlight_video_url` (text)
-  - `link_url` (text)
-  - `image_url` (text, null)
-  - `created_at`, `updated_at`
-
-- **about_page** (singleton)
-  - `id` (uuid, pk) — manter um único registro
-  - `content` (jsonb, tiptap)
-  - `updated_at`
-
-> _Observação:_ usamos `jsonb` para conteúdo Tiptap, preservando formatação sem conversões.
-
----
-
-## 3) DDL (Supabase SQL)
+**✅ Implementado (ver `supabase-setup.sql`)**
 
 ```sql
--- Tipos
-create type public.nft_type as enum ('single', 'edition');
+-- Core tables
+artworks (id, slug, title, description JSONB, token_id, mint_date,
+         mint_link, type, editions_total, image_url, is_featured,
+         is_one_of_one, posted_at, created/updated_at)
 
--- Tabelas
-create table if not exists public.artworks (
-  id uuid primary key default gen_random_uuid(),
-  slug text unique not null,
-  title text not null,
-  description jsonb null,
-  token_id text not null,
-  mint_date date null,
-  mint_link text null,
-  type public.nft_type not null default 'single',
-  editions_total int null,
-  image_url text null,
-  image_cached_path text null,
-  is_featured boolean not null default false,
-  is_one_of_one boolean not null default false,
-  posted_at timestamptz not null default now(),
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
-);
+series (id, slug, name, cover_image_url, created/updated_at)
 
-create table if not exists public.series (
-  id uuid primary key default gen_random_uuid(),
-  slug text unique not null,
-  name text not null,
-  cover_image_url text null,
-  cover_image_cached_path text null,
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
-);
+series_artworks (series_id, artwork_id) -- N:N junction
 
-create table if not exists public.series_artworks (
-  series_id uuid not null references public.series(id) on delete cascade,
-  artwork_id uuid not null references public.artworks(id) on delete cascade,
-  created_at timestamptz not null default now(),
-  primary key (series_id, artwork_id)
-);
+artifacts (id, title, description, highlight_video_url,
+          link_url, image_url, created/updated_at)
 
-create table if not exists public.artifacts (
-  id uuid primary key default gen_random_uuid(),
-  title text not null,
-  description text null,
-  highlight_video_url text null,
-  link_url text null,
-  image_url text null,
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
-);
+about_page (id, content JSONB, updated_at) -- singleton
 
-create table if not exists public.about_page (
-  id uuid primary key default gen_random_uuid(),
-  content jsonb not null,
-  updated_at timestamptz not null default now()
-);
-
--- RLS
-alter table public.artworks enable row level security;
-alter table public.series enable row level security;
-alter table public.series_artworks enable row level security;
-alter table public.artifacts enable row level security;
-alter table public.about_page enable row level security;
-
--- Políticas simples: leitura pública, escrita apenas para usuários autenticados com role 'admin'.
-create policy "read_public" on public.artworks for select using (true);
-create policy "read_public" on public.series for select using (true);
-create policy "read_public" on public.series_artworks for select using (true);
-create policy "read_public" on public.artifacts for select using (true);
-create policy "read_public" on public.about_page for select using (true);
-
-create policy "write_admins" on public.artworks for all using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
-create policy "write_admins" on public.series for all using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
-create policy "write_admins" on public.series_artworks for all using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
-create policy "write_admins" on public.artifacts for all using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
-create policy "write_admins" on public.about_page for all using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
+user_roles (user_id, role) -- admin permissions
 ```
 
-> **Nota**: Caso queira granularidade por tabela/usuário, use uma `table user_roles(user_id uuid, role text)` e policies baseadas nela.
+**RLS**: leitura pública, escrita apenas para admins (`is_admin()` function)
 
 ---
 
-## 4) Semeadura (partir dos JSONs estáticos)
+## 3) Funcionalidades Implementadas
 
-Exemplo de `artworks.json` atual (estático → seeds):
+**✅ Páginas Públicas**
 
-```json
-[
-  {
-    "slug": "abstract-painting",
-    "title": "Abstract Painting",
-    "description": {
-      "type": "doc",
-      "content": [
-        {
-          "type": "paragraph",
-          "content": [
-            {
-              "type": "text",
-              "text": "A vibrant abstract painting with bold colors and dynamic brushstrokes."
-            }
-          ]
-        }
-      ]
-    },
-    "token_id": "1",
-    "mint_date": "2023-01-15",
-    "mint_link": "https://example.com/artwork1",
-    "type": "single",
-    "editions_total": null,
-    "image_url": "https://opensea.io/…/image.png",
-    "is_featured": true,
-    "is_one_of_one": true,
-    "posted_at": "2023-05-30T12:00:00Z",
-    "series_slugs": ["natures-wonders"]
-  }
-]
-```
+- **Home**: artworks em destaque (`is_featured = true`)
+- **Portfolio**: todos artworks ordenados por `posted_at`
+- **1/1**: peças únicas (`is_one_of_one = true`)
+- **Series**: coleções com artworks relacionados
+- **Artifacts**: conteúdo adicional
+- **Sobre**: página singleton com rich text editor
 
-### Script de import
+**✅ Painel Admin (`/admin`)**
 
-1. Carregar JSONs.
-2. Inserir/`upsert` em `artworks` por `slug`.
-3. Resolver `series` por `slug` (criar se não existir).
-4. Popular `series_artworks` por relacionamento.
+- **Auth**: magic link + middleware protection
+- **Artworks**: CRUD completo com upload/proxy de imagens
+- **Series**: gestão de coleções + relacionamentos N:N
+- **Artifacts**: conteúdo adicional simples
+- **About**: editor Tiptap para página única
+- **Users**: gestão de roles de admin
 
-> Implementar como rota `POST /api/admin/seed` protegida por sessão Supabase ou script CLI usando `@supabase/supabase-js`.
+**✅ Componentes Admin**
+
+- `AdminTable`: tabela reutilizável via descriptors
+- `AdminForm`: formulários dinâmicos (text, tiptap, upload, relations)
+- `TiptapEditor`: rich text com toolbar (bold, italic, lists, links, images)
+- `RelationPicker`: seleção múltipla para relacionamentos
+
+**✅ APIs Admin**
+
+- **REST CRUD**: `/api/admin/{artworks,series,artifacts}`
+- **Auth**: `/api/admin/auth`, user roles, logout
+- **Seeding**: `/api/admin/seed` (import JSONs)
+- **Image proxy**: `/api/images/proxy` (OpenSea URLs)
 
 ---
 
-## 5) Páginas Públicas (queries padrão)
+## 4) Descriptor Pattern (Replicabilidade)
 
-- **Home (destaques)**: `select * from artworks where is_featured = true order by posted_at desc limit 12`.
-- **Portfolio**: `select * from artworks order by posted_at desc` (paginação cursor).
-- **1/1**: `select * from artworks where is_one_of_one = true order by posted_at desc`.
-- **Series (listagem)**: `select s.*, array_agg(a.title) ... join series_artworks`.
-- **Series/\[slug]**: listar artes de uma série.
-- **Artifacts**: `select * from artifacts order by created_at desc`.
-- **Sobre**: `select content from about_page limit 1`.
+**Sistema de Descriptors** para criar CRUDs rapidamente:
 
-> Utilizar SWR/React Query ou _server components_ com `cache: 'force-cache'`/`revalidate` conforme necessidade.
-
----
-
-## 6) Painel `/admin` (UI replicável)
-
-### 6.1 Artworks Listing (baseado no print)
-
-Colunas: **Title**, **Image**, **Description (clamp)**, **Mint Date**, **Mint Link**, **Type**, **Number of Editions**.
-
-Ações por linha: **Edit**, **Duplicate**, **Delete**.
-
-Filtros:
-
-- Busca por `title`/`token_id`.
-- Tipo (`single`/`edition`).
-- Sinalizadores: `is_featured`, `is_one_of_one`.
-
-Formulário **Create/Edit Artwork**:
-
-- Inputs básicos (title, slug auto, token_id, mint_date, mint_link).
-- Select `type` com condicional para `editions_total`.
-- Upload/Campo de imagem com opção **“Usar da OpenSea (URL)”** e **“Cachear no Storage”** (aciona job de proxy + optimize).
-- Toggle `is_featured`, `is_one_of_one`.
-- **Descrição (Tiptap)** com extensões: Bold, Italic, Link, Listas, Code, Blockquote, Imagem.
-- **Series Picker** (multiselect) — cria série na hora se não existir.
-
-### 6.2 Series Listing (baseado no print)
-
-Colunas: **Name**, **Cover Image**, **Artworks** (lista curta).
-
-Form **Create/Edit Series**:
-
-- `name`, `slug` auto, `cover_image_url` (ou upload+cache), `artworks` (multiselect de `artworks`).
-
-### 6.3 Artifacts
-
-- CRUD simples com `title`, `description` (plain), `highlight_video_url`, `link_url`, `image_url`.
-
-### 6.4 Sobre
-
-- Editor Tiptap de página única (salvar auto‐draft + publicar).
-
-> **Componente de Tabela Único**: Criar `AdminTable<T>()` + `AdminForm<T>()` para reaproveitar padrão em Artworks/Series/Artifacts.
-
----
-
-## 7) OpenSea → Imagens & Otimização
-
-- **Estratégia 1 (rápida)**: usar `next/image` com `loader` custom apontando para proxy `/api/img?src=…` que faz `fetch` da URL do OpenSea e aplica `Cache-Control` + reenvia bytes otimizados.
-- **Estratégia 2 (persistente)**: endpoint `/api/cache-image?src=…` baixa a imagem do OpenSea, salva no Storage (`media/nfts/{slug}.webp`), retorna caminho e atualiza `image_cached_path`.
-- Sempre retornar **WebP/AVIF** quando suportado.
-
----
-
-## 8) Tipos e Schemas (TypeScript + Zod)
-
-```ts
-// zod schemas
-const RichText = z.any() // conteúdo Tiptap json
-export const ArtworkSchema = z.object({
-  id: z.string().uuid().optional(),
-  slug: z.string(),
-  title: z.string().min(1),
-  description: RichText.nullish(),
-  token_id: z.string(),
-  mint_date: z.string().date().optional().nullable(),
-  mint_link: z.string().url().optional().nullable(),
-  type: z.enum(['single', 'edition']),
-  editions_total: z.number().int().positive().nullable().optional(),
-  image_url: z.string().url().optional().nullable(),
-  image_cached_path: z.string().optional().nullable(),
-  is_featured: z.boolean().default(false),
-  is_one_of_one: z.boolean().default(false),
-  posted_at: z.string().datetime().optional()
-})
-```
-
-> Usar `supabase-js` + gerador de tipos (Supabase) para sincronia entre banco e TS.
-
----
-
-## 9) Replicabilidade (scaffold)
-
-1. **Defina tabela** no SQL (ou prisma-like com migrações SQL).
-2. **Gere tipos** via `supabase gen types typescript --project-id …`.
-3. **Crie rota CRUD** em `/app/api/admin/<resource>/route.ts` com validação Zod.
-4. **Monte UI** com `AdminTable` + `AdminForm` alimentados por um **descriptor**:
-
-```ts
-// descriptors/artworks.ts
-export const artworksDescriptor = {
+```typescript
+// Exemplo: artworksDescriptor
+{
   table: 'artworks',
+  title: 'Artworks',
   list: [
     { key: 'title', label: 'Title', render: 'text' },
     { key: 'image_url', label: 'Image', render: 'image' },
-    { key: 'description', label: 'Description', render: 'clamp' },
-    { key: 'mint_date', label: 'Mint Date', render: 'date' },
-    { key: 'mint_link', label: 'Mint Link', render: 'link' },
-    { key: 'type', label: 'Type', render: 'badge' },
-    { key: 'editions_total', label: 'Number of Editions', render: 'number' }
+    { key: 'description', label: 'Description', render: 'clamp' }
   ],
   form: [
     { key: 'title', type: 'text', required: true },
     { key: 'slug', type: 'slug', from: 'title' },
-    { key: 'token_id', type: 'text', required: true },
-    { key: 'mint_date', type: 'date' },
-    { key: 'mint_link', type: 'url' },
-    { key: 'type', type: 'select', options: ['single', 'edition'] },
-    { key: 'editions_total', type: 'number', when: { type: 'edition' } },
-    { key: 'image_url', type: 'url' },
-    { key: 'is_featured', type: 'switch' },
-    { key: 'is_one_of_one', type: 'switch' },
     { key: 'description', type: 'tiptap' },
-    { key: 'series', type: 'relation-multi', relation: 'series_artworks' }
+    { key: 'series', type: 'relation-multi', relation: { table: 'series' }}
   ]
 }
 ```
 
-Com esse **descriptor**, o mesmo esqueleto serve para **Series** e **Artifacts**, reduzindo código e facilitando replicação.
+**Para adicionar nova entidade**:
+
+1. Criar tabela no Supabase
+2. Gerar tipos TS (`supabase gen types`)
+3. Criar descriptor em `/types/descriptors.ts`
+4. Implementar rota API `/api/admin/{table}`
+5. Criar páginas admin usando `AdminTable`/`AdminForm`
 
 ---
 
-## 10) Rotas/API sugeridas
+## 5) Setup & Configuração
 
-- `GET /api/public/artworks` — filtros `featured`, `oneOfOne`, `series`.
-- `GET /api/public/series` / `GET /api/public/series/[slug]`.
-- `GET /api/public/artifacts`
-- `GET /api/public/about`
-- `POST /api/admin/*` — CRUD com sessão supabase.
-- `POST /api/cache-image` — cache de imagens (OpenSea → Storage).
+**Variáveis de Ambiente**
 
-> Todas com tratamento de cache: `revalidateTag('artworks')`, etc.
+```bash
+NEXT_PUBLIC_SUPABASE_URL=https://seu-projeto.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=sua_anon_key
+SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key
+```
 
----
+**Primeira configuração**:
 
-## 11) Fluxo de Sincronização com OpenSea (opcional)
-
-1. Campo `mint_link`/`token_id` informado.
-2. Endpoint `/api/opensea/sync?token=…` busca metadados (imagem, atributos) e preenche `image_url`, `title` (se vazio) e `description` (append).
-3. Botão **“Sincronizar do OpenSea”** no form de Artwork.
+1. Executar `supabase-setup.sql` no SQL Editor
+2. Configurar storage bucket `media` e `cached-images`
+3. Criar primeiro admin via `/admin/setup`
+4. Import dados via `/api/admin/seed`
 
 ---
 
-## 12) Checklist de Implementação
+## 6) Próximos Passos
 
-- [ ] Criar projeto Supabase (habilitar Storage, Auth, RLS).
-- [ ] Executar DDL de tabelas e policies.
-- [ ] Criar bucket `media` e regras públicas de leitura.
-- [ ] Gerar tipos TS do banco.
-- [ ] Implementar `AdminTable` + `AdminForm` + `TiptapEditor`.
-- [ ] Implementar CRUD de `artworks`, `series`, `series_artworks`.
-- [ ] Implementar `artifacts` e `about_page`.
-- [ ] Importar JSONs estáticos (seed).
-- [ ] Implementar proxy/cache de imagens.
-- [ ] Construir páginas públicas (Home, Portfolio, 1/1, Series, Artifacts, Sobre).
-- [ ] Revisar acessibilidade e SEO (OpenGraph por Artwork/Series).
+**🎯 Roadmap**
 
----
+- [ ] Sync automático OpenSea (metadados + cache de imagens)
+- [ ] Otimização de imagens (WebP/AVIF)
+- [ ] Paginação avançada (cursor-based)
+- [ ] Search/filtros avançados
+- [ ] Backup/restore de dados
+- [ ] Analytics e metrics
 
-## 13) Agentes e Instruções (para uso no Codex/IA)
+**🔧 Tech Debt**
 
-### 13.1 Schema Agent
-
-- **Tarefa**: Garantir consistência do esquema, gerar migrações SQL e tipos TS.
-- **Entrada**: Lista de campos e relacionamentos.
-- **Saída**: DDL pronto + `supabase.gen types` atualizado.
-- **Critérios**: Chaves por `slug`, jsonb para rich text, enum `nft_type`.
-
-**Prompt curto**: “Conferir e atualizar o schema do Supabase para as entidades artworks, series, series_artworks, artifacts e about_page com RLS de leitura pública e escrita autenticada.”
-
-### 13.2 UI Agent
-
-- **Tarefa**: Montar telas do painel conforme _prints_.
-- **Entrada**: `descriptor` do recurso.
-- **Saída**: Páginas `/admin/<resource>` com tabela, filtros e formulários.
-- **Critérios**: acessível, responsivo, reutilizável.
-
-**Prompt curto**: “Gerar AdminTable e AdminForm a partir do descriptor, incluindo Tiptap, toggles e picker de séries; telas de Artworks e Series idênticas ao layout.”
-
-### 13.3 ETL/Sync Agent
-
-- **Tarefa**: Importar JSONs estáticos e sincronizar imagens do OpenSea.
-- **Entrada**: JSONs antigos.
-- **Saída**: Registros no Postgres + arquivos no Storage (quando optar por cache).
-- **Critérios**: _upsert_ por `slug`, idempotente.
-
-**Prompt curto**: “Escrever rota /api/admin/seed que importa artworks/series do JSON e cria vínculos N\:N; incluir opção cache de imagens.”
-
-### 13.4 Content Agent
-
-- **Tarefa**: Manter copy e texto rico (Tiptap) das descrições e do Sobre.
-- **Entrada**: texto simples.
-- **Saída**: doc Tiptap JSON validado.
-
-**Prompt curto**: “Converter este markdown/HTML em json Tiptap válido preservando listas, ênfases e links.”
-
-### 13.5 Delivery Agent
-
-- **Tarefa**: Configurar build/deploy e invalidar caches.
-- **Saída**: `next.config.js` com imagens remotas, `revalidateTag`, e scripts de _seed_.
-
-**Prompt curto**: “Habilitar domínios de imagem do OpenSea e implementar revalidação por tag nas rotas públicas.”
+- [ ] Testes unitários e E2E
+- [ ] Error boundaries
+- [ ] Loading states unificados
+- [ ] SEO optimization (meta tags, sitemap)
 
 ---
 
-## 14) Notas de segurança e performance
+## 7) Agentes de Desenvolvimento
 
-- RLS: leitura pública apenas; escrita restrita a sessão Admin (ou lista de emails).
-- Rate-limit em rotas `/api/cache-image` e `/api/opensea/sync`.
-- `next/image` com `sizes` e `priority` só onde necessário.
-- Paginação cursor-based no Portfolio para evitar cargas grandes.
+### 7.1 Schema Agent
+
+**Tarefa**: Manter consistência do banco e tipos TS
+**Input**: Mudanças no schema
+**Output**: SQL migrations + tipos atualizados
+
+### 7.2 CRUD Agent
+
+**Tarefa**: Gerar CRUDs via descriptors
+**Input**: Novo descriptor ou modificações
+**Output**: Páginas admin + APIs completas
+
+### 7.3 Content Agent
+
+**Tarefa**: Gerenciar rich content (Tiptap)
+**Input**: Texto/markdown simples
+**Output**: JSON Tiptap estruturado
+
+### 7.4 Sync Agent
+
+**Tarefa**: Integração OpenSea/external APIs
+**Input**: URLs de NFT/metadados
+**Output**: Dados normalizados + cache
 
 ---
 
-## 15) Roadmap curto
+## 8) Padrões de Código
 
-1. Schema + policies + seeds ✅
-2. Admin Artworks/Series ✅
-3. Páginas públicas (Home/Portfolio/1/1/Series) ✅
-4. Artifacts + Sobre ✅
-5. Proxy/cache de imagens ✅
-6. Sync OpenSea (opcional) 🎯
+**✅ Boas práticas implementadas**
 
-**Pronto para replicar**: qualquer novo conteúdo segue o mesmo padrão — definir tabela, gerar descriptor, apontar AdminTable/AdminForm, criar página pública com queries padrão, e (opcional) adicionar pipeline de cache/sync.
+- TypeScript strict mode
+- Supabase RLS + middleware auth
+- Error handling com try/catch + toast
+- Responsive design (Tailwind)
+- Performance: Next.js optimization + caching
+- Accessibility: semantic HTML + aria labels
+
+**🔄 Convenções**
+
+- Server Components por padrão
+- Client Components apenas quando necessário (`'use client'`)
+- Consistent naming: camelCase (TS), kebab-case (URLs)
+- Centralização: configs em `/lib`, utils em `/utils`
 
 ---
 
-# 16) PR Guidelines & Agent Instructions
+## 9) PR Guidelines
 
-- Seja consiso e direto ao descrever mudanças.
-- Use linguagem clara para facilitar revisão e documentação.
-- Categorize mudanças para fácil rastreamento.
-
-## 16.1 PR Standards & Formatting
-
-### Título Padrão (Inglês)
+### 9.1 Título Padrão (Inglês)
 
 ```
 <type>: <concise description in English>
 ```
 
-**Tipos aceitos:**
+**Tipos**: `feat`, `fix`, `refactor`, `style`, `docs`, `chore`, `perf`, `test`
 
-- `feat`: nova funcionalidade
-- `fix`: correção de bug
-- `refactor`: refatoração sem mudança de funcionalidade
-- `style`: mudanças de formatação/estilo
-- `docs`: documentação
-- `chore`: tarefas de manutenção
-- `perf`: melhorias de performance
-- `test`: testes
-
-**Exemplos de títulos:**
-
-- `feat: add complete CRUD operations for artifacts and series`
-- `fix: resolve image caching issues in OpenSea integration`
-- `refactor: standardize admin form validation patterns`
-
-### Conteúdo da PR (Português)
-
-Estrutura obrigatória em Markdown:
+### 9.2 Conteúdo da PR (Português)
 
 ```markdown
 ## 📋 Resumo das Alterações
@@ -498,11 +230,11 @@ Estrutura obrigatória em Markdown:
 
 ### 🆕 Novas Funcionalidades
 
-- **Feature Name**: [`/path/to/file`](relative-path) - Descrição
+- **Feature**: [`/path/to/file`](path) - Descrição
 
 ### 🔧 Melhorias Existentes
 
-- **Component/Feature**: Descrição das melhorias
+- **Component**: Descrição das melhorias
 
 ## 🔄 Mudanças Técnicas
 
@@ -514,33 +246,21 @@ Estrutura obrigatória em Markdown:
 
 - Descrição das alterações de schema/queries
 
-### 🛡️ Melhorias de Validação
-
-- Ajustes em schemas, tipos, validações
-
 ## 🎯 Experiência do Usuário
 
 ### ✅ Feedback Visual
 
 - Melhorias na interface e interações
 
-### 🔍 Melhorias na Interface
-
-- Descrição das melhorias de UX/UI
-
-### 🧹 Limpeza de Código
-
-- Arquivos removidos ou refatorados
-
 ## 🔗 Arquivos Modificados
 
 ### Novas funcionalidades
 
-- [`path/to/file`](relative-path) - Descrição
+- [`path/to/file`](path) - Descrição
 
 ### Arquivos aprimorados
 
-- [`path/to/file`](relative-path) - Descrição das melhorias
+- [`path/to/file`](path) - Descrição das melhorias
 
 ## ✅ Impacto
 
@@ -549,115 +269,4 @@ Estrutura obrigatória em Markdown:
 
 ---
 
-## 16.2 PR Creation Agent
-
-### Função
-
-Analise commits e mudanças no código para gerar PRs padronizadas automaticamente.
-
-### Input
-
-```
-- Git diff/commits desde último merge
-- Lista de arquivos modificados/adicionados/removidos
-- Contexto do projeto (AGENTS.md)
-```
-
-### Output
-
-```
-- Título da PR em inglês padronizado
-- Conteúdo completo da PR em português seguindo template
-- Categorização automática das mudanças
-- Links relativos para arquivos modificados
-```
-
-### Prompt Template
-
-```
-Analise as mudanças desde o commit {commit_hash} e crie uma PR seguindo os padrões:
-
-1. TÍTULO: Use formato "type: description" em inglês
-2. CONTEÚDO: Em português, seguindo template com seções:
-   - Resumo das Alterações
-   - Principais Funcionalidades (🆕 Novas / 🔧 Melhorias)
-   - Mudanças Técnicas (📦 Deps / 🗃️ DB / 🛡️ Validação)
-   - Experiência do Usuário (✅ Feedback / 🔍 Interface / 🧹 Limpeza)
-   - Arquivos Modificados (separar novos vs aprimorados)
-   - Impacto
-
-3. LINKS: usar formato [`file.ext`](relative-path) para todos os arquivos
-4. EMOJIS: usar consistentemente conforme template
-5. FOCO: destacar valor para o cliente e usuários finais
-```
-
-### Critérios de Qualidade
-
-- **Clareza**: linguagem clara e direta para documentação com cliente
-- **Completude**: todas as mudanças relevantes documentadas
-- **Organização**: mudanças categorizadas logicamente
-- **Rastreabilidade**: links para todos os arquivos importantes
-- **Impacto**: valor de negócio explícito
-
----
-
-## 16.3 Code Review Agent
-
-### Função
-
-Revisar PRs antes do merge para garantir conformidade com padrões.
-
-### Checklist Automático
-
-```
-- [ ] Título segue padrão "type: description"
-- [ ] Conteúdo em português com todas as seções obrigatórias
-- [ ] Links relativos funcionando
-- [ ] Emojis consistentes com template
-- [ ] Impacto de negócio claramente descrito
-- [ ] Mudanças técnicas explicadas
-- [ ] UX improvements documentadas
-```
-
-### Prompt Template
-
-```
-Revise esta PR conforme checklist:
-
-1. ESTRUTURA: Verificar se segue template completo
-2. CONTEÚDO: Avaliar clareza e completude das descrições
-3. LINKS: Validar se todos os arquivos importantes estão linkados
-4. IMPACTO: Confirmar se valor para cliente está claro
-5. TÉCNICO: Verificar se mudanças técnicas estão bem explicadas
-
-Forneça feedback específico para melhorias necessárias.
-```
-
----
-
-## 16.4 Documentation Sync Agent
-
-### Função
-
-Manter AGENTS.md atualizado com padrões de PR e instruções para novos agentes.
-
-### Responsabilidades
-
-- Atualizar exemplos de PR quando padrões mudarem
-- Sincronizar instruções com práticas reais do projeto
-- Documentar novos tipos de mudanças/padrões identificados
-- Manter templates atualizados
-
-### Prompt Template
-
-```
-Analise as últimas 5 PRs e identifique:
-1. Padrões emergentes não documentados
-2. Seções do template pouco utilizadas
-3. Novos tipos de mudanças frequentes
-4. Melhorias nos exemplos/templates
-
-Sugira atualizações para AGENTS.md seção 16.
-```
-
----
+**Status Atual**: Sistema funcional e pronto para produção. Admin completo, páginas públicas implementadas, infraestrutura de upload e proxy de imagens funcionando.
