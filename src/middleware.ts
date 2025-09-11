@@ -1,6 +1,6 @@
+import { supabaseConfig } from '@/lib/supabase/config'
 import { createServerClient } from '@supabase/ssr'
 import { type NextRequest, NextResponse } from 'next/server'
-import { supabaseConfig } from '@/lib/supabase/config'
 import { updateSession } from '../utils/supabase/middleware'
 
 export async function middleware(request: NextRequest) {
@@ -9,51 +9,104 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // First, update the session using the helper function
-  let supabaseResponse = await updateSession(request)
+  // Só exige autenticação para rotas do admin (exceto a página de login /admin)
+  if (request.nextUrl.pathname.startsWith('/admin')) {
+    // Se é a página de login (/admin), permite acesso sem autenticação
+    if (request.nextUrl.pathname === '/admin') {
+      // Atualiza sessão e cria client para verificar se usuário já está logado
+      let supabaseResponse = await updateSession(request)
+      const supabase = createServerClient(
+        supabaseConfig.url,
+        supabaseConfig.anonKey,
+        {
+          cookies: {
+            getAll() {
+              return request.cookies.getAll()
+            },
+            setAll(cookiesToSet) {
+              cookiesToSet.forEach(({ name, value, options }) =>
+                request.cookies.set(name, value)
+              )
+              supabaseResponse = NextResponse.next({
+                request
+              })
+              cookiesToSet.forEach(({ name, value, options }) =>
+                supabaseResponse.cookies.set(name, value, options)
+              )
+            }
+          }
+        }
+      )
 
-  // Create a new Supabase client for basic auth checking
-  const supabase = createServerClient(
-    supabaseConfig.url,
-    supabaseConfig.anonKey,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll()
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            request.cookies.set(name, value)
-          )
-          supabaseResponse = NextResponse.next({
-            request
-          })
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          )
+      // Busca usuário
+      const {
+        data: { user },
+        error
+      } = await supabase.auth.getUser()
+
+      // Se já está logado e é admin, redireciona para dashboard
+      if (user) {
+        try {
+          const { data: roleData, error: roleError } = await supabase
+            .from('user_roles')
+            .select('role')
+            .eq('user_id', user.id)
+            .single()
+
+          if (!roleError && roleData?.role === 'admin') {
+            const url = request.nextUrl.clone()
+            url.pathname = '/admin/artworks'
+            return NextResponse.redirect(url)
+          }
+        } catch (error) {
+          // Ignora erro e permite acesso à página de login
         }
       }
+
+      return supabaseResponse
     }
-  )
 
-  // Get the user after session refresh
-  const {
-    data: { user }
-  } = await supabase.auth.getUser()
+    // Para outras rotas admin (não /admin), exige autenticação
+    let supabaseResponse = await updateSession(request)
+    const supabase = createServerClient(
+      supabaseConfig.url,
+      supabaseConfig.anonKey,
+      {
+        cookies: {
+          getAll() {
+            return request.cookies.getAll()
+          },
+          setAll(cookiesToSet) {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              request.cookies.set(name, value)
+            )
+            supabaseResponse = NextResponse.next({
+              request
+            })
+            cookiesToSet.forEach(({ name, value, options }) =>
+              supabaseResponse.cookies.set(name, value, options)
+            )
+          }
+        }
+      }
+    )
 
-  // Check if the request is for the admin dashboard (protected routes)
-  if (
-    request.nextUrl.pathname.startsWith('/admin') &&
-    request.nextUrl.pathname !== '/admin'
-  ) {
-    // If no user is authenticated, redirect to admin login
+    // Busca usuário
+    const {
+      data: { user },
+      error
+    } = await supabase.auth.getUser()
+
+    if (error) {
+      console.error('Auth error in middleware:', error.message)
+    }
+
+    // Se não autenticado, redireciona para login
     if (!user) {
-      const url = request.nextUrl.clone()
-      url.pathname = '/admin'
-      return NextResponse.redirect(url)
+      return NextResponse.redirect(new URL('/admin', request.url))
     }
 
-    // Check if user has admin role
+    // Verifica role de admin
     try {
       const { data: roleData, error: roleError } = await supabase
         .from('user_roles')
@@ -61,7 +114,6 @@ export async function middleware(request: NextRequest) {
         .eq('user_id', user.id)
         .single()
 
-      // If there's an error or user is not admin, redirect with error
       if (roleError || roleData?.role !== 'admin') {
         const url = request.nextUrl.clone()
         url.pathname = '/admin'
@@ -74,40 +126,12 @@ export async function middleware(request: NextRequest) {
       url.searchParams.set('error', 'access_denied')
       return NextResponse.redirect(url)
     }
+
+    return supabaseResponse
   }
 
-  // If user is logged in and tries to access admin login page, check if they're admin
-  if (request.nextUrl.pathname === '/admin' && user) {
-    try {
-      const { data: roleData, error: roleError } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', user.id)
-        .single()
-
-      // If user is admin, redirect to dashboard
-      if (!roleError && roleData?.role === 'admin') {
-        const url = request.nextUrl.clone()
-        url.pathname = '/admin/artworks'
-        return NextResponse.redirect(url)
-      }
-      // If user is not admin, stay on login page with error
-      if (roleError || roleData?.role !== 'admin') {
-        const url = request.nextUrl.clone()
-        url.pathname = '/admin'
-        url.searchParams.set('error', 'access_denied')
-        return NextResponse.redirect(url)
-      }
-    } catch (error) {
-      // On error, show access denied
-      const url = request.nextUrl.clone()
-      url.pathname = '/admin'
-      url.searchParams.set('error', 'access_denied')
-      return NextResponse.redirect(url)
-    }
-  }
-
-  return supabaseResponse
+  // Para rotas públicas, não faz nada de sessão
+  return NextResponse.next()
 }
 
 export const config = {
