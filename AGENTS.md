@@ -219,53 +219,84 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key
 
 **Tipos**: `feat`, `fix`, `refactor`, `style`, `docs`, `chore`, `perf`, `test`
 
+**Exemplo**: `refactor: unify artwork hooks and improve fetching logic`
+
 ### 9.2 Conteúdo da PR (Português)
+
+Todo o conteúdo da PR deve ser em **português** para facilitar a legibilidade e apresentação para o cliente. Apenas o título deve permanecer em inglês para padronização.
 
 ```markdown
 ## 📋 Resumo das Alterações
 
-[Descrição concisa das mudanças principais]
+[Descrição concisa das mudanças principais em português]
 
 ## ✨ Principais Funcionalidades
 
 ### 🆕 Novas Funcionalidades
 
-- **Feature**: [`/path/to/file`](path) - Descrição
+- **Funcionalidade**: [`/caminho/para/arquivo`](caminho) - Descrição da nova funcionalidade
 
 ### 🔧 Melhorias Existentes
 
-- **Component**: Descrição das melhorias
+- **Componente**: Descrição das melhorias implementadas
 
 ## 🔄 Mudanças Técnicas
 
 ### 📦 Atualizações de Dependências
 
-- Package: versão anterior → nova versão
+- Pacote: versão anterior → nova versão (se aplicável)
 
-### 🗃️ Mudanças no Banco de Dados
+### 🗃️ Mudanças no Sistema de Dados
 
-- Descrição das alterações de schema/queries
+- Descrição das alterações de schema/queries (se aplicável)
 
 ## 🎯 Experiência do Usuário
 
-### ✅ Feedback Visual
+### ✅ Melhorias de Performance/Interface
 
-- Melhorias na interface e interações
+- Descrição das melhorias na interface e interações
 
 ## 🔗 Arquivos Modificados
 
 ### Novas funcionalidades
 
-- [`path/to/file`](path) - Descrição
+- [`caminho/para/arquivo`](caminho) - Descrição da funcionalidade
 
 ### Arquivos aprimorados
 
-- [`path/to/file`](path) - Descrição das melhorias
+- [`caminho/para/arquivo`](caminho) - Descrição das melhorias
+
+### Arquivos removidos (se aplicável)
+
+- **Removido**: `caminho/para/arquivo` - Motivo da remoção
+
+## ⚠️ Mudanças que Quebram Compatibilidade (se aplicável)
+
+- Descrição de breaking changes
+- Guia de migração quando necessário
+
+## 🧪 Testes Realizados
+
+- [x] Lista de verificações testadas
+- [x] Funcionalidades validadas
+
+## 📊 Estatísticas
+
+- **X arquivos alterados**: Y inserções(+), Z deleções(-)
+- **Áreas principais**: descrição das áreas modificadas
 
 ## ✅ Impacto
 
 [Resumo do impacto geral das mudanças no projeto]
 ```
+
+### 9.3 Diretrizes Importantes
+
+- **Título em inglês**: Para consistência técnica e padrões de versionamento
+- **Conteúdo em português**: Para clareza na comunicação com stakeholders e clientes
+- **Emojis**: Usar para melhor organização visual e quick scanning
+- **Links relativos**: Sempre usar links para arquivos modificados quando relevante
+- **Seções opcionais**: Incluir apenas seções relevantes para a PR específica
 
 ---
 
