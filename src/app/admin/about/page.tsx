@@ -62,7 +62,9 @@ export default function AboutPage() {
       } else {
         const error = await response.json()
         console.error('Error saving about page:', error)
-        toast.error('Failed to save about page: ' + (error.error || 'Unknown error'))
+        toast.error(
+          'Failed to save about page: ' + (error.error || 'Unknown error')
+        )
       }
     } catch (error) {
       console.error('Error saving about page:', error)
