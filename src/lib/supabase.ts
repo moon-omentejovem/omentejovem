@@ -7,9 +7,9 @@
  * This file provides typed helper functions for common database operations
  */
 
+import { TABLES } from '@/lib/supabase/config'
 import type { Database } from '@/types/supabase'
 import { createClient } from '@/utils/supabase/client'
-import { TABLES } from '@/lib/supabase/config'
 
 // Client-side helper functions - use only in client components
 const supabase = createClient()
@@ -56,7 +56,82 @@ export async function fetchArtworks(options?: {
   oneOfOne?: boolean
   limit?: number
   seriesSlug?: string
+  type?: 'single' | 'edition'
 }) {
+  const { processArtwork } = await import('@/types/artwork')
+
+  // If filtering by seriesSlug, we need a different approach
+  if (options?.seriesSlug) {
+    // First, get artwork IDs for this series
+    const { data: seriesArtworks, error: seriesError } = await supabase
+      .from(TABLES.SERIES_ARTWORKS)
+      .select(
+        `
+        artwork_id,
+        series!inner(slug)
+      `
+      )
+      .eq('series.slug', options.seriesSlug)
+
+    if (seriesError) {
+      console.error('Error fetching series artworks:', seriesError)
+      throw new Error(`Failed to fetch series artworks: ${seriesError.message}`)
+    }
+
+    const artworkIds =
+      seriesArtworks
+        ?.map((sa) => sa.artwork_id)
+        .filter((id): id is string => id !== null) || []
+
+    if (artworkIds.length === 0) {
+      return []
+    }
+
+    // Now get the full artworks with series data
+    let query = supabase
+      .from(TABLES.ARTWORKS)
+      .select(
+        `
+        *,
+        series_artworks(
+          series(*)
+        )
+      `
+      )
+      .in('id', artworkIds)
+
+    // Apply other filters
+    if (options?.featured) {
+      query = query.eq('is_featured', true)
+    }
+
+    if (options?.oneOfOne) {
+      query = query.eq('is_one_of_one', true)
+    }
+
+    if (options?.type) {
+      query = query.eq('type', options.type)
+    }
+
+    // Apply ordering and limit
+    query = query.order('posted_at', { ascending: false })
+
+    if (options?.limit) {
+      query = query.limit(options.limit)
+    }
+
+    const { data, error } = await query
+
+    if (error) {
+      console.error('Error fetching artworks:', error)
+      throw new Error(`Failed to fetch artworks: ${error.message}`)
+    }
+
+    // Process raw data to ProcessedArtwork format
+    return ((data as any[]) || []).map(processArtwork)
+  }
+
+  // Standard query without seriesSlug filter
   let query = supabase.from(TABLES.ARTWORKS).select(`
       *,
       series_artworks(
@@ -73,8 +148,8 @@ export async function fetchArtworks(options?: {
     query = query.eq('is_one_of_one', true)
   }
 
-  if (options?.seriesSlug) {
-    query = query.eq('series_artworks.series.slug', options.seriesSlug)
+  if (options?.type) {
+    query = query.eq('type', options.type)
   }
 
   // Apply ordering and limit
@@ -91,10 +166,9 @@ export async function fetchArtworks(options?: {
     throw new Error(`Failed to fetch artworks: ${error.message}`)
   }
 
-  return data || []
-}
-
-/**
+  // Process raw data to ProcessedArtwork format
+  return ((data as any[]) || []).map(processArtwork)
+} /**
  * Fetch single artwork by slug
  */
 export async function fetchArtworkBySlug(slug: string) {
