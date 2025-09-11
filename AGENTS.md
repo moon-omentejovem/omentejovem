@@ -36,7 +36,6 @@
 ## 2) Modelo de Dados (ERD verbal)
 
 - **artworks** (NFTs)
-
   - `id` (uuid, pk)
   - `slug` (text, unique)
   - `title` (text)
@@ -54,7 +53,6 @@
   - `created_at`, `updated_at`
 
 - **series**
-
   - `id` (uuid, pk)
   - `slug` (text, unique)
   - `name` (text)
@@ -63,13 +61,11 @@
   - `created_at`, `updated_at`
 
 - **series_artworks** (N\:N)
-
   - `series_id` (fk → series.id)
   - `artwork_id` (fk → artworks.id)
   - pk composta (`series_id`, `artwork_id`)
 
 - **artifacts**
-
   - `id` (uuid, pk)
   - `title` (text)
   - `description` (text)
@@ -79,7 +75,6 @@
   - `created_at`, `updated_at`
 
 - **about_page** (singleton)
-
   - `id` (uuid, pk) — manter um único registro
   - `content` (jsonb, tiptap)
   - `updated_at`
@@ -188,7 +183,10 @@ Exemplo de `artworks.json` atual (estático → seeds):
         {
           "type": "paragraph",
           "content": [
-            { "type": "text", "text": "A vibrant abstract painting with bold colors and dynamic brushstrokes." }
+            {
+              "type": "text",
+              "text": "A vibrant abstract painting with bold colors and dynamic brushstrokes."
+            }
           ]
         }
       ]
@@ -302,7 +300,7 @@ export const ArtworkSchema = z.object({
   image_cached_path: z.string().optional().nullable(),
   is_featured: z.boolean().default(false),
   is_one_of_one: z.boolean().default(false),
-  posted_at: z.string().datetime().optional(),
+  posted_at: z.string().datetime().optional()
 })
 ```
 
@@ -328,7 +326,7 @@ export const artworksDescriptor = {
     { key: 'mint_date', label: 'Mint Date', render: 'date' },
     { key: 'mint_link', label: 'Mint Link', render: 'link' },
     { key: 'type', label: 'Type', render: 'badge' },
-    { key: 'editions_total', label: 'Number of Editions', render: 'number' },
+    { key: 'editions_total', label: 'Number of Editions', render: 'number' }
   ],
   form: [
     { key: 'title', type: 'text', required: true },
@@ -342,8 +340,8 @@ export const artworksDescriptor = {
     { key: 'is_featured', type: 'switch' },
     { key: 'is_one_of_one', type: 'switch' },
     { key: 'description', type: 'tiptap' },
-    { key: 'series', type: 'relation-multi', relation: 'series_artworks' },
-  ],
+    { key: 'series', type: 'relation-multi', relation: 'series_artworks' }
+  ]
 }
 ```
 
@@ -457,6 +455,10 @@ Com esse **descriptor**, o mesmo esqueleto serve para **Series** e **Artifacts**
 ---
 
 # 16) PR Guidelines & Agent Instructions
+
+- Seja consiso e direto ao descrever mudanças.
+- Use linguagem clara para facilitar revisão e documentação.
+- Categorize mudanças para fácil rastreamento.
 
 ## 16.1 PR Standards & Formatting
 
