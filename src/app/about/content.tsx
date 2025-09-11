@@ -160,7 +160,7 @@ export function AboutContent({
         <div className="flex">
           <CachedImage
             id="about-spans"
-            src={AboutArt}
+            src={AboutArt.src}
             alt={'omentejovem'}
             width={800}
             height={600}
