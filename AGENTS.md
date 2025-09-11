@@ -280,11 +280,6 @@ Todo o conteúdo da PR deve ser em **português** para facilitar a legibilidade 
 - [x] Lista de verificações testadas
 - [x] Funcionalidades validadas
 
-## 📊 Estatísticas
-
-- **X arquivos alterados**: Y inserções(+), Z deleções(-)
-- **Áreas principais**: descrição das áreas modificadas
-
 ## ✅ Impacto
 
 [Resumo do impacto geral das mudanças no projeto]
