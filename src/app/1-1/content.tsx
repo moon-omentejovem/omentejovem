@@ -1,7 +1,7 @@
 'use client'
 
 import { ArtMainContent } from '@/components/ArtContent/ArtMainContent'
-import { useOneOfOneArtworks } from '@/hooks'
+import { useArtworks } from '@/hooks'
 import { ProcessedArtwork } from '@/types/artwork'
 import { ReactElement, useCallback, useEffect, useState } from 'react'
 
@@ -19,7 +19,7 @@ export default function OneOfOneContent({
     data: artworks = initialArtworks,
     isLoading,
     error
-  } = useOneOfOneArtworks()
+  } = useArtworks({ oneOfOne: true, enabled: true })
 
   // Local state for filtering and selection
   const [filteredArtworks, setFilteredArtworks] =

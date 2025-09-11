@@ -27,6 +27,7 @@ export const artworkKeys = {
 export function useArtworks(options?: {
   featured?: boolean
   oneOfOne?: boolean
+  type?: 'single' | 'edition'
   limit?: number
   seriesSlug?: string
   enabled?: boolean

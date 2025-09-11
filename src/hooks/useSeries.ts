@@ -205,7 +205,36 @@ export function useRemoveArtworkFromSeries() {
 /**
  * Hook para buscar artworks de uma série específica
  */
-export function useSeriesArtworks(seriesId: string, enabled = true) {
+export function useSeriesArtworks(options: {
+  seriesSlug: string
+  enabled?: boolean
+}) {
+  const {
+    data: artworks = [],
+    isLoading,
+    error
+  } = useQuery({
+    queryKey: ['series', options.seriesSlug, 'artworks'],
+    queryFn: async () => {
+      const { fetchArtworks } = await import('@/lib/supabase')
+      return fetchArtworks({ seriesSlug: options.seriesSlug })
+    },
+    enabled: (options.enabled ?? true) && !!options.seriesSlug,
+    staleTime: 5 * 60 * 1000
+  })
+
+  return {
+    data: artworks,
+    isLoading,
+    error
+  }
+}
+
+/**
+ * Hook para buscar artworks de uma série específica (por ID)
+ * @deprecated Use useSeriesArtworks with seriesSlug instead
+ */
+export function useSeriesArtworksById(seriesId: string, enabled = true) {
   const supabase = createClient()
 
   return useQuery({

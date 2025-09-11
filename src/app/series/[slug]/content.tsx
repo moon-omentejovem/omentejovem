@@ -1,7 +1,7 @@
 'use client'
 
 import { ArtMainContent } from '@/components/ArtContent/ArtMainContent'
-import { useSeriesArtworks } from '@/hooks/useSeriesArtworks'
+import { useSeriesArtworks } from '@/hooks/useSeries'
 import { ProcessedArtwork } from '@/types/artwork'
 import { ReactElement, useCallback, useState } from 'react'
 
