@@ -1,10 +1,11 @@
+'use server'
 /**
  * Versão Server-Side pura do ImageBanner
  * Não precisa de client component para as imagens
  */
 
 import { getArtworksServer } from '@/lib/server-queries'
-import Image from 'next/image'
+import { SmoothImage } from './SmoothImage'
 
 export async function ServerImageBanner() {
   // Buscar imagens diretamente no servidor
@@ -15,13 +16,13 @@ export async function ServerImageBanner() {
     <div className="fixed left-0 top-0 h-full overflow-hidden hidden md:block z-50">
       <div className="animate-scroll flex flex-col">
         {[...images, ...images].map((src, index) => (
-          <Image
+          <SmoothImage
             key={index}
             src={src}
             alt={`Banner image ${index + 1}`}
             width={200}
             height={200}
-            className="object-cover"
+            priority
           />
         ))}
       </div>
