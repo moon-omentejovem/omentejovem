@@ -1,5 +1,11 @@
 import { Newsletter } from './content'
+import { ServerImageBanner } from './ServerImageBanner'
 
 export default async function NewsletterPage() {
-  return <Newsletter />
+  return (
+    <div className="relative z-50 bg-background">
+      <ServerImageBanner />
+      <Newsletter />
+    </div>
+  )
 }
