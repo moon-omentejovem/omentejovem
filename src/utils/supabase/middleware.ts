@@ -37,6 +37,16 @@ function createMiddlewareClient(request: NextRequest, response: NextResponse) {
  */
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request })
+
+  // Check if Supabase environment variables are available
+  if (!supabaseConfig.url || !supabaseConfig.anonKey) {
+    console.warn(
+      'Supabase configuration missing - skipping auth check for public route:',
+      request.nextUrl.pathname
+    )
+    return response
+  }
+
   const supabase = createMiddlewareClient(request, response)
 
   // Refresh session
@@ -45,9 +55,14 @@ export async function updateSession(request: NextRequest) {
     error
   } = await supabase.auth.getUser()
 
-  // Log authentication errors for debugging
-  if (error) {
-    console.error('Auth error in middleware:', error.message)
+  // Log only actual authentication errors (not missing sessions)
+  if (error && error.message !== 'Auth session missing!') {
+    console.error(
+      'Auth error in middleware for route:',
+      request.nextUrl.pathname,
+      '- Error:',
+      error.message
+    )
   }
 
   // Optional: Add user info to headers for debugging (remove in production)
