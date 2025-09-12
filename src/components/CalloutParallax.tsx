@@ -3,8 +3,8 @@
 import Image from 'next/image'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import { HomeImage } from '@/types/home'
 import { calloutAnimation } from '@/animations'
+import { HomeImage } from '@/types/home'
 
 interface CalloutParallaxProperties {
   title: string
@@ -93,7 +93,7 @@ export function CalloutParallax({
 
   return (
     <div
-      className="relative grid h-screenMinusHeader w-full select-none place-items-center overflow-hidden"
+      className=" grid w-full select-none place-items-center overflow-hidden fixed top-0 right-0 left-0 bottom-0 z-0 h-screen pt-[8rem]"
       id="logo"
       ref={calloutReference}
     >
@@ -121,7 +121,7 @@ export function CalloutParallax({
             <Image
               src={calloutImages[currentImageIndex].imageUrl}
               width={0}
-              height={0}
+              height={900}
               alt={'omentejovem'}
               className="md:h-[32rem] w-auto object-contain invisible 2xl:h-[600px]"
               onClick={() =>
@@ -131,6 +131,9 @@ export function CalloutParallax({
                     : currentImageIndex + 1
                 )
               }
+              style={{
+                userSelect: 'none'
+              }}
             />
             <p className="text-sm text-secondary-100 self-start invisible">
               {new Date(
