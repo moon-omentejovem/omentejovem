@@ -44,7 +44,6 @@ export function ArtInfosNew({
     selectedArtwork.tokenId === '' ||
     selectedArtwork.tokenId === '0x0000000000000000000000000000000000000000'
 
-  console.log('hasVideo', hasVideo)
 
   const onChangeToOtherSlide = async (index: number) => {
     onChangeSlideIndex(index)
