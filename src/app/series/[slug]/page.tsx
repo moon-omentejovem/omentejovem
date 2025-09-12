@@ -2,20 +2,19 @@ import { ArtworkService, SeriesService } from '@/services'
 import { notFound } from 'next/navigation'
 import SeriesContentWrapper from './content'
 
-// Force dynamic rendering to prevent DYNAMIC_SERVER_USAGE errors
-export const dynamic = 'force-dynamic'
-
 interface SeriesPageProps {
   params: {
     slug: string
   }
 }
 
-// Generate static params - return empty to enable ISR
 export async function generateStaticParams() {
-  // For series, we'll use ISR instead of full static generation
-  // to handle dynamic content better
-  return []
+  // Generate static params for all series
+  const slugs = await SeriesService.getSlugs()
+
+  return slugs.map((slug) => ({
+    slug
+  }))
 }
 
 // Generate metadata for SEO
