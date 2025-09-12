@@ -29,7 +29,10 @@ export class BaseService {
       return await createServerSupabaseClient()
     } catch (error) {
       // Fallback to build client (works during static generation)
-      console.log('Using build client for static generation')
+      console.debug(
+        `Falling back to build client for static generation due to error in createServerSupabaseClient:`,
+        error
+      )
       return createBuildSupabaseClient()
     }
   }
