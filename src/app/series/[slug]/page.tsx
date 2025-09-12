@@ -1,4 +1,5 @@
-import { ArtworkService, SeriesService } from '@/services'
+import { ArtworkWithSeries, processArtwork } from '@/types/artwork'
+import { createClient } from '@/utils/supabase/server'
 import { notFound } from 'next/navigation'
 import SeriesContentWrapper from './content'
 
@@ -8,13 +9,57 @@ interface SeriesPageProps {
   }
 }
 
-export async function generateStaticParams() {
-  // Generate static params for all series
-  const slugs = await SeriesService.getSlugs()
+async function getSeriesData(slug: string) {
+  const supabase = await createClient()
 
-  return slugs.map((slug) => ({
-    slug
-  }))
+  // Get the series to validate it exists
+  const { data: series, error: seriesError } = await supabase
+    .from('series')
+    .select('*')
+    .eq('slug', slug)
+    .single()
+
+  if (seriesError || !series) {
+    return { series: null, artworks: [], error: seriesError }
+  }
+
+  // Get all artworks from the series
+  const { data: seriesArtworks, error: artworksError } = await supabase
+    .from('artworks')
+    .select(
+      `
+      *,
+      series_artworks!inner(
+        series!inner(
+          slug,
+          name
+        )
+      )
+    `
+    )
+    .eq('series_artworks.series.slug', slug)
+    .order('mint_date', { ascending: false })
+
+  if (artworksError) {
+    console.error('Series artworks query error:', artworksError)
+    return { series, artworks: [], error: artworksError }
+  }
+
+  // Process artworks data
+  const processedArtworks = (seriesArtworks || []).map((artwork: any) =>
+    processArtwork(artwork as ArtworkWithSeries)
+  )
+
+  return {
+    series,
+    artworks: processedArtworks,
+    error: null
+  }
+}
+
+// Generate static params - return empty to enable ISR
+export async function generateStaticParams() {
+  return []
 }
 
 // Generate metadata for SEO
@@ -41,9 +86,7 @@ export async function generateMetadata({ params }: SeriesPageProps) {
 }
 
 export default async function SeriesDetailPage({ params }: SeriesPageProps) {
-  try {
-    // Check if series exists using the service
-    const seriesExists = await SeriesService.existsBySlug(params.slug)
+  const { series, artworks, error } = await getSeriesData(params.slug)
 
     if (!seriesExists) {
       notFound()
@@ -86,4 +129,12 @@ export default async function SeriesDetailPage({ params }: SeriesPageProps) {
       </div>
     )
   }
+
+  return (
+    <SeriesContentWrapper
+      email="contact@omentejovem.com"
+      slug={params.slug}
+      initialArtworks={artworks}
+    />
+  )
 }

@@ -89,7 +89,6 @@ export async function generateStaticParams() {
 }
 
 export async function generateStaticParams() {
-  // Return empty array to let Next.js generate pages on-demand
   return []
 }
 
