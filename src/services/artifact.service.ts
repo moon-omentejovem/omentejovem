@@ -1,13 +1,13 @@
 /**
  * Artifact Service - Server-side artifact data fetching
- * 
+ *
  * Centralized service for artifact-related data operations.
  * Handles collectible content and special items.
  */
 
-import { cache } from 'react'
-import { createClient } from '@/utils/supabase/server'
 import type { Database } from '@/types/supabase'
+import { createProductionClient } from '@/utils/supabase/server'
+import { cache } from 'react'
 
 // Type definitions
 type DatabaseArtifact = Database['public']['Tables']['artifacts']['Row']
@@ -31,54 +31,56 @@ export class ArtifactService {
   /**
    * Get all artifacts with filtering options
    */
-  static getArtifacts = cache(async (filters: ArtifactFilters = {}): Promise<ProcessedArtifactData> => {
-    const supabase = await createClient()
-    
-    try {
-      let query = supabase.from('artifacts').select('*')
+  static getArtifacts = cache(
+    async (filters: ArtifactFilters = {}): Promise<ProcessedArtifactData> => {
+      const supabase = await createProductionClient()
 
-      // Apply ordering
-      const orderBy = filters.orderBy || 'created_at'
-      const ascending = filters.ascending ?? false
-      query = query.order(orderBy, { ascending })
+      try {
+        let query = supabase.from('artifacts').select('*')
 
-      // Apply limit
-      if (filters.limit) {
-        query = query.limit(filters.limit)
-      }
+        // Apply ordering
+        const orderBy = filters.orderBy || 'created_at'
+        const ascending = filters.ascending ?? false
+        query = query.order(orderBy, { ascending })
 
-      const { data, error, count } = await query
+        // Apply limit
+        if (filters.limit) {
+          query = query.limit(filters.limit)
+        }
 
-      if (error) {
-        console.error('Error fetching artifacts:', error)
+        const { data, error, count } = await query
+
+        if (error) {
+          console.error('Error fetching artifacts:', error)
+          return {
+            artifacts: [],
+            total: 0,
+            error: error.message
+          }
+        }
+
+        return {
+          artifacts: data || [],
+          total: count || data?.length || 0,
+          error: null
+        }
+      } catch (error) {
+        console.error('Unexpected error in getArtifacts:', error)
         return {
           artifacts: [],
           total: 0,
-          error: error.message
+          error: error instanceof Error ? error.message : 'Unknown error'
         }
       }
-
-      return {
-        artifacts: data || [],
-        total: count || (data?.length || 0),
-        error: null
-      }
-    } catch (error) {
-      console.error('Unexpected error in getArtifacts:', error)
-      return {
-        artifacts: [],
-        total: 0,
-        error: error instanceof Error ? error.message : 'Unknown error'
-      }
     }
-  })
+  )
 
   /**
    * Get artifact by ID
    */
   static getById = cache(async (id: string) => {
-    const supabase = await createClient()
-    
+    const supabase = await createProductionClient()
+
     try {
       const { data, error } = await supabase
         .from('artifacts')
@@ -136,8 +138,8 @@ export class ArtifactService {
    * Get artifacts statistics
    */
   static getStats = cache(async () => {
-    const supabase = await createClient()
-    
+    const supabase = await createProductionClient()
+
     try {
       const { count: totalArtifacts } = await supabase
         .from('artifacts')
@@ -158,8 +160,8 @@ export class ArtifactService {
    * Check if artifacts exist
    */
   static hasArtifacts = cache(async (): Promise<boolean> => {
-    const supabase = await createClient()
-    
+    const supabase = await createProductionClient()
+
     try {
       const { count } = await supabase
         .from('artifacts')
