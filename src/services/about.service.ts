@@ -1,14 +1,14 @@
 /**
  * About Service - Server-side about page data fetching
- * 
+ *
  * Centralized service for about page content, social media links,
  * exhibitions, press mentions, and contact information.
  */
 
-import { cache } from 'react'
-import { createClient } from '@/utils/supabase/server'
-import type { Database } from '@/types/supabase'
 import { AboutData, PressTalk } from '@/app/about/@types/wordpress'
+import type { Database } from '@/types/supabase'
+import { createProductionClient } from '@/utils/supabase/server'
+import { cache } from 'react'
 
 // Type definitions
 type DatabaseAboutPage = Database['public']['Tables']['about_page']['Row']
@@ -80,7 +80,7 @@ export class AboutService {
    * Get complete about page data
    */
   static getAboutPageData = cache(async (): Promise<ProcessedAboutData> => {
-    const supabase = await createClient()
+    const supabase = await createProductionClient()
 
     try {
       // Fetch about page data from Supabase
@@ -120,34 +120,39 @@ export class AboutService {
       const aboutData: AboutData = this.getDefaultAboutData()
 
       // Merge socials from database if available
-      if (typedAboutPageData?.socials && Array.isArray(typedAboutPageData.socials)) {
+      if (
+        typedAboutPageData?.socials &&
+        Array.isArray(typedAboutPageData.socials)
+      ) {
         typedAboutPageData.socials.forEach((social) => {
           const platform = social.platform?.toLowerCase()
           if (platform && aboutData.social_media.hasOwnProperty(platform)) {
-            (aboutData.social_media as any)[platform] = social.url
+            ;(aboutData.social_media as any)[platform] = social.url
           }
         })
       }
 
       // Transform press to PressTalk format
-      const press: PressTalk[] = typedAboutPageData?.press?.map((pressItem) => ({
-        title: {
-          rendered: pressItem.title
-        },
-        acf: {
-          link: pressItem.url || '#'
-        }
-      })) || []
+      const press: PressTalk[] =
+        typedAboutPageData?.press?.map((pressItem) => ({
+          title: {
+            rendered: pressItem.title
+          },
+          acf: {
+            link: pressItem.url || '#'
+          }
+        })) || []
 
       // Transform exhibitions to PressTalk format
-      const exhibitions: PressTalk[] = typedAboutPageData?.exhibitions?.map((exhibition) => ({
-        title: {
-          rendered: `${exhibition.title} - ${exhibition.venue} (${exhibition.year})`
-        },
-        acf: {
-          link: '#'
-        }
-      })) || []
+      const exhibitions: PressTalk[] =
+        typedAboutPageData?.exhibitions?.map((exhibition) => ({
+          title: {
+            rendered: `${exhibition.title} - ${exhibition.venue} (${exhibition.year})`
+          },
+          acf: {
+            link: '#'
+          }
+        })) || []
 
       return {
         aboutData,
@@ -158,7 +163,7 @@ export class AboutService {
       }
     } catch (error) {
       console.error('Unexpected error in getAboutPageData:', error)
-      
+
       // Always return fallback data on any error
       const defaultData = this.getDefaultAboutData()
       return {
@@ -175,8 +180,8 @@ export class AboutService {
    * Get about content only (for quick access)
    */
   static getAboutContent = cache(async () => {
-    const supabase = await createClient()
-    
+    const supabase = await createProductionClient()
+
     try {
       const { data, error } = await supabase
         .from('about_page')
@@ -199,8 +204,8 @@ export class AboutService {
    * Get social media links only
    */
   static getSocialLinks = cache(async () => {
-    const supabase = await createClient()
-    
+    const supabase = await createProductionClient()
+
     try {
       const { data, error } = await supabase
         .from('about_page')
@@ -220,7 +225,7 @@ export class AboutService {
         typedData.socials.forEach((social) => {
           const platform = social.platform?.toLowerCase()
           if (platform && defaultSocials.hasOwnProperty(platform)) {
-            (defaultSocials as any)[platform] = social.url
+            ;(defaultSocials as any)[platform] = social.url
           }
         })
       }
@@ -238,7 +243,7 @@ export class AboutService {
   static getContactInfo = cache(async () => {
     // Contact info is currently static, but this allows for future dynamic content
     return {
-      email: 'contact@omentejovem.com',
+      email: 'contact@omentejovem.com'
       // Add other contact methods as needed
     }
   })
@@ -247,8 +252,8 @@ export class AboutService {
    * Check if about page has custom content
    */
   static hasCustomContent = cache(async (): Promise<boolean> => {
-    const supabase = await createClient()
-    
+    const supabase = await createProductionClient()
+
     try {
       const { data, error } = await supabase
         .from('about_page')

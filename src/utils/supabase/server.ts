@@ -1,8 +1,8 @@
 import { supabaseClientOptions, supabaseConfig } from '@/lib/supabase/config'
 import type { Database } from '@/types/supabase'
 import { createServerClient } from '@supabase/ssr'
-import { cookies } from 'next/headers'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
+import { cookies } from 'next/headers'
 
 export async function createClient() {
   const cookieStore = await cookies()
@@ -52,4 +52,19 @@ export function createBuildClient() {
       }
     }
   )
+}
+
+/**
+ * Create a production-safe client that works in all contexts
+ * Uses build client during static generation and server client during runtime
+ */
+export async function createProductionClient() {
+  try {
+    // Try to use the server client (works in runtime)
+    return await createClient()
+  } catch (error) {
+    // Fallback to build client (works during static generation)
+    console.log('Using build client for static generation')
+    return createBuildClient()
+  }
 }

@@ -1,14 +1,14 @@
 /**
  * Artwork Service - Server-side artwork data fetching
- * 
+ *
  * Centralized service for all artwork-related data operations.
  * Optimized for server components with React cache and proper error handling.
  */
 
-import { cache } from 'react'
-import { createClient, createBuildClient } from '@/utils/supabase/server'
 import { processArtwork, type ArtworkWithSeries } from '@/types/artwork'
 import type { Database } from '@/types/supabase'
+import { createProductionClient } from '@/utils/supabase/server'
+import { cache } from 'react'
 
 // Type definitions
 type DatabaseArtwork = Database['public']['Tables']['artworks']['Row']
@@ -44,13 +44,12 @@ export class ArtworkService {
   /**
    * Get artworks with flexible filtering options
    */
-  static getArtworks = cache(async (filters: ArtworkFilters = {}, useBuildClient: boolean = false): Promise<ProcessedArtworkData> => {
-    const supabase = useBuildClient ? createBuildClient() : await createClient()
-    
-    try {
-      let query = supabase
-        .from('artworks')
-        .select(`
+  static getArtworks = cache(
+    async (filters: ArtworkFilters = {}): Promise<ProcessedArtworkData> => {
+      const supabase = await createProductionClient()
+
+      try {
+        let query = supabase.from('artworks').select(`
           *,
           series_artworks(
             series(
@@ -62,149 +61,159 @@ export class ArtworkService {
           )
         `)
 
-      // Apply filters
-      if (filters.featured !== undefined) {
-        query = query.eq('is_featured', filters.featured)
-      }
+        // Apply filters
+        if (filters.featured !== undefined) {
+          query = query.eq('is_featured', filters.featured)
+        }
 
-      if (filters.oneOfOne !== undefined) {
-        query = query.eq('is_one_of_one', filters.oneOfOne)
-      }
+        if (filters.oneOfOne !== undefined) {
+          query = query.eq('is_one_of_one', filters.oneOfOne)
+        }
 
-      if (filters.type) {
-        query = query.eq('type', filters.type)
-      }
+        if (filters.type) {
+          query = query.eq('type', filters.type)
+        }
 
-      // Series filter requires a subquery
-      if (filters.seriesSlug) {
-        const { data: seriesData } = await supabase
-          .from('series')
-          .select('id')
-          .eq('slug', filters.seriesSlug)
-          .single()
+        // Series filter requires a subquery
+        if (filters.seriesSlug) {
+          const { data: seriesData } = await supabase
+            .from('series')
+            .select('id')
+            .eq('slug', filters.seriesSlug)
+            .single()
 
-        if (seriesData) {
-          const { data: artworkIds } = await supabase
-            .from('series_artworks')
-            .select('artwork_id')
-            .eq('series_id', (seriesData as any).id)
+          if (seriesData) {
+            const { data: artworkIds } = await supabase
+              .from('series_artworks')
+              .select('artwork_id')
+              .eq('series_id', (seriesData as any).id)
 
-          if (artworkIds && artworkIds.length > 0) {
-            const ids = artworkIds.map((item: any) => item.artwork_id)
-            query = query.in('id', ids)
+            if (artworkIds && artworkIds.length > 0) {
+              const ids = artworkIds.map((item: any) => item.artwork_id)
+              query = query.in('id', ids)
+            }
           }
         }
-      }
 
-      // Apply ordering
-      const orderBy = filters.orderBy || 'posted_at'
-      const ascending = filters.ascending ?? false
-      query = query.order(orderBy, { ascending })
+        // Apply ordering
+        const orderBy = filters.orderBy || 'posted_at'
+        const ascending = filters.ascending ?? false
+        query = query.order(orderBy, { ascending })
 
-      // Apply limit
-      if (filters.limit) {
-        query = query.limit(filters.limit)
-      }
+        // Apply limit
+        if (filters.limit) {
+          query = query.limit(filters.limit)
+        }
 
-      const { data, error, count } = await query
+        const { data, error, count } = await query
 
-      if (error) {
-        console.error('Error fetching artworks:', error)
+        if (error) {
+          console.error('Error fetching artworks:', error)
+          return {
+            artworks: [],
+            total: 0,
+            error: error.message
+          }
+        }
+
+        const artworks = (data || []) as ArtworkWithSeries[]
+        let processedArtworks = artworks.map(processArtwork)
+
+        // Apply random shuffle if requested
+        if (filters.random) {
+          processedArtworks = processedArtworks.sort(() => Math.random() - 0.5)
+        }
+
+        return {
+          artworks: processedArtworks,
+          total: count || processedArtworks.length,
+          error: null
+        }
+      } catch (error) {
+        console.error('Unexpected error in getArtworks:', error)
         return {
           artworks: [],
           total: 0,
-          error: error.message
+          error: error instanceof Error ? error.message : 'Unknown error'
         }
       }
-
-      const artworks = (data || []) as ArtworkWithSeries[]
-      let processedArtworks = artworks.map(processArtwork)
-
-      // Apply random shuffle if requested
-      if (filters.random) {
-        processedArtworks = processedArtworks.sort(() => Math.random() - 0.5)
-      }
-
-      return {
-        artworks: processedArtworks,
-        total: count || processedArtworks.length,
-        error: null
-      }
-    } catch (error) {
-      console.error('Unexpected error in getArtworks:', error)
-      return {
-        artworks: [],
-        total: 0,
-        error: error instanceof Error ? error.message : 'Unknown error'
-      }
     }
-  })
+  )
 
   /**
    * Get featured artworks for homepage
    */
-  static getFeatured = cache(async (options: { limit?: number; random?: boolean; useBuildClient?: boolean } = {}) => {
-    return this.getArtworks({
-      featured: true,
-      limit: options.limit || 10,
-      random: options.random
-    }, options.useBuildClient)
-  })
+  static getFeatured = cache(
+    async (options: { limit?: number; random?: boolean } = {}) => {
+      return this.getArtworks({
+        featured: true,
+        limit: options.limit || 10,
+        random: options.random
+      })
+    }
+  )
 
   /**
    * Get one-of-one artworks
    */
-  static getOneOfOne = cache(async (options: { limit?: number; useBuildClient?: boolean } = {}) => {
+  static getOneOfOne = cache(async (options: { limit?: number } = {}) => {
     return this.getArtworks({
       oneOfOne: true,
       type: 'single',
-      limit: options.limit
-    }, options.useBuildClient)
-  })
-
-  /**
-   * Get edition artworks
-   */
-  static getEditions = cache(async (options: { limit?: number; useBuildClient?: boolean } = {}) => {
-    return this.getArtworks({
-      type: 'edition',
-      limit: options.limit
-    }, options.useBuildClient)
-  })
-
-  /**
-   * Get all portfolio artworks with optional filters
-   */
-  static getPortfolio = cache(async (filters: {
-    type?: 'single' | 'edition'
-    seriesSlug?: string
-    featured?: boolean
-    oneOfOne?: boolean
-    limit?: number
-  } = {}) => {
-    return this.getArtworks(filters)
-  })
-
-  /**
-   * Get artworks by series slug
-   */
-  static getBySeriesSlug = cache(async (seriesSlug: string, options: { limit?: number } = {}) => {
-    return this.getArtworks({
-      seriesSlug,
       limit: options.limit
     })
   })
 
   /**
+   * Get edition artworks
+   */
+  static getEditions = cache(async (options: { limit?: number } = {}) => {
+    return this.getArtworks({
+      type: 'edition',
+      limit: options.limit
+    })
+  })
+
+  /**
+   * Get all portfolio artworks with optional filters
+   */
+  static getPortfolio = cache(
+    async (
+      filters: {
+        type?: 'single' | 'edition'
+        seriesSlug?: string
+        featured?: boolean
+        oneOfOne?: boolean
+        limit?: number
+      } = {}
+    ) => {
+      return this.getArtworks(filters)
+    }
+  )
+
+  /**
+   * Get artworks by series slug
+   */
+  static getBySeriesSlug = cache(
+    async (seriesSlug: string, options: { limit?: number } = {}) => {
+      return this.getArtworks({
+        seriesSlug,
+        limit: options.limit
+      })
+    }
+  )
+
+  /**
    * Get single artwork by slug
    */
   static getBySlug = cache(async (slug: string) => {
-    const supabase = await createClient()
-    
+    const supabase = await createProductionClient()
+
     try {
       const { data, error } = await supabase
         .from('artworks')
-        .select(`
+        .select(
+          `
           *,
           series_artworks(
             series(
@@ -214,7 +223,8 @@ export class ArtworkService {
               cover_image_url
             )
           )
-        `)
+        `
+        )
         .eq('slug', slug)
         .single()
 
@@ -233,33 +243,35 @@ export class ArtworkService {
   /**
    * Get artworks for a specific series context (used in series detail pages)
    */
-  static getForSeriesPage = cache(async (seriesSlug: string, selectedArtworkSlug?: string) => {
-    const artworksResult = await this.getBySeriesSlug(seriesSlug)
-    
-    if (artworksResult.error || artworksResult.artworks.length === 0) {
+  static getForSeriesPage = cache(
+    async (seriesSlug: string, selectedArtworkSlug?: string) => {
+      const artworksResult = await this.getBySeriesSlug(seriesSlug)
+
+      if (artworksResult.error || artworksResult.artworks.length === 0) {
+        return {
+          artworks: [],
+          selectedIndex: -1,
+          error: artworksResult.error || 'No artworks found for this series'
+        }
+      }
+
+      let selectedIndex = 0
+      if (selectedArtworkSlug) {
+        const index = artworksResult.artworks.findIndex(
+          (artwork) => artwork.slug === selectedArtworkSlug
+        )
+        if (index !== -1) {
+          selectedIndex = index
+        }
+      }
+
       return {
-        artworks: [],
-        selectedIndex: -1,
-        error: artworksResult.error || 'No artworks found for this series'
+        artworks: artworksResult.artworks,
+        selectedIndex,
+        error: null
       }
     }
-
-    let selectedIndex = 0
-    if (selectedArtworkSlug) {
-      const index = artworksResult.artworks.findIndex(
-        artwork => artwork.slug === selectedArtworkSlug
-      )
-      if (index !== -1) {
-        selectedIndex = index
-      }
-    }
-
-    return {
-      artworks: artworksResult.artworks,
-      selectedIndex,
-      error: null
-    }
-  })
+  )
 
   /**
    * Get homepage data - optimized for landing page
@@ -268,7 +280,7 @@ export class ArtworkService {
     try {
       // Fetch featured artworks for the homepage carousel
       const featured = await this.getFeatured({ limit: 10, random: true })
-      
+
       return {
         featuredArtworks: featured.artworks,
         error: featured.error
@@ -286,8 +298,8 @@ export class ArtworkService {
    * Get artwork statistics
    */
   static getStats = cache(async () => {
-    const supabase = await createClient()
-    
+    const supabase = await createProductionClient()
+
     try {
       const [
         { count: totalArtworks },
@@ -296,9 +308,18 @@ export class ArtworkService {
         { count: editionCount }
       ] = await Promise.all([
         supabase.from('artworks').select('*', { count: 'exact', head: true }),
-        supabase.from('artworks').select('*', { count: 'exact', head: true }).eq('is_featured', true),
-        supabase.from('artworks').select('*', { count: 'exact', head: true }).eq('is_one_of_one', true),
-        supabase.from('artworks').select('*', { count: 'exact', head: true }).eq('type', 'edition')
+        supabase
+          .from('artworks')
+          .select('*', { count: 'exact', head: true })
+          .eq('is_featured', true),
+        supabase
+          .from('artworks')
+          .select('*', { count: 'exact', head: true })
+          .eq('is_one_of_one', true),
+        supabase
+          .from('artworks')
+          .select('*', { count: 'exact', head: true })
+          .eq('type', 'edition')
       ])
 
       return {
