@@ -1,33 +1,52 @@
-import gsap from 'gsap'
-import { CustomEase, ScrollToPlugin, ScrollTrigger } from 'gsap/all'
 import { Dispatch, SetStateAction } from 'react'
-import SplitType from 'split-type'
 
-// Função para inicializar GSAP apenas no cliente
+// Função para inicializar GSAP apenas no cliente com imports dinâmicos
 let gsapInitialized = false
+let gsap: any
+let CustomEase: any
+let ScrollTrigger: any
+let ScrollToPlugin: any
+let SplitType: any
 
-function initializeGSAP() {
+async function initializeGSAP() {
   if (typeof window === 'undefined' || gsapInitialized) return
+  
+  try {
+    const [gsapModule, gsapPlugins, splitTypeModule] = await Promise.all([
+      import('gsap'),
+      import('gsap/all'),
+      import('split-type')
+    ])
+    
+    gsap = gsapModule.default
+    CustomEase = gsapPlugins.CustomEase
+    ScrollTrigger = gsapPlugins.ScrollTrigger
+    ScrollToPlugin = gsapPlugins.ScrollToPlugin
+    SplitType = splitTypeModule.default
 
-  gsap.registerPlugin(CustomEase)
-  gsap.registerPlugin(ScrollTrigger)
-  gsap.registerPlugin(ScrollToPlugin)
+    gsap.registerPlugin(CustomEase)
+    gsap.registerPlugin(ScrollTrigger)
+    gsap.registerPlugin(ScrollToPlugin)
 
-  CustomEase.create(
-    'custom',
-    'M0,0 C0,0.421 0.037,0.632 0.116,0.779 0.182,0.902 0.374,1 1,1'
-  )
-  CustomEase.create(
-    'custom-out',
-    'M0,0 C0.299,0 0.594,-0.011 0.772,0.047 1.016,0.127 1,0.949 1,1'
-  )
-  CustomEase.create('button', 'M0,0 C0.798,0 1,0.101 1,1')
-
-  gsapInitialized = true
+    CustomEase.create(
+      'custom',
+      'M0,0 C0,0.421 0.037,0.632 0.116,0.779 0.182,0.902 0.374,1 1,1'
+    )
+    CustomEase.create(
+      'custom-out',
+      'M0,0 C0.299,0 0.594,-0.011 0.772,0.047 1.016,0.127 1,0.949 1,1'
+    )
+    CustomEase.create('button', 'M0,0 C0.798,0 1,0.101 1,1')
+    
+    gsapInitialized = true
+  } catch (error) {
+    console.error('Failed to initialize GSAP:', error)
+  }
 }
 
-export function aboutAnimations() {
-  initializeGSAP()
+export async function aboutAnimations() {
+  await initializeGSAP()
+  if (!gsap || !SplitType) return
 
   const splitSubtitle = new SplitType('h2#about-subtitle', { types: 'lines' })
   // const splitBio = new SplitType('div.bio')
@@ -133,8 +152,9 @@ export function aboutAnimations() {
   )
 }
 
-export function calloutAnimation() {
-  initializeGSAP()
+export async function calloutAnimation() {
+  await initializeGSAP()
+  if (!gsap) return
 
   gsap.fromTo(
     '#callout-element img',
@@ -164,8 +184,9 @@ export function calloutAnimation() {
   )
 }
 
-export function collectionLinksAnimations(mobileSize: boolean) {
-  initializeGSAP()
+export async function collectionLinksAnimations(mobileSize: boolean) {
+  await initializeGSAP()
+  if (!gsap) return
 
   const tl = gsap.timeline()
 
@@ -195,8 +216,9 @@ export function collectionLinksAnimations(mobileSize: boolean) {
   tl.set('.collection-link p', { clearProps: 'color' })
 }
 
-export function footerAnimations() {
-  initializeGSAP()
+export async function footerAnimations() {
+  await initializeGSAP()
+  if (!gsap) return
 
   gsap.fromTo(
     '.footer-items',
@@ -238,8 +260,9 @@ export function footerAnimations() {
   )
 }
 
-export function headerAnimations() {
-  initializeGSAP()
+export async function headerAnimations() {
+  await initializeGSAP()
+  if (!gsap) return
 
   gsap.fromTo(
     '.header-tab p',
@@ -255,8 +278,9 @@ export function headerAnimations() {
   )
 }
 
-export function filterAnimations(open: boolean) {
-  initializeGSAP()
+export async function filterAnimations(open: boolean) {
+  await initializeGSAP()
+  if (!gsap) return
 
   const tl = gsap.timeline()
 
@@ -284,10 +308,11 @@ export function filterAnimations(open: boolean) {
   }
 }
 
-export function modalAnimations(
+export async function modalAnimations(
   setIsAnimating: Dispatch<SetStateAction<boolean>>
 ) {
-  initializeGSAP()
+  await initializeGSAP()
+  if (!gsap) return
 
   setIsAnimating(true)
 
@@ -314,8 +339,9 @@ export function modalAnimations(
   )
 }
 
-export function horizontalCarouselAnimation() {
-  initializeGSAP()
+export async function horizontalCarouselAnimation() {
+  await initializeGSAP()
+  if (!gsap) return
 
   gsap.set('body', {
     overflowX: 'hidden'
@@ -338,11 +364,12 @@ export function horizontalCarouselAnimation() {
   )
 }
 
-export function carouselFigcaptionAnimation(
+export async function carouselFigcaptionAnimation(
   element: HTMLElement,
   open: boolean
 ) {
-  initializeGSAP()
+  await initializeGSAP()
+  if (!gsap) return
 
   if (open) {
     gsap.to(element.closest('.swiper-slide'), {
@@ -387,8 +414,9 @@ export function carouselFigcaptionAnimation(
   }
 }
 
-export function carouselActiveSlideAnimation() {
-  initializeGSAP()
+export async function carouselActiveSlideAnimation() {
+  await initializeGSAP()
+  if (!gsap) return
 
   gsap.to('.swiper-slide:not(.swiper-slide-active):not(.art-wrapper:hover) p', {
     yPercent: 100,
@@ -408,11 +436,12 @@ export function carouselActiveSlideAnimation() {
   )
 }
 
-export function artInfosAnimation(
+export async function artInfosAnimation(
   isOpen: boolean,
   setIsAnimating: Dispatch<SetStateAction<boolean>>
-): void {
-  initializeGSAP()
+): Promise<void> {
+  await initializeGSAP()
+  if (!gsap) return
 
   const tl = gsap.timeline()
 
@@ -473,11 +502,12 @@ export function artInfosAnimation(
   }
 }
 
-export function artInfosCollectionsAnimation(
+export async function artInfosCollectionsAnimation(
   isOpen: boolean,
   setIsAnimating: Dispatch<SetStateAction<boolean>>
-): void {
-  initializeGSAP()
+): Promise<void> {
+  await initializeGSAP()
+  if (!gsap) return
 
   const tl = gsap.timeline()
 
@@ -538,8 +568,9 @@ export function artInfosCollectionsAnimation(
   }
 }
 
-export function resetArtInfo(): void {
-  initializeGSAP()
+export async function resetArtInfo(): Promise<void> {
+  await initializeGSAP()
+  if (!gsap) return
 
   const tl = gsap.timeline()
 
@@ -550,8 +581,9 @@ export function resetArtInfo(): void {
   })
 }
 
-export function artInfoButtonAnimation(): void {
-  initializeGSAP()
+export async function artInfoButtonAnimation(): Promise<void> {
+  await initializeGSAP()
+  if (!gsap) return
 
   gsap.to('.art-info-button', {
     rotate: '+=45',
@@ -559,8 +591,9 @@ export function artInfoButtonAnimation(): void {
   })
 }
 
-export function resetButtonInfo(): void {
-  initializeGSAP()
+export async function resetButtonInfo(): Promise<void> {
+  await initializeGSAP()
+  if (!gsap) return
 
   gsap.set('.art-info-button', {
     rotate: 0

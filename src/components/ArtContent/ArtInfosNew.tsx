@@ -46,10 +46,10 @@ export function ArtInfosNew({
 
   console.log('hasVideo', hasVideo)
 
-  const onChangeToOtherSlide = (index: number) => {
+  const onChangeToOtherSlide = async (index: number) => {
     onChangeSlideIndex(index)
     setShowDetails(false)
-    resetButtonInfo()
+    await resetButtonInfo()
   }
 
   function handleMoreSlides() {
@@ -266,9 +266,9 @@ export function ArtInfosNew({
               <button
                 aria-label="Open art infos"
                 className="group relative flex items-center justify-center w-10 h-10"
-                onClick={() => {
+                onClick={async () => {
                   setShowDetails(!showDetails)
-                  artInfoButtonAnimation()
+                  await artInfoButtonAnimation()
                 }}
                 disabled={isAnimating}
               >
