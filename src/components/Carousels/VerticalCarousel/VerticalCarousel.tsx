@@ -36,8 +36,6 @@ export function VerticalCarousel({
     }
   }
 
-  console.log('first slide', slides[0])
-
   return (
     <div
       className={cn(

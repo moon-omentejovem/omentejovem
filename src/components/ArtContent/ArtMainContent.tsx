@@ -1,6 +1,7 @@
 'use client'
 
 import { ProcessedArtwork } from '@/types/artwork'
+import { useRouter } from 'next/navigation'
 import { ReactElement, useCallback, useState } from 'react'
 import { ArtFilterNew as ArtFilter } from '../ArtFilter/ArtFilterNew'
 import { HorizontalCarousel } from '../Carousels/HorizontalCarousel/HorizontalCarousel'
@@ -27,9 +28,17 @@ export function ArtMainContent({
 }: ArtMainContentProperties): ReactElement {
   const [page, setPage] = useState(1)
   const [loading, setLoading] = useState(false)
+  const router = useRouter()
 
   function onRedirect(index: number): void {
-    onChangeSelectedArtworkIndex(index)
+    const artwork = artworks[index]
+    if (artwork?.slug) {
+      // Navegar para a página individual da arte
+      router.push(`/${source}/${artwork.slug}`)
+    } else {
+      // Fallback para o comportamento anterior se não houver slug
+      onChangeSelectedArtworkIndex(index)
+    }
   }
 
   const renderContent = useCallback((): ReactElement => {
@@ -58,7 +67,8 @@ export function ArtMainContent({
           loading={loading}
           slides={artworks?.map((artwork) => ({
             name: artwork.title || '',
-            nftCompressedHdUrl: artwork.image.url
+            nftCompressedHdUrl: artwork.image.url,
+            slug: artwork.slug
           }))}
           redirectSource={source}
           onRedirect={onRedirect}
@@ -74,7 +84,7 @@ export function ArtMainContent({
   }
 
   return (
-    <main className="p-8 md:px-12 lg:px-20 flex flex-col sm:px-6 2xl:pb-16 2xl:px-20 2xl:pb-8 xl:h-screenMinusHeader overflow-hidden xl:overflow-auto">
+    <main className="p-8 md:px-12 lg:px-20 flex flex-col sm:px-6 2xl:pb-8 2xl:px-20 xl:h-screenMinusHeader overflow-hidden xl:overflow-auto">
       <VerticalCarousel
         slideIndex={selectedArtworkIndex}
         onChangeSlideIndex={onChangeSelectedArtworkIndex}
