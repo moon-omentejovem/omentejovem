@@ -1346,6 +1346,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tiptap/html@npm:^3.4.2":
+  version: 3.4.2
+  resolution: "@tiptap/html@npm:3.4.2"
+  peerDependencies:
+    "@tiptap/core": ^3.4.2
+    "@tiptap/pm": ^3.4.2
+    happy-dom: ^18.0.1
+  checksum: 10c0/c12ae75898e2e4914fe337a4c3f21e729d2e64ac21df15b644f97f01268d3ee843b67696406fbbe2ceacd2c9d85d138ed9121cf8e14633622419dd81572b3594
+  languageName: node
+  linkType: hard
+
 "@tiptap/pm@npm:^3.3.0, @tiptap/pm@npm:^3.4.1":
   version: 3.4.1
   resolution: "@tiptap/pm@npm:3.4.1"
@@ -1483,7 +1494,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^20":
+"@types/node@npm:*, @types/node@npm:^20, @types/node@npm:^20.0.0":
   version: 20.19.13
   resolution: "@types/node@npm:20.19.13"
   dependencies:
@@ -1561,6 +1572,13 @@ __metadata:
   version: 9.0.8
   resolution: "@types/uuid@npm:9.0.8"
   checksum: 10c0/b411b93054cb1d4361919579ef3508a1f12bf15b5fdd97337d3d351bece6c921b52b6daeef89b62340fd73fd60da407878432a1af777f40648cbe53a01723489
+  languageName: node
+  linkType: hard
+
+"@types/whatwg-mimetype@npm:^3.0.2":
+  version: 3.0.2
+  resolution: "@types/whatwg-mimetype@npm:3.0.2"
+  checksum: 10c0/dad39d1e4abe760a0a963c84bbdbd26b1df0eb68aff83bdf6ecbb50ad781ead777f6906d19a87007790b750f7500a12e5624d31fc6a1529d14bd19b5c3a316d1
   languageName: node
   linkType: hard
 
@@ -3795,6 +3813,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"happy-dom@npm:^18.0.1":
+  version: 18.0.1
+  resolution: "happy-dom@npm:18.0.1"
+  dependencies:
+    "@types/node": "npm:^20.0.0"
+    "@types/whatwg-mimetype": "npm:^3.0.2"
+    whatwg-mimetype: "npm:^3.0.0"
+  checksum: 10c0/10f2115f5001fdaf1aedcbda89c15248a1c2e43a25d7e774cb641a35bf6763cef9097b438ef3c2248ab59a0ef33b3e88cb94da096f2bb0fc109ba3f43f7c66d4
+  languageName: node
+  linkType: hard
+
 "has-bigints@npm:^1.0.2":
   version: 1.1.0
   resolution: "has-bigints@npm:1.1.0"
@@ -5165,6 +5194,7 @@ __metadata:
     "@tiptap/extension-code-block": "npm:^3.3.0"
     "@tiptap/extension-image": "npm:^3.3.0"
     "@tiptap/extension-link": "npm:^3.3.0"
+    "@tiptap/html": "npm:^3.4.2"
     "@tiptap/pm": "npm:^3.3.0"
     "@tiptap/react": "npm:^3.3.0"
     "@tiptap/starter-kit": "npm:^3.3.0"
@@ -5194,6 +5224,7 @@ __metadata:
     graphql: "npm:^16.11.0"
     graphql-request: "npm:6.1.0"
     gsap: "npm:3.12.2"
+    happy-dom: "npm:^18.0.1"
     html-react-parser: "npm:5.1.7"
     js-cookie: "npm:^3.0.5"
     lucide-react: "npm:0.292.0"
@@ -7337,6 +7368,13 @@ __metadata:
   version: 3.0.1
   resolution: "webidl-conversions@npm:3.0.1"
   checksum: 10c0/5612d5f3e54760a797052eb4927f0ddc01383550f542ccd33d5238cfd65aeed392a45ad38364970d0a0f4fea32e1f4d231b3d8dac4a3bdd385e5cf802ae097db
+  languageName: node
+  linkType: hard
+
+"whatwg-mimetype@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "whatwg-mimetype@npm:3.0.0"
+  checksum: 10c0/323895a1cda29a5fb0b9ca82831d2c316309fede0365047c4c323073e3239067a304a09a1f4b123b9532641ab604203f33a1403b5ca6a62ef405bcd7a204080f
   languageName: node
   linkType: hard
 
