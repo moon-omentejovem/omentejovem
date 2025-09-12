@@ -6,7 +6,7 @@ const nextConfig = {
     // ignoreDuringBuilds: process.env.NODE_ENV === 'production',
   },
   images: {
-    unoptimized: false, // Habilitar otimização do Next.js
+    unoptimized: true, // Ativar otimização de imagens do Next.js
     remotePatterns: [
       {
         protocol: 'https',

@@ -1,7 +1,7 @@
 import { getArtworksServer } from '@/lib/server-queries'
 import type { HomeImage } from '@/types/home'
-import HomeContent from './home/content'
 import { cookies } from 'next/headers'
+import HomeContent from './home/content'
 import NewsletterPage from './newsletter/page'
 
 // Disable caching - fetch fresh data on every request
@@ -9,7 +9,11 @@ export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
 export default async function Home() {
-  const artworks = await getArtworksServer({ limit: 10, featured: true, random: true })
+  const artworks = await getArtworksServer({
+    limit: 10,
+    featured: true,
+    random: true
+  })
   const images: HomeImage[] = artworks.map((artwork) => ({
     title: artwork.title || '',
     imageUrl: artwork.image_url || '',
@@ -31,7 +35,7 @@ export default async function Home() {
   }
 
   return (
-    <div className="fixed sm:z-50 bg-background w-full h-full max-w-[1920px]">
+    <div className="fixed sm:z-20 bg-background w-full h-full max-w-[1920px]">
       <NewsletterPage />
       {content}
     </div>
