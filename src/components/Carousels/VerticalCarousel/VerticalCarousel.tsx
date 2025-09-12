@@ -64,8 +64,9 @@ export function VerticalCarousel({
         centeredSlides={true}
         onSlideChange={(e) => {
           const newIndex = e.realIndex % slides.length
-          // Usar replace para scroll (não adiciona ao histórico)
-          onRedirect?.(newIndex, true)
+          // Atualiza o índice local e navega sem recarregar (usando replace)
+          onChangeSlideIndex(newIndex)
+          onRedirect?.(newIndex, true) // true = replace (não adiciona ao histórico)
         }}
         onSlideChangeTransitionEnd={(swiperInstance) => {
           handleGetMoreslides(swiperInstance)
