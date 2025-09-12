@@ -90,8 +90,11 @@ export function ArtMainContent({
         onChangeSlideIndex={onChangeSelectedArtworkIndex}
         slides={artworks.map((artwork) => ({
           name: artwork.title || '',
-          nftCompressedHdUrl: artwork.image.url
+          nftCompressedHdUrl: artwork.image.url,
+          slug: artwork.slug
         }))}
+        redirectSource={source}
+        onRedirect={onRedirect}
       />
       {renderContent()}
     </main>

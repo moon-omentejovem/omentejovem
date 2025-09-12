@@ -26,7 +26,7 @@ interface HorizontalCarouselProperties {
     slug?: string
   }[]
   redirectSource?: string
-  onRedirect: (index: number) => void
+  onRedirect?: (index: number) => void
   getMoreSlides?: () => void
 }
 
@@ -118,11 +118,11 @@ export function HorizontalCarousel({
 
                     <div
                       className="cursor-pointer"
-                      onClick={() => onRedirect(index)}
+                      onClick={() => onRedirect?.(index)}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter' || e.key === ' ') {
                           e.preventDefault()
-                          onRedirect(index)
+                          onRedirect?.(index)
                         }
                       }}
                       role="button"
