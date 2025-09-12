@@ -3,6 +3,7 @@ import type { Database } from '@/types/supabase'
 import { createServerClient } from '@supabase/ssr'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 
 /**
  * Create server-side Supabase client with cookie support
@@ -42,10 +43,10 @@ export async function createServerSupabaseClient() {
 }
 
 /**
- * Create build-time Supabase client without cookie dependencies
- * For use during static generation (generateStaticParams, etc.)
+ * Create a simple client for build-time operations like generateStaticParams
+ * This doesn't rely on cookies and can be used safely during build
  */
-export function createBuildSupabaseClient() {
+export function createBuildClient() {
   return createSupabaseClient<Database>(
     supabaseConfig.url,
     supabaseConfig.anonKey,
@@ -57,7 +58,3 @@ export function createBuildSupabaseClient() {
     }
   )
 }
-
-// Export backward compatibility aliases
-export const createClient = createServerSupabaseClient
-export const createBuildClient = createBuildSupabaseClient

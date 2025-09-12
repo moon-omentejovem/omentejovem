@@ -1,75 +1,74 @@
 /**
  * About Service - Server-side about page data fetching
- *
- * Centralized service for about page content management.
- * Handles rich text content, sections, and about page metadata.
+ * 
+ * Centralized service for about page content, social media links,
+ * exhibitions, press mentions, and contact information.
  */
 
-import { socialConfigs } from '@/configs/documents'
-import type { Database } from '@/types/supabase'
 import { cache } from 'react'
-import { BaseService } from './base.service'
+import { createClient } from '@/utils/supabase/server'
+import type { Database } from '@/types/supabase'
+import { AboutData, PressTalk } from '@/app/about/@types/wordpress'
 
 // Type definitions
 type DatabaseAboutPage = Database['public']['Tables']['about_page']['Row']
 
 export interface AboutPageData {
   id: string
-  content: any // JSON content from Tiptap
+  content: any
+  socials?: Array<{
+    platform: string
+    handle: string
+    url: string
+  }>
+  exhibitions?: Array<{
+    title: string
+    venue: string
+    location: string
+    year: string
+    type: 'solo' | 'group' | 'online'
+    description?: string
+  }>
+  press?: Array<{
+    title: string
+    publication: string
+    date: string
+    url?: string
+    type: 'feature' | 'interview' | 'review' | 'news'
+  }>
   created_at: string | null
   updated_at: string | null
 }
 
-// Legacy AboutData interface for compatibility
-export interface AboutData {
-  title: string
-  subtitle: string
-  subtitle_art: string | false
-  bio: string
-  social_media: {
-    twitter: string
-    instagram: string
-    aotm: string
-    superrare: string
-    foundation: string
-    opensea: string
-    objkt: string
-  }
-  contact: {
-    'e-mail': string
-  }
-}
-
 export interface ProcessedAboutData {
-  aboutPage: AboutPageData | null
-  aboutData: AboutData | null
-  error: null | string
+  aboutData: AboutData
+  aboutPageData: AboutPageData | null
+  press: PressTalk[]
+  exhibitions: PressTalk[]
+  error: string | null
 }
 
 /**
  * About Service Class
  */
-export class AboutService extends BaseService {
+export class AboutService {
   /**
-   * Get default about data for legacy compatibility
+   * Get fallback/default about data
    */
-  private static getDefaultLegacyAboutData(): AboutData {
+  private static getDefaultAboutData(): AboutData {
     return {
-      title: 'THALES MACHADO',
-      subtitle: '"omentejovem"',
-      subtitle_art: false,
-      bio: 'Artist and creator exploring digital narratives through NFTs.',
+      title: 'Thales Machado',
+      subtitle: 'omentejovem',
+      subtitle_art: '',
+      bio: '',
       social_media: {
-        twitter: socialConfigs.find((s) => s.name === 'Twitter')?.link || '',
-        instagram:
-          socialConfigs.find((s) => s.name === 'Instagram')?.link || '',
-        aotm: socialConfigs.find((s) => s.name === 'AOTM')?.link || '',
-        superrare:
-          socialConfigs.find((s) => s.name === 'SuperRare')?.link || '',
-        foundation:
-          socialConfigs.find((s) => s.name === 'Foundation')?.link || '',
-        opensea: socialConfigs.find((s) => s.name === 'OpenSea')?.link || '',
-        objkt: socialConfigs.find((s) => s.name === 'Objkt')?.link || ''
+        twitter: 'https://twitter.com/omentejovem',
+        instagram: 'https://instagram.com/omentejovem',
+        aotm: 'https://aotm.gallery/artist/omentejovem',
+        superrare: 'https://superrare.com/omentejovem',
+        foundation: 'https://foundation.app/@omentejovem',
+        opensea: 'https://opensea.io/omentejovem',
+        objkt: 'https://objkt.com/@omentejovem'
       },
       contact: {
         'e-mail': 'contact@omentejovem.com'
@@ -78,83 +77,111 @@ export class AboutService extends BaseService {
   }
 
   /**
-   * Get default about page data structure
-   */
-  private static getDefaultAboutData(): AboutPageData {
-    return {
-      id: 'default',
-      content: {
-        type: 'doc',
-        content: [
-          {
-            type: 'paragraph',
-            content: [
-              {
-                type: 'text',
-                text: 'Welcome to our NFT portfolio. This page is currently being setup.'
-              }
-            ]
-          }
-        ]
-      },
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    }
-  }
-
-  /**
    * Get complete about page data
    */
   static getAboutPageData = cache(async (): Promise<ProcessedAboutData> => {
-    return this.executeQuery(async (supabase) => {
+    const supabase = await createClient()
+
+    try {
+      // Fetch about page data from Supabase
       const { data: aboutPageData, error } = await supabase
         .from('about_page')
         .select('*')
         .single()
 
-      // Always provide legacy data for compatibility
-      const aboutData = this.getDefaultLegacyAboutData()
-
       // If no data found (first time), use defaults
       if (error && error.code === 'PGRST116') {
         const defaultData = this.getDefaultAboutData()
         return {
-          aboutPage: defaultData,
-          aboutData,
+          aboutData: defaultData,
+          aboutPageData: null,
+          press: [],
+          exhibitions: [],
           error: null
         }
       }
 
+      // If other error, log and use defaults
       if (error) {
         console.error('Error fetching about page data:', error)
+        const defaultData = this.getDefaultAboutData()
         return {
-          aboutPage: null,
-          aboutData,
-          error: error.message
+          aboutData: defaultData,
+          aboutPageData: null,
+          press: [],
+          exhibitions: [],
+          error: null // Don't expose error to user
         }
       }
 
+      const typedAboutPageData = aboutPageData as AboutPageData | null
+
+      // Transform database data to expected format
+      const aboutData: AboutData = this.getDefaultAboutData()
+
+      // Merge socials from database if available
+      if (typedAboutPageData?.socials && Array.isArray(typedAboutPageData.socials)) {
+        typedAboutPageData.socials.forEach((social) => {
+          const platform = social.platform?.toLowerCase()
+          if (platform && aboutData.social_media.hasOwnProperty(platform)) {
+            (aboutData.social_media as any)[platform] = social.url
+          }
+        })
+      }
+
+      // Transform press to PressTalk format
+      const press: PressTalk[] = typedAboutPageData?.press?.map((pressItem) => ({
+        title: {
+          rendered: pressItem.title
+        },
+        acf: {
+          link: pressItem.url || '#'
+        }
+      })) || []
+
+      // Transform exhibitions to PressTalk format
+      const exhibitions: PressTalk[] = typedAboutPageData?.exhibitions?.map((exhibition) => ({
+        title: {
+          rendered: `${exhibition.title} - ${exhibition.venue} (${exhibition.year})`
+        },
+        acf: {
+          link: '#'
+        }
+      })) || []
+
       return {
-        aboutPage: aboutPageData as AboutPageData,
         aboutData,
+        aboutPageData: typedAboutPageData,
+        press,
+        exhibitions,
         error: null
       }
-    }, 'getAboutPageData')
+    } catch (error) {
+      console.error('Unexpected error in getAboutPageData:', error)
+      
+      // Always return fallback data on any error
+      const defaultData = this.getDefaultAboutData()
+      return {
+        aboutData: defaultData,
+        aboutPageData: null,
+        press: [],
+        exhibitions: [],
+        error: null
+      }
+    }
   })
 
   /**
-   * Get about page content only
+   * Get about content only (for quick access)
    */
-  static getContent = cache(async () => {
-    return this.safeExecuteQuery(async (supabase) => {
+  static getAboutContent = cache(async () => {
+    const supabase = await createClient()
+    
+    try {
       const { data, error } = await supabase
         .from('about_page')
         .select('content')
         .single()
-
-      if (error && error.code === 'PGRST116') {
-        return this.getDefaultAboutData().content
-      }
 
       if (error) {
         console.error('Error fetching about content:', error)
@@ -162,38 +189,75 @@ export class AboutService extends BaseService {
       }
 
       return data?.content || null
-    }, 'getContent')
+    } catch (error) {
+      console.error('Unexpected error in getAboutContent:', error)
+      return null
+    }
   })
 
   /**
-   * Check if about page exists
+   * Get social media links only
    */
-  static hasAboutPage = cache(async (): Promise<boolean> => {
-    return this.executeQuery(async (supabase) => {
-      const { count } = await supabase
-        .from('about_page')
-        .select('*', { count: 'exact', head: true })
-
-      return (count || 0) > 0
-    }, 'hasAboutPage')
-  })
-
-  /**
-   * Get about page metadata (without content)
-   */
-  static getMetadata = cache(async () => {
-    return this.safeExecuteQuery(async (supabase) => {
+  static getSocialLinks = cache(async () => {
+    const supabase = await createClient()
+    
+    try {
       const { data, error } = await supabase
         .from('about_page')
-        .select('id, created_at, updated_at')
+        .select('socials')
         .single()
 
       if (error) {
-        console.error('Error fetching about metadata:', error)
-        return null
+        console.error('Error fetching social links:', error)
+        return this.getDefaultAboutData().social_media
       }
 
-      return data
-    }, 'getMetadata')
+      const typedData = data as { socials?: AboutPageData['socials'] }
+      const defaultSocials = this.getDefaultAboutData().social_media
+
+      // Merge database socials with defaults
+      if (typedData?.socials && Array.isArray(typedData.socials)) {
+        typedData.socials.forEach((social) => {
+          const platform = social.platform?.toLowerCase()
+          if (platform && defaultSocials.hasOwnProperty(platform)) {
+            (defaultSocials as any)[platform] = social.url
+          }
+        })
+      }
+
+      return defaultSocials
+    } catch (error) {
+      console.error('Unexpected error in getSocialLinks:', error)
+      return this.getDefaultAboutData().social_media
+    }
+  })
+
+  /**
+   * Get contact information
+   */
+  static getContactInfo = cache(async () => {
+    // Contact info is currently static, but this allows for future dynamic content
+    return {
+      email: 'contact@omentejovem.com',
+      // Add other contact methods as needed
+    }
+  })
+
+  /**
+   * Check if about page has custom content
+   */
+  static hasCustomContent = cache(async (): Promise<boolean> => {
+    const supabase = await createClient()
+    
+    try {
+      const { data, error } = await supabase
+        .from('about_page')
+        .select('id')
+        .single()
+
+      return !error && data !== null
+    } catch (error) {
+      return false
+    }
   })
 }

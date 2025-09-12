@@ -10,85 +10,6 @@ interface ArtworkPageProps {
 }
 
 export async function generateStaticParams() {
-  // Get all series
-  const { series } = await SeriesService.getSeries()
-
-  try {
-    // Get all artworks from the series to maintain consistency with other pages
-    const { data: seriesArtworks, error: seriesError } = await supabase
-      .from('artworks')
-      .select(
-        `
-        *,
-        series_artworks!inner(
-          series!inner(
-            slug,
-            name
-          )
-        )
-      `
-      )
-      .eq('series_artworks.series.slug', seriesSlug)
-      .order('mint_date', { ascending: false })
-
-    if (seriesError) {
-      console.error('Series query error:', seriesError)
-      return { artworks: [], selectedIndex: -1, error: seriesError }
-    }
-
-    if (!seriesArtworks || seriesArtworks.length === 0) {
-      console.log('No artworks found for series:', seriesSlug)
-      return {
-        artworks: [],
-        selectedIndex: -1,
-        error: new Error('Series not found')
-      }
-    }
-
-    // Process artworks data
-    const processedArtworks = seriesArtworks.map((artwork: any) => {
-      try {
-        return processArtwork(artwork as ArtworkWithSeries)
-      } catch (processError) {
-        console.error('Error processing artwork:', artwork.id, processError)
-        throw processError
-      }
-    })
-
-    // Find the selected artwork index
-    const selectedIndex = processedArtworks.findIndex(
-      (artwork) => artwork.slug === artworkSlug
-    )
-
-    if (selectedIndex === -1) {
-      console.log('Artwork not found:', artworkSlug, 'in series:', seriesSlug)
-      console.log(
-        'Available slugs:',
-        processedArtworks.map((a) => a.slug)
-      )
-      return {
-        artworks: [],
-        selectedIndex: -1,
-        error: new Error('Artwork not found')
-      }
-    }
-
-    return {
-      artworks: processedArtworks,
-      selectedIndex,
-      error: null
-    }
-  } catch (error) {
-    console.error('Error in getArtworkData:', error)
-    return {
-      artworks: [],
-      selectedIndex: -1,
-      error: error instanceof Error ? error : new Error('Unknown error')
-    }
-  }
-}
-
-export async function generateStaticParams() {
   return []
 }
 
@@ -106,9 +27,7 @@ export async function generateMetadata({ params }: ArtworkPageProps) {
 
   return {
     title: `${artwork.title} - ${seriesMetadata.name} - Mente Jovem`,
-    description:
-      artwork.description ||
-      `Artwork ${artwork.title} from the ${seriesMetadata.name} series`,
+    description: artwork.description || `Artwork ${artwork.title} from the ${seriesMetadata.name} series`,
     openGraph: {
       title: artwork.title,
       description: artwork.description || '',
@@ -120,14 +39,16 @@ export async function generateMetadata({ params }: ArtworkPageProps) {
 export default async function ArtworkDetailPage({ params }: ArtworkPageProps) {
   // Check if series exists
   const seriesExists = await SeriesService.existsBySlug(params.slug)
-
+  
   if (!seriesExists) {
     notFound()
   }
 
   // Get artworks for this series and find the selected artwork index
-  const { artworks, selectedIndex, error } =
-    await ArtworkService.getForSeriesPage(params.slug, params.artwork)
+  const { artworks, selectedIndex, error } = await ArtworkService.getForSeriesPage(
+    params.slug,
+    params.artwork
+  )
 
   if (selectedIndex === -1 || artworks.length === 0) {
     notFound()

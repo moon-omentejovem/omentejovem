@@ -1,260 +1,273 @@
 /**
  * Series Service - Server-side series data fetching
- *
+ * 
  * Centralized service for all series-related data operations.
- * Optimized for server components with React cache and proper error handling.
+ * Handles collections, relationships with artworks, and series metadata.
  */
 
-import type { Database } from '@/types/supabase'
 import { cache } from 'react'
-import { BaseService } from './base.service'
-
-// Import types for collections response
-interface CollectionRes {
-  name: string
-  year: string
-  slug: string
-  nftImageUrls: string[]
-}
-
-interface CollectionsResponse {
-  collections: CollectionRes[]
-}
+import { createClient, createBuildClient } from '@/utils/supabase/server'
+import type { Database } from '@/types/supabase'
+import { CollectionsResponse } from '@/api/resolver/types'
 
 // Type definitions
 type DatabaseSeries = Database['public']['Tables']['series']['Row']
-
-export interface SeriesData extends DatabaseSeries {
-  artwork_count?: number
-}
+type DatabaseArtwork = Database['public']['Tables']['artworks']['Row']
+type DatabaseSeriesArtwork = Database['public']['Tables']['series_artworks']['Row']
 
 export interface SeriesFilters {
   limit?: number
-  orderBy?: 'created_at' | 'updated_at' | 'name'
+  includeArtworks?: boolean
+  includeArtworkCount?: boolean
+  orderBy?: 'name' | 'created_at'
   ascending?: boolean
 }
 
-export interface SeriesWithArtworks extends SeriesData {
-  artworks: Array<{
-    id: string
-    title: string
-    slug: string
-    image_url: string | null
+export interface SeriesWithArtworks extends DatabaseSeries {
+  series_artworks?: Array<DatabaseSeriesArtwork & {
+    artworks: DatabaseArtwork
   }>
+  artwork_count?: number
 }
 
 export interface ProcessedSeriesData {
-  series: SeriesData[]
+  series: SeriesWithArtworks[]
+  total: number
   error: null | string
 }
 
 /**
  * Series Service Class
  */
-export class SeriesService extends BaseService {
+export class SeriesService {
   /**
-   * Get all series with optional filtering
+   * Get all series with flexible filtering options
    */
-  static getSeries = cache(async (): Promise<ProcessedSeriesData> => {
-    return this.executeQuery(async (supabase) => {
-      const { data, error } = await supabase
-        .from('series')
-        .select(
-          `
+  static getSeries = cache(async (filters: SeriesFilters = {}, useBuildClient: boolean = false): Promise<ProcessedSeriesData> => {
+    const supabase = useBuildClient ? createBuildClient() : await createClient()
+    
+    try {
+      let selectQuery = '*'
+      
+      if (filters.includeArtworks) {
+        selectQuery = `
+          *,
+          series_artworks(
+            artworks(*)
+          )
+        `
+      } else if (filters.includeArtworkCount) {
+        selectQuery = `
           *,
           series_artworks(count)
         `
-        )
-        .order('created_at', { ascending: false })
+      }
+
+      let query = supabase.from('series').select(selectQuery)
+
+      // Apply ordering
+      const orderBy = filters.orderBy || 'created_at'
+      const ascending = filters.ascending ?? false
+      query = query.order(orderBy, { ascending })
+
+      // Apply limit
+      if (filters.limit) {
+        query = query.limit(filters.limit)
+      }
+
+      const { data, error, count } = await query
 
       if (error) {
         console.error('Error fetching series:', error)
         return {
           series: [],
+          total: 0,
           error: error.message
         }
       }
 
-      // Process series data to include artwork count
-      const processedSeries = (data || []).map((series) => ({
-        ...series,
-        artwork_count: (series as any).series_artworks?.length || 0
-      })) as SeriesData[]
-
       return {
-        series: processedSeries,
+        series: data ? (data as unknown as SeriesWithArtworks[]) : [],
+        total: count || (data?.length || 0),
         error: null
       }
-    }, 'getSeries')
+    } catch (error) {
+      console.error('Unexpected error in getSeries:', error)
+      return {
+        series: [],
+        total: 0,
+        error: error instanceof Error ? error.message : 'Unknown error'
+      }
+    }
   })
 
   /**
-   * Get series by slug
+   * Get series by slug with all related artworks
    */
-  static getBySlug = cache(async (slug: string): Promise<SeriesData | null> => {
-    return this.safeExecuteQuery(async (supabase) => {
+  static getBySlug = cache(async (slug: string) => {
+    const supabase = await createClient()
+    
+    try {
       const { data, error } = await supabase
         .from('series')
-        .select(
-          `
+        .select(`
           *,
-          series_artworks(count)
-        `
-        )
+          series_artworks(
+            artworks(*)
+          )
+        `)
         .eq('slug', slug)
         .single()
 
       if (error) {
-        console.error(`Error fetching series by slug "${slug}":`, error)
+        console.error('Error fetching series by slug:', error)
         return null
       }
 
-      // Process series data to include artwork count
-      const processedSeries = {
-        ...data,
-        artwork_count: (data as any).series_artworks?.length || 0
-      } as SeriesData
-
-      return processedSeries
-    }, 'getBySlug')
-  })
-
-  /**
-   * Get series metadata by slug (for SEO)
-   */
-  static getMetadataBySlug = cache(
-    async (
-      slug: string
-    ): Promise<Pick<SeriesData, 'name' | 'cover_image_url'> | null> => {
-      return this.safeExecuteQuery(async (supabase) => {
-        const { data, error } = await supabase
-          .from('series')
-          .select('name, cover_image_url')
-          .eq('slug', slug)
-          .single()
-
-        if (error) {
-          console.error(
-            `Error fetching series metadata by slug "${slug}":`,
-            error
-          )
-          return null
-        }
-
-        return data as Pick<SeriesData, 'name' | 'cover_image_url'>
-      }, 'getMetadataBySlug')
+      return data as SeriesWithArtworks
+    } catch (error) {
+      console.error('Unexpected error in getBySlug:', error)
+      return null
     }
-  )
-
-  /**
-   * Check if series exists by slug (for static params generation)
-   */
-  static existsBySlug = cache(async (slug: string): Promise<boolean> => {
-    return this.executeQuery(async (supabase) => {
-      const { count } = await supabase
-        .from('series')
-        .select('*', { count: 'exact', head: true })
-        .eq('slug', slug)
-
-      return (count || 0) > 0
-    }, 'existsBySlug')
   })
 
   /**
-   * Get all series slugs for static generation
-   */
-  static getSlugs = cache(async (): Promise<string[]> => {
-    const result = await this.safeExecuteQuery(async (supabase) => {
-      const { data, error } = await supabase.from('series').select('slug')
-
-      if (error) {
-        console.error('Error fetching series slugs:', error)
-        return []
-      }
-
-      return (data || [])
-        .map((series) => series.slug)
-        .filter(Boolean) as string[]
-    }, 'getSlugs')
-
-    return result || []
-  })
-
-  /**
-   * Get series stats
-   */
-  static getStats = cache(async () => {
-    return this.safeExecuteQuery(async (supabase) => {
-      const { count } = await supabase
-        .from('series')
-        .select('*', { count: 'exact', head: true })
-
-      return {
-        total: count || 0
-      }
-    }, 'getStats')
-  })
-
-  /**
-   * Get collections data for series page
+   * Get series list for collections page (legacy format compatibility)
    */
   static getCollectionsData = cache(async (): Promise<CollectionsResponse> => {
-    const result = await this.safeExecuteQuery(async (supabase) => {
-      const { data, error } = await supabase
-        .from('series')
-        .select(
-          `
-          name,
-          slug,
-          created_at,
-          cover_image_url,
-          series_artworks(
-            artworks(
-              image_url
-            )
-          )
-        `
-        )
-        .order('created_at', { ascending: false })
-
-      if (error) {
-        console.error('Error fetching collections data:', error)
-        return {
-          collections: []
-        }
-      }
-
-      // Process series data to match CollectionRes format
-      const collections: CollectionRes[] = (data || []).map((series) => {
-        // Extract year from created_at
-        const year = series.created_at
-          ? new Date(series.created_at).getFullYear().toString()
-          : new Date().getFullYear().toString()
-
-        // Get image URLs from related artworks
-        const artworks = (series as any).series_artworks || []
-        const nftImageUrls = artworks
-          .map((sa: any) => sa.artworks?.image_url)
-          .filter(Boolean)
-
-        // Use cover image as fallback
-        if (nftImageUrls.length === 0 && series.cover_image_url) {
-          nftImageUrls.push(series.cover_image_url)
-        }
-
-        return {
-          name: series.name,
-          year,
-          slug: series.slug,
-          nftImageUrls
-        }
+    try {
+      const seriesResult = await this.getSeries({ 
+        includeArtworks: true,
+        orderBy: 'name',
+        ascending: true 
       })
 
-      return {
-        collections
+      if (seriesResult.error) {
+        console.error('Error fetching series for collections:', seriesResult.error)
+        return { collections: [] }
       }
-    }, 'getCollectionsData')
 
-    return result || { collections: [] }
+      const collections = seriesResult.series.map((seriesItem) => ({
+        name: seriesItem.name,
+        year: seriesItem.created_at
+          ? new Date(seriesItem.created_at).getFullYear().toString()
+          : '',
+        slug: seriesItem.slug,
+        nftImageUrls: seriesItem.series_artworks?.map(
+          (sa) => sa.artworks.image_url || ''
+        ) || []
+      }))
+
+      return { collections }
+    } catch (error) {
+      console.error('Unexpected error in getCollectionsData:', error)
+      return { collections: [] }
+    }
+  })
+
+  /**
+   * Get series metadata (name, description, etc.) by slug
+   */
+  static getMetadataBySlug = cache(async (slug: string) => {
+    const supabase = await createClient()
+    
+    try {
+      const { data, error } = await supabase
+        .from('series')
+        .select('id, name, slug, cover_image_url, created_at, updated_at')
+        .eq('slug', slug)
+        .single()
+
+      if (error) {
+        console.error('Error fetching series metadata:', error)
+        return null
+      }
+
+      return data as Pick<DatabaseSeries, 'id' | 'name' | 'slug' | 'cover_image_url' | 'created_at' | 'updated_at'>
+    } catch (error) {
+      console.error('Unexpected error in getMetadataBySlug:', error)
+      return null
+    }
+  })
+
+  /**
+   * Get series statistics
+   */
+  static getStats = cache(async () => {
+    const supabase = await createClient()
+    
+    try {
+      const { count: totalSeries } = await supabase
+        .from('series')
+        .select('*', { count: 'exact', head: true })
+
+      // Get series with artwork counts
+      const { data: seriesWithCounts } = await supabase
+        .from('series')
+        .select(`
+          id,
+          name,
+          series_artworks(count)
+        `)
+
+      const avgArtworksPerSeries = seriesWithCounts 
+        ? seriesWithCounts.reduce((acc, series) => {
+            const count = (series as any).series_artworks?.length || 0
+            return acc + count
+          }, 0) / seriesWithCounts.length
+        : 0
+
+      return {
+        total: totalSeries || 0,
+        avgArtworksPerSeries: Math.round(avgArtworksPerSeries * 100) / 100
+      }
+    } catch (error) {
+      console.error('Error fetching series stats:', error)
+      return {
+        total: 0,
+        avgArtworksPerSeries: 0
+      }
+    }
+  })
+
+  /**
+   * Get series list for navigation/dropdown
+   */
+  static getForNavigation = cache(async () => {
+    try {
+      const seriesResult = await this.getSeries({
+        limit: 20,
+        orderBy: 'name',
+        ascending: true
+      })
+
+      return seriesResult.series.map(series => ({
+        id: series.id,
+        name: series.name,
+        slug: series.slug
+      }))
+    } catch (error) {
+      console.error('Error fetching series for navigation:', error)
+      return []
+    }
+  })
+
+  /**
+   * Check if series exists by slug
+   */
+  static existsBySlug = cache(async (slug: string): Promise<boolean> => {
+    const supabase = await createClient()
+    
+    try {
+      const { data, error } = await supabase
+        .from('series')
+        .select('id')
+        .eq('slug', slug)
+        .single()
+
+      return !error && data !== null
+    } catch (error) {
+      return false
+    }
   })
 }
