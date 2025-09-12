@@ -1,7 +1,7 @@
 'use client'
 
 import { ProcessedArtwork } from '@/types/artwork'
-import { useRouter } from 'next/navigation'
+import { useCarouselNavigation } from '@/hooks/useCarouselNavigation'
 import { ReactElement, useCallback, useState } from 'react'
 import { ArtFilterNew as ArtFilter } from '../ArtFilter/ArtFilterNew'
 import { HorizontalCarousel } from '../Carousels/HorizontalCarousel/HorizontalCarousel'
@@ -28,18 +28,12 @@ export function ArtMainContent({
 }: ArtMainContentProperties): ReactElement {
   const [page, setPage] = useState(1)
   const [loading, setLoading] = useState(false)
-  const router = useRouter()
 
-  function onRedirect(index: number): void {
-    const artwork = artworks[index]
-    if (artwork?.slug) {
-      // Navegar para a página individual da arte
-      router.push(`/${source}/${artwork.slug}`)
-    } else {
-      // Fallback para o comportamento anterior se não houver slug
-      onChangeSelectedArtworkIndex(index)
-    }
-  }
+  const { handleNavigation } = useCarouselNavigation({
+    source,
+    artworks,
+    onChangeIndex: onChangeSelectedArtworkIndex
+  })
 
   const renderContent = useCallback((): ReactElement => {
     return (
@@ -71,7 +65,7 @@ export function ArtMainContent({
             slug: artwork.slug
           }))}
           redirectSource={source}
-          onRedirect={onRedirect}
+          onRedirect={handleNavigation}
         />
 
         <ArtFilter
@@ -94,7 +88,7 @@ export function ArtMainContent({
           slug: artwork.slug
         }))}
         redirectSource={source}
-        onRedirect={onRedirect}
+        onRedirect={handleNavigation}
       />
       {renderContent()}
     </main>

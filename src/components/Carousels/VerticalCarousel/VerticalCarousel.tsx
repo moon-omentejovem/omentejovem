@@ -63,7 +63,9 @@ export function VerticalCarousel({
         className="vertical-slider"
         centeredSlides={true}
         onSlideChange={(e) => {
-          onChangeSlideIndex(e.realIndex % slides.length)
+          const newIndex = e.realIndex % slides.length
+          // Sempre navegar para a página da arte quando mudar o slide
+          onRedirect?.(newIndex)
         }}
         onSlideChangeTransitionEnd={(swiperInstance) => {
           handleGetMoreslides(swiperInstance)
