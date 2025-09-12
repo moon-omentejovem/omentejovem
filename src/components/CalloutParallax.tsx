@@ -123,7 +123,7 @@ export function CalloutParallax({
               width={0}
               height={900}
               alt={'omentejovem'}
-              className="md:h-[32rem] w-auto object-contain invisible 2xl:h-[600px]"
+              className="md:h-[32rem] w-auto object-contain invisible 2xl:h-[600px] select-none"
               onClick={() =>
                 setCurrentImageIndex(
                   currentImageIndex >= calloutImages.length - 1
@@ -131,9 +131,6 @@ export function CalloutParallax({
                     : currentImageIndex + 1
                 )
               }
-              style={{
-                userSelect: 'none'
-              }}
             />
             <p className="text-sm text-secondary-100 self-start invisible">
               {new Date(
