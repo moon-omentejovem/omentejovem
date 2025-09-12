@@ -15,11 +15,12 @@ Este documento descreve o processo de migração dos dados NFT legados (arquivos
 ## 📁 Arquivos Legados
 
 ### Estrutura Original
+
 ```
 public/
 ├── token-metadata.json    # 🎯 FONTE PRINCIPAL - metadados completos de NFTs
 ├── nfts.json             # Dados simplificados (descontinuado)
-├── mint-dates.json       # Datas de mint (descontinuado) 
+├── mint-dates.json       # Datas de mint (descontinuado)
 └── tezos-data.json       # Dados Tezos (descontinuado)
 ```
 
@@ -71,17 +72,17 @@ O arquivo `token-metadata.json` contém os metadados completos de todos os NFTs 
 ```typescript
 // Mapeamento de coleções para séries
 const seriesMapping = {
-  'the3cycle': {
+  the3cycle: {
     slug: 'the-cycle',
     name: 'The Cycle',
     cover_image_url: 'https://i.seadn.io/...'
   },
-  'omentejovem': {
-    slug: 'omentejovem-1-1s', 
+  omentejovem: {
+    slug: 'omentejovem-1-1s',
     name: 'OMENTEJOVEM 1/1s',
     cover_image_url: 'https://i.seadn.io/...'
   },
-  'shapesncolors': {
+  shapesncolors: {
     slug: 'shapes-colors',
     name: 'Shapes & Colors',
     cover_image_url: 'https://i.seadn.io/...'
@@ -117,7 +118,8 @@ node scripts/vercel-seed.js --legacy
 ```typescript
 // Geração de slugs consistentes
 function generateSlug(text) {
-  return text.toLowerCase()
+  return text
+    .toLowerCase()
     .replace(/[^a-z0-9\s-]/g, '')
     .replace(/\s+/g, '-')
     .trim()
@@ -127,10 +129,12 @@ function generateSlug(text) {
 function convertDescriptionToTiptap(description) {
   return {
     type: 'doc',
-    content: [{
-      type: 'paragraph', 
-      content: [{ type: 'text', text: description }]
-    }]
+    content: [
+      {
+        type: 'paragraph',
+        content: [{ type: 'text', text: description }]
+      }
+    ]
   }
 }
 
@@ -191,10 +195,12 @@ Os seguintes artworks são automaticamente marcados como `is_featured: true`:
 
 ```typescript
 // ✅ Abordagem correta (backend-oriented)
-const externalLink = artwork.mintLink ? {
-  url: artwork.mintLink,
-  name: 'View NFT'
-} : null
+const externalLink = artwork.mintLink
+  ? {
+      url: artwork.mintLink,
+      name: 'View NFT'
+    }
+  : null
 
 // ❌ Evitado (frontend-oriented)
 const platformName = detectPlatform(artwork.mintLink)
@@ -217,8 +223,8 @@ GROUP BY s.id, s.name
 ORDER BY artwork_count DESC;
 
 -- Artworks featured
-SELECT title, is_featured, is_one_of_one 
-FROM artworks 
+SELECT title, is_featured, is_one_of_one
+FROM artworks
 WHERE is_featured = true;
 
 -- Tipos de artwork

@@ -7,6 +7,7 @@ A migração dos dados NFT legados para o Supabase foi **concluída com sucesso*
 ## 📊 Resultados da Migração
 
 ### Dados Migrados
+
 - ✅ **95 artworks** migrados com sucesso
 - ✅ **5 séries** criadas e organizadas
 - ✅ **44 relacionamentos** série-artwork estabelecidos
@@ -14,12 +15,14 @@ A migração dos dados NFT legados para o Supabase foi **concluída com sucesso*
 - ✅ **99% dos mint links** funcionais (94/95)
 
 ### Distribuição por Tipo
+
 - **75 obras únicas** (1/1 - ERC721)
 - **20 edições** (ERC1155)
 
 ### Séries Migradas
+
 1. **The Cycle** - 4 artworks
-2. **Shapes & Colors** - 12 artworks  
+2. **Shapes & Colors** - 12 artworks
 3. **Stories on Circles** - 10 artworks
 4. **OMENTEJOVEM 1/1s** - 11 artworks
 5. **OMENTEJOVEM's Editions** - 7 artworks
@@ -27,6 +30,7 @@ A migração dos dados NFT legados para o Supabase foi **concluída com sucesso*
 ## 🚀 Scripts Desenvolvidos
 
 ### 1. `migrate-legacy-data.js`
+
 Script principal de migração que processa `token-metadata.json`:
 
 ```bash
@@ -38,6 +42,7 @@ node scripts/vercel-seed.js --legacy
 ```
 
 **Funcionalidades:**
+
 - ✅ Processa metadados NFT da Alchemy API
 - ✅ Cria séries baseadas em collections OpenSea
 - ✅ Converte descrições para formato Tiptap JSON
@@ -46,6 +51,7 @@ node scripts/vercel-seed.js --legacy
 - ✅ Evita duplicatas por slug
 
 ### 2. `data-tools.js`
+
 Ferramentas de verificação e manutenção:
 
 ```bash
@@ -60,6 +66,7 @@ node scripts/data-tools.js export
 ```
 
 ### 3. `enhance-data.js`
+
 Melhorias pós-migração:
 
 ```bash
@@ -86,10 +93,12 @@ node scripts/enhance-data.js descriptions  # Melhorar descrições
 
 ```typescript
 // ✅ Abordagem implementada (backend-oriented)
-const externalLink = artwork.mintLink ? {
-  url: artwork.mintLink,
-  name: 'View NFT'
-} : null
+const externalLink = artwork.mintLink
+  ? {
+      url: artwork.mintLink,
+      name: 'View NFT'
+    }
+  : null
 
 // ❌ Evitado (frontend-oriented - complexo)
 const platformName = detectPlatform(artwork.mintLink)
@@ -134,7 +143,7 @@ series_artworks (
 ↓
 {
   slug: "the-flower",
-  title: "The Flower", 
+  title: "The Flower",
   token_id: "5",
   mint_link: "https://opensea.io/assets/ethereum/0x.../5",
   image_url: "https://nft-cdn.alchemy.com/...",
@@ -148,7 +157,7 @@ series_artworks (
 Selecionados por relevância e qualidade artística:
 
 1. **The Flower** - Obra icônica de The Cycle
-2. **The Seed** - Primeira obra de The Cycle  
+2. **The Seed** - Primeira obra de The Cycle
 3. **The Dot** - Obra seminal, 2022
 4. **The Moon** - Peça interativa clássica
 5. **Out of Babylon** - Obra reflexiva importante
@@ -163,7 +172,7 @@ Selecionados por relevância e qualidade artística:
 ### ✅ Validações Implementadas
 
 - **Slugs únicos**: Todos verificados ✅
-- **Imagens presentes**: 100% das obras ✅  
+- **Imagens presentes**: 100% das obras ✅
 - **Relacionamentos válidos**: 44 ligações ✅
 - **Mint links funcionais**: 99% válidos ✅
 - **Tipos corretos**: ERC721/ERC1155 mapeados ✅
@@ -225,6 +234,6 @@ O projeto agora está pronto para **produção** com uma base de dados sólida e
 
 ---
 
-**Última atualização**: Setembro 2025  
-**Status**: ✅ Produção  
+**Última atualização**: Setembro 2025
+**Status**: ✅ Produção
 **Mantenedor**: GitHub Copilot + Omentejovem Team

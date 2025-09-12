@@ -13,12 +13,14 @@ const CORE_SERIES = [
   {
     slug: 'the-cycle',
     name: 'The Cycle',
-    cover_image_url: 'https://i.seadn.io/s/raw/files/ed5d5b2508bd188b00832ac86adb57ba.jpg?w=500&auto=format'
+    cover_image_url:
+      'https://i.seadn.io/s/raw/files/ed5d5b2508bd188b00832ac86adb57ba.jpg?w=500&auto=format'
   },
   {
     slug: 'omentejovem-1-1s',
     name: 'OMENTEJOVEM 1/1s',
-    cover_image_url: 'https://i.seadn.io/gcs/files/cacbfeb217dd1be2d79a65a765ca550f.jpg?w=500&auto=format'
+    cover_image_url:
+      'https://i.seadn.io/gcs/files/cacbfeb217dd1be2d79a65a765ca550f.jpg?w=500&auto=format'
   },
   {
     slug: 'new-series',
@@ -33,21 +35,25 @@ const CORE_ARTWORKS = [
     title: 'The Flower',
     token_id: '5',
     mint_date: '2023-10-17',
-    mint_link: 'https://opensea.io/assets/ethereum/0x826b11a95a9393e8a3cc0c2a7dfc9accb4ff4e43/5',
+    mint_link:
+      'https://opensea.io/assets/ethereum/0x826b11a95a9393e8a3cc0c2a7dfc9accb4ff4e43/5',
     type: 'single',
-    image_url: 'https://nft-cdn.alchemy.com/eth-mainnet/37a6828e1258729749dec4e599ff3a9a',
+    image_url:
+      'https://nft-cdn.alchemy.com/eth-mainnet/37a6828e1258729749dec4e599ff3a9a',
     is_featured: true,
     is_one_of_one: true,
     posted_at: '2023-10-17T02:39:35Z'
   },
   {
-    slug: 'the-seed', 
+    slug: 'the-seed',
     title: 'The Seed',
     token_id: '6',
     mint_date: '2023-10-17',
-    mint_link: 'https://opensea.io/assets/ethereum/0x826b11a95a9393e8a3cc0c2a7dfc9accb4ff4e43/6',
+    mint_link:
+      'https://opensea.io/assets/ethereum/0x826b11a95a9393e8a3cc0c2a7dfc9accb4ff4e43/6',
     type: 'single',
-    image_url: 'https://nft-cdn.alchemy.com/eth-mainnet/cd486d85038abe77174c91422f96ac95',
+    image_url:
+      'https://nft-cdn.alchemy.com/eth-mainnet/cd486d85038abe77174c91422f96ac95',
     is_featured: true,
     is_one_of_one: true,
     posted_at: '2023-10-17T02:43:11Z'
@@ -57,9 +63,11 @@ const CORE_ARTWORKS = [
     title: 'The Dot',
     token_id: '1',
     mint_date: '2022-11-03',
-    mint_link: 'https://opensea.io/assets/ethereum/0xfda33af4770d844dc18d8788c7bf84accfac79ad/1',
+    mint_link:
+      'https://opensea.io/assets/ethereum/0xfda33af4770d844dc18d8788c7bf84accfac79ad/1',
     type: 'single',
-    image_url: 'https://nft-cdn.alchemy.com/eth-mainnet/f9baf6dc256e300d501ef4a512613922',
+    image_url:
+      'https://nft-cdn.alchemy.com/eth-mainnet/f9baf6dc256e300d501ef4a512613922',
     is_featured: true,
     is_one_of_one: true,
     posted_at: '2022-11-03T18:02:35Z'
@@ -146,7 +154,6 @@ function seedOnDeploy() {
 
       console.log('🎉 Database seeding completed successfully!')
       resolve()
-
     } catch (error) {
       console.error('❌ Seeding error:', error.message)
       // Don't fail the build on seeding errors
@@ -164,7 +171,7 @@ function runSeed(supabase) {
         const { error } = await supabase
           .from('series')
           .upsert(series, { onConflict: 'slug' })
-        
+
         if (error) {
           console.log('⚠️ Series error:', error.message)
         } else {
@@ -172,13 +179,13 @@ function runSeed(supabase) {
         }
       }
 
-      // Insert artworks  
+      // Insert artworks
       console.log('🎨 Creating artworks...')
       for (const artwork of CORE_ARTWORKS) {
         const { error } = await supabase
           .from('artworks')
           .upsert(artwork, { onConflict: 'slug' })
-          
+
         if (error) {
           console.log('⚠️ Artwork error:', error.message)
         } else {
@@ -197,14 +204,15 @@ function runSeed(supabase) {
 
       // Seed about page
       console.log('📄 Creating about page...')
-      const { error: aboutError } = await supabase.from('about_page').upsert(ABOUT_CONTENT)
+      const { error: aboutError } = await supabase
+        .from('about_page')
+        .upsert(ABOUT_CONTENT)
       if (!aboutError) {
         console.log('✅ About page created')
       }
 
       console.log('✅ Core data seeded successfully!')
       resolve()
-      
     } catch (error) {
       reject(error)
     }
@@ -217,19 +225,19 @@ const { migrateLegacyData } = require('./migrate-legacy-data')
 // Enhanced seeding function with legacy data option
 async function seedWithLegacyData() {
   console.log('🌱 Starting enhanced seeding with legacy data...')
-  
+
   // First run basic seeding
   await seedOnDeploy()
-  
+
   // Then migrate legacy data
   console.log('📦 Migrating legacy NFT data...')
   await migrateLegacyData()
-  
+
   console.log('🎉 Enhanced seeding completed!')
 }
 
 // Export functions
-module.exports = { 
+module.exports = {
   seedOnDeploy,
   seedWithLegacyData,
   migrateLegacyData
@@ -239,16 +247,20 @@ module.exports = {
 if (require.main === module) {
   const args = process.argv.slice(2)
   const useLegacyData = args.includes('--legacy') || args.includes('-l')
-  
+
   const seedFunction = useLegacyData ? seedWithLegacyData : seedOnDeploy
-  
-  console.log(`🚀 Running ${useLegacyData ? 'enhanced seed with legacy data' : 'basic seed'}...`)
-  
-  seedFunction().then(() => {
-    console.log('✅ Script completed successfully')
-    process.exit(0)
-  }).catch(err => {
-    console.error('❌ Script failed:', err)
-    process.exit(0)
-  })
+
+  console.log(
+    `🚀 Running ${useLegacyData ? 'enhanced seed with legacy data' : 'basic seed'}...`
+  )
+
+  seedFunction()
+    .then(() => {
+      console.log('✅ Script completed successfully')
+      process.exit(0)
+    })
+    .catch((err) => {
+      console.error('❌ Script failed:', err)
+      process.exit(0)
+    })
 }

@@ -7,7 +7,7 @@ A migração dos dados legados foi **concluída com sucesso**. Este documento é
 ### ✅ Status da Migração
 
 - **95 artworks** migrados com sucesso
-- **5 séries** criadas e organizadas  
+- **5 séries** criadas e organizadas
 - **44 relacionamentos** estabelecidos
 - **10 artworks** marcados como featured
 - **99% dos mint links** funcionais
@@ -17,8 +17,9 @@ A migração dos dados legados foi **concluída com sucesso**. Este documento é
 O projeto foi migrado da estrutura antiga baseada em arquivos JSON para uma arquitetura **backend-oriented** com Supabase, seguindo as especificações do `AGENTS.md` e `BACKEND_ORIENTED_FRONTEND.md`.
 
 **Dados migrados:**
+
 - `token-metadata.json` → `artworks` table (fonte principal)
-- OpenSea collections → `series` table  
+- OpenSea collections → `series` table
 - Relacionamentos N:N via `series_artworks`
 - Todas as imagens, descrições e metadados preservados
 
@@ -73,24 +74,26 @@ AS NFTs são as `artworks` na estrutura nova, e cada `artwork` pode ter várias 
 
 - `token-metadata.json` ✅ - **Preservado** como referência histórica
 - `nfts.json` ⚠️ - **Descontinuado** (pode ser removido)
-- `mint-dates.json` ⚠️ - **Descontinuado** (pode ser removido)  
+- `mint-dates.json` ⚠️ - **Descontinuado** (pode ser removido)
 - `tezos-data.json` ⚠️ - **Descontinuado** (pode ser removido)
 
 ### 🔄 Workflow Atual
 
 **Para novos NFTs:**
+
 1. Usar Admin Panel (`/admin/artworks`)
 2. Upload via Supabase Storage
 3. Relacionar com séries existentes
 4. Marcar como featured se relevante
 
 **Para atualizações:**
+
 1. Editar via Admin (não mais via JSON)
 2. Usar editor Tiptap para descrições
 3. Sistema de proxy de imagens automático
 
 ---
 
-**Migração concluída em**: Setembro 2025  
-**Documentação completa**: `scripts/README.md`  
+**Migração concluída em**: Setembro 2025
+**Documentação completa**: `scripts/README.md`
 **Scripts disponíveis**: `scripts/migrate-legacy-data.js`, `scripts/data-tools.js`, `scripts/enhance-data.js`
