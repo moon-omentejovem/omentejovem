@@ -8,6 +8,13 @@ let ScrollTrigger: any
 let ScrollToPlugin: any
 let SplitType: any
 
+/**
+ * Initializes GSAP and related plugins on the client side using dynamic imports.
+ * Registers CustomEase, ScrollTrigger, and ScrollToPlugin with GSAP, and sets up custom eases.
+ * Ensures initialization occurs only once per client session.
+ *
+ * @returns {Promise<void>} Resolves when GSAP and plugins are initialized.
+ */
 async function initializeGSAP() {
   if (typeof window === 'undefined' || gsapInitialized) return
   
