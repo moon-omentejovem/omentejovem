@@ -1,41 +1,41 @@
 /**
  * Artifact Service - Server-side artifact data fetching
  *
- * Centralized service for artifact-related data operations.
- * Handles collectible content and special items.
+ * Centralized service for all artifact-related data operations.
+ * Optimized for server components with React cache and proper error handling.
  */
 
 import type { Database } from '@/types/supabase'
-import { createProductionClient } from '@/utils/supabase/server'
 import { cache } from 'react'
+import { BaseService } from './base.service'
 
 // Type definitions
 type DatabaseArtifact = Database['public']['Tables']['artifacts']['Row']
 
-export interface ArtifactFilters {
-  limit?: number
-  orderBy?: 'created_at' | 'title'
-  ascending?: boolean
-}
+export interface ArtifactData extends DatabaseArtifact {}
 
 export interface ProcessedArtifactData {
-  artifacts: DatabaseArtifact[]
+  artifacts: ArtifactData[]
   total: number
   error: null | string
+}
+
+export interface ArtifactFilters {
+  limit?: number
+  orderBy?: 'created_at' | 'updated_at' | 'title'
+  ascending?: boolean
 }
 
 /**
  * Artifact Service Class
  */
-export class ArtifactService {
+export class ArtifactService extends BaseService {
   /**
-   * Get all artifacts with filtering options
+   * Get all artifacts with optional filtering
    */
   static getArtifacts = cache(
     async (filters: ArtifactFilters = {}): Promise<ProcessedArtifactData> => {
-      const supabase = await createProductionClient()
-
-      try {
+      return this.executeQuery(async (supabase) => {
         let query = supabase.from('artifacts').select('*')
 
         // Apply ordering
@@ -60,28 +60,19 @@ export class ArtifactService {
         }
 
         return {
-          artifacts: data || [],
-          total: count || data?.length || 0,
+          artifacts: (data || []) as ArtifactData[],
+          total: count || (data || []).length,
           error: null
         }
-      } catch (error) {
-        console.error('Unexpected error in getArtifacts:', error)
-        return {
-          artifacts: [],
-          total: 0,
-          error: error instanceof Error ? error.message : 'Unknown error'
-        }
-      }
+      }, 'getArtifacts')
     }
   )
 
   /**
    * Get artifact by ID
    */
-  static getById = cache(async (id: string) => {
-    const supabase = await createProductionClient()
-
-    try {
+  static getById = cache(async (id: string): Promise<ArtifactData | null> => {
+    return this.safeExecuteQuery(async (supabase) => {
       const { data, error } = await supabase
         .from('artifacts')
         .select('*')
@@ -89,89 +80,91 @@ export class ArtifactService {
         .single()
 
       if (error) {
-        console.error('Error fetching artifact by ID:', error)
+        console.error(`Error fetching artifact by ID "${id}":`, error)
         return null
       }
 
-      return data
-    } catch (error) {
-      console.error('Unexpected error in getById:', error)
-      return null
-    }
+      return data as ArtifactData
+    }, 'getById')
   })
 
   /**
-   * Get featured/highlighted artifacts for display
+   * Get featured artifacts
    */
-  static getFeatured = cache(async (options: { limit?: number } = {}) => {
-    return this.getArtifacts({
-      limit: options.limit || 5,
-      orderBy: 'created_at',
-      ascending: false
-    })
-  })
-
-  /**
-   * Get artifacts for the artifacts page
-   */
-  static getForArtifactsPage = cache(async () => {
-    try {
-      const artifactsResult = await this.getArtifacts({
+  static getFeatured = cache(
+    async (
+      options: { limit?: number } = {}
+    ): Promise<ProcessedArtifactData> => {
+      return this.getArtifacts({
+        limit: options.limit || 10,
         orderBy: 'created_at',
         ascending: false
       })
-
-      return {
-        artifacts: artifactsResult.artifacts,
-        error: artifactsResult.error
-      }
-    } catch (error) {
-      console.error('Error fetching artifacts for page:', error)
-      return {
-        artifacts: [],
-        error: error instanceof Error ? error.message : 'Unknown error'
-      }
     }
-  })
+  )
 
   /**
-   * Get artifacts statistics
+   * Get artifacts stats
    */
   static getStats = cache(async () => {
-    const supabase = await createProductionClient()
-
-    try {
-      const { count: totalArtifacts } = await supabase
+    return this.safeExecuteQuery(async (supabase) => {
+      const { count } = await supabase
         .from('artifacts')
         .select('*', { count: 'exact', head: true })
 
       return {
-        total: totalArtifacts || 0
+        total: count || 0
       }
-    } catch (error) {
-      console.error('Error fetching artifact stats:', error)
-      return {
-        total: 0
-      }
-    }
+    }, 'getStats')
   })
 
   /**
-   * Check if artifacts exist
+   * Check if artifacts exist in database
    */
   static hasArtifacts = cache(async (): Promise<boolean> => {
-    const supabase = await createProductionClient()
-
-    try {
+    return this.executeQuery(async (supabase) => {
       const { count } = await supabase
         .from('artifacts')
         .select('*', { count: 'exact', head: true })
         .limit(1)
 
       return (count || 0) > 0
-    } catch (error) {
-      console.error('Error checking if artifacts exist:', error)
-      return false
-    }
+    }, 'hasArtifacts')
   })
+
+  /**
+   * Get artifacts data for artifacts page
+   */
+  static getForArtifactsPage = cache(
+    async (): Promise<ProcessedArtifactData> => {
+      return this.getArtifacts({
+        orderBy: 'created_at',
+        ascending: false
+      })
+    }
+  )
+
+  /**
+   * Get artifact by slug (if slug field exists)
+   */
+  static getBySlug = cache(
+    async (slug: string): Promise<ArtifactData | null> => {
+      return this.safeExecuteQuery(async (supabase) => {
+        // Since artifacts table doesn't have slug, we'll use title as identifier
+        // This assumes title is unique and URL-friendly
+        const { data, error } = await supabase
+          .from('artifacts')
+          .select('*')
+          .eq('title', slug)
+          .single()
+
+        if (error) {
+          console.error(`Error fetching artifact by slug "${slug}":`, error)
+          return null
+        }
+
+        return data as ArtifactData
+      }, 'getBySlug')
+    }
+  )
 }

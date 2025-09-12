@@ -10,8 +10,8 @@ interface ArtworkPageProps {
 
 export async function generateStaticParams() {
   // Generate static params for build-time optimization
-  const { artworks } = await ArtworkService.getArtworks({ limit: 100 }, true)
-  
+  const { artworks } = await ArtworkService.getArtworks({ limit: 100 })
+
   return artworks.map((artwork: any) => ({
     slug: artwork.slug
   }))
@@ -19,7 +19,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: ArtworkPageProps) {
   const artwork = await ArtworkService.getBySlug(params.slug)
-  
+
   if (!artwork) {
     return {
       title: 'Artwork Not Found'
@@ -28,7 +28,8 @@ export async function generateMetadata({ params }: ArtworkPageProps) {
 
   return {
     title: `${artwork.title} - Portfolio - Mente Jovem`,
-    description: artwork.description || `Artwork ${artwork.title} by Thales Machado`,
+    description:
+      artwork.description || `Artwork ${artwork.title} by Thales Machado`,
     openGraph: {
       title: artwork.title,
       description: artwork.description || '',
