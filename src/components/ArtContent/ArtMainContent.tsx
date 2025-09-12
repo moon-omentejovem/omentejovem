@@ -1,11 +1,11 @@
 'use client'
 
+import { ProcessedArtwork } from '@/types/artwork'
 import { ReactElement, useCallback, useState } from 'react'
 import { ArtFilterNew as ArtFilter } from '../ArtFilter/ArtFilterNew'
 import { HorizontalCarousel } from '../Carousels/HorizontalCarousel/HorizontalCarousel'
 import { VerticalCarousel } from '../Carousels/VerticalCarousel/VerticalCarousel'
 import { ArtInfosNew as ArtInfos } from './ArtInfosNew'
-import { ProcessedArtwork } from '@/types/artwork'
 
 interface ArtMainContentProperties {
   email: string
@@ -42,7 +42,13 @@ export function ArtMainContent({
         source={source}
       />
     )
-  }, [artworks, email, onChangeSelectedArtworkIndex, selectedArtworkIndex, source])
+  }, [
+    artworks,
+    email,
+    onChangeSelectedArtworkIndex,
+    selectedArtworkIndex,
+    source
+  ])
 
   if (selectedArtworkIndex === -1) {
     return (

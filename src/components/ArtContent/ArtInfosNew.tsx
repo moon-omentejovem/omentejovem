@@ -2,19 +2,19 @@
 
 import { ReactElement, useEffect, useState } from 'react'
 
-import { ArtLinks } from '@/components/ArtLinks'
-import { ProcessedArtwork } from '@/types/artwork'
-import { cn } from '@/lib/utils'
 import {
   artInfoButtonAnimation,
   resetArtInfo,
   resetButtonInfo
 } from '@/animations'
-import { HorizontalInCarousel } from '../Carousels/HorizontalInCarousel/HorizontalInCarousel'
-import './styles.css'
-import { ArtDescription } from './ArtDescription'
+import { CustomIcons } from '@/assets/icons'
 import { ArtDetails } from '@/components/ArtDetails'
-import { NFT } from './types'
+import { ArtLinks } from '@/components/ArtLinks'
+import { cn } from '@/lib/utils'
+import { ProcessedArtwork } from '@/types/artwork'
+import { addHours, format } from 'date-fns'
+import { HorizontalInCarouselArtwork } from '../Carousels/HorizontalInCarousel/HorizontalInCarouselArtwork'
+import './styles.css'
 
 interface ArtInfosProperties {
   email: string
@@ -24,132 +24,6 @@ interface ArtInfosProperties {
   onChangeSlideIndex: (index: number) => void
 }
 
-// Component for artwork technical details
-function ArtworkDetails({ artwork }: { artwork: ProcessedArtwork }) {
-  return (
-    <div className="rounded-lg border border-gray-700 p-4">
-      <h3 className="mb-4 text-lg font-medium">Artwork Details</h3>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div>
-          <h4 className="mb-2 text-sm font-medium text-gray-400">Type</h4>
-          <p className="text-sm">
-            {artwork.type === 'single' ? '1/1' : 'Edition'}
-          </p>
-        </div>
-        
-        {artwork.editionsTotal && (
-          <div>
-            <h4 className="mb-2 text-sm font-medium text-gray-400">
-              Edition Size
-            </h4>
-            <p className="text-sm">{artwork.editionsTotal}</p>
-          </div>
-        )}
-
-        <div>
-          <h4 className="mb-2 text-sm font-medium text-gray-400">Token ID</h4>
-          <p className="text-sm font-mono">{artwork.tokenId}</p>
-        </div>
-
-        {artwork.series.length > 0 && (
-          <div>
-            <h4 className="mb-2 text-sm font-medium text-gray-400">Series</h4>
-            <p className="text-sm">
-              {artwork.series.map(s => s.name).join(', ')}
-            </p>
-          </div>
-        )}
-
-        {artwork.mintDate && (
-          <div>
-            <h4 className="mb-2 text-sm font-medium text-gray-400">
-              Mint Date
-            </h4>
-            <p className="text-sm">
-              {new Date(artwork.mintDate).toLocaleDateString()}
-            </p>
-          </div>
-        )}
-      </div>
-    </div>
-  )
-}
-
-// Convert ProcessedArtwork to NFT format for carousel compatibility
-function convertToNFTFormat(artwork: ProcessedArtwork): NFT {
-  return {
-    nft_id: artwork.id,
-    chain: 'ethereum' as const,
-    contract: {
-      address: artwork.tokenId,
-      name: artwork.title,
-      symbol: artwork.slug,
-      totalSupply: artwork.editionsTotal?.toString() || '1',
-      tokenType: artwork.type === 'single' ? 'ERC721' : 'ERC1155',
-      contractDeployer: 'omentejovem',
-      deployedBlockNumber: 0,
-      openSeaMetadata: {
-        floorPrice: 0,
-        collectionName: artwork.title,
-        collectionSlug: artwork.slug,
-        safelistRequestStatus: 'verified',
-        imageUrl: artwork.image.url,
-        description: typeof artwork.description === 'string' ? artwork.description : '',
-        externalUrl: artwork.mintLink || null,
-        twitterUsername: 'omentejovem',
-        discordUrl: '',
-        bannerImageUrl: artwork.image.url,
-        lastIngestedAt: artwork.updatedAt
-      },
-      isSpam: false,
-      spamClassifications: []
-    },
-    tokenId: artwork.tokenId,
-    tokenType: artwork.type === 'single' ? 'ERC721' : 'ERC1155',
-    name: artwork.title,
-    description: typeof artwork.description === 'string' ? artwork.description : '',
-    tokenUri: artwork.image.originalUrl,
-    image: {
-      cachedUrl: artwork.image.url,
-      thumbnailUrl: artwork.image.thumbnailUrl || artwork.image.url,
-      pngUrl: artwork.image.url,
-      contentType: 'image/jpeg',
-      size: 0,
-      originalUrl: artwork.image.originalUrl,
-      displayUrl: artwork.image.url
-    },
-    raw: {
-      tokenUri: artwork.image.originalUrl,
-      metadata: {
-        image: artwork.image.originalUrl,
-        createdBy: 'omentejovem',
-        yearCreated: artwork.mintDate
-          ? new Date(artwork.mintDate).getFullYear().toString()
-          : '',
-        name: artwork.title,
-        description: typeof artwork.description === 'string' ? artwork.description : '',
-        media: null,
-        tags: artwork.series.map(s => s.name)
-      },
-      error: null
-    },
-    collection: {
-      name: artwork.series[0]?.name || 'Omentejovem Collection',
-      slug: artwork.series[0]?.slug || 'omentejovem',
-      externalUrl: null,
-      bannerImageUrl: artwork.image.url
-    },
-    mint: {
-      mintAddress: artwork.tokenId || null,
-      blockNumber: null,
-      timestamp: artwork.mintDate || null,
-      transactionHash: null
-    },
-    owners: null,
-    timeLastUpdated: artwork.updatedAt
-  }
-}
-
 export function ArtInfosNew({
   email,
   selectedArtwork,
@@ -157,8 +31,20 @@ export function ArtInfosNew({
   source,
   onChangeSlideIndex
 }: ArtInfosProperties): ReactElement {
+  const [isOpenVideo, setIsOpenVideo] = useState(false)
   const [isAnimating, setIsAnimating] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
+
+  console.log('selectedArtwork', selectedArtwork)
+
+  // Check if artwork has video - base on if there's no real token_id (fake/local artworks)
+  const hasVideo =
+    !selectedArtwork.tokenId ||
+    selectedArtwork.tokenId === '' ||
+    selectedArtwork.tokenId === '0x0000000000000000000000000000000000000000'
+
+  console.log('hasVideo', hasVideo)
 
   const onChangeToOtherSlide = (index: number) => {
     onChangeSlideIndex(index)
@@ -170,8 +56,20 @@ export function ArtInfosNew({
     // Busca mais slides
   }
 
+  function wasMinted(artwork: ProcessedArtwork) {
+    return (
+      artwork.tokenId &&
+      artwork.tokenId !== '' &&
+      artwork.tokenId !== '0x0000000000000000000000000000000000000000'
+    )
+  }
+
+  const truncate = (input: string) =>
+    input?.length > 600 ? `${input.substring(0, 250)}...` : input
+
   useEffect(() => {
     if (selectedArtwork && window.screen.width >= 1280) {
+      setIsOpenVideo(false)
       setIsAnimating(false)
       resetArtInfo()
       setShowDetails(false)
@@ -183,134 +81,260 @@ export function ArtInfosNew({
     throw new Error('Artwork does not exist')
   }
 
-  // Convert slides to NFT format for carousel compatibility
-  const nftSlides: NFT[] = slides.map(convertToNFTFormat)
-  const selectedNFT = convertToNFTFormat(selectedArtwork)
+  // Setup external links - use mint_link from backend as single source of truth
+  const externalLink = selectedArtwork.mintLink
+    ? {
+        url: selectedArtwork.mintLink,
+        name: 'View NFT'
+      }
+    : null
 
-  function handleToggleAnimation(): void {
-    if (isAnimating) {
-      setIsAnimating(false)
-      resetArtInfo()
-      resetButtonInfo()
-    } else {
-      setIsAnimating(true)
-      artInfoButtonAnimation()
+  // Format mint date
+  let mintedOn = ''
+  if (selectedArtwork.mintDate) {
+    try {
+      mintedOn = format(
+        addHours(new Date(selectedArtwork.mintDate), 3),
+        'd LLLL, yyyy'
+      )
+    } catch (error) {
+      console.error('Error formatting date:', error)
     }
   }
 
-  function handleToggleDetails(): void {
-    setShowDetails(!showDetails)
+  // Get description as string - handle both string and Tiptap JSON formats
+  const getDescriptionText = (description: any): string => {
+    if (!description) return ''
+
+    if (typeof description === 'string') {
+      return description
+    }
+
+    // Handle Tiptap JSON format
+    if (typeof description === 'object' && description.content) {
+      const extractTextFromTiptap = (content: any[]): string => {
+        return content
+          .map((node: any) => {
+            if (node.type === 'paragraph' || node.type === 'heading') {
+              return (
+                node.content
+                  ?.map((textNode: any) => textNode.text || '')
+                  .join('') || ''
+              )
+            }
+            if (node.type === 'text') {
+              return node.text || ''
+            }
+            if (node.content) {
+              return extractTextFromTiptap(node.content)
+            }
+            return ''
+          })
+          .join('\n')
+          .trim()
+      }
+
+      return extractTextFromTiptap(description.content)
+    }
+
+    // Fallback to JSON string
+    return JSON.stringify(description)
   }
 
+  const descriptionText = getDescriptionText(selectedArtwork.description)
+
   return (
-    <section
-      className={cn(
-        'flex flex-wrap gap-8 xl:h-[calc(100vh-4rem)] xl:overflow-scroll xl:max-w-[85%] gap-x-auto w-full scrollbar-hide'
-      )}
-    >
-      <div className="md:flex-1 min-w-[200px] xl:min-w-[350px] flex flex-col max-h-full">
-        <div className="xl:art-detail-inner-container overflow-hidden flex flex-1 justify-start xl:justify-end">
-          <ArtDetails
-            detailedImage={selectedArtwork.image.originalUrl}
-            image={source === 'portfolio' ? selectedArtwork.image.url : selectedArtwork.image.originalUrl}
-            name={selectedArtwork.title || ''}
-          />
-        </div>
-      </div>
-      
-      <div className="block w-[100vw] self-center xl:hidden md:order-3">
-        <HorizontalInCarousel
-          slideIndex={slides.findIndex(slide => slide.id === selectedArtwork.id)}
-          onChangeSlideIndex={onChangeToOtherSlide}
-          getMoreSlides={handleMoreSlides}
-          slides={nftSlides}
-        />
-      </div>
-
-      <div className="flex flex-col w-full md:w-[48%] xl:w-[35%] gap-y-4 xl:gap-y-8">
-        <div className="flex flex-row items-center gap-x-6">
-          <h1 className="text-xl font-semibold lg:text-2xl 2xl:text-4xl">
-            {selectedArtwork.title}
-          </h1>
-        </div>
-
-        <ArtDescription
-          description={typeof selectedArtwork.description === 'string' ? selectedArtwork.description : ''}
-          name={selectedArtwork.title}
-        />
-
-        <div className="grid w-full grid-cols-2 grid-rows-1 gap-x-4 lg:gap-x-6">
-          <ArtLinks
-            email={email}
-            externalLinks={selectedArtwork.mintLink ? [
-              { 
-                name: 'View on Marketplace', 
-                url: selectedArtwork.mintLink 
+    <>
+      <section
+        className={cn(
+          'flex flex-wrap gap-8 xl:h-[calc(100vh-4rem)] xl:overflow-scroll xl:max-w-[85%] gap-x-auto w-full scrollbar-hide'
+        )}
+      >
+        <div className="md:flex-1 min-w-[200px] xl:min-w-[350px] flex flex-col max-h-full">
+          <div className="xl:art-detail-inner-container overflow-hidden flex flex-1 justify-start xl:justify-end">
+            <ArtDetails
+              detailedImage={selectedArtwork.image.originalUrl}
+              image={
+                source === 'portfolio'
+                  ? selectedArtwork.image.url
+                  : selectedArtwork.image.originalUrl
               }
-            ] : []}
-            makeOffer={{
-              active: false,
-              buttonText: ''
-            }}
-            views={{}}
+              name={selectedArtwork.title || ''}
+            />
+          </div>
+        </div>
+
+        {hasVideo && (
+          <button
+            aria-label="Open video process modal"
+            onClick={() => setIsOpenVideo(true)}
+            className="grid place-content-center h-6 xl:hidden"
+          >
+            <CustomIcons.Camera />
+          </button>
+        )}
+
+        <div className="block w-[100vw] self-center xl:hidden md:order-3">
+          <HorizontalInCarouselArtwork
+            slideIndex={slides.findIndex(
+              (slide) => slide.id === selectedArtwork.id
+            )}
+            onChangeSlideIndex={onChangeToOtherSlide}
+            slides={slides}
+            getMoreSlides={() => handleMoreSlides()}
           />
         </div>
 
-        <div className="flex w-full flex-row items-center justify-between">
-          <button
-            id="art-info-button"
-            type="button"
-            onClick={handleToggleAnimation}
+        {wasMinted(selectedArtwork) ? (
+          <div
+            id="art-container"
             className={cn(
-              'art-info-icon-container flex cursor-pointer flex-row items-center gap-x-2 border-b-2 border-transparent pb-1 text-sm transition-all hover:border-white lg:text-base'
+              'gap-2 transition-all max-h-[calc(100vh-8rem)] xl:h-full w-full sm:w-auto md:w-[400px] flex-shrink-0 flex flex-col justify-end xl:justify-end ml-auto md:order-2'
             )}
           >
-            Art Info
-            <span className="art-info-icon h-4 w-4">↓</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={handleToggleDetails}
-            className={cn(
-              'flex cursor-pointer flex-row items-center gap-x-2 border-b-2 border-transparent pb-1 text-sm transition-all hover:border-white lg:text-base'
-            )}
-          >
-            Details
-            <span
-              className={cn('h-4 w-4', {
-                'rotate-180': showDetails
-              })}
+            <div
+              className={cn(
+                'overflow-hidden',
+                showDetails ? 'overflow-y-auto' : ''
+              )}
             >
-              ↓
-            </span>
-          </button>
-        </div>
+              <div
+                id="art-description"
+                className={cn(
+                  'h-fit flex flex-col-reverse gap-4 w-full text-sm text-secondary-100',
+                  'xl:flex-col xl:max-w-sm xl:mt-auto'
+                )}
+              >
+                <p id="art-description-text" className="break-words">
+                  {isDescriptionExpanded
+                    ? descriptionText
+                    : truncate(descriptionText)}
+                  {(descriptionText?.length || 0) > 600 && (
+                    <span>
+                      <button
+                        onClick={() =>
+                          setIsDescriptionExpanded(!isDescriptionExpanded)
+                        }
+                        className="text-primary-50 font-extrabold ml-1"
+                      >
+                        {isDescriptionExpanded ? ' -' : ' +'}
+                      </button>
+                    </span>
+                  )}
+                </p>
+                <div>
+                  <p className="text-primary-50 underline mt-4">
+                    {selectedArtwork.title}
+                  </p>
+                  {mintedOn && <p>minted on {mintedOn}</p>}
+                </div>
+              </div>
 
-        <div
-          id="art-info"
-          className={cn(
-            'art-info-container fade-up w-full opacity-0'
-          )}
-        >
-          <ArtworkDetails artwork={selectedArtwork} />
-        </div>
+              {/* Conditional rendering with fade animation */}
+              <div
+                className={cn(
+                  'fade-up',
+                  showDetails
+                    ? 'opacity-100 max-h-screen visible'
+                    : 'opacity-0 max-h-0 overflow-y-hidden invisible'
+                )}
+                style={{ transitionProperty: 'opacity, max-height' }}
+              >
+                <div id="art-info-wrapper" className={cn('flex flex-col')}>
+                  <div id="art-links" className="mt-12">
+                    <ArtLinks
+                      email={email}
+                      externalLinks={externalLink ? [externalLink] : []}
+                      makeOffer={{
+                        active: false,
+                        buttonText: 'Make Offer'
+                      }}
+                      views={
+                        wasMinted(selectedArtwork)
+                          ? {
+                              explorer: `https://etherscan.io/token/${selectedArtwork.tokenId}`
+                            }
+                          : {}
+                      }
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
 
-        {showDetails && (
-          <div className="w-full">
-            <ArtworkDetails artwork={selectedArtwork} />
+            {externalLink && (
+              <button
+                aria-label="Open art infos"
+                className="group relative flex items-center justify-center w-10 h-10"
+                onClick={() => {
+                  setShowDetails(!showDetails)
+                  artInfoButtonAnimation()
+                }}
+                disabled={isAnimating}
+              >
+                <CustomIcons.Plus
+                  className={cn(
+                    'art-info-button w-6 h-6 transition-all text-secondary-100 group-hover:text-primary-50'
+                  )}
+                />
+              </button>
+            )}
+          </div>
+        ) : (
+          <div className="flex flex-col w-full max-w-sm justify-end text-sm text-secondary-100 h-full">
+            <div className="flex flex-col-reverse mt-4 mb-10 gap-4 xl:flex-col">
+              <p className="break-words">{descriptionText}</p>
+              <p className="text-primary-50 underline">
+                {selectedArtwork.title}
+              </p>
+            </div>
           </div>
         )}
-      </div>
 
-      <div className="hidden xl:block w-full">
-        <HorizontalInCarousel
-          slideIndex={slides.findIndex(slide => slide.id === selectedArtwork.id)}
-          onChangeSlideIndex={onChangeToOtherSlide}
-          getMoreSlides={handleMoreSlides}
-          slides={nftSlides}
-        />
-      </div>
-    </section>
+        <div className="hidden place-content-center xl:grid">
+          {hasVideo ? (
+            <button
+              aria-label="Open video process modal"
+              onClick={() => setIsOpenVideo(true)}
+              className="grid place-content-center h-6"
+            >
+              <CustomIcons.Camera />
+            </button>
+          ) : (
+            <span className="h-6" />
+          )}
+        </div>
+      </section>
+
+      {isOpenVideo && (
+        <button
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 border-none p-0"
+          aria-label="Close video modal"
+          onClick={() => setIsOpenVideo(false)}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              setIsOpenVideo(false)
+            }
+          }}
+        >
+          <div
+            className="relative w-full max-w-4xl mx-4 max-h-[90vh]"
+            role="presentation"
+            onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => e.stopPropagation()}
+          >
+            <video
+              className="w-auto h-auto max-w-full max-h-[90vh] rounded-lg"
+              controls
+              autoPlay
+              src={`${selectedArtwork.image.originalUrl.replace('/new_series/', '/new_series/videos/').replace('.jpg', '.mp4')}`}
+            >
+              <track kind="captions" srcLang="en" label="English" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </button>
+      )}
+    </>
   )
 }
