@@ -4,7 +4,7 @@ import { gsap } from 'gsap'
 import type { ReactElement } from 'react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import { cursorLoop, cursorClick } from '@/assets/cursor'
+import { cursorClick, cursorLoop } from '@/assets/cursor'
 import Image from 'next/image'
 
 export function Cursor(): ReactElement {
@@ -59,7 +59,7 @@ export function Cursor(): ReactElement {
         height={32}
         alt={'Animated cursor'}
         src={imageSource}
-        className="min-h-fit min-w-fit"
+        className="min-h-fit min-w-fit select-none"
       />
     </div>
   )

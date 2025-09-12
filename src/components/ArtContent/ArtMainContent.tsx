@@ -1,5 +1,6 @@
 'use client'
 
+import { useCarouselNavigation } from '@/hooks/useCarouselNavigation'
 import { ProcessedArtwork } from '@/types/artwork'
 import { ReactElement, useCallback, useState } from 'react'
 import { ArtFilterNew as ArtFilter } from '../ArtFilter/ArtFilterNew'
@@ -28,9 +29,19 @@ export function ArtMainContent({
   const [page, setPage] = useState(1)
   const [loading, setLoading] = useState(false)
 
-  function onRedirect(index: number): void {
-    onChangeSelectedArtworkIndex(index)
-  }
+  const { handleNavigation } = useCarouselNavigation({
+    source,
+    artworks,
+    onChangeIndex: onChangeSelectedArtworkIndex
+  })
+
+  // Wrapper para controlar o tipo de navegação
+  const handleNavigationWrapper = useCallback(
+    (index: number, replace = false) => {
+      handleNavigation(index, replace)
+    },
+    [handleNavigation]
+  )
 
   const renderContent = useCallback((): ReactElement => {
     return (
@@ -58,10 +69,11 @@ export function ArtMainContent({
           loading={loading}
           slides={artworks?.map((artwork) => ({
             name: artwork.title || '',
-            nftCompressedHdUrl: artwork.image.url
+            nftCompressedHdUrl: artwork.image.url,
+            slug: artwork.slug
           }))}
           redirectSource={source}
-          onRedirect={onRedirect}
+          onRedirect={handleNavigationWrapper}
         />
 
         <ArtFilter
@@ -74,14 +86,17 @@ export function ArtMainContent({
   }
 
   return (
-    <main className="p-8 md:px-12 lg:px-20 flex flex-col sm:px-6 2xl:pb-16 2xl:px-20 2xl:pb-8 xl:h-screenMinusHeader overflow-hidden xl:overflow-auto">
+    <main className="p-8 md:px-12 lg:px-20 flex flex-col sm:px-6 2xl:pb-8 2xl:px-20 xl:h-screenMinusHeader overflow-hidden xl:overflow-auto">
       <VerticalCarousel
         slideIndex={selectedArtworkIndex}
         onChangeSlideIndex={onChangeSelectedArtworkIndex}
         slides={artworks.map((artwork) => ({
           name: artwork.title || '',
-          nftCompressedHdUrl: artwork.image.url
+          nftCompressedHdUrl: artwork.image.url,
+          slug: artwork.slug
         }))}
+        redirectSource={source}
+        onRedirect={handleNavigationWrapper}
       />
       {renderContent()}
     </main>

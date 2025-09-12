@@ -4,12 +4,13 @@ import 'swiper/css'
 import 'swiper/css/pagination'
 import './style.css'
 
+import { cn } from '@/lib/utils'
+import { addLoadedClass } from '@/utils/lazyLoading'
 import Image from 'next/image'
+import Link from 'next/link'
 import { Mousewheel, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Swiper as SwiperType } from 'swiper/types'
-import { cn } from '@/lib/utils'
-import { addLoadedClass } from '@/utils/lazyLoading'
 
 interface VerticalCarouselProperties {
   slideIndex?: number
@@ -17,15 +18,20 @@ interface VerticalCarouselProperties {
   slides: {
     name: string
     nftCompressedHdUrl: string
+    slug?: string
   }[]
   getMoreSlides?: () => void
+  redirectSource?: string
+  onRedirect?: (index: number, replace?: boolean) => void
 }
 
 export function VerticalCarousel({
   slideIndex,
   onChangeSlideIndex,
   slides,
-  getMoreSlides
+  getMoreSlides,
+  redirectSource,
+  onRedirect
 }: VerticalCarouselProperties) {
   function handleGetMoreslides(swiperInstance: SwiperType) {
     const currentIndex = swiperInstance.activeIndex
@@ -35,8 +41,6 @@ export function VerticalCarousel({
       getMoreSlides?.()
     }
   }
-
-  console.log('first slide', slides[0])
 
   return (
     <div
@@ -59,7 +63,10 @@ export function VerticalCarousel({
         className="vertical-slider"
         centeredSlides={true}
         onSlideChange={(e) => {
-          onChangeSlideIndex(e.realIndex % slides.length)
+          const newIndex = e.realIndex % slides.length
+          // Atualiza o índice local e navega sem recarregar (usando replace)
+          onChangeSlideIndex(newIndex)
+          onRedirect?.(newIndex, true) // true = replace (não adiciona ao histórico)
         }}
         onSlideChangeTransitionEnd={(swiperInstance) => {
           handleGetMoreslides(swiperInstance)
@@ -72,17 +79,39 @@ export function VerticalCarousel({
           >
             <div
               aria-label={art.name}
-              className="flex h-[150px] w-[150px] lazy-load-img-wrapper"
+              className="flex h-[150px] w-[150px] lazy-load-img-wrapper relative"
             >
-              <Image
-                src={art.nftCompressedHdUrl}
-                alt={art.name}
-                width={0}
-                height={0}
-                className="h-full w-full object-cover lazy-load-img"
-                loading="lazy"
-                onLoad={addLoadedClass}
-              />
+              <div
+                className="cursor-pointer w-full h-full"
+                onClick={() => onRedirect?.(index, false)} // false = push (adiciona ao histórico)
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    onRedirect?.(index, false)
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                aria-label={`View ${art.name}`}
+              >
+                <Image
+                  src={art.nftCompressedHdUrl}
+                  alt={art.name}
+                  width={150}
+                  height={150}
+                  className="h-full w-full object-cover lazy-load-img"
+                  loading="lazy"
+                  onLoad={addLoadedClass}
+                />
+              </div>
+
+              {redirectSource && art.slug && (
+                <Link
+                  href={`/${redirectSource}/${art.slug}`}
+                  aria-label={art.name}
+                  className="absolute inset-0 z-10"
+                />
+              )}
             </div>
           </SwiperSlide>
         ))}

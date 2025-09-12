@@ -4,18 +4,18 @@ import 'swiper/css'
 import 'swiper/css/pagination'
 import './style.css'
 
-import Image from 'next/image'
-import Link from 'next/link'
-import { FreeMode, Mousewheel, Pagination } from 'swiper/modules'
-import { Swiper, SwiperSlide } from 'swiper/react'
-import { useEffect } from 'react'
 import {
-  carouselFigcaptionAnimation,
-  carouselActiveSlideAnimation
+  carouselActiveSlideAnimation,
+  carouselFigcaptionAnimation
 } from '@/animations'
 import { cn } from '@/lib/utils'
-import { Swiper as SwiperType } from 'swiper/types'
 import { addLoadedClass } from '@/utils/lazyLoading'
+import Image from 'next/image'
+import Link from 'next/link'
+import { useEffect } from 'react'
+import { FreeMode, Mousewheel, Pagination } from 'swiper/modules'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Swiper as SwiperType } from 'swiper/types'
 
 interface HorizontalCarouselProperties {
   currentPage: number
@@ -23,9 +23,10 @@ interface HorizontalCarouselProperties {
   slides: {
     name: string
     nftCompressedHdUrl: string
+    slug?: string
   }[]
   redirectSource?: string
-  onRedirect: (index: number) => void
+  onRedirect?: (index: number) => void
   getMoreSlides?: () => void
 }
 
@@ -115,23 +116,36 @@ export function HorizontalCarousel({
                       </p>
                     </figcaption>
 
-                    <Image
-                      src={slide.nftCompressedHdUrl}
-                      alt={slide.name}
-                      width={0}
-                      height={0}
-                      className="h-full w-48 object-cover sm:w-64 2xl:w-[22rem] lazy-load-img"
-                      loading="lazy"
-                      onLoad={addLoadedClass}
-                    />
+                    <div
+                      className="cursor-pointer"
+                      onClick={() => onRedirect?.(index)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault()
+                          onRedirect?.(index)
+                        }
+                      }}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`View ${slide.name}`}
+                    >
+                      <Image
+                        src={slide.nftCompressedHdUrl}
+                        alt={slide.name}
+                        width={0}
+                        height={0}
+                        className="h-full w-48 object-cover sm:w-64 2xl:w-[22rem] lazy-load-img"
+                        loading="lazy"
+                        onLoad={addLoadedClass}
+                      />
+                    </div>
                   </div>
 
-                  {redirectSource && (
+                  {redirectSource && slide.slug && (
                     <Link
-                      href={`/${redirectSource}`}
-                      onClick={() => onRedirect(index)}
+                      href={`/${redirectSource}/${slide.slug}`}
                       aria-label={slide.name}
-                      className="hidden absolute h-full w-full"
+                      className="absolute inset-0 z-10"
                     />
                   )}
                 </div>
