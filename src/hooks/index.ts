@@ -4,6 +4,7 @@
 
 // Artwork hooks
 export * from './useArtworks'
+export * from './useHomeArtworks'
 
 // Series hooks
 export * from './useSeries'

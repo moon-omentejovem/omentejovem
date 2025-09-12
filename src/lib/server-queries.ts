@@ -5,6 +5,7 @@
 
 import { TABLES } from '@/lib/supabase/config'
 import { createClient } from '@/utils/supabase/server'
+import { shuffle } from '@/utils/arrays'
 
 // Cache these functions using Next.js cache
 import { cache } from 'react'
@@ -19,6 +20,7 @@ export const getArtworksServer = cache(
     oneOfOne?: boolean
     orderBy?: string
     ascending?: boolean
+    random?: boolean
   }) => {
     const supabase = await createClient()
 
@@ -54,7 +56,8 @@ export const getArtworksServer = cache(
       return []
     }
 
-    return data || []
+    const artworks = data || []
+    return options?.random ? shuffle(artworks) : artworks
   }
 )
 

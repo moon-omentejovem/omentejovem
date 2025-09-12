@@ -31,6 +31,7 @@ export function useArtworks(options?: {
   limit?: number
   seriesSlug?: string
   enabled?: boolean
+  random?: boolean
 }) {
   return useQuery({
     queryKey: artworkKeys.list(options),
