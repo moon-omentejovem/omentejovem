@@ -211,18 +211,44 @@ function runSeed(supabase) {
   })
 }
 
-// Export function
+// Import legacy migration function
+const { migrateLegacyData } = require('./migrate-legacy-data')
+
+// Enhanced seeding function with legacy data option
+async function seedWithLegacyData() {
+  console.log('🌱 Starting enhanced seeding with legacy data...')
+  
+  // First run basic seeding
+  await seedOnDeploy()
+  
+  // Then migrate legacy data
+  console.log('📦 Migrating legacy NFT data...')
+  await migrateLegacyData()
+  
+  console.log('🎉 Enhanced seeding completed!')
+}
+
+// Export functions
 module.exports = { 
-  seedOnDeploy
+  seedOnDeploy,
+  seedWithLegacyData,
+  migrateLegacyData
 }
 
 // Execute if run directly
 if (require.main === module) {
-  seedOnDeploy().then(() => {
-    console.log('Script completed')
+  const args = process.argv.slice(2)
+  const useLegacyData = args.includes('--legacy') || args.includes('-l')
+  
+  const seedFunction = useLegacyData ? seedWithLegacyData : seedOnDeploy
+  
+  console.log(`🚀 Running ${useLegacyData ? 'enhanced seed with legacy data' : 'basic seed'}...`)
+  
+  seedFunction().then(() => {
+    console.log('✅ Script completed successfully')
     process.exit(0)
   }).catch(err => {
-    console.error('Script failed:', err)
+    console.error('❌ Script failed:', err)
     process.exit(0)
   })
 }
