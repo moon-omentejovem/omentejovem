@@ -93,7 +93,7 @@ export function CalloutParallax({
 
   return (
     <div
-      className=" grid w-full select-none place-items-center overflow-hidden fixed top-0 right-0 left-0 bottom-0 z-0 h-screen pt-[8rem]"
+      className="grid w-full select-none place-items-center overflow-visible fixed top-[4rem] right-0 left-0 bottom-0 z-10 h-screen"
       id="logo"
       ref={calloutReference}
     >
