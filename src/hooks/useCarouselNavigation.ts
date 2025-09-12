@@ -1,5 +1,5 @@
 /**
- * Hook para navegação em carousels
+ * Hook para navegação simples em carousels
  */
 
 import { useRouter } from 'next/navigation'
@@ -19,14 +19,18 @@ export function useCarouselNavigation({
   const router = useRouter()
 
   const handleNavigation = useCallback(
-    (index: number) => {
+    (index: number, replace = false) => {
       const artwork = artworks[index]
-      if (artwork?.slug) {
-        // Navegar para a página individual da arte
-        router.push(`/${source}/${artwork.slug}`)
-      } else {
-        // Fallback para o comportamento de mudança de índice
+      if (!artwork?.slug) {
         onChangeIndex?.(index)
+        return
+      }
+
+      // Usar replace para scroll, push para clique
+      if (replace) {
+        router.replace(`/${source}/${artwork.slug}`)
+      } else {
+        router.push(`/${source}/${artwork.slug}`)
       }
     },
     [router, source, artworks, onChangeIndex]

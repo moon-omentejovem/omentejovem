@@ -22,7 +22,7 @@ interface VerticalCarouselProperties {
   }[]
   getMoreSlides?: () => void
   redirectSource?: string
-  onRedirect?: (index: number) => void
+  onRedirect?: (index: number, replace?: boolean) => void
 }
 
 export function VerticalCarousel({
@@ -64,8 +64,8 @@ export function VerticalCarousel({
         centeredSlides={true}
         onSlideChange={(e) => {
           const newIndex = e.realIndex % slides.length
-          // Sempre navegar para a página da arte quando mudar o slide
-          onRedirect?.(newIndex)
+          // Usar replace para scroll (não adiciona ao histórico)
+          onRedirect?.(newIndex, true)
         }}
         onSlideChangeTransitionEnd={(swiperInstance) => {
           handleGetMoreslides(swiperInstance)
@@ -82,11 +82,11 @@ export function VerticalCarousel({
             >
               <div
                 className="cursor-pointer w-full h-full"
-                onClick={() => onRedirect?.(index)}
+                onClick={() => onRedirect?.(index, false)} // false = push (adiciona ao histórico)
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault()
-                    onRedirect?.(index)
+                    onRedirect?.(index, false)
                   }
                 }}
                 role="button"
@@ -96,8 +96,8 @@ export function VerticalCarousel({
                 <Image
                   src={art.nftCompressedHdUrl}
                   alt={art.name}
-                  width={0}
-                  height={0}
+                  width={150}
+                  height={150}
                   className="h-full w-full object-cover lazy-load-img"
                   loading="lazy"
                   onLoad={addLoadedClass}

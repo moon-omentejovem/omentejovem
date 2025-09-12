@@ -1,7 +1,7 @@
 'use client'
 
-import { ProcessedArtwork } from '@/types/artwork'
 import { useCarouselNavigation } from '@/hooks/useCarouselNavigation'
+import { ProcessedArtwork } from '@/types/artwork'
 import { ReactElement, useCallback, useState } from 'react'
 import { ArtFilterNew as ArtFilter } from '../ArtFilter/ArtFilterNew'
 import { HorizontalCarousel } from '../Carousels/HorizontalCarousel/HorizontalCarousel'
@@ -35,6 +35,14 @@ export function ArtMainContent({
     onChangeIndex: onChangeSelectedArtworkIndex
   })
 
+  // Wrapper para controlar o tipo de navegação
+  const handleNavigationWrapper = useCallback(
+    (index: number, replace = false) => {
+      handleNavigation(index, replace)
+    },
+    [handleNavigation]
+  )
+
   const renderContent = useCallback((): ReactElement => {
     return (
       <ArtInfos
@@ -65,7 +73,7 @@ export function ArtMainContent({
             slug: artwork.slug
           }))}
           redirectSource={source}
-          onRedirect={handleNavigation}
+          onRedirect={handleNavigationWrapper}
         />
 
         <ArtFilter
@@ -88,7 +96,7 @@ export function ArtMainContent({
           slug: artwork.slug
         }))}
         redirectSource={source}
-        onRedirect={handleNavigation}
+        onRedirect={handleNavigationWrapper}
       />
       {renderContent()}
     </main>

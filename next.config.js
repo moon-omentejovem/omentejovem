@@ -6,7 +6,7 @@ const nextConfig = {
     // ignoreDuringBuilds: process.env.NODE_ENV === 'production',
   },
   images: {
-    unoptimized: true,
+    unoptimized: false, // Habilitar otimização do Next.js
     remotePatterns: [
       {
         protocol: 'https',
@@ -36,7 +36,8 @@ const nextConfig = {
         protocol: 'https',
         hostname: '**.ipfs.nftstorage.link'
       }
-    ]
+    ],
+    minimumCacheTTL: 3600 // Cache por 1 hora
   },
   logging: {
     fetches: {
@@ -51,11 +52,11 @@ const nextConfig = {
   },
   headers: () => [
     {
-      source: '/:path*',
+      source: '/_next/image',
       headers: [
         {
           key: 'Cache-Control',
-          value: 'no-store'
+          value: 'public, max-age=86400, immutable' // Cache imagens otimizadas por 1 dia
         }
       ]
     }
