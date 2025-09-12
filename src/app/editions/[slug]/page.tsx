@@ -1,6 +1,5 @@
 import ArtworkContent from '@/app/1-1/[slug]/content'
-import { ArtworkWithSeries, processArtwork } from '@/types/artwork'
-import { createClient } from '@/utils/supabase/server'
+import { ArtworkService } from '@/services'
 import { notFound } from 'next/navigation'
 
 interface ArtworkPageProps {
@@ -9,62 +8,63 @@ interface ArtworkPageProps {
   }
 }
 
-async function getPortfolioData() {
-  const supabase = await createClient()
+export async function generateStaticParams() {
+  // Generate static params for edition artworks
+  const { artworks } = await ArtworkService.getEditions({ limit: 50, useBuildClient: true })
+  
+  return artworks.map((artwork: any) => ({
+    slug: artwork.slug
+  }))
+}
 
-  const { data: artworks, error } = await supabase
-    .from('artworks')
-    .select(
-      `
-      *,
-      series_artworks(
-        series(name, slug)
-      )
-    `
-    )
-    .order('posted_at', { ascending: false })
+export async function generateMetadata({ params }: ArtworkPageProps) {
+  const artwork = await ArtworkService.getBySlug(params.slug)
+  
+  if (!artwork) {
+    return {
+      title: 'Artwork Not Found'
+    }
+  }
 
   return {
-    artworks: (artworks || []) as ArtworkWithSeries[],
-    error
+    title: `${artwork.title} - Editions - Mente Jovem`,
+    description: artwork.description || `Edition artwork ${artwork.title} by Thales Machado`,
+    openGraph: {
+      title: artwork.title,
+      description: artwork.description || '',
+      images: artwork.image.url ? [artwork.image.url] : []
+    }
   }
 }
 
 export default async function ArtworkPage({ params }: ArtworkPageProps) {
-  const { artworks, error } = await getPortfolioData()
+  // Get all portfolio artworks for navigation
+  const { artworks, error } = await ArtworkService.getPortfolio()
 
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-4xl font-bold mb-4">Error Loading Artwork</h1>
-          <p className="text-neutral-400">{error.message}</p>
+          <p className="text-neutral-400">{error}</p>
         </div>
       </div>
     )
   }
 
-  // Find the selected artwork
-  const selectedArtwork = artworks.find(
-    (artwork) => artwork.slug === params.slug
+  // Find the index of the selected artwork
+  const selectedIndex = artworks.findIndex(
+    (artwork: any) => artwork.slug === params.slug
   )
 
-  if (!selectedArtwork) {
+  if (selectedIndex === -1) {
     notFound()
   }
-
-  // Process artworks to frontend-friendly format
-  const processedArtworks = artworks.map(processArtwork)
-
-  // Find the index of the selected artwork
-  const selectedIndex = processedArtworks.findIndex(
-    (artwork) => artwork.slug === params.slug
-  )
 
   return (
     <ArtworkContent
       email="contact@omentejovem.com"
-      initialArtworks={processedArtworks}
+      initialArtworks={artworks}
       initialSelectedIndex={selectedIndex}
     />
   )

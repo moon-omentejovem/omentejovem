@@ -2,6 +2,7 @@ import { supabaseClientOptions, supabaseConfig } from '@/lib/supabase/config'
 import type { Database } from '@/types/supabase'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 
 export async function createClient() {
   const cookieStore = await cookies()
@@ -31,6 +32,23 @@ export async function createClient() {
             // user sessions.
           }
         }
+      }
+    }
+  )
+}
+
+/**
+ * Create a simple client for build-time operations like generateStaticParams
+ * This doesn't rely on cookies and can be used safely during build
+ */
+export function createBuildClient() {
+  return createSupabaseClient<Database>(
+    supabaseConfig.url,
+    supabaseConfig.anonKey,
+    {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false
       }
     }
   )
