@@ -1,3 +1,4 @@
+import { ArtworkWithSeries, processArtwork } from '@/types/artwork'
 import { createClient } from '@/utils/supabase/server'
 import { notFound } from 'next/navigation'
 import SeriesContentWrapper from './content'
@@ -11,7 +12,7 @@ interface SeriesPageProps {
 async function getSeriesData(slug: string) {
   const supabase = await createClient()
 
-  // Get the series to validate it exists and get initial data
+  // Get the series to validate it exists
   const { data: series, error: seriesError } = await supabase
     .from('series')
     .select('*')
@@ -19,20 +20,45 @@ async function getSeriesData(slug: string) {
     .single()
 
   if (seriesError || !series) {
-    return { series: null, error: seriesError }
+    return { series: null, artworks: [], error: seriesError }
   }
+
+  // Get all artworks from the series
+  const { data: seriesArtworks, error: artworksError } = await supabase
+    .from('artworks')
+    .select(
+      `
+      *,
+      series_artworks!inner(
+        series!inner(
+          slug,
+          name
+        )
+      )
+    `
+    )
+    .eq('series_artworks.series.slug', slug)
+    .order('mint_date', { ascending: false })
+
+  if (artworksError) {
+    console.error('Series artworks query error:', artworksError)
+    return { series, artworks: [], error: artworksError }
+  }
+
+  // Process artworks data
+  const processedArtworks = (seriesArtworks || []).map((artwork: any) =>
+    processArtwork(artwork as ArtworkWithSeries)
+  )
 
   return {
     series,
+    artworks: processedArtworks,
     error: null
   }
 }
 
-// Generate static params for all series - removed due to server context issues
-// Let Next.js generate pages on-demand instead
+// Generate static params - return empty to enable ISR
 export async function generateStaticParams() {
-  // Return empty array to let Next.js generate pages on-demand
-  // This prevents the cookies error during build time
   return []
 }
 
@@ -53,7 +79,7 @@ export async function generateMetadata({ params }: SeriesPageProps) {
 }
 
 export default async function SeriesDetailPage({ params }: SeriesPageProps) {
-  const { series, error } = await getSeriesData(params.slug)
+  const { series, artworks, error } = await getSeriesData(params.slug)
 
   if (!series) {
     notFound()
@@ -71,6 +97,10 @@ export default async function SeriesDetailPage({ params }: SeriesPageProps) {
   }
 
   return (
-    <SeriesContentWrapper email="contact@omentejovem.com" slug={params.slug} />
+    <SeriesContentWrapper
+      email="contact@omentejovem.com"
+      slug={params.slug}
+      initialArtworks={artworks}
+    />
   )
 }

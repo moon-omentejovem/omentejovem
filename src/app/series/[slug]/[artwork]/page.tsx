@@ -89,7 +89,6 @@ async function getArtworkData(seriesSlug: string, artworkSlug: string) {
 }
 
 export async function generateStaticParams() {
-  // Return empty array to let Next.js generate pages on-demand
   return []
 }
 
