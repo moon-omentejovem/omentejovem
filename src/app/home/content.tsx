@@ -1,7 +1,7 @@
 'use client'
 
 import { CalloutParallax } from '@/components/CalloutParallax'
-import { useArtworks } from '@/hooks'
+import { useHomeArtworks } from '@/hooks'
 import type { HomeImage } from '@/types/home'
 import { ReactElement } from 'react'
 
@@ -16,7 +16,7 @@ export default function HomeContent({
   title,
   subtitle
 }: HomeContentProperties): ReactElement {
-  const { data } = useArtworks({ limit: 10 })
+  const { data } = useHomeArtworks(10)
 
   const images: HomeImage[] = data
     ? data.map((artwork) => ({

@@ -10,6 +10,7 @@
 import { TABLES } from '@/lib/supabase/config'
 import type { Database } from '@/types/supabase'
 import { createClient } from '@/utils/supabase/client'
+import { shuffle } from '@/utils/arrays'
 
 // Client-side helper functions - use only in client components
 const supabase = createClient()
@@ -57,6 +58,7 @@ export async function fetchArtworks(options?: {
   limit?: number
   seriesSlug?: string
   type?: 'single' | 'edition'
+  random?: boolean
 }) {
   const { processArtwork } = await import('@/types/artwork')
 
@@ -128,7 +130,8 @@ export async function fetchArtworks(options?: {
     }
 
     // Process raw data to ProcessedArtwork format
-    return ((data as any[]) || []).map(processArtwork)
+    const artworks = ((data as any[]) || []).map(processArtwork)
+    return options?.random ? shuffle(artworks) : artworks
   }
 
   // Standard query without seriesSlug filter
@@ -167,7 +170,8 @@ export async function fetchArtworks(options?: {
   }
 
   // Process raw data to ProcessedArtwork format
-  return ((data as any[]) || []).map(processArtwork)
+  const artworks = ((data as any[]) || []).map(processArtwork)
+  return options?.random ? shuffle(artworks) : artworks
 } /**
  * Fetch single artwork by slug
  */

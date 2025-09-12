@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
 export default async function Home() {
-  const artworks = await getArtworksServer({ limit: 10 })
+  const artworks = await getArtworksServer({ limit: 10, featured: true, random: true })
   const images: HomeImage[] = artworks.map((artwork) => ({
     title: artwork.title || '',
     imageUrl: artwork.image_url || '',
