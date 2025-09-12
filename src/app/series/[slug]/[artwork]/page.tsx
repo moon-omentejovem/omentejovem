@@ -13,49 +13,78 @@ interface ArtworkPageProps {
 async function getArtworkData(seriesSlug: string, artworkSlug: string) {
   const supabase = await createClient()
 
-  // Get all artworks from the series to maintain consistency with other pages
-  const { data: seriesArtworks, error: seriesError } = await supabase
-    .from('artworks')
-    .select(
-      `
-      *,
-      series_artworks!inner(
-        series!inner(
-          slug,
-          name
+  try {
+    // Get all artworks from the series to maintain consistency with other pages
+    const { data: seriesArtworks, error: seriesError } = await supabase
+      .from('artworks')
+      .select(
+        `
+        *,
+        series_artworks!inner(
+          series!inner(
+            slug,
+            name
+          )
         )
+      `
       )
-    `
+      .eq('series_artworks.series.slug', seriesSlug)
+      .order('mint_date', { ascending: false })
+
+    if (seriesError) {
+      console.error('Series query error:', seriesError)
+      return { artworks: [], selectedIndex: -1, error: seriesError }
+    }
+
+    if (!seriesArtworks || seriesArtworks.length === 0) {
+      console.log('No artworks found for series:', seriesSlug)
+      return {
+        artworks: [],
+        selectedIndex: -1,
+        error: new Error('Series not found')
+      }
+    }
+
+    // Process artworks data
+    const processedArtworks = seriesArtworks.map((artwork: any) => {
+      try {
+        return processArtwork(artwork as ArtworkWithSeries)
+      } catch (processError) {
+        console.error('Error processing artwork:', artwork.id, processError)
+        throw processError
+      }
+    })
+
+    // Find the selected artwork index
+    const selectedIndex = processedArtworks.findIndex(
+      (artwork) => artwork.slug === artworkSlug
     )
-    .eq('series_artworks.series.slug', seriesSlug)
-    .order('mint_date', { ascending: false })
 
-  if (seriesError || !seriesArtworks || seriesArtworks.length === 0) {
-    return { artworks: [], selectedIndex: -1, error: seriesError }
-  }
+    if (selectedIndex === -1) {
+      console.log('Artwork not found:', artworkSlug, 'in series:', seriesSlug)
+      console.log(
+        'Available slugs:',
+        processedArtworks.map((a) => a.slug)
+      )
+      return {
+        artworks: [],
+        selectedIndex: -1,
+        error: new Error('Artwork not found')
+      }
+    }
 
-  // Process artworks data
-  const processedArtworks = seriesArtworks.map((artwork: any) =>
-    processArtwork(artwork as ArtworkWithSeries)
-  )
-
-  // Find the selected artwork index
-  const selectedIndex = processedArtworks.findIndex(
-    (artwork) => artwork.slug === artworkSlug
-  )
-
-  if (selectedIndex === -1) {
+    return {
+      artworks: processedArtworks,
+      selectedIndex,
+      error: null
+    }
+  } catch (error) {
+    console.error('Error in getArtworkData:', error)
     return {
       artworks: [],
       selectedIndex: -1,
-      error: new Error('Artwork not found')
+      error: error instanceof Error ? error : new Error('Unknown error')
     }
-  }
-
-  return {
-    artworks: processedArtworks,
-    selectedIndex,
-    error: null
   }
 }
 

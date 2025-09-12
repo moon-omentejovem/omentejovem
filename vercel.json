@@ -2,6 +2,13 @@
   "functions": {
     "src/app/api/cache-image/route.ts": {
       "maxDuration": 15
+    },
+    "src/app/series/[slug]/[artwork]/page.tsx": {
+      "maxDuration": 30
+    },
+    "src/app/series/[slug]/page.tsx": {
+      "maxDuration": 30
     }
-  }
+  },
+  "regions": ["cle1"]
 }

@@ -1,7 +1,4 @@
-import {
-  supabaseClientOptions,
-  supabaseConfig
-} from '@/lib/supabase/config'
+import { supabaseClientOptions, supabaseConfig } from '@/lib/supabase/config'
 import type { Database } from '@/types/supabase'
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
