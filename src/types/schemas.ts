@@ -52,10 +52,39 @@ export const ArtifactSchema = z.object({
   updated_at: z.string().optional()
 })
 
+// Social media schema
+export const SocialSchema = z.object({
+  platform: z.string().min(1),
+  handle: z.string().min(1),
+  url: z.string().url()
+})
+
+// Exhibition schema  
+export const ExhibitionSchema = z.object({
+  title: z.string().min(1),
+  venue: z.string().min(1),
+  location: z.string().min(1),
+  year: z.string().min(1),
+  type: z.enum(['solo', 'group', 'online']),
+  description: z.string().optional()
+})
+
+// Press schema
+export const PressSchema = z.object({
+  title: z.string().min(1),
+  publication: z.string().min(1),
+  date: z.string().min(1),
+  url: z.string().url().optional(),
+  type: z.enum(['feature', 'interview', 'review', 'news'])
+})
+
 // About Page Schema
 export const AboutPageSchema = z.object({
   id: z.string().uuid().optional(),
   content: RichTextSchema,
+  socials: z.array(SocialSchema).optional().default([]),
+  exhibitions: z.array(ExhibitionSchema).optional().default([]),
+  press: z.array(PressSchema).optional().default([]),
   updated_at: z.string().optional()
 })
 
@@ -90,6 +119,9 @@ export const UpdateAboutPageSchema = AboutPageSchema.omit({
 })
 
 // Type exports
+export type Social = z.infer<typeof SocialSchema>
+export type Exhibition = z.infer<typeof ExhibitionSchema>
+export type Press = z.infer<typeof PressSchema>
 export type Artwork = z.infer<typeof ArtworkSchema>
 export type Series = z.infer<typeof SeriesSchema>
 export type SeriesArtwork = z.infer<typeof SeriesArtworkSchema>

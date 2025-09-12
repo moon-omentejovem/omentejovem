@@ -13,9 +13,38 @@ import { useCallback, useEffect, useMemo } from 'react'
 import parse from 'html-react-parser'
 import './style.css'
 import HardCodedBio from './hardcoded-bio'
+import { BioRenderer } from './bio-renderer'
+
+interface AboutPageData {
+  id: string
+  content: any
+  socials?: Array<{
+    platform: string
+    handle: string
+    url: string
+  }>
+  exhibitions?: Array<{
+    title: string
+    venue: string
+    location: string
+    year: string
+    type: 'solo' | 'group' | 'online'
+    description?: string
+  }>
+  press?: Array<{
+    title: string
+    publication: string
+    date: string
+    url?: string
+    type: 'feature' | 'interview' | 'review' | 'news'
+  }>
+  created_at: string | null
+  updated_at: string | null
+}
 
 interface AboutContentProperties {
   data: AboutData | undefined
+  aboutPageData?: AboutPageData | null
   press: PressTalk[]
   exhibitions: PressTalk[]
 }
@@ -33,6 +62,7 @@ function AboutBio({ text }: { text: string }): ReactElement {
 
 export function AboutContent({
   data,
+  aboutPageData,
   press,
   exhibitions
 }: AboutContentProperties): ReactElement {
@@ -176,7 +206,11 @@ export function AboutContent({
           <p className="bio font-heading text-xs min-w-[4.5rem] text-secondary-100 sm:text-base sm:min-w-[6rem] xl:text-lg xl:min-w-[7rem]">
             Bio
           </p>
-          <HardCodedBio />
+          {aboutPageData?.content ? (
+            <BioRenderer content={aboutPageData.content} />
+          ) : (
+            <HardCodedBio />
+          )}
         </div>
 
         <div className="flex flex-row gap-6 w-full max-w-sm xl:gap-24">

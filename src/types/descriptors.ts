@@ -16,6 +16,7 @@ type FieldType =
   | 'relation-single'
   | 'relation-multi'
   | 'image'
+  | 'json'
 
 type RenderType =
   | 'text'
@@ -54,6 +55,14 @@ export interface FormField {
     min?: number
     max?: number
     pattern?: RegExp
+  }
+  schema?: {
+    type: string
+    items?: {
+      type: string
+      properties?: Record<string, any>
+      required?: string[]
+    }
   }
 }
 
@@ -308,9 +317,77 @@ export const aboutPageDescriptor = {
   form: [
     {
       key: 'content',
-      label: 'Content',
+      label: 'About Content',
       type: 'tiptap' as const,
-      required: true
+      required: true,
+      placeholder: 'Write about the artist, their background, artistic vision...'
+    },
+    {
+      key: 'socials',
+      label: 'Social Media',
+      type: 'json' as const,
+      schema: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            platform: { type: 'string', title: 'Platform' },
+            handle: { type: 'string', title: 'Handle' },
+            url: { type: 'string', title: 'URL' }
+          },
+          required: ['platform', 'handle', 'url']
+        }
+      },
+      placeholder: 'Add social media profiles'
+    },
+    {
+      key: 'exhibitions',
+      label: 'Exhibitions',
+      type: 'json' as const,
+      schema: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            title: { type: 'string', title: 'Exhibition Title' },
+            venue: { type: 'string', title: 'Venue' },
+            location: { type: 'string', title: 'Location' },
+            year: { type: 'string', title: 'Year' },
+            type: { 
+              type: 'string', 
+              title: 'Type',
+              enum: ['solo', 'group', 'online']
+            },
+            description: { type: 'string', title: 'Description' }
+          },
+          required: ['title', 'venue', 'year', 'type']
+        }
+      },
+      placeholder: 'Add exhibition history'
+    },
+    {
+      key: 'press',
+      label: 'Press & Media',
+      type: 'json' as const,
+      schema: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            title: { type: 'string', title: 'Article/Interview Title' },
+            publication: { type: 'string', title: 'Publication' },
+            date: { type: 'string', title: 'Date' },
+            url: { type: 'string', title: 'URL' },
+            type: { 
+              type: 'string', 
+              title: 'Type',
+              enum: ['feature', 'interview', 'review', 'news']
+            }
+          },
+          required: ['title', 'publication', 'date', 'type']
+        }
+      },
+      placeholder: 'Add press coverage and media mentions'
     }
   ]
 }

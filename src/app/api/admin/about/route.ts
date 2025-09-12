@@ -19,6 +19,9 @@ export async function GET() {
       return NextResponse.json({
         id: null,
         content: null,
+        socials: [],
+        exhibitions: [],
+        press: [],
         updated_at: null
       })
     }
@@ -33,8 +36,46 @@ export async function GET() {
   }
 }
 
-// POST /api/admin/about - Create or update about page content
+// POST /api/admin/about - Create about page content
 export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json()
+
+    // Validate input
+    const validatedData = UpdateAboutPageSchema.parse(body)
+
+    // Create new
+    const { data, error } = await supabaseAdmin
+      .from('about_page')
+      .insert(validatedData)
+      .select()
+      .single()
+
+    if (error) throw error
+
+    // Revalidate cache
+    revalidateTag('about')
+
+    return NextResponse.json(data)
+  } catch (error) {
+    console.error('Error creating about page:', error)
+
+    if (error instanceof Error && error.name === 'ZodError') {
+      return NextResponse.json(
+        { error: 'Invalid input data', details: error.message },
+        { status: 400 }
+      )
+    }
+
+    return NextResponse.json(
+      { error: 'Failed to create about page' },
+      { status: 500 }
+    )
+  }
+}
+
+// PUT /api/admin/about - Update about page content
+export async function PUT(request: NextRequest) {
   try {
     const body = await request.json()
 
@@ -65,7 +106,7 @@ export async function POST(request: NextRequest) {
       if (error) throw error
       result = data
     } else {
-      // Create new
+      // Create new if doesn't exist
       const { data, error } = await supabaseAdmin
         .from('about_page')
         .insert(validatedData)
