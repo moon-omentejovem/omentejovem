@@ -1,6 +1,10 @@
-# Supabase Integration Guide
+# Integração Supabase
 
-Este guia documenta a integração do Supabase no projeto Omentejovem, seguindo as melhores práticas oficiais para Next.js.
+> **Documentação da integração Supabase no projeto**
+>
+> Como usar Supabase corretamente com Next.js 14 e App Router.
+
+---
 
 ## 📁 Estrutura dos Arquivos
 
@@ -10,9 +14,11 @@ utils/supabase/
 ├── server.ts          # Cliente para server components/API routes
 └── middleware.ts      # Middleware para gestão de sessões
 
-src/lib/
-├── supabase.ts        # Helper functions para queries
-└── supabase/config.ts # Configurações e constantes
+services/
+├── base.service.ts    # Classe base para gerenciamento inteligente
+├── artwork.service.ts # Service especializado para artworks
+├── series.service.ts  # Service especializado para séries
+└── ...               # Outros services especializados
 ```
 
 ## 🔧 Configuração
@@ -26,67 +32,56 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 ```
 
-### Database Schema
+### Schema do Banco
 
-O schema está definido em `supabase-setup.sql` e inclui:
+O schema está documentado em detalhes no arquivo `supabase-setup.sql` e inclui:
 
-- **artworks**: NFTs e peças de arte
+- **artworks**: NFTs e peças de arte com metadados completos
 - **series**: Coleções/grupos de artworks
-- **series_artworks**: Relacionamento N:N
-- **artifacts**: Conteúdo adicional
-- **about_page**: Página sobre (singleton)
-- **user_roles**: Gestão de permissões
+- **series_artworks**: Relacionamento N:N entre séries e artworks
+- **artifacts**: Conteúdo adicional (coleções, vídeos)
+- **about_page**: Página sobre (singleton com Tiptap JSON)
+- **user_roles**: Gestão de permissões administrativas
 
 ## 🚀 Como Usar
 
-### Client Components
+### Services (Recomendado)
 
 ```tsx
-import { createClient } from '@/utils/supabase/client'
+// Usar Services em vez de cliente direto
+import { ArtworkService } from '@/services/artwork.service'
 
-export default function MyClientComponent() {
-  const supabase = createClient()
+export default async function PortfolioPage() {
+  const artworks = await ArtworkService.getArtworks({ featured: true })
 
-  // Usar supabase aqui...
+  return <ArtworkGrid artworks={artworks} />
 }
 ```
 
-### Server Components
+### Client Components (Quando Necessário)
 
 ```tsx
-import { createClient } from '@/utils/supabase/server'
+'use client'
+import { createClient } from '@/utils/supabase/client'
 
-export default async function MyServerComponent() {
-  const supabase = await createClient()
+export default function InteractiveComponent() {
+  const supabase = createClient()
 
-  // Usar supabase aqui...
+  // Usar apenas para interações client-side
 }
 ```
 
 ### API Routes
 
 ```tsx
-import { createServerActionClient } from '@/utils/supabase/server'
+import { ArtworkService } from '@/services/artwork.service'
 
 export async function POST(request: Request) {
-  const supabase = await createServerActionClient()
+  // Services são production-safe para API routes
+  const artworks = await ArtworkService.createArtwork(data)
 
-  // Usar supabase aqui...
+  return Response.json(artworks)
 }
-```
-
-### Helper Functions
-
-Use as funções helper em `src/lib/supabase.ts`:
-
-```tsx
-import { fetchArtworks, fetchSeries } from '@/lib/supabase'
-
-// Buscar artworks em destaque
-const featured = await fetchArtworks({ featured: true, limit: 6 })
-
-// Buscar séries com artworks
-const series = await fetchSeries({ includeArtworks: true })
 ```
 
 ## 🔐 Row Level Security (RLS)
@@ -95,60 +90,54 @@ const series = await fetchSeries({ includeArtworks: true })
 
 - **Leitura Pública**: Todos os dados são legíveis publicamente
 - **Escrita Restrita**: Apenas usuários autenticados podem escrever
-- **Admin Only**: Operações de gestão requerem autenticação
+- **Admin Only**: Operações de gestão requerem role 'admin'
 
-### Implementação
+### Helper Function
 
 ```sql
--- Leitura pública
-create policy "read_public" on public.artworks
-  for select using (true);
-
--- Escrita para admins
-create policy "write_admins" on public.artworks
-  for all using (auth.role() = 'authenticated')
-  with check (auth.role() = 'authenticated');
+-- Função para verificar se usuário é admin
+CREATE OR REPLACE FUNCTION is_admin()
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN EXISTS (
+    SELECT 1 FROM user_roles
+    WHERE user_id = auth.uid() AND role = 'admin'
+  );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 ```
 
-## 📝 Padrões de Código
+## 📝 Padrões de Uso
 
-### 1. Tratamento de Erros
-
-```tsx
-try {
-  const data = await fetchArtworks()
-} catch (error) {
-  console.error('Error:', error)
-  // Tratar erro apropriadamente
-}
-```
-
-### 2. Tipagem
+### 1. Services Architecture (Atual)
 
 ```tsx
-import type { Database } from '@/types/supabase'
+// ✅ Recomendado - usar Services
+const artworks = await ArtworkService.getArtworks()
 
-type Artwork = Database['public']['Tables']['artworks']['Row']
-```
-
-### 3. Queries Otimizadas
-
-```tsx
-// ✅ Bom - especificar campos necessários
-const { data } = await supabase.from('artworks').select('id, title, image_url')
-
-// ❌ Evitar - selecionar tudo sem necessidade
+// ❌ Evitar - cliente direto em pages
+const supabase = createClient()
 const { data } = await supabase.from('artworks').select('*')
 ```
 
-### 4. Cache e Revalidação
+### 2. Error Handling
 
 ```tsx
-// Em Server Components
-const artworks = await fetchArtworks()
+// Services têm error handling integrado
+const { artworks, error } = await ArtworkService.safeGetArtworks()
 
-// Com revalidação no Next.js
-export const revalidate = 60 // 1 minuto
+if (error) {
+  console.error('Error loading artworks:', error)
+  return <ErrorDisplay />
+}
+```
+
+### 3. Cache Automático
+
+```tsx
+// Services usam React cache() automaticamente
+const artworks = await ArtworkService.getArtworks() // Cached
+const featuredArtworks = await ArtworkService.getArtworks({ featured: true }) // Separate cache
 ```
 
 ## 🛡️ Segurança
@@ -156,36 +145,22 @@ export const revalidate = 60 // 1 minuto
 ### Environment Variables
 
 - **Públicas**: `NEXT_PUBLIC_*` - expostas no client
-- **Privadas**: `SUPABASE_SERVICE_ROLE_KEY` - apenas no server
+- **Privadas**: `SUPABASE_SERVICE_ROLE_KEY` - apenas no server/Services
 
 ### Authentication
 
 ```tsx
-const {
-  data: { user }
-} = await supabase.auth.getUser()
+// Verificação de auth via Services
+const user = await AuthService.getCurrentUser()
 
 if (!user) {
   redirect('/auth/login')
 }
 ```
 
-### Service Role
-
-Use apenas no servidor para operações administrativas:
-
-```tsx
-import { createClient } from '@supabase/supabase-js'
-
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
-```
-
 ## 🔄 Middleware
 
-O middleware em `utils/supabase/middleware.ts` é responsável por:
+O middleware em `utils/supabase/middleware.ts` gerencia:
 
 - Refresh automático de tokens
 - Sincronização de sessão entre client/server
@@ -202,82 +177,75 @@ export async function middleware(request: NextRequest) {
 
 ## 📊 Performance
 
-### 1. Queries Eficientes
+### Services com Cache
 
 ```tsx
-// ✅ Com paginação
-const { data } = await supabase
-  .from('artworks')
-  .select('*')
-  .range(0, 9)
-
-  // ✅ Com índices apropriados
-  .eq('is_featured', true)
-  .order('posted_at', { ascending: false })
+// Cache automático por request
+export class ArtworkService extends BaseService {
+  static getArtworks = cache(async (filters: ArtworkFilters = {}) => {
+    // Implementation with automatic caching
+  })
+}
 ```
 
-### 2. Relacionamentos
+### Static Generation
 
 ```tsx
-// ✅ Join eficiente
-const { data } = await supabase.from('artworks').select(`
-    *,
-    series_artworks(
-      series(name, slug)
-    )
-  `)
+// generateStaticParams para páginas dinâmicas
+export async function generateStaticParams() {
+  const slugs = await ArtworkService.getSlugs()
+  return slugs.map((slug) => ({ slug }))
+}
 ```
 
-### 3. Caching
+### Query Optimization
 
-```tsx
-// Next.js App Router
-export const revalidate = 3600 // 1 hora
-
-// React Query
-const { data } = useQuery({
-  queryKey: ['artworks'],
-  queryFn: fetchArtworks,
-  staleTime: 1000 * 60 * 5 // 5 minutos
-})
+```sql
+-- ✅ Queries otimizadas nos Services
+SELECT
+  a.*,
+  json_agg(s.*) as series
+FROM artworks a
+LEFT JOIN series_artworks sa ON a.id = sa.artwork_id
+LEFT JOIN series s ON sa.series_id = s.id
+WHERE a.is_featured = true
+GROUP BY a.id
+ORDER BY a.posted_at DESC
+LIMIT 6;
 ```
 
 ## 🚨 Troubleshooting
 
 ### Problemas Comuns
 
-1. **"Cannot find name 'process'"**
-
-   - Verificar se `@types/node` está instalado
-   - Adicionar `"types": ["node"]` no tsconfig.json
+1. **"DYNAMIC_SERVER_USAGE"**
+   - **Solução**: Usar Services em vez de cliente direto
+   - Services têm context detection automático
 
 2. **"Missing environment variables"**
-
    - Verificar arquivo `.env.local`
    - Confirmar variáveis no Vercel/deploy
 
-3. **"Session not found"**
-
-   - Verificar middleware
-   - Confirmar cookies estão sendo passados
-
-4. **RLS Policy Errors**
+3. **"RLS Policy Errors"**
    - Verificar políticas no Supabase Dashboard
    - Confirmar autenticação do usuário
 
 ### Debug Mode
 
 ```tsx
-// Ativar logs detalhados
-const supabase = createClient()
-supabase.auth.onAuthStateChange((event, session) => {
-  console.log('Auth event:', event, session)
-})
+// Services têm logging integrado
+const artworks = await ArtworkService.getArtworks()
+// Logs automáticos em caso de erro
 ```
 
 ## 📚 Recursos
 
 - [Supabase Docs](https://supabase.com/docs)
 - [Next.js + Supabase Guide](https://supabase.com/docs/guides/getting-started/quickstarts/nextjs)
-- [RLS Documentation](https://supabase.com/docs/guides/auth/row-level-security)
-- [Type Generation](https://supabase.com/docs/guides/api/generating-types)
+- [Schema Setup](../supabase-setup.sql)
+
+---
+
+**Status**: ✅ Integração completa e production-ready
+**Arquitetura**: Services-based com BaseService pattern
+**Performance**: Otimizada com cache e static generation
