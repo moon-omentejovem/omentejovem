@@ -7,8 +7,8 @@
 
 import { processArtwork, type ArtworkWithSeries } from '@/types/artwork'
 import type { Database } from '@/types/supabase'
-import { createProductionClient } from '@/utils/supabase/server'
 import { cache } from 'react'
+import { BaseService } from './base.service'
 
 // Type definitions
 type DatabaseArtwork = Database['public']['Tables']['artworks']['Row']
@@ -40,15 +40,13 @@ export interface ProcessedArtworkData {
 /**
  * Artwork Service Class
  */
-export class ArtworkService {
+export class ArtworkService extends BaseService {
   /**
    * Get artworks with flexible filtering options
    */
   static getArtworks = cache(
     async (filters: ArtworkFilters = {}): Promise<ProcessedArtworkData> => {
-      const supabase = await createProductionClient()
-
-      try {
+      return this.executeQuery(async (supabase) => {
         let query = supabase.from('artworks').select(`
           *,
           series_artworks(
@@ -129,14 +127,7 @@ export class ArtworkService {
           total: count || processedArtworks.length,
           error: null
         }
-      } catch (error) {
-        console.error('Unexpected error in getArtworks:', error)
-        return {
-          artworks: [],
-          total: 0,
-          error: error instanceof Error ? error.message : 'Unknown error'
-        }
-      }
+      }, 'getArtworks')
     }
   )
 
@@ -207,9 +198,7 @@ export class ArtworkService {
    * Get single artwork by slug
    */
   static getBySlug = cache(async (slug: string) => {
-    const supabase = await createProductionClient()
-
-    try {
+    return this.safeExecuteQuery(async (supabase) => {
       const { data, error } = await supabase
         .from('artworks')
         .select(
@@ -234,10 +223,7 @@ export class ArtworkService {
       }
 
       return data ? processArtwork(data as ArtworkWithSeries) : null
-    } catch (error) {
-      console.error('Unexpected error in getBySlug:', error)
-      return null
-    }
+    }, 'getBySlug')
   })
 
   /**
@@ -298,9 +284,7 @@ export class ArtworkService {
    * Get artwork statistics
    */
   static getStats = cache(async () => {
-    const supabase = await createProductionClient()
-
-    try {
+    return this.executeQuery(async (supabase) => {
       const [
         { count: totalArtworks },
         { count: featuredCount },
@@ -328,14 +312,6 @@ export class ArtworkService {
         oneOfOne: oneOfOneCount || 0,
         editions: editionCount || 0
       }
-    } catch (error) {
-      console.error('Error fetching artwork stats:', error)
-      return {
-        total: 0,
-        featured: 0,
-        oneOfOne: 0,
-        editions: 0
-      }
-    }
+    }, 'getStats')
   })
 }

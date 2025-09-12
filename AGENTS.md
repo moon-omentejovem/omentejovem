@@ -268,10 +268,32 @@ SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key
 
 **🚀 Padrões de Produção**
 
-- **Services**: Sempre usar `createProductionClient()` que detecta contexto automaticamente
+- **Services**: Sempre usar `BaseService` como classe pai para herança
+- **Cliente Supabase**: Gerenciado apenas pelo `BaseService`, nunca diretamente
 - **Páginas dinâmicas**: Adicionar `export const dynamic = 'force-dynamic'`
-- **Error handling**: Try/catch em todos os Services com fallbacks
-- **DYNAMIC_SERVER_USAGE**: Evitado através do cliente de produção inteligente
+- **Error handling**: Padronizado via `executeQuery` e `safeExecuteQuery`
+- **DYNAMIC_SERVER_USAGE**: Evitado através da arquitetura BaseService
+
+**🏗️ Arquitetura Modular**
+
+```
+/src/services/
+├── base.service.ts          # Cliente Supabase + error handling
+├── artwork.service.ts       # extends BaseService
+├── series.service.ts        # extends BaseService
+├── artifact.service.ts      # extends BaseService
+└── about.service.ts         # extends BaseService
+
+/src/utils/supabase/
+└── server.ts               # APENAS factory de clientes
+```
+
+**Responsabilidades Claras**:
+
+- **BaseService**: Gerencia cliente Supabase + error handling
+- **Services especializados**: Lógica de negócio específica de cada entidade
+- **utils/supabase**: Apenas criação de clientes, sem lógica de negócio
+- **Páginas**: Usam APENAS Services, nunca Supabase diretamente
 
 ---
 

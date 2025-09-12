@@ -4,7 +4,11 @@ import { createServerClient } from '@supabase/ssr'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 
-export async function createClient() {
+/**
+ * Create server-side Supabase client with cookie support
+ * For use in Server Components and API routes
+ */
+export async function createServerSupabaseClient() {
   const cookieStore = await cookies()
 
   return createServerClient<Database>(
@@ -38,10 +42,10 @@ export async function createClient() {
 }
 
 /**
- * Create a simple client for build-time operations like generateStaticParams
- * This doesn't rely on cookies and can be used safely during build
+ * Create build-time Supabase client without cookie dependencies
+ * For use during static generation (generateStaticParams, etc.)
  */
-export function createBuildClient() {
+export function createBuildSupabaseClient() {
   return createSupabaseClient<Database>(
     supabaseConfig.url,
     supabaseConfig.anonKey,
@@ -54,17 +58,6 @@ export function createBuildClient() {
   )
 }
 
-/**
- * Create a production-safe client that works in all contexts
- * Uses build client during static generation and server client during runtime
- */
-export async function createProductionClient() {
-  try {
-    // Try to use the server client (works in runtime)
-    return await createClient()
-  } catch (error) {
-    // Fallback to build client (works during static generation)
-    console.log('Using build client for static generation')
-    return createBuildClient()
-  }
-}
+// Export backward compatibility aliases
+export const createClient = createServerSupabaseClient
+export const createBuildClient = createBuildSupabaseClient

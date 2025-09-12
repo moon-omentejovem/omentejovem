@@ -3,7 +3,7 @@ import { AboutContent } from './content'
 
 export default async function AboutPage() {
   // Use the new service architecture
-  const { aboutData, aboutPageData, press, exhibitions, error } = await AboutService.getAboutPageData()
+  const { aboutPage, aboutData, error } = await AboutService.getAboutPageData()
 
   if (error) {
     return (
@@ -17,11 +17,11 @@ export default async function AboutPage() {
   }
 
   return (
-    <AboutContent 
-      data={aboutData} 
-      aboutPageData={aboutPageData}
-      press={press} 
-      exhibitions={exhibitions} 
+    <AboutContent
+      data={aboutData || undefined}
+      aboutPageData={aboutPage}
+      press={[]}
+      exhibitions={[]}
     />
   )
 }
