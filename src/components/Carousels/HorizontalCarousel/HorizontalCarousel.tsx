@@ -4,18 +4,18 @@ import 'swiper/css'
 import 'swiper/css/pagination'
 import './style.css'
 
-import Image from 'next/image'
-import Link from 'next/link'
-import { FreeMode, Mousewheel, Pagination } from 'swiper/modules'
-import { Swiper, SwiperSlide } from 'swiper/react'
-import { useEffect } from 'react'
 import {
-  carouselFigcaptionAnimation,
-  carouselActiveSlideAnimation
+  carouselActiveSlideAnimation,
+  carouselFigcaptionAnimation
 } from '@/animations'
 import { cn } from '@/lib/utils'
-import { Swiper as SwiperType } from 'swiper/types'
 import { addLoadedClass } from '@/utils/lazyLoading'
+import Image from 'next/image'
+import Link from 'next/link'
+import { useEffect } from 'react'
+import { FreeMode, Mousewheel, Pagination } from 'swiper/modules'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Swiper as SwiperType } from 'swiper/types'
 
 interface HorizontalCarouselProperties {
   currentPage: number

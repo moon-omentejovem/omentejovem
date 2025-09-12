@@ -4,12 +4,12 @@ import 'swiper/css'
 import 'swiper/css/pagination'
 import './style.css'
 
+import { cn } from '@/lib/utils'
+import { addLoadedClass } from '@/utils/lazyLoading'
 import Image from 'next/image'
 import { Mousewheel, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Swiper as SwiperType } from 'swiper/types'
-import { cn } from '@/lib/utils'
-import { addLoadedClass } from '@/utils/lazyLoading'
 
 interface VerticalCarouselProperties {
   slideIndex?: number
