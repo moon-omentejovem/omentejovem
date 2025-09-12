@@ -13,24 +13,84 @@ export async function generateStaticParams() {
   // Get all series
   const { series } = await SeriesService.getSeries()
 
-  const params = []
+  try {
+    // Get all artworks from the series to maintain consistency with other pages
+    const { data: seriesArtworks, error: seriesError } = await supabase
+      .from('artworks')
+      .select(
+        `
+        *,
+        series_artworks!inner(
+          series!inner(
+            slug,
+            name
+          )
+        )
+      `
+      )
+      .eq('series_artworks.series.slug', seriesSlug)
+      .order('mint_date', { ascending: false })
 
-  // For each series, get its artworks and generate params
-  for (const seriesItem of series) {
-    const { artworks } = await ArtworkService.getArtworks({
-      seriesSlug: seriesItem.slug,
-      limit: 100
+    if (seriesError) {
+      console.error('Series query error:', seriesError)
+      return { artworks: [], selectedIndex: -1, error: seriesError }
+    }
+
+    if (!seriesArtworks || seriesArtworks.length === 0) {
+      console.log('No artworks found for series:', seriesSlug)
+      return {
+        artworks: [],
+        selectedIndex: -1,
+        error: new Error('Series not found')
+      }
+    }
+
+    // Process artworks data
+    const processedArtworks = seriesArtworks.map((artwork: any) => {
+      try {
+        return processArtwork(artwork as ArtworkWithSeries)
+      } catch (processError) {
+        console.error('Error processing artwork:', artwork.id, processError)
+        throw processError
+      }
     })
 
-    for (const artwork of artworks) {
-      params.push({
-        slug: seriesItem.slug,
-        artwork: artwork.slug
-      })
+    // Find the selected artwork index
+    const selectedIndex = processedArtworks.findIndex(
+      (artwork) => artwork.slug === artworkSlug
+    )
+
+    if (selectedIndex === -1) {
+      console.log('Artwork not found:', artworkSlug, 'in series:', seriesSlug)
+      console.log(
+        'Available slugs:',
+        processedArtworks.map((a) => a.slug)
+      )
+      return {
+        artworks: [],
+        selectedIndex: -1,
+        error: new Error('Artwork not found')
+      }
+    }
+
+    return {
+      artworks: processedArtworks,
+      selectedIndex,
+      error: null
+    }
+  } catch (error) {
+    console.error('Error in getArtworkData:', error)
+    return {
+      artworks: [],
+      selectedIndex: -1,
+      error: error instanceof Error ? error : new Error('Unknown error')
     }
   }
+}
 
-  return params
+export async function generateStaticParams() {
+  // Return empty array to let Next.js generate pages on-demand
+  return []
 }
 
 export async function generateMetadata({ params }: ArtworkPageProps) {
