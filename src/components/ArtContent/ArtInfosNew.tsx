@@ -6,7 +6,7 @@ import {
   artInfoButtonAnimation,
   resetArtInfo,
   resetButtonInfo
-} from '@/animations'
+} from '@/animations/client'
 import { CustomIcons } from '@/assets/icons'
 import { ArtDetails } from '@/components/ArtDetails'
 import { ArtLinks } from '@/components/ArtLinks'

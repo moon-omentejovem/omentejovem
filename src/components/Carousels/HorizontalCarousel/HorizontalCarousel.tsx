@@ -7,7 +7,7 @@ import './style.css'
 import {
   carouselActiveSlideAnimation,
   carouselFigcaptionAnimation
-} from '@/animations'
+} from '@/animations/client'
 import { cn } from '@/lib/utils'
 import { addLoadedClass } from '@/utils/lazyLoading'
 import Image from 'next/image'

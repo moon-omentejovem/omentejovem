@@ -4,16 +4,16 @@ import Image from 'next/image'
 import type { ReactElement } from 'react'
 import { AboutData, PressTalk } from './@types/wordpress'
 
-import { aboutAnimations } from '@/animations'
+import { aboutAnimations } from '@/animations/client'
 import { AboutArt } from '@/assets/images'
 import { Footer, FooterProperties } from '@/components/Footer'
 import { decodeRenderedString } from '@/utils/decodeRenderedString'
 import { useCallback, useEffect, useMemo } from 'react'
 
 import parse from 'html-react-parser'
-import './style.css'
-import HardCodedBio from './hardcoded-bio'
 import { BioRenderer } from './bio-renderer'
+import HardCodedBio from './hardcoded-bio'
+import './style.css'
 
 interface AboutPageData {
   id: string

@@ -1,4 +1,4 @@
-import { modalAnimations } from '@/animations'
+import { modalAnimations } from '@/animations/client'
 import * as Dialog from '@radix-ui/react-dialog'
 import { Dispatch, SetStateAction, useState } from 'react'
 

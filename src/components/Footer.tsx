@@ -1,6 +1,6 @@
 'use client'
 
-import { footerAnimations } from '@/animations'
+import { footerAnimations } from '@/animations/client'
 import { ExternalLinkIcon } from 'lucide-react'
 import Link from 'next/link'
 import type { ReactElement } from 'react'

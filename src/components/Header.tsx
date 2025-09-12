@@ -1,6 +1,6 @@
 'use client'
 
-import { headerAnimations } from '@/animations'
+import { headerAnimations } from '@/animations/client'
 import { logo } from '@/assets/images'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'

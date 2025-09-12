@@ -1,10 +1,10 @@
 'use client'
 
-import { ReactElement, useCallback, useEffect, useState } from 'react'
-import { Icons } from './Icons'
-import { filterAnimations } from '@/animations'
+import { filterAnimations } from '@/animations/client'
 import { cn } from '@/lib/utils'
+import { ReactElement, useCallback, useEffect, useState } from 'react'
 import { ChainedFilter } from './ArtFilter/filters'
+import { Icons } from './Icons'
 
 export interface Filter {
   name: string
