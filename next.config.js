@@ -7,7 +7,7 @@ const nextConfig = {
   },
   experimental: {
     // Improve server component stability
-    serverComponentsExternalPackages: ['@supabase/supabase-js']
+    serverComponentsExternalPackages: ['@supabase/supabase-js', 'gsap']
   },
   images: {
     unoptimized: true, // Ativar otimização de imagens do Next.js

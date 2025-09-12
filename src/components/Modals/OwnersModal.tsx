@@ -1,5 +1,5 @@
 import { modalAnimations } from '@/animations/client'
-import { Owner } from '@/types/legacy'
+import { Owner } from '@/api/resolver/types'
 import * as Dialog from '@radix-ui/react-dialog'
 import { Dispatch, ReactNode, SetStateAction, useState } from 'react'
 import { Icons } from '../Icons'
