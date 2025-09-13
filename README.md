@@ -1,4 +1,4 @@
-![Omentejovem Logo](/logo.jpg)
+![Omentejovem Logo](/logo.png)
 
 # Omentejovem
 
