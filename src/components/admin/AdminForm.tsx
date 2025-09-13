@@ -251,7 +251,7 @@ export default function AdminForm<T extends Record<string, any>>({
               type="button"
               color="failure"
               onClick={handlePermanentDelete}
-              className="flex items-center justify-center space-x-2"
+              className="flex items-center justify-center space-x-2 mr-auto"
             >
               <span>Delete Permanently</span>
             </Button>
