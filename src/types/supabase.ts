@@ -124,6 +124,7 @@ export type Database = {
           raw_image_path: string | null
           raw_image_url: string | null
           slug: string
+          status: string
           title: string
           token_id: string | null
           type: string
@@ -148,6 +149,7 @@ export type Database = {
           raw_image_path?: string | null
           raw_image_url?: string | null
           slug: string
+          status?: string
           title: string
           token_id?: string | null
           type: string
@@ -172,6 +174,7 @@ export type Database = {
           raw_image_path?: string | null
           raw_image_url?: string | null
           slug?: string
+          status?: string
           title?: string
           token_id?: string | null
           type?: string

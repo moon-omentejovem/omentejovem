@@ -49,44 +49,69 @@ export default function ArtworksPage() {
   }
 
   const handleDuplicate = async (artwork: ArtworkRow) => {
-    try {
-      // Create a copy without id and with modified title and slug
-      const timestamp = Date.now()
-      const duplicateData = {
-        ...artwork,
-        id: undefined,
-        title: `${artwork.title} (Copy)`,
-        slug: `${artwork.slug}-copy-${timestamp}`,
-        created_at: undefined,
-        updated_at: undefined,
-        posted_at: new Date().toISOString()
-      }
+    if (confirm(`Are you sure you want to duplicate "${artwork.title}"?`)) {
+      try {
+        // Create a copy without id and with modified title and slug
+        const timestamp = Date.now()
+        const duplicateData = {
+          ...artwork,
+          id: undefined,
+          title: `${artwork.title} (Copy)`,
+          slug: `${artwork.slug}-copy-${timestamp}`,
+          created_at: undefined,
+          updated_at: undefined,
+          posted_at: new Date().toISOString()
+        }
 
-      const response = await fetch('/api/admin/artworks', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(duplicateData)
-      })
+        const response = await fetch('/api/admin/artworks', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(duplicateData)
+        })
 
-      if (response.ok) {
-        fetchArtworks(true) // Refresh the list
-        toast.success('Artwork duplicated successfully!')
-      } else {
-        const error = await response.json()
+        if (response.ok) {
+          fetchArtworks(true) // Refresh the list
+          toast.success('Artwork duplicated successfully!')
+        } else {
+          const error = await response.json()
+          console.error('Error duplicating artwork:', error)
+          toast.error(
+            'Failed to duplicate artwork: ' + (error.error || 'Unknown error')
+          )
+        }
+      } catch (error) {
         console.error('Error duplicating artwork:', error)
-        toast.error(
-          'Failed to duplicate artwork: ' + (error.error || 'Unknown error')
-        )
+        toast.error('Failed to duplicate artwork')
       }
-    } catch (error) {
-      console.error('Error duplicating artwork:', error)
-      toast.error('Failed to duplicate artwork')
     }
   }
 
   const handleDelete = async (artwork: ArtworkRow) => {
+    const handleToggleDraft = async (artwork: ArtworkRow) => {
+      const newStatus = artwork.status === 'draft' ? 'published' : 'draft'
+      try {
+        const response = await fetch(`/api/admin/artworks/${artwork.id}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ status: newStatus })
+        })
+        if (response.ok) {
+          fetchArtworks(true)
+          toast.success(`Artwork marked as ${newStatus}`)
+        } else {
+          const error = await response.json()
+          toast.error(
+            'Failed to update status: ' + (error.error || 'Unknown error')
+          )
+        }
+      } catch (error) {
+        toast.error('Failed to update status')
+      }
+    }
     if (
       confirm(
         `Are you sure you want to delete "${artwork.title}"? This action cannot be undone.`
@@ -127,6 +152,22 @@ export default function ArtworksPage() {
         onSort={() => {}} // TODO: Implement sorting
         onLoadMore={() => fetchArtworks()}
         hasMore={hasMore}
+        renderCell={(item, column) => {
+          if (column.key === 'status') {
+            return (
+              <span
+                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${item.status === 'draft' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'}`}
+              >
+                {item.status === 'draft' ? 'Draft' : 'Published'}
+              </span>
+            )
+          }
+        }}
+        actions={{
+          ...artworksDescriptor.actions,
+          toggleDraft: true
+        }}
+        onToggleDraft={handleToggleDraft}
       />
     </AdminLayout>
   )

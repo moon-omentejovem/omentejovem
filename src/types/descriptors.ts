@@ -97,6 +97,7 @@ export const artworksDescriptor: ResourceDescriptor = {
     { key: 'type', label: 'Type', render: 'badge' },
     { key: 'editions_total', label: 'Number of Editions', render: 'number' },
     { key: 'blockchain', label: 'Blockchain', render: 'badge' },
+    { key: 'status', label: 'Status', render: 'badge' },
     { key: 'video_url', label: 'Video', render: 'link' }
   ],
   form: [
