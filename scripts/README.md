@@ -64,20 +64,17 @@ Scripts para limpeza, otimização e manutenção.
 
 **Uso**: Manutenção semanal/mensal.
 
-### 🐛 [`debug/`](./debug/) - **Scripts de Debug**
+### �️ [`tmp/`](./tmp/) - **Scripts Temporários**
 
-Scripts para troubleshooting e correção de problemas.
+Scripts temporários de desenvolvimento e migração específica.
 
-| Script                     | Função                          |
-| -------------------------- | ------------------------------- |
-| `debug-comparison.js`      | Debug de comparação de nomes    |
-| `debug-name-comparison.js` | Análise de caracteres especiais |
-| `fix-apostrophe.js`        | Correção de aspas curvas/retas  |
-| `fix-exact-match.js`       | Força correspondência exata     |
-| `test-migrate-images.js`   | Teste de migração com subset    |
-| `check-missing-artwork.js` | Busca detalhada por artwork     |
+| Categoria               | Scripts                          | Status             |
+| ----------------------- | -------------------------------- | ------------------ |
+| Raw Image URL Migration | `apply-*`, `populate-*`, `fix-*` | ✅ COMPLETO        |
+| Debug Legacy            | `debug-*`, `check-*`             | 📋 HISTÓRICO       |
+| Testes                  | `test-*`, `quick-analysis.js`    | 🧪 DESENVOLVIMENTO |
 
-**Uso**: Desenvolvimento e resolução de problemas.
+**Uso**: Referência histórica e debugging futuro. **⚠️ Não executar em produção.**
 
 ### 🛠️ [`utils/`](./utils/) - **Scripts Utilitários**
 
@@ -203,12 +200,11 @@ node scripts/utils/health-check.js
 3. `analysis/complete-migration-summary.js` - Relatório
 4. `utils/health-check.js` - Saúde
 
-### **🐛 Troubleshooting**
+#### **Troubleshooting**
 
 1. `utils/health-check.js` - Identificar problema
-2. `debug/debug-*.js` - Debug específico
-3. `debug/fix-*.js` - Aplicar correções
-4. `analysis/final-migration-check.js` - Validar
+2. `tmp/debug-*.js` - Debug específico (referência histórica)
+3. `analysis/final-migration-check.js` - Validar
 
 ---
 
@@ -218,8 +214,8 @@ node scripts/utils/health-check.js
 - **[Migration README](./migration/README.md)** - Migração de conteúdo
 - **[Analysis README](./analysis/README.md)** - Análise e relatórios
 - **[Maintenance README](./maintenance/README.md)** - Manutenção
-- **[Debug README](./debug/README.md)** - Troubleshooting
 - **[Utils README](./utils/README.md)** - Utilitários
+- **[Tmp README](./tmp/README.md)** - Scripts temporários e histórico
 
 ---
 
