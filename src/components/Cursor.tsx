@@ -61,6 +61,7 @@ export function Cursor(): ReactElement {
         src={imageSource}
         className="min-h-fit min-w-fit select-none"
         unoptimized
+        priority
       />
     </div>
   )

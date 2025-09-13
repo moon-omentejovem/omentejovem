@@ -36,8 +36,6 @@ export function ArtInfo({
   const [showDetails, setShowDetails] = useState(false)
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
 
-  console.log('selectedArtwork', selectedArtwork)
-
   const hasVideo = !!selectedArtwork.video_url
 
   const onChangeToOtherSlide = async (index: number) => {
@@ -136,7 +134,6 @@ export function ArtInfo({
   }
 
   const descriptionText = getDescriptionText(selectedArtwork.description)
-  console.log({ selectedArtwork })
 
   return (
     <>
@@ -234,6 +231,13 @@ export function ArtInfo({
                 style={{ transitionProperty: 'opacity, max-height' }}
               >
                 <div id="art-info-wrapper" className={cn('flex flex-col')}>
+                  <div
+                    id="art-ownership-collections"
+                    className="opacity-0"
+                    style={{ display: 'none' }}
+                  >
+                    {/* Placeholder for ownership/collections info */}
+                  </div>
                   <div id="art-links" className="mt-12">
                     <ArtLinks
                       email={email}

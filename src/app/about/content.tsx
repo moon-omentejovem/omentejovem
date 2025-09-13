@@ -66,8 +66,6 @@ export function AboutContent({
   press,
   exhibitions
 }: AboutContentProperties): ReactElement {
-  console.log('socials!!', data)
-
   useEffect(() => {
     aboutAnimations()
   }, [])
