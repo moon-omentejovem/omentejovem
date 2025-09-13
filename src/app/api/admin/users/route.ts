@@ -56,7 +56,7 @@ export async function GET() {
     for (const adminUser of adminUsers) {
       try {
         const { data: authUser } = await supabaseAdmin.auth.admin.getUserById(
-          adminUser.user_id
+          adminUser.user_id || ''
         )
         if (authUser.user) {
           usersWithDetails.push({

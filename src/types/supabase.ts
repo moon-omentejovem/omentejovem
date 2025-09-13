@@ -1,4 +1,4 @@
-export type Json =
+﻿export type Json =
   | string
   | number
   | boolean
@@ -12,25 +12,59 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: '13.0.4'
   }
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   public: {
     Tables: {
       about_page: {
         Row: {
           content: Json
           created_at: string | null
+          exhibitions: Json | null
           id: string
+          press: Json | null
+          socials: Json | null
           updated_at: string | null
         }
         Insert: {
           content: Json
           created_at?: string | null
+          exhibitions?: Json | null
           id?: string
+          press?: Json | null
+          socials?: Json | null
           updated_at?: string | null
         }
         Update: {
           content?: Json
           created_at?: string | null
+          exhibitions?: Json | null
           id?: string
+          press?: Json | null
+          socials?: Json | null
           updated_at?: string | null
         }
         Relationships: []
@@ -85,6 +119,7 @@ export type Database = {
           token_id: string | null
           type: string
           updated_at: string | null
+          video_url: string | null
         }
         Insert: {
           created_at?: string | null
@@ -102,6 +137,7 @@ export type Database = {
           token_id?: string | null
           type: string
           updated_at?: string | null
+          video_url?: string | null
         }
         Update: {
           created_at?: string | null
@@ -119,6 +155,7 @@ export type Database = {
           token_id?: string | null
           type?: string
           updated_at?: string | null
+          video_url?: string | null
         }
         Relationships: []
       }
@@ -182,7 +219,7 @@ export type Database = {
             isOneToOne: false
             referencedRelation: 'series'
             referencedColumns: ['id']
-          }
+          },
         ]
       }
       user_roles: {
@@ -191,38 +228,37 @@ export type Database = {
           id: string
           role: string
           updated_at: string
-          user_id: string
+          user_id: string | null
         }
         Insert: {
           created_at?: string
           id?: string
           role?: string
           updated_at?: string
-          user_id: string
+          user_id?: string | null
         }
         Update: {
           created_at?: string
           id?: string
           role?: string
           updated_at?: string
-          user_id?: string
+          user_id?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: 'user_roles_user_id_fkey'
-            columns: ['user_id']
-            isOneToOne: true
-            referencedRelation: 'users'
-            referencedColumns: ['id']
-          }
-        ]
+        Relationships: []
       }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: { required_role: string }
+        Returns: boolean
+      }
+      is_admin: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
@@ -246,7 +282,7 @@ export type Tables<
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])
-    : never = never
+    : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -274,7 +310,7 @@ export type TablesInsert<
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
-    : never = never
+    : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -299,7 +335,7 @@ export type TablesUpdate<
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
-    : never = never
+    : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -324,7 +360,7 @@ export type Enums<
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums']
-    : never = never
+    : never = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -341,7 +377,7 @@ export type CompositeTypes<
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes']
-    : never = never
+    : never = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -351,7 +387,10 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
-    Enums: {}
-  }
+    Enums: {},
+  },
 } as const
