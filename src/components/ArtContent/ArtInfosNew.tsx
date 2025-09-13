@@ -136,6 +136,7 @@ export function ArtInfosNew({
   }
 
   const descriptionText = getDescriptionText(selectedArtwork.description)
+  console.log({ selectedArtwork })
 
   return (
     <>
@@ -148,7 +149,7 @@ export function ArtInfosNew({
           <div className="xl:art-detail-inner-container overflow-hidden flex flex-1 justify-start xl:justify-end">
             <ArtDetails
               detailedImage={selectedArtwork.image_url}
-              image={selectedArtwork.image_cached_path || ''}
+              image={selectedArtwork.image_url || ''}
               name={selectedArtwork.title || ''}
             />
           </div>
