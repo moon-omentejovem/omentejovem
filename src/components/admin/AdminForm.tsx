@@ -363,25 +363,25 @@ export default function AdminForm<T extends Record<string, any>>({
           <div key={field.key} className="space-y-2">
             <Label htmlFor={field.key} value={field.label || field.key} />
             <div className="flex items-center gap-2">
-              <TextInput
-                id={field.key}
-                type="url"
-                value={value}
-                onChange={(e) => handleInputChange(field.key, e.target.value)}
-                placeholder={field.placeholder}
-                color={error ? 'failure' : undefined}
+              <Label className="mb-2 block" htmlFor="large-file-upload">
+                {!!formData['image_url'] ? 'Change image' : 'Upload image'}
+              </Label>
+              <FileInput id="large-file-upload" />
+              <FileInput
+                accept="image/*"
+                onChange={handleFileChange}
+                sizing="lg"
               />
-              <FileInput accept="image/*" onChange={handleFileChange} />
             </div>
-            {value && (
+            {formData['image_url'] && (
               <div className="mt-2">
                 <Image
-                  src={value}
+                  src={formData['image_url']}
                   alt="Preview"
-                  width={192}
-                  height={192}
-                  sizes="192px"
-                  className="w-48 h-48 object-cover rounded-lg border border-gray-200"
+                  width={640}
+                  height={640}
+                  sizes="640px; (max-width: 640px) 100vw"
+                  className="object-cover rounded-lg border border-gray-200"
                   onError={(e) => {
                     e.currentTarget.style.display = 'none'
                   }}

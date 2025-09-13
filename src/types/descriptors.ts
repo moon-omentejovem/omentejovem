@@ -229,7 +229,7 @@ export const artworksDescriptor: ResourceDescriptor = {
     create: true,
     edit: true,
     duplicate: true,
-    delete: true
+    delete: false
   }
 }
 
@@ -356,7 +356,7 @@ export const artifactsDescriptor: ResourceDescriptor = {
     create: true,
     edit: true,
     duplicate: true,
-    delete: true
+    delete: false
   }
 }
 

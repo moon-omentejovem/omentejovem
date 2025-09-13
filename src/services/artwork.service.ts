@@ -24,6 +24,8 @@ export interface ArtworkFilters {
   random?: boolean
   orderBy?: 'posted_at' | 'mint_date' | 'created_at'
   ascending?: boolean
+  status?: 'draft' | 'published' | 'all'
+  includesDrafts?: boolean
 }
 
 export interface ArtworkWithRelations extends DatabaseArtwork {
@@ -92,6 +94,16 @@ export class ArtworkService extends BaseService {
 
         if (filters.type) {
           query = query.eq('type', filters.type)
+        }
+
+        // Status filter - default to 'published' for public access
+        if (filters.status === 'draft') {
+          query = query.eq('status', 'draft')
+        } else if (filters.status === 'published') {
+          query = query.eq('status', 'published')
+        } else if (filters.status !== 'all' && !filters.includesDrafts) {
+          // Default behavior: only published for public access
+          query = query.eq('status', 'published')
         }
 
         // Series filter requires a subquery
@@ -337,4 +349,72 @@ export class ArtworkService extends BaseService {
       }
     }, 'getStats')
   })
+
+  /**
+   * PUBLIC METHODS - Only published artworks
+   * Use these methods for public-facing pages
+   */
+
+  /**
+   * Get published artworks for public pages
+   */
+  static getPublishedArtworks = cache(
+    async (filters: Omit<ArtworkFilters, 'status' | 'includesDrafts'> = {}): Promise<ArtworkData> => {
+      return this.getArtworks({
+        ...filters,
+        status: 'published'
+      })
+    }
+  )
+
+  /**
+   * Get published featured artworks for homepage
+   */
+  static getPublishedFeatured = cache(
+    async (options: { limit?: number; random?: boolean } = {}) => {
+      return this.getPublishedArtworks({
+        featured: true,
+        limit: options.limit || 10,
+        random: options.random
+      })
+    }
+  )
+
+  /**
+   * Get published one-of-one artworks
+   */
+  static getPublishedOneOfOne = cache(async (options: { limit?: number } = {}) => {
+    return this.getPublishedArtworks({
+      oneOfOne: true,
+      type: 'single',
+      limit: options.limit
+    })
+  })
+
+  /**
+   * Get published edition artworks
+   */
+  static getPublishedEditions = cache(async (options: { limit?: number } = {}) => {
+    return this.getPublishedArtworks({
+      type: 'edition',
+      limit: options.limit
+    })
+  })
+
+  /**
+   * ADMIN METHODS - All artworks including drafts
+   * Use these methods for admin pages
+   */
+
+  /**
+   * Get all artworks for admin interface
+   */
+  static getAdminArtworks = cache(
+    async (filters: ArtworkFilters = {}): Promise<ArtworkData> => {
+      return this.getArtworks({
+        ...filters,
+        includesDrafts: true
+      })
+    }
+  )
 }

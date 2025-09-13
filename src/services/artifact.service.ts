@@ -24,6 +24,8 @@ export interface ArtifactFilters {
   limit?: number
   orderBy?: 'created_at' | 'updated_at' | 'title'
   ascending?: boolean
+  status?: 'draft' | 'published' | 'all'
+  includesDrafts?: boolean
 }
 
 /**
@@ -37,6 +39,16 @@ export class ArtifactService extends BaseService {
     async (filters: ArtifactFilters = {}): Promise<ProcessedArtifactData> => {
       return this.executeQuery(async (supabase) => {
         let query = supabase.from('artifacts').select('*')
+
+        // Status filter - default to 'published' for public access
+        if (filters.status === 'draft') {
+          query = query.eq('status', 'draft')
+        } else if (filters.status === 'published') {
+          query = query.eq('status', 'published')
+        } else if (filters.status !== 'all' && !filters.includesDrafts) {
+          // Default behavior: only published for public access
+          query = query.eq('status', 'published')
+        }
 
         // Apply ordering
         const orderBy = filters.orderBy || 'created_at'
@@ -165,6 +177,52 @@ export class ArtifactService extends BaseService {
 
         return data as ArtifactData
       }, 'getBySlug')
+    }
+  )
+
+  /**
+   * PUBLIC METHODS - Only published artifacts
+   * Use these methods for public-facing pages
+   */
+
+  /**
+   * Get published artifacts for public pages
+   */
+  static getPublishedArtifacts = cache(
+    async (filters: Omit<ArtifactFilters, 'status' | 'includesDrafts'> = {}): Promise<ProcessedArtifactData> => {
+      return this.getArtifacts({
+        ...filters,
+        status: 'published'
+      })
+    }
+  )
+
+  /**
+   * Get published artifacts for public artifacts page
+   */
+  static getPublishedForArtifactsPage = cache(
+    async (): Promise<ProcessedArtifactData> => {
+      return this.getPublishedArtifacts({
+        orderBy: 'created_at',
+        ascending: false
+      })
+    }
+  )
+
+  /**
+   * ADMIN METHODS - All artifacts including drafts
+   * Use these methods for admin pages
+   */
+
+  /**
+   * Get all artifacts for admin interface
+   */
+  static getAdminArtifacts = cache(
+    async (filters: ArtifactFilters = {}): Promise<ProcessedArtifactData> => {
+      return this.getArtifacts({
+        ...filters,
+        includesDrafts: true
+      })
     }
   )
 }

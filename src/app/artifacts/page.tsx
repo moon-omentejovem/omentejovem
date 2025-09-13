@@ -6,8 +6,8 @@ export default async function ArtifactsPage() {
   const hasArtifacts = await ArtifactService.hasArtifacts()
   
   if (hasArtifacts) {
-    // If we have artifacts, fetch and display them
-    const { artifacts, error } = await ArtifactService.getForArtifactsPage()
+    // If we have artifacts, fetch and display only published ones
+    const { artifacts, error } = await ArtifactService.getPublishedForArtifactsPage()
     
     if (error) {
       console.error('Error loading artifacts:', error)

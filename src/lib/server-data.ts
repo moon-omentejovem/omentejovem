@@ -23,7 +23,7 @@ export interface PortfolioPageData {
  */
 export async function getHomepageData(): Promise<PortfolioPageData> {
   try {
-    const result = await ArtworkService.getHomepageData()
+    const result = await ArtworkService.getPublishedFeatured()
 
     if (result.error) {
       return {
@@ -34,8 +34,8 @@ export async function getHomepageData(): Promise<PortfolioPageData> {
     }
 
     return {
-      artworks: result.featuredArtworks,
-      totalCount: result.featuredArtworks.length,
+      artworks: result.artworks,
+      totalCount: result.artworks.length,
       selectedIndex: 0
     }
   } catch (error) {
@@ -53,7 +53,7 @@ export async function getHomepageData(): Promise<PortfolioPageData> {
  */
 export async function getOneOfOneData(): Promise<PortfolioPageData> {
   try {
-    const result = await ArtworkService.getOneOfOne()
+    const result = await ArtworkService.getPublishedOneOfOne()
 
     if (result.error) {
       return {
@@ -83,7 +83,7 @@ export async function getOneOfOneData(): Promise<PortfolioPageData> {
  */
 export async function getEditionsData(): Promise<PortfolioPageData> {
   try {
-    const result = await ArtworkService.getEditions()
+    const result = await ArtworkService.getPublishedEditions()
 
     if (result.error) {
       return {
@@ -132,7 +132,7 @@ export async function getPortfolioData(searchParams?: {
       filters.featured = true
     }
 
-    const result = await ArtworkService.getPortfolio(filters)
+    const result = await ArtworkService.getPublishedArtworks(filters)
 
     if (result.error) {
       return {

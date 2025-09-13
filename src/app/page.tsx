@@ -9,8 +9,8 @@ export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
 export default async function Home() {
-  // Use new service architecture
-  const { featuredArtworks, error } = await ArtworkService.getHomepageData()
+  // Use published artworks only for public homepage
+  const { artworks: featuredArtworks } = await ArtworkService.getPublishedFeatured()
 
   const images: HomeImage[] = featuredArtworks.map((artwork: any) => ({
     title: artwork.title || '',

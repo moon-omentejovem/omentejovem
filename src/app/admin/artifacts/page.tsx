@@ -154,18 +154,6 @@ export default function ArtifactsPage() {
         onSort={() => {}} // TODO: Implement sort functionality
         onLoadMore={() => fetchArtifacts()}
         hasMore={hasMore}
-        renderCell={(item, column) => {
-          if (column.key === 'status') {
-            const status = item.status || 'published'
-            return (
-              <span
-                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${status === 'draft' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'}`}
-              >
-                {status === 'draft' ? 'Draft' : 'Published'}
-              </span>
-            )
-          }
-        }}
       />
     </AdminLayout>
   )
