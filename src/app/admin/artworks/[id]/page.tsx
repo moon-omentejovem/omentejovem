@@ -107,6 +107,9 @@ export default function EditArtworkPage({
       ...artwork,
       is_featured: artwork.is_featured ?? false,
       is_one_of_one: artwork.is_one_of_one ?? false,
+      status: (artwork.status === 'draft' ? 'draft' : 'published') as
+        | 'draft'
+        | 'published',
       posted_at: artwork.posted_at ?? new Date().toISOString()
     }
   }

@@ -115,7 +115,6 @@ export default function SeriesPage() {
         data={series}
         loading={loading}
         onEdit={handleEdit}
-        onDelete={handleDelete}
         onSearch={() => {}} // TODO: Implement search
         onSort={() => {}} // TODO: Implement sorting
         renderCell={renderCell}

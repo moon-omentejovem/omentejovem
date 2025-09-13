@@ -70,6 +70,41 @@ export async function PUT(
   }
 }
 
+// PATCH /api/admin/artifacts/[id] - Partial update artifact
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const body = await request.json()
+
+    // For partial updates, we don't validate the entire schema
+    // Just update the provided fields
+    const { data: artifact, error } = await supabaseAdmin
+      .from('artifacts')
+      .update({
+        ...body,
+        updated_at: new Date().toISOString()
+      } as Database['public']['Tables']['artifacts']['Update'])
+      .eq('id', params.id)
+      .select()
+      .single()
+
+    if (error) throw error
+
+    // Revalidate cache
+    revalidateTag('artifacts')
+
+    return NextResponse.json(artifact)
+  } catch (error) {
+    console.error('Error updating artifact:', error)
+    return NextResponse.json(
+      { error: 'Failed to update artifact' },
+      { status: 500 }
+    )
+  }
+}
+
 // DELETE /api/admin/artifacts/[id] - Delete artifact
 export async function DELETE(
   request: NextRequest,

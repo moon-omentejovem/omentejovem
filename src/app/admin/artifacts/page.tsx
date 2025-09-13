@@ -12,7 +12,7 @@ type ArtifactRow = Database['public']['Tables']['artifacts']['Row']
 
 interface OperationState {
   duplicating: string | null
-  deleting: string | null
+  updatingStatus: string | null
 }
 
 export default function ArtifactsPage() {
@@ -22,7 +22,7 @@ export default function ArtifactsPage() {
   const [hasMore, setHasMore] = useState(true)
   const [operations, setOperations] = useState<OperationState>({
     duplicating: null,
-    deleting: null
+    updatingStatus: null
   })
   const router = useRouter()
 
@@ -102,41 +102,70 @@ export default function ArtifactsPage() {
     }
   }
 
-  const handleDelete = async (artifact: ArtifactRow) => {
-    if (operations.deleting) return // Prevent multiple simultaneous operations
+  const handleDraft = async (artifact: ArtifactRow) => {
+    if (operations.updatingStatus) return // Prevent multiple simultaneous operations
 
-    const confirmDelete = confirm(
-      `Are you sure you want to delete "${artifact.title}"?\n\nThis action cannot be undone.`
-    )
-
-    if (!confirmDelete) return
+    const currentStatus = artifact.status || 'published'
+    const newStatus = currentStatus === 'draft' ? 'published' : 'draft'
 
     try {
-      setOperations((prev) => ({ ...prev, deleting: artifact.id }))
+      setOperations((prev) => ({ ...prev, updatingStatus: artifact.id }))
 
       const response = await fetch(`/api/admin/artifacts/${artifact.id}`, {
-        method: 'DELETE'
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ status: newStatus })
       })
 
       if (response.ok) {
         await fetchArtifacts(true)
-        toast.success('Artifact deleted successfully!')
+        toast.success(`Artifact marked as ${newStatus}`)
       } else {
         const errorData = await response.json()
-        console.error('Error deleting artifact:', errorData)
+        console.error('Error updating artifact status:', errorData)
         toast.error(
-          `Failed to delete artifact: ${errorData.error || 'Unknown error'}`
+          `Failed to update status: ${errorData.error || 'Unknown error'}`
         )
       }
     } catch (error) {
-      console.error('Error deleting artifact:', error)
+      console.error('Error updating artifact status:', error)
       toast.error(
         error instanceof Error
-          ? `Failed to delete artifact: ${error.message}`
-          : 'Failed to delete artifact'
+          ? `Failed to update status: ${error.message}`
+          : 'Failed to update status'
       )
     } finally {
-      setOperations((prev) => ({ ...prev, deleting: null }))
+      setOperations((prev) => ({ ...prev, updatingStatus: null }))
+    }
+  }
+
+  const handleDelete = async (artifact: ArtifactRow) => {
+    if (
+      confirm(
+        `Are you sure you want to permanently delete "${artifact.title}"? This action cannot be undone.`
+      )
+    ) {
+      try {
+        const response = await fetch(`/api/admin/artifacts/${artifact.id}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        if (response.ok) {
+          fetchArtifacts(true)
+          toast.success('Artifact deleted successfully')
+        } else {
+          const error = await response.json()
+          toast.error(
+            'Failed to delete artifact: ' + (error.error || 'Unknown error')
+          )
+        }
+      } catch (error) {
+        toast.error('Failed to delete artifact')
+      }
     }
   }
 
@@ -148,7 +177,7 @@ export default function ArtifactsPage() {
         loading={loading}
         onEdit={handleEdit}
         onDuplicate={handleDuplicate}
-        onDelete={handleDelete}
+        onToggleDraft={handleDraft}
         onSearch={() => {}} // TODO: Implement search functionality
         onSort={() => {}} // TODO: Implement sort functionality
         onLoadMore={() => fetchArtifacts()}

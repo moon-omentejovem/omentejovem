@@ -13,12 +13,12 @@ interface AdminTableProps<T = any> {
   loading?: boolean
   onEdit?: (item: T) => void
   onDuplicate?: (item: T) => void
-  onDelete?: (item: T) => void
   onSearch?: (term: string) => void
   onSort?: (field: string, direction: 'asc' | 'desc') => void
   renderCell?: (item: T, column: ListColumn) => React.ReactNode
   onLoadMore?: () => void
   hasMore?: boolean
+  onToggleDraft?: (item: T) => void
 }
 
 export default function AdminTable<T extends Record<string, any>>({
@@ -27,12 +27,12 @@ export default function AdminTable<T extends Record<string, any>>({
   loading = false,
   onEdit,
   onDuplicate,
-  onDelete,
   onSearch,
   onSort,
   renderCell,
   onLoadMore,
-  hasMore = false
+  hasMore = false,
+  onToggleDraft
 }: AdminTableProps<T>) {
   const [searchTerm, setSearchTerm] = useState('')
   const [sortField, setSortField] = useState(descriptor.defaultSort?.key || '')
@@ -185,6 +185,21 @@ export default function AdminTable<T extends Record<string, any>>({
         )
 
       case 'badge':
+        if (column.key === 'status') {
+          return value ? (
+            <span
+              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                value === 'draft'
+                  ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
+                  : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+              }`}
+            >
+              {value === 'draft' ? 'Draft' : 'Published'}
+            </span>
+          ) : (
+            '-'
+          )
+        }
         return value ? (
           <span
             className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
@@ -212,10 +227,11 @@ export default function AdminTable<T extends Record<string, any>>({
   }
 
   const hasActions =
-    descriptor.actions &&
-    (descriptor.actions.edit ||
-      descriptor.actions.duplicate ||
-      descriptor.actions.delete)
+    (descriptor.actions &&
+      (descriptor.actions.edit ||
+        descriptor.actions.duplicate ||
+        descriptor.actions.delete)) ||
+    typeof onToggleDraft === 'function'
 
   return (
     <div className="space-y-6">
@@ -331,13 +347,17 @@ export default function AdminTable<T extends Record<string, any>>({
                             Duplicate
                           </button>
                         )}
-                        {descriptor.actions?.delete && onDelete && (
+                        {typeof onToggleDraft === 'function' && (
                           <button
-                            onClick={() => onDelete(item)}
-                            className="text-red-600 hover:text-red-800 ml-2"
-                            title="Delete"
+                            onClick={() => onToggleDraft(item)}
+                            className={`ml-2 ${item.status === 'draft' ? 'text-yellow-700 hover:text-yellow-900' : 'text-gray-600 hover:text-green-700'}`}
+                            title={
+                              item.status === 'draft'
+                                ? 'Publicar'
+                                : 'Marcar como rascunho'
+                            }
                           >
-                            Delete
+                            {item.status === 'draft' ? 'Publicar' : 'Draft'}
                           </button>
                         )}
                       </td>

@@ -97,6 +97,7 @@ export const artworksDescriptor: ResourceDescriptor = {
     { key: 'type', label: 'Type', render: 'badge' },
     { key: 'editions_total', label: 'Number of Editions', render: 'number' },
     { key: 'blockchain', label: 'Blockchain', render: 'badge' },
+    { key: 'status', label: 'Status', render: 'badge' },
     { key: 'video_url', label: 'Video', render: 'link' }
   ],
   form: [
@@ -207,6 +208,16 @@ export const artworksDescriptor: ResourceDescriptor = {
         labelKey: 'name',
         valueKey: 'id'
       }
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      type: 'select',
+      options: [
+        { value: 'draft', label: 'Draft' },
+        { value: 'published', label: 'Published' }
+      ],
+      required: true
     }
   ],
   defaultSort: {
@@ -234,7 +245,8 @@ export const seriesDescriptor: ResourceDescriptor = {
       render: 'image',
       width: '80px'
     },
-    { key: 'artworks', label: 'Artworks', render: 'text' } // Will show count or names
+    { key: 'artworks', label: 'Artworks', render: 'text' }, // Will show count or names
+    { key: 'status', label: 'Status', render: 'badge' }
   ],
   form: [
     {
@@ -267,6 +279,16 @@ export const seriesDescriptor: ResourceDescriptor = {
         labelKey: 'title',
         valueKey: 'id'
       }
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      type: 'select',
+      options: [
+        { value: 'draft', label: 'Draft' },
+        { value: 'published', label: 'Published' }
+      ],
+      required: false
     }
   ],
   defaultSort: {
@@ -290,6 +312,7 @@ export const artifactsDescriptor: ResourceDescriptor = {
     { key: 'title', label: 'Title', render: 'text' },
     { key: 'image_path', label: 'Image', render: 'image', width: '80px' },
     { key: 'description', label: 'Description', render: 'clamp' },
+    { key: 'status', label: 'Status', render: 'badge' },
     { key: 'link_url', label: 'Link', render: 'link' }
   ],
   form: [
@@ -323,6 +346,16 @@ export const artifactsDescriptor: ResourceDescriptor = {
       label: 'Image',
       type: 'image',
       placeholder: 'Upload artifact image'
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      type: 'select',
+      options: [
+        { value: 'draft', label: 'Draft' },
+        { value: 'published', label: 'Published' }
+      ],
+      required: false
     }
   ],
   defaultSort: {

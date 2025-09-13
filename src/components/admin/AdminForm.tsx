@@ -14,6 +14,7 @@ import {
 } from 'flowbite-react'
 import { SaveIcon, XIcon } from 'lucide-react'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import RelationPicker from './RelationPicker'
@@ -37,6 +38,7 @@ export default function AdminForm<T extends Record<string, any>>({
   const [formData, setFormData] = useState<Record<string, any>>({})
   const [errors, setErrors] = useState<Record<string, string>>({})
   const supabase = createClient()
+  const router = useRouter()
 
   useEffect(() => {
     if (data) {
@@ -175,6 +177,48 @@ export default function AdminForm<T extends Record<string, any>>({
     } catch (error) {
       console.error('Form submission error:', error)
       toast.error('Failed to submit form')
+    }
+  }
+
+  const handlePermanentDelete = async () => {
+    if (!data || !descriptor.actions?.delete) return
+
+    const ok = confirm(
+      `Are you sure you want to permanently delete this ${descriptor.title.slice(
+        0,
+        -1
+      )}? This action cannot be undone.`
+    )
+
+    if (!ok) return
+
+    try {
+      await toast.promise(
+        (async () => {
+          const id = (data as any).id
+          const response = await fetch(`/api/admin/${descriptor.table}/${id}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' }
+          })
+
+          if (!response.ok) {
+            const err = await response.json()
+            throw new Error(err?.error || 'Failed to delete')
+          }
+
+          return true
+        })(),
+        {
+          loading: 'Deleting...',
+          success: `${descriptor.title.slice(0, -1)} deleted`,
+          error: (e) => `Delete failed: ${e.message}`
+        }
+      )
+
+      // Navigate back to list
+      router.push(`/admin/${descriptor.table}`)
+    } catch (error) {
+      console.error('Delete error:', error)
     }
   }
 
@@ -363,25 +407,22 @@ export default function AdminForm<T extends Record<string, any>>({
           <div key={field.key} className="space-y-2">
             <Label htmlFor={field.key} value={field.label || field.key} />
             <div className="flex items-center gap-2">
-              <TextInput
-                id={field.key}
-                type="url"
-                value={value}
-                onChange={(e) => handleInputChange(field.key, e.target.value)}
-                placeholder={field.placeholder}
-                color={error ? 'failure' : undefined}
+              <FileInput
+                accept="image/*"
+                onChange={handleFileChange}
+                sizing="lg"
+                placeholder={field.placeholder || 'Upload an image'}
               />
-              <FileInput accept="image/*" onChange={handleFileChange} />
             </div>
-            {value && (
+            {formData['image_url'] && (
               <div className="mt-2">
                 <Image
-                  src={value}
+                  src={formData['image_url']}
                   alt="Preview"
-                  width={192}
-                  height={192}
-                  sizes="192px"
-                  className="w-48 h-48 object-cover rounded-lg border border-gray-200"
+                  width={640}
+                  height={640}
+                  sizes="640px; (max-width: 640px) 100vw"
+                  className="object-cover rounded-lg border border-gray-200"
                   onError={(e) => {
                     e.currentTarget.style.display = 'none'
                   }}
@@ -424,6 +465,16 @@ export default function AdminForm<T extends Record<string, any>>({
         {descriptor.form.map(renderField)}
 
         <div className="flex justify-end space-x-4 pt-6 border-t border-gray-200">
+          {data && descriptor.actions?.delete && (
+            <Button
+              type="button"
+              color="failure"
+              onClick={handlePermanentDelete}
+              className="flex items-center space-x-2"
+            >
+              <span>Delete Permanently</span>
+            </Button>
+          )}
           <Button
             type="button"
             onClick={onCancel}

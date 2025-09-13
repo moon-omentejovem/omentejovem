@@ -49,66 +49,88 @@ export default function ArtworksPage() {
   }
 
   const handleDuplicate = async (artwork: ArtworkRow) => {
-    try {
-      // Create a copy without id and with modified title and slug
-      const timestamp = Date.now()
-      const duplicateData = {
-        ...artwork,
-        id: undefined,
-        title: `${artwork.title} (Copy)`,
-        slug: `${artwork.slug}-copy-${timestamp}`,
-        created_at: undefined,
-        updated_at: undefined,
-        posted_at: new Date().toISOString()
-      }
+    if (confirm(`Are you sure you want to duplicate "${artwork.title}"?`)) {
+      try {
+        // Create a copy without id and with modified title and slug
+        const timestamp = Date.now()
+        const duplicateData = {
+          ...artwork,
+          title: `${artwork.title} (Copy)`,
+          slug: `${artwork.slug}-copy-${timestamp}`
+        }
 
-      const response = await fetch('/api/admin/artworks', {
-        method: 'POST',
+        const response = await fetch('/api/admin/artworks', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(duplicateData)
+        })
+
+        if (response.ok) {
+          fetchArtworks(true) // Refresh the list
+          toast.success('Artwork duplicated successfully!')
+        } else {
+          const error = await response.json()
+          console.error('Error duplicating artwork:', error)
+          toast.error(
+            'Failed to duplicate artwork: ' + (error.error || 'Unknown error')
+          )
+        }
+      } catch (error) {
+        console.error('Error duplicating artwork:', error)
+        toast.error('Failed to duplicate artwork')
+      }
+    }
+  }
+
+  const handleToggleDraft = async (artwork: ArtworkRow) => {
+    const newStatus = artwork.status === 'draft' ? 'published' : 'draft'
+    try {
+      const response = await fetch(`/api/admin/artworks/${artwork.id}`, {
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(duplicateData)
+        body: JSON.stringify({ status: newStatus })
       })
-
       if (response.ok) {
-        fetchArtworks(true) // Refresh the list
-        toast.success('Artwork duplicated successfully!')
+        fetchArtworks(true)
+        toast.success(`Artwork marked as ${newStatus}`)
       } else {
         const error = await response.json()
-        console.error('Error duplicating artwork:', error)
         toast.error(
-          'Failed to duplicate artwork: ' + (error.error || 'Unknown error')
+          'Failed to update status: ' + (error.error || 'Unknown error')
         )
       }
     } catch (error) {
-      console.error('Error duplicating artwork:', error)
-      toast.error('Failed to duplicate artwork')
+      toast.error('Failed to update status')
     }
   }
 
   const handleDelete = async (artwork: ArtworkRow) => {
     if (
       confirm(
-        `Are you sure you want to delete "${artwork.title}"? This action cannot be undone.`
+        `Are you sure you want to permanently delete "${artwork.title}"? This action cannot be undone.`
       )
     ) {
       try {
         const response = await fetch(`/api/admin/artworks/${artwork.id}`, {
-          method: 'DELETE'
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json'
+          }
         })
-
         if (response.ok) {
-          fetchArtworks(true) // Refresh the list
-          toast.success('Artwork deleted successfully!')
+          fetchArtworks(true)
+          toast.success('Artwork deleted successfully')
         } else {
           const error = await response.json()
-          console.error('Error deleting artwork:', error)
           toast.error(
             'Failed to delete artwork: ' + (error.error || 'Unknown error')
           )
         }
       } catch (error) {
-        console.error('Error deleting artwork:', error)
         toast.error('Failed to delete artwork')
       }
     }
@@ -122,11 +144,11 @@ export default function ArtworksPage() {
         loading={loading}
         onEdit={handleEdit}
         onDuplicate={handleDuplicate}
-        onDelete={handleDelete}
         onSearch={() => {}} // TODO: Implement search
         onSort={() => {}} // TODO: Implement sorting
         onLoadMore={() => fetchArtworks()}
         hasMore={hasMore}
+        onToggleDraft={handleToggleDraft}
       />
     </AdminLayout>
   )
