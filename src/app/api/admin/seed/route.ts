@@ -6,7 +6,7 @@ export async function POST(request: NextRequest) {
     console.log('🌱 Manual database seeding started...')
 
     // Use require for CommonJS module
-    const { seedOnDeploy } = require('../../../../../scripts/vercel-seed.js')
+    const { seedOnDeploy } = require('@/../scripts/vercel-seed')
     await seedOnDeploy()
 
     return NextResponse.json({
