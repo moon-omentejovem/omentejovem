@@ -12,7 +12,7 @@
     "format": "prettier --write .",
     "typecheck": "tsc --noEmit --skipLibCheck",
     "build:staging": "env-cmd -f .env.staging npx build && npx start",
-    "lighthouse:staging": "node scripts/test-staging-lighthouse-simple.js",
+    "lighthouse:staging": "node scripts/test-staging-lighthouse.js",
     "supabase:init": "npx supabase init",
     "supabase:login": "npx supabase login",
     "supabase:link": "npx supabase link",
