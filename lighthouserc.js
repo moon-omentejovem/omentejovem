@@ -2,6 +2,8 @@ module.exports = {
   ci: {
     collect: {
       numberOfRuns: 3,
+      startServerCommand: 'yarn start',
+      url: ['http://localhost:3000'],
       settings: {
         chromeFlags: '--no-sandbox --disable-dev-shm-usage'
       }
