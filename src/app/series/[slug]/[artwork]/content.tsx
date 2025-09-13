@@ -1,43 +1,26 @@
 'use client'
 
-import { ArtMainContent } from '@/components/ArtContent/ArtMainContent'
+import { ArtContent } from '@/components/ArtContent/ArtContent'
 import { Artwork } from '@/types/artwork'
-import { ReactElement, useCallback, useState } from 'react'
+import { ReactElement } from 'react'
 
 interface ArtworkContentProps {
-  email: string
-  initialArtworks: Artwork[]
+  artworks: Artwork[]
   initialSelectedIndex: number
   seriesSlug: string
 }
 
 export default function ArtworkContent({
-  email,
-  initialArtworks,
+  artworks,
   initialSelectedIndex,
   seriesSlug
 }: ArtworkContentProps): ReactElement {
-  const [artworks, setArtworks] = useState<Artwork[]>(initialArtworks)
-  const [selectedArtworkIndex, setSelectedArtworkIndex] =
-    useState(initialSelectedIndex)
-
-  const onChangeArtworks = useCallback((newArtworks: Artwork[]) => {
-    setArtworks(newArtworks)
-  }, [])
-
-  const onChangeSelectedArtworkIndex = useCallback((index: number) => {
-    setSelectedArtworkIndex(index)
-  }, [])
-
   return (
-    <ArtMainContent
-      email={email}
-      source={`series/${seriesSlug}`}
+    <ArtContent
       artworks={artworks}
-      onChangeArtworks={onChangeArtworks}
-      onChangeSelectedArtworkIndex={onChangeSelectedArtworkIndex}
-      selectedArtworkIndex={selectedArtworkIndex}
-      unfilteredArtworks={initialArtworks}
+      initialSelectedIndex={initialSelectedIndex}
+      source={`series/${seriesSlug}`}
+      email="contact@omentejovem.com"
     />
   )
 }

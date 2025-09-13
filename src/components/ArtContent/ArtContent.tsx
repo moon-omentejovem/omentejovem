@@ -12,7 +12,7 @@ import { Artwork } from '@/types/artwork'
 import { ReactElement, useCallback, useState } from 'react'
 import { HorizontalCarousel } from '../HorizontalCarousel/HorizontalCarousel'
 import { VerticalCarousel } from '../VerticalCarousel/VerticalCarousel'
-import { ArtInfosNew as ArtInfos } from './ArtInfosNew'
+import { ArtInfo } from './ArtInfo'
 
 interface ArtContentProps {
   artworks: Artwork[]
@@ -114,7 +114,7 @@ export function ArtContent({
         onRedirect={handleSelectArtwork}
       />
 
-      <ArtInfos
+      <ArtInfo
         email={email}
         selectedArtwork={selectedArtwork}
         slides={filteredArtworks}

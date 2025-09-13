@@ -1,6 +1,6 @@
 'use client'
 
-import { SimplifiedArtMainContent } from '@/components/ArtContent/SimplifiedArtMainContent'
+import { ArtContent } from '@/components/ArtContent/ArtContent'
 import { Artwork } from '@/types/artwork'
 import { ReactElement } from 'react'
 
@@ -14,11 +14,10 @@ export default function OneOfOneContent({
   // No more hooks, no more prop drilling, no more complex state management
   // Just pass the server data to the simplified component
   return (
-    <SimplifiedArtMainContent
+    <ArtContent
       artworks={artworks}
       source="1-1"
       email="contact@omentejovem.com"
-      enableFilters={true}
       showGridView={true}
     />
   )

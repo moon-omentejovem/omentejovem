@@ -1,6 +1,6 @@
 'use client'
 
-import { SimplifiedArtMainContent } from '@/components/ArtContent/SimplifiedArtMainContent'
+import { ArtContent } from '@/components/ArtContent/ArtContent'
 import { Artwork } from '@/types/artwork'
 import { ReactElement } from 'react'
 
@@ -12,11 +12,10 @@ export default function EditionsContent({
   artworks
 }: EditionsContentProps): ReactElement {
   return (
-    <SimplifiedArtMainContent
+    <ArtContent
       artworks={artworks}
       source="editions"
       email="contact@omentejovem.com"
-      enableFilters={true}
       showGridView={true}
     />
   )

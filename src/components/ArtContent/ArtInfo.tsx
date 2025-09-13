@@ -16,7 +16,7 @@ import { addHours, format } from 'date-fns'
 import { HorizontalInCarouselArtwork } from './HorizontalInCarousel/HorizontalInCarouselArtwork'
 import './styles.css'
 
-interface ArtInfosProperties {
+interface ArtInfoProps {
   email: string
   selectedArtwork: Artwork
   slides: Artwork[]
@@ -24,13 +24,13 @@ interface ArtInfosProperties {
   onChangeSlideIndex: (index: number) => void
 }
 
-export function ArtInfosNew({
+export function ArtInfo({
   email,
   selectedArtwork,
   slides,
   source,
   onChangeSlideIndex
-}: ArtInfosProperties): ReactElement {
+}: ArtInfoProps): ReactElement {
   const [isOpenVideo, setIsOpenVideo] = useState(false)
   const [isAnimating, setIsAnimating] = useState(false)
   const [showDetails, setShowDetails] = useState(false)

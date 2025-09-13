@@ -1,6 +1,6 @@
 'use client'
 
-import { SimplifiedArtMainContent } from '@/components/ArtContent/SimplifiedArtMainContent'
+import { ArtContent } from '@/components/ArtContent/ArtContent'
 import { Artwork } from '@/types/artwork'
 import { ReactElement } from 'react'
 
@@ -29,12 +29,11 @@ export default function SeriesContentWrapper({
   }
 
   return (
-    <SimplifiedArtMainContent
+    <ArtContent
       artworks={artworks}
       initialSelectedIndex={initialSelectedIndex}
       source={`series/${seriesInfo?.slug || 'unknown'}`}
       email="contact@omentejovem.com"
-      enableFilters={false} // Series pages don't need filters
       showGridView={true}
     />
   )

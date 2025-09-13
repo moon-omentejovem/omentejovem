@@ -64,10 +64,6 @@ export default async function ArtworkPage({ params }: ArtworkPageProps) {
   }
 
   return (
-    <ArtworkContent
-      email="contact@omentejovem.com"
-      initialArtworks={artworks}
-      initialSelectedIndex={selectedIndex}
-    />
+    <ArtworkContent artworks={artworks} initialSelectedIndex={selectedIndex} />
   )
 }

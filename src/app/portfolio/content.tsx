@@ -1,6 +1,6 @@
 'use client'
 
-import { SimplifiedArtMainContent } from '@/components/ArtContent/SimplifiedArtMainContent'
+import { ArtContent } from '@/components/ArtContent/ArtContent'
 import { Artwork } from '@/types/artwork'
 import { ReactElement } from 'react'
 
@@ -15,12 +15,11 @@ export default function PortfolioContent({
 }: PortfolioContentProps): ReactElement {
   // Clean, simple component without complex state management
   return (
-    <SimplifiedArtMainContent
+    <ArtContent
       artworks={artworks}
       initialSelectedIndex={initialSelectedIndex}
       source="portfolio"
       email="contact@omentejovem.com"
-      enableFilters={true}
       showGridView={true}
     />
   )
