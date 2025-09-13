@@ -14,31 +14,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Corepack Enable
-        run: corepack enable
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-          cache: 'yarn'
-
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-
       - name: Wait for Vercel deployment
         uses: patrickedqvist/wait-for-vercel-preview@v1.3.1
-        id: waitForDeploy
+        id: vercel_preview_url
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          max_timeout: 300
+          max_timeout: 200 #  4 minutes
 
       - name: Run Lighthouse CI
         uses: treosh/lighthouse-ci-action@v10
         with:
           urls: |
-            ${{ steps.waitForDeploy.outputs.url }}
-            ${{ steps.waitForDeploy.outputs.url }}/portfolio
-            ${{ steps.waitForDeploy.outputs.url }}/1-1
+            ${{ steps.vercel_preview_url.outputs.url }}
+            ${{ steps.vercel_preview_url.outputs.url }}/portfolio
+            ${{ steps.vercel_preview_url.outputs.url }}/1-1
           uploadArtifacts: true
           temporaryPublicStorage: true
