@@ -55,12 +55,8 @@ export default function ArtworksPage() {
         const timestamp = Date.now()
         const duplicateData = {
           ...artwork,
-          id: undefined,
           title: `${artwork.title} (Copy)`,
-          slug: `${artwork.slug}-copy-${timestamp}`,
-          created_at: undefined,
-          updated_at: undefined,
-          posted_at: new Date().toISOString()
+          slug: `${artwork.slug}-copy-${timestamp}`
         }
 
         const response = await fetch('/api/admin/artworks', {
