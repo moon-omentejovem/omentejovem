@@ -2,6 +2,7 @@
 
 import { useCarouselNavigation } from '@/hooks/useCarouselNavigation'
 import { Artwork } from '@/types/artwork'
+import { getArtworkImageUrls } from '@/utils/storage'
 import { ReactElement, useCallback, useState } from 'react'
 import { ArtFilterNew as ArtFilter } from '../ArtFilter/ArtFilterNew'
 import { HorizontalCarousel } from '../HorizontalCarousel/HorizontalCarousel'
@@ -67,11 +68,14 @@ export function ArtMainContent({
         <HorizontalCarousel
           currentPage={page}
           loading={loading}
-          slides={artworks?.map((artwork) => ({
-            name: artwork.title || '',
-            nftCompressedHdUrl: artwork.image_url,
-            slug: artwork.slug
-          }))}
+          slides={artworks?.map((artwork) => {
+            const imageUrls = getArtworkImageUrls(artwork)
+            return {
+              name: artwork.title || '',
+              nftCompressedHdUrl: imageUrls.optimizedUrl || '',
+              slug: artwork.slug
+            }
+          })}
           redirectSource={source}
           onRedirect={handleNavigationWrapper}
         />
@@ -90,11 +94,14 @@ export function ArtMainContent({
       <VerticalCarousel
         slideIndex={selectedArtworkIndex}
         onChangeSlideIndex={onChangeSelectedArtworkIndex}
-        slides={artworks.map((artwork) => ({
-          name: artwork.title || '',
-          nftCompressedHdUrl: artwork.image_url,
-          slug: artwork.slug
-        }))}
+        slides={artworks.map((artwork) => {
+          const imageUrls = getArtworkImageUrls(artwork)
+          return {
+            name: artwork.title || '',
+            nftCompressedHdUrl: imageUrls.optimizedUrl || '',
+            slug: artwork.slug
+          }
+        })}
         redirectSource={source}
         onRedirect={handleNavigationWrapper}
       />

@@ -10,8 +10,8 @@ import { optimizeImageFile } from '@/utils/optimize-image'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
 export interface ImageUploadResult {
-  optimizedUrl: string
-  rawUrl: string
+  optimizedPath: string
+  rawPath: string
 }
 
 export class ImageUploadService {
@@ -20,7 +20,7 @@ export class ImageUploadService {
    * @param file - Arquivo de imagem a ser enviado
    * @param supabase - Cliente Supabase
    * @param resourceType - Tipo de recurso (artworks, series, artifacts, etc.)
-   * @returns URLs da imagem otimizada e original
+   * @returns Paths da imagem otimizada e original no storage
    */
   static async uploadImage(
     file: File,
@@ -59,18 +59,10 @@ export class ImageUploadService {
         throw new Error(`Failed to upload optimized image: ${optError.message}`)
       }
 
-      // 4. Gerar URLs públicas
-      const {
-        data: { publicUrl: optimizedUrl }
-      } = supabase.storage.from(bucket).getPublicUrl(optimizedPath)
-
-      const {
-        data: { publicUrl: rawUrl }
-      } = supabase.storage.from(bucket).getPublicUrl(rawPath)
-
+      // 4. Retornar paths para salvar no banco
       return {
-        optimizedUrl,
-        rawUrl
+        optimizedPath,
+        rawPath
       }
     } catch (error) {
       // Limpar uploads parciais em caso de erro

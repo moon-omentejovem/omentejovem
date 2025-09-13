@@ -1,0 +1,43 @@
+-- Migration: Drop old image_url columns
+-- This migration removes the old image_url and raw_image_url columns
+-- Run this ONLY after confirming the data migration script has completed successfully
+
+BEGIN;
+
+-- First verify that the new columns exist and have data
+DO $$
+BEGIN
+    -- Check if the new columns exist
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_name = 'artworks' AND column_name = 'image_path'
+    ) THEN
+        RAISE EXCEPTION 'Column image_path does not exist in artworks table. Run the rename migration first.';
+    END IF;
+
+    -- Check if there's data in the new columns
+    IF NOT EXISTS (
+        SELECT 1 FROM artworks
+        WHERE image_path IS NOT NULL
+        LIMIT 1
+    ) THEN
+        RAISE WARNING 'No data found in image_path column. Make sure to run the data migration script first.';
+    END IF;
+END $$;
+
+-- Drop old columns from artworks table
+ALTER TABLE artworks DROP COLUMN IF EXISTS image_url;
+ALTER TABLE artworks DROP COLUMN IF EXISTS raw_image_url;
+
+-- Drop old columns from artifacts table
+ALTER TABLE artifacts DROP COLUMN IF EXISTS image_url;
+
+-- Drop old columns from series table
+ALTER TABLE series DROP COLUMN IF EXISTS cover_image_url;
+
+-- Add final comment
+COMMENT ON TABLE artworks IS 'Artworks table - migration to storage paths completed';
+COMMENT ON TABLE artifacts IS 'Artifacts table - migration to storage paths completed';
+COMMENT ON TABLE series IS 'Series table - migration to storage paths completed';
+
+COMMIT;

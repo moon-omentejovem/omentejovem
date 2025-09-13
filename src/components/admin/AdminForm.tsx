@@ -347,9 +347,9 @@ export default function AdminForm<T extends Record<string, any>>({
                 descriptor.table
               )
 
-              // Salvar ambas as URLs
-              handleInputChange(field.key, result.optimizedUrl)
-              handleInputChange('raw_image_url', result.rawUrl)
+              // Salvar ambos os paths
+              handleInputChange(field.key, result.optimizedPath)
+              handleInputChange('raw_image_path', result.rawPath)
             })(),
             {
               loading: 'Uploading image...',

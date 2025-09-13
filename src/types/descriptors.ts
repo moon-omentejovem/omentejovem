@@ -89,7 +89,7 @@ export const artworksDescriptor: ResourceDescriptor = {
   table: 'artworks',
   title: 'Artworks',
   list: [
-    { key: 'image_url', label: 'Image', render: 'image', width: '140px' },
+    { key: 'image_path', label: 'Image', render: 'image', width: '140px' },
     { key: 'title', label: 'Title', render: 'text' },
     { key: 'description', label: 'Description', render: 'clamp' },
     { key: 'mint_date', label: 'Mint Date', render: 'date' },
@@ -101,7 +101,7 @@ export const artworksDescriptor: ResourceDescriptor = {
   ],
   form: [
     {
-      key: 'image_url',
+      key: 'image_path',
       label: 'Artwork Image',
       type: 'image',
       required: true,
@@ -229,7 +229,7 @@ export const seriesDescriptor: ResourceDescriptor = {
   list: [
     { key: 'name', label: 'Name', render: 'text' },
     {
-      key: 'cover_image_url',
+      key: 'cover_image_path',
       label: 'Cover Image',
       render: 'image',
       width: '80px'
@@ -253,10 +253,10 @@ export const seriesDescriptor: ResourceDescriptor = {
       placeholder: 'auto-generated-from-name'
     },
     {
-      key: 'cover_image_url',
+      key: 'cover_image_path',
       label: 'Cover Image',
       type: 'image',
-      placeholder: 'https://opensea.io/image.png'
+      placeholder: 'Upload series cover image'
     },
     {
       key: 'artworks',
@@ -288,7 +288,7 @@ export const artifactsDescriptor: ResourceDescriptor = {
   title: 'Artifacts',
   list: [
     { key: 'title', label: 'Title', render: 'text' },
-    { key: 'image_url', label: 'Image', render: 'image', width: '80px' },
+    { key: 'image_path', label: 'Image', render: 'image', width: '80px' },
     { key: 'description', label: 'Description', render: 'clamp' },
     { key: 'link_url', label: 'Link', render: 'link' }
   ],
@@ -319,10 +319,10 @@ export const artifactsDescriptor: ResourceDescriptor = {
       placeholder: 'https://...'
     },
     {
-      key: 'image_url',
+      key: 'image_path',
       label: 'Image',
       type: 'image',
-      placeholder: 'https://example.com/image.png'
+      placeholder: 'Upload artifact image'
     }
   ],
   defaultSort: {

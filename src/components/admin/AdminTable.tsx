@@ -1,6 +1,7 @@
 'use client'
 
 import type { ListColumn, ResourceDescriptor } from '@/types/descriptors'
+import { getPublicUrl } from '@/utils/storage'
 import { ChevronDownIcon, ChevronUpIcon, PlusIcon } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -112,9 +113,10 @@ export default function AdminTable<T extends Record<string, any>>({
 
     switch (column.render) {
       case 'image':
-        return value ? (
+        const imageUrl = getPublicUrl(value)
+        return imageUrl ? (
           <Image
-            src={value}
+            src={imageUrl}
             alt={item.title || item.name || 'Image'}
             width={96}
             height={96}
