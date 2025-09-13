@@ -13,7 +13,7 @@ import { ArtLinks } from '@/components/ArtLinks'
 import { cn } from '@/lib/utils'
 import { Artwork } from '@/types/artwork'
 import { addHours, format } from 'date-fns'
-import { HorizontalInCarouselArtwork } from '../Carousels/HorizontalInCarousel/HorizontalInCarouselArtwork'
+import { HorizontalInCarouselArtwork } from './HorizontalInCarousel/HorizontalInCarouselArtwork'
 import './styles.css'
 
 interface ArtInfosProperties {

@@ -12,7 +12,6 @@ import { cn } from '@/lib/utils'
 import { addLoadedClass } from '@/utils/lazyLoading'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect } from 'react'
 import { FreeMode, Mousewheel, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Swiper as SwiperType } from 'swiper/types'
@@ -38,10 +37,6 @@ export function HorizontalCarousel({
   onRedirect,
   getMoreSlides
 }: HorizontalCarouselProperties) {
-  useEffect(() => {
-    // horizontalCarouselAnimation()
-  }, [])
-
   function figcaptionAnimationHandler(element: HTMLElement, open: boolean) {
     if (window.screen.width >= 768) {
       carouselFigcaptionAnimation(element, open)
@@ -82,6 +77,7 @@ export function HorizontalCarousel({
         speed={800}
         onSlideChangeTransitionEnd={(swiperInstance) => {
           slideOnChangeAnimationHandler()
+          handleGetMoreslides(swiperInstance)
         }}
         onAfterInit={() => {
           slideOnChangeAnimationHandler()

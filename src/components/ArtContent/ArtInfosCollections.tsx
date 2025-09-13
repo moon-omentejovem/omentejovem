@@ -3,7 +3,7 @@
 import { ReactElement, useCallback, useEffect, useState } from 'react'
 
 import { artInfosCollectionsAnimation } from '@/animations/client'
-import { VerticalCarousel } from '../Carousels/VerticalCarousel/VerticalCarousel'
+import { VerticalCarousel } from '../VerticalCarousel/VerticalCarousel'
 import { ArtInfos } from './ArtInfos'
 import './styles.css'
 import { Artwork } from './types'

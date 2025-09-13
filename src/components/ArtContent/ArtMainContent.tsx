@@ -4,8 +4,8 @@ import { useCarouselNavigation } from '@/hooks/useCarouselNavigation'
 import { Artwork } from '@/types/artwork'
 import { ReactElement, useCallback, useState } from 'react'
 import { ArtFilterNew as ArtFilter } from '../ArtFilter/ArtFilterNew'
-import { HorizontalCarousel } from '../Carousels/HorizontalCarousel/HorizontalCarousel'
-import { VerticalCarousel } from '../Carousels/VerticalCarousel/VerticalCarousel'
+import { HorizontalCarousel } from '../HorizontalCarousel/HorizontalCarousel'
+import { VerticalCarousel } from '../VerticalCarousel/VerticalCarousel'
 import { ArtInfosNew as ArtInfos } from './ArtInfosNew'
 
 interface ArtMainContentProperties {

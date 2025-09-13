@@ -8,12 +8,12 @@ import {
   resetButtonInfo
 } from '@/animations/client'
 import { CustomIcons } from '@/assets/icons'
+import { HorizontalInCarousel } from '@/components/ArtContent/HorizontalInCarousel/HorizontalInCarousel'
 import { ArtDetails } from '@/components/ArtDetails'
 import { ArtLinks } from '@/components/ArtLinks'
 import { VideoProcessModal } from '@/components/Modals/VideoProcessModal'
 import { cn } from '@/lib/utils'
 import { Artwork } from '@/types/artwork'
-import { HorizontalInCarousel } from '../Carousels/HorizontalInCarousel/HorizontalInCarousel'
 import { ArtDescription } from './ArtDescription'
 import './styles.css'
 import { getMintedOn, resolveExternalLinks } from './utils'
