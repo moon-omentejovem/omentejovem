@@ -142,7 +142,11 @@ export default function ArtifactsPage() {
   }
 
   const handleDelete = async (artifact: ArtifactRow) => {
-    if (confirm(`Are you sure you want to permanently delete "${artifact.title}"? This action cannot be undone.`)) {
+    if (
+      confirm(
+        `Are you sure you want to permanently delete "${artifact.title}"? This action cannot be undone.`
+      )
+    ) {
       try {
         const response = await fetch(`/api/admin/artifacts/${artifact.id}`, {
           method: 'DELETE',
@@ -179,18 +183,28 @@ export default function ArtifactsPage() {
         onLoadMore={() => fetchArtifacts()}
         hasMore={hasMore}
       />
-      
+
       {/* Action Buttons Section */}
       {artifacts.length > 0 && (
         <div className="mt-8 p-6 bg-white rounded-lg border border-gray-200">
-          <h3 className="text-lg font-semibold mb-4 text-gray-900">Quick Actions</h3>
+          <h3 className="text-lg font-semibold mb-4 text-gray-900">
+            Quick Actions
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {artifacts.map((artifact) => (
-              <div key={artifact.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+              <div
+                key={artifact.id}
+                className="flex items-center justify-between p-4 border border-gray-200 rounded-lg"
+              >
                 <div className="flex-1">
-                  <h4 className="font-medium text-gray-900 truncate">{artifact.title}</h4>
+                  <h4 className="font-medium text-gray-900 truncate">
+                    {artifact.title}
+                  </h4>
                   <p className="text-sm text-gray-500">
-                    Status: <span className={`font-medium ${artifact.status === 'published' ? 'text-green-600' : 'text-yellow-600'}`}>
+                    Status:{' '}
+                    <span
+                      className={`font-medium ${artifact.status === 'published' ? 'text-green-600' : 'text-yellow-600'}`}
+                    >
                       {artifact.status === 'published' ? 'Published' : 'Draft'}
                     </span>
                   </p>
@@ -199,11 +213,13 @@ export default function ArtifactsPage() {
                   <button
                     onClick={() => handleDraft(artifact)}
                     className={`px-3 py-1 text-sm rounded ${
-                      artifact.status === 'draft' 
-                        ? 'bg-green-100 text-green-700 hover:bg-green-200' 
+                      artifact.status === 'draft'
+                        ? 'bg-green-100 text-green-700 hover:bg-green-200'
                         : 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'
                     }`}
-                    title={artifact.status === 'draft' ? 'Publish' : 'Mark as Draft'}
+                    title={
+                      artifact.status === 'draft' ? 'Publish' : 'Mark as Draft'
+                    }
                   >
                     {artifact.status === 'draft' ? 'Publish' : 'Draft'}
                   </button>
