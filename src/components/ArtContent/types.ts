@@ -1,1 +1,1 @@
-export * from '@/types/legacy'
+export * from '@/types/artwork'

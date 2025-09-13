@@ -60,8 +60,6 @@ export async function fetchArtworks(options?: {
   type?: 'single' | 'edition'
   random?: boolean
 }) {
-  const { processArtwork } = await import('@/types/artwork')
-
   // If filtering by seriesSlug, we need a different approach
   if (options?.seriesSlug) {
     // First, get artwork IDs for this series
@@ -129,8 +127,8 @@ export async function fetchArtworks(options?: {
       throw new Error(`Failed to fetch artworks: ${error.message}`)
     }
 
-    // Process raw data to ProcessedArtwork format
-    const artworks = ((data as any[]) || []).map(processArtwork)
+    // Return raw data as ArtworkWithSeries
+    const artworks = (data as any[]) || []
     return options?.random ? shuffle(artworks) : artworks
   }
 
@@ -169,8 +167,8 @@ export async function fetchArtworks(options?: {
     throw new Error(`Failed to fetch artworks: ${error.message}`)
   }
 
-  // Process raw data to ProcessedArtwork format
-  const artworks = ((data as any[]) || []).map(processArtwork)
+  // Return raw data as ArtworkWithSeries
+  const artworks = (data as any[]) || []
   return options?.random ? shuffle(artworks) : artworks
 } /**
  * Fetch single artwork by slug

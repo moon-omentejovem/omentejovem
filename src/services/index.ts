@@ -26,7 +26,7 @@ export { SeriesService } from './series.service'
 export type {
   ArtworkFilters,
   ArtworkWithRelations,
-  ProcessedArtworkData
+  ArtworkData
 } from './artwork.service'
 
 export type {

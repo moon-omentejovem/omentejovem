@@ -3,7 +3,7 @@
 import 'swiper/css'
 import 'swiper/css/pagination'
 
-import { NFT } from '@/types/legacy'
+import { Artwork } from '@/types/artwork'
 import Image from 'next/image'
 import { useEffect } from 'react'
 import { Mousewheel } from 'swiper/modules'
@@ -13,7 +13,7 @@ import { Swiper as SwiperType } from 'swiper/types'
 interface HorizontalInCarouselProperties {
   slideIndex?: number
   onChangeSlideIndex: (index: number) => void
-  slides: NFT[]
+  slides: Artwork[]
   getMoreSlides?: () => void
 }
 
@@ -60,17 +60,12 @@ export function HorizontalInCarousel({
             className="h-24 w-24 max-w-fit xl:h-[120px] xl:w-[120px]"
           >
             <div
-              aria-label={art.name}
+              aria-label={art.title}
               className="flex h-24 w-24 xl:h-[120px] xl:w-[120px]"
             >
               <Image
-                src={
-                  art.image.pngUrl ||
-                  art.image.cachedUrl ||
-                  art.image.originalUrl ||
-                  ''
-                }
-                alt={art.name || ''}
+                src={art.image_cached_path || art.image_url || ''}
+                alt={art.title || ''}
                 width={100}
                 height={100}
                 className={`h-full w-full object-cover transition-opacity duration-300 ${

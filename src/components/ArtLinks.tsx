@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import { CustomIcons } from '@/assets/icons'
 import { cn } from '@/lib/utils'
-import { ExternalLink } from '@/types/legacy'
+import { ExternalLink } from '@/types/artwork'
 import { useState } from 'react'
 import { OfferModal } from './Modals/OfferModal'
 

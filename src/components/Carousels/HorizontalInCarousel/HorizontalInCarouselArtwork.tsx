@@ -3,7 +3,7 @@
 import 'swiper/css'
 import 'swiper/css/pagination'
 
-import { ProcessedArtwork } from '@/types/artwork'
+import { Artwork } from '@/types/artwork'
 import Image from 'next/image'
 import { useEffect } from 'react'
 import { Mousewheel } from 'swiper/modules'
@@ -13,7 +13,7 @@ import { Swiper as SwiperType } from 'swiper/types'
 interface HorizontalInCarouselArtworkProperties {
   slideIndex?: number
   onChangeSlideIndex: (index: number) => void
-  slides: ProcessedArtwork[]
+  slides: Artwork[]
   getMoreSlides?: () => void
 }
 
@@ -64,7 +64,7 @@ export function HorizontalInCarouselArtwork({
               className="flex h-24 w-24 xl:h-[120px] xl:w-[120px]"
             >
               <Image
-                src={artwork.image.url}
+                src={artwork.image_cached_path || artwork.image_url || ''}
                 alt={artwork.title || ''}
                 width={100}
                 height={100}
