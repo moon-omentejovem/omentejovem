@@ -178,8 +178,6 @@ export default function ArtifactsPage() {
         onEdit={handleEdit}
         onDuplicate={handleDuplicate}
         onToggleDraft={handleDraft}
-        onSearch={() => {}} // TODO: Implement search functionality
-        onSort={() => {}} // TODO: Implement sort functionality
         onLoadMore={() => fetchArtifacts()}
         hasMore={hasMore}
         onDelete={handleDelete}

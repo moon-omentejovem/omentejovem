@@ -10,6 +10,7 @@ import {
 import Image from 'next/image'
 import Link from 'next/link'
 import {
+  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -17,11 +18,15 @@ import {
 } from 'react'
 import {
   ColumnDef,
+  Header,
+  HeaderGroup,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
+  Row,
+  Cell,
   SortingState
 } from '@tanstack/react-table'
 import { Button, Table, TextInput } from 'flowbite-react'
@@ -32,8 +37,6 @@ interface AdminTableProps<T = any> {
   loading?: boolean
   onEdit?: (item: T) => void
   onDuplicate?: (item: T) => void
-  onSearch?: (term: string) => void
-  onSort?: (field: string, direction: 'asc' | 'desc') => void
   renderCell?: (item: T, column: ListColumn) => React.ReactNode
   onLoadMore?: () => void
   hasMore?: boolean
@@ -47,8 +50,6 @@ export default function AdminTable<T extends Record<string, any>>({
   loading = false,
   onEdit,
   onDuplicate,
-  onSearch,
-  onSort,
   renderCell,
   onLoadMore,
   hasMore = false,
@@ -56,7 +57,16 @@ export default function AdminTable<T extends Record<string, any>>({
   onDelete
 }: AdminTableProps<T>) {
   const [globalFilter, setGlobalFilter] = useState('')
-  const [sorting, setSorting] = useState<SortingState>([])
+  const [sorting, setSorting] = useState<SortingState>(
+    descriptor.defaultSort
+      ? [
+          {
+            id: descriptor.defaultSort.key,
+            desc: descriptor.defaultSort.direction === 'desc'
+          }
+        ]
+      : []
+  )
   const loadMoreRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
@@ -75,55 +85,57 @@ export default function AdminTable<T extends Record<string, any>>({
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setGlobalFilter(e.target.value)
-    onSearch?.(e.target.value)
   }
 
-  const defaultRenderCell = (item: T, column: ListColumn): React.ReactNode => {
-    if (renderCell) {
-      const custom = renderCell(item, column)
-      if (custom !== undefined) return custom
-    }
-    const value = item[column.key]
+  const defaultRenderCell = useCallback(
+    (item: T, column: ListColumn): React.ReactNode => {
+      if (renderCell) {
+        const custom = renderCell(item, column)
+        if (custom !== undefined) return custom
+      }
+      const value = item[column.key]
 
-    switch (column.render) {
-      case 'image':
-        const imageUrl = getPublicUrl(value)
-        return imageUrl ? (
-          <Image
-            src={imageUrl}
-            alt={item.title || item.name || 'Image'}
-            width={96}
-            height={96}
-            className="rounded-lg object-cover border border-gray-200"
-          />
-        ) : (
-          <span className="text-gray-400">No image</span>
-        )
-      case 'link':
-        return value ? (
-          <a
-            href={value}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 hover:underline"
-          >
-            {value}
-          </a>
-        ) : (
-          <span className="text-gray-500">—</span>
-        )
-      case 'clamp':
-        return <span className="line-clamp-2">{value}</span>
-      case 'badge':
-        return (
-          <span className="px-2 py-1 text-xs rounded-full bg-gray-100">
-            {value}
-          </span>
-        )
-      default:
-        return value as React.ReactNode
-    }
-  }
+      switch (column.render) {
+        case 'image':
+          const imageUrl = getPublicUrl(value)
+          return imageUrl ? (
+            <Image
+              src={imageUrl}
+              alt={item.title || item.name || 'Image'}
+              width={96}
+              height={96}
+              className="rounded-lg object-cover border border-gray-200"
+            />
+          ) : (
+            <span className="text-gray-400">No image</span>
+          )
+        case 'link':
+          return value ? (
+            <a
+              href={value}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline"
+            >
+              {value}
+            </a>
+          ) : (
+            <span className="text-gray-500">—</span>
+          )
+        case 'clamp':
+          return <span className="line-clamp-2">{value}</span>
+        case 'badge':
+          return (
+            <span className="px-2 py-1 text-xs rounded-full bg-gray-100">
+              {value}
+            </span>
+          )
+        default:
+          return value as React.ReactNode
+      }
+    },
+    [renderCell]
+  )
 
   const hasActions = Boolean(
     descriptor.actions?.edit ||
@@ -137,14 +149,15 @@ export default function AdminTable<T extends Record<string, any>>({
       ...descriptor.list.map((column) => ({
         accessorKey: column.key,
         header: () => column.label,
-        cell: ({ row }) => defaultRenderCell(row.original as T, column)
+        cell: ({ row }: { row: Row<T> }) =>
+          defaultRenderCell(row.original as T, column)
       })),
-      {
-        id: 'actions',
-        header: () => (hasActions ? 'Actions' : null),
-        cell: ({ row }) => {
-          const item = row.original as T
-          return hasActions ? (
+        {
+          id: 'actions',
+          header: () => (hasActions ? 'Actions' : null),
+          cell: ({ row }: { row: Row<T> }) => {
+            const item = row.original as T
+            return hasActions ? (
             <div className="flex justify-end space-x-2">
               {descriptor.actions?.edit && onEdit && (
                 <Button size="xs" color="light" onClick={() => onEdit(item)}>
@@ -190,9 +203,24 @@ export default function AdminTable<T extends Record<string, any>>({
       onDuplicate,
       onToggleDraft,
       onDelete,
-      hasActions
+      hasActions,
+      defaultRenderCell
     ]
   )
+
+  const globalFilterFn = (
+    row: Row<T>,
+    _columnId: string,
+    filterValue: string
+  ) => {
+    const search = filterValue.toLowerCase()
+    const fields = descriptor.searchFields || []
+    if (fields.length === 0) return true
+    return fields.some((field) => {
+      const value = row.original[field]
+      return String(value ?? '').toLowerCase().includes(search)
+    })
+  }
 
   const table = useReactTable({
     data,
@@ -201,19 +229,12 @@ export default function AdminTable<T extends Record<string, any>>({
       sorting,
       globalFilter
     },
-    onSortingChange: (updater) => {
-      setSorting(updater)
-      const sort = (typeof updater === 'function'
-        ? updater(sorting)
-        : updater)[0]
-      if (sort) {
-        onSort?.(String(sort.id), sort.desc ? 'desc' : 'asc')
-      }
-    },
+    onSortingChange: setSorting,
     onGlobalFilterChange: setGlobalFilter,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel()
+    getSortedRowModel: getSortedRowModel(),
+    globalFilterFn
   })
 
   return (
@@ -247,12 +268,12 @@ export default function AdminTable<T extends Record<string, any>>({
         <div className="overflow-x-auto bg-white border border-gray-200 rounded-lg">
           <Table className="min-w-full text-sm">
             <Table.Head className="bg-gray-50">
-              {table.getHeaderGroups().map((headerGroup) => (
+              {table.getHeaderGroups().map((headerGroup: HeaderGroup<T>) => (
                 <Table.Row
                   key={headerGroup.id}
                   className="border-b border-gray-200"
                 >
-                  {headerGroup.headers.map((header) => (
+                  {headerGroup.headers.map((header: Header<T, unknown>) => (
                     <Table.HeadCell
                       key={header.id}
                       className="py-3 px-4 text-left text-gray-600 font-medium"
@@ -289,9 +310,9 @@ export default function AdminTable<T extends Record<string, any>>({
                   </Table.Cell>
                 </Table.Row>
               ) : (
-                table.getRowModel().rows.map((row) => (
+                table.getRowModel().rows.map((row: Row<T>) => (
                   <Table.Row key={row.id} className="hover:bg-gray-50">
-                    {row.getVisibleCells().map((cell) => (
+                    {row.getVisibleCells().map((cell: Cell<T, unknown>) => (
                       <Table.Cell
                         key={cell.id}
                         className="py-4 px-4 text-gray-700"

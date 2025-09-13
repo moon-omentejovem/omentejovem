@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 type SeriesRow = Database['public']['Tables']['series']['Row'] & {
+  status?: 'draft' | 'published'
   series_artworks?: {
     artworks: Database['public']['Tables']['artworks']['Row']
   }[]
@@ -167,8 +168,6 @@ export default function SeriesPage() {
         loading={loading}
         onEdit={handleEdit}
         onDuplicate={handleDuplicate}
-        onSearch={() => {}} // TODO: Implement search
-        onSort={() => {}} // TODO: Implement sorting
         renderCell={renderCell}
         onLoadMore={() => fetchSeries()}
         hasMore={hasMore}

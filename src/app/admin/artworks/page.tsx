@@ -144,8 +144,6 @@ export default function ArtworksPage() {
         loading={loading}
         onEdit={handleEdit}
         onDuplicate={handleDuplicate}
-        onSearch={() => {}} // TODO: Implement search
-        onSort={() => {}} // TODO: Implement sorting
         onLoadMore={() => fetchArtworks()}
         hasMore={hasMore}
         onToggleDraft={handleToggleDraft}
