@@ -1,9 +1,9 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import { CustomIcons } from '@/assets/icons'
+import { cn } from '@/lib/utils'
+import { ExternalLink } from '@/types/legacy'
 import { useState } from 'react'
 import { OfferModal } from './Modals/OfferModal'
-import { cn } from '@/lib/utils'
-import { ExternalLink, NFT } from '@/api/resolver/types'
 
 interface ArtLinkProperties {
   email: string
@@ -41,7 +41,7 @@ export function ArtLinks({
 						'sm:px-8 last:border-b-[1px]',
 					)}
 				>
-					AVAILABLE FOR 
+					AVAILABLE FOR
 				</a>
 			))}    */}
 

@@ -3,12 +3,12 @@
 import 'swiper/css'
 import 'swiper/css/pagination'
 
+import { NFT } from '@/types/legacy'
 import Image from 'next/image'
+import { useEffect } from 'react'
 import { Mousewheel } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Swiper as SwiperType } from 'swiper/types'
-import { useEffect } from 'react'
-import { NFT } from '@/api/resolver/types'
 
 interface HorizontalInCarouselProperties {
   slideIndex?: number

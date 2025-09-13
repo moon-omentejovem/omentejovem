@@ -1,21 +1,14 @@
 import { CustomIcons } from '@/assets/icons'
 import Objkt from '@/assets/icons/objkt'
 import OpenSea from '@/assets/icons/open-sea'
+import { fetchTransfersForToken } from '@/lib/legacy-api'
 import { cn } from '@/lib/utils'
+import { Chain, Mint, Owner, TransferFromAPI } from '@/types/legacy'
 import { usePathname } from 'next/navigation'
-import {
-  Chain,
-  FirstCreated,
-  Mint,
-  Owner,
-  Sale,
-  TransferFromAPI
-} from '../ArtContent/types'
-import { ArtTransaction, formatOwnerAddress } from './ArtTransaction'
 import { useEffect, useState } from 'react'
 import { OwnersModal } from '../Modals/OwnersModal'
 import { ArtMint } from './ArtMint'
-import { fetchTransfersForToken } from '@/api/requests/fetchTransfersForToken'
+import { ArtTransaction, formatOwnerAddress } from './ArtTransaction'
 
 interface ArtOwnershipProperties {
   nftChain: Chain
