@@ -84,7 +84,7 @@ export class ArtworkService extends BaseService {
             const { data: artworkIds } = await supabase
               .from('series_artworks')
               .select('artwork_id')
-              .eq('series_id', seriesData.id)
+              .eq('series_id', String(seriesData.id))
 
             if (artworkIds && artworkIds.length > 0) {
               const ids = artworkIds.map((item: any) => item.artwork_id)
