@@ -38,11 +38,7 @@ export function ArtInfosNew({
 
   console.log('selectedArtwork', selectedArtwork)
 
-  // Check if artwork has video - base on if there's no real token_id (fake/local artworks)
-  const hasVideo =
-    !selectedArtwork.token_id ||
-    selectedArtwork.token_id === '' ||
-    selectedArtwork.token_id === '0x0000000000000000000000000000000000000000'
+  const hasVideo = !!selectedArtwork.video_url
 
   const onChangeToOtherSlide = async (index: number) => {
     onChangeSlideIndex(index)
@@ -152,12 +148,7 @@ export function ArtInfosNew({
           <div className="xl:art-detail-inner-container overflow-hidden flex flex-1 justify-start xl:justify-end">
             <ArtDetails
               detailedImage={selectedArtwork.image_url}
-              image={
-                source === 'portfolio'
-                  ? selectedArtwork.image_cached_path ||
-                    selectedArtwork.image_url
-                  : selectedArtwork.image_url
-              }
+              image={selectedArtwork.image_cached_path || ''}
               name={selectedArtwork.title || ''}
             />
           </div>
@@ -326,7 +317,10 @@ export function ArtInfosNew({
               className="w-auto h-auto max-w-full max-h-[90vh] rounded-lg"
               controls
               autoPlay
-              src={`${selectedArtwork.image_url.replace('/new_series/', '/new_series/videos/').replace('.jpg', '.mp4')}`}
+              src={
+                selectedArtwork.video_url ||
+                `${selectedArtwork.image_url.replace('/new_series/', '/new_series/videos/').replace('.jpg', '.mp4')}`
+              }
             >
               <track kind="captions" srcLang="en" label="English" />
               Your browser does not support the video tag.

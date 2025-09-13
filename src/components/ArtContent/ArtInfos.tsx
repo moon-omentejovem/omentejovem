@@ -37,8 +37,8 @@ export function ArtInfos({
   const [isAnimating, setIsAnimating] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
 
-  // Simplified hasVideo logic - can be enhanced later
-  const hasVideo = false
+  // Check if artwork has video - use video_url field when available
+  const hasVideo = !!selectedArt.video_url
 
   const onChangeToOtherSlide = (index: number) => {
     onChangeSlideIndex(index)
@@ -84,10 +84,13 @@ export function ArtInfos({
   const optimizedImageUrl = selectedArt.image_url
   const rawImageUrl = selectedArt.image_url
 
+  // Use video_url field when available, fallback to legacy path conversion
   const videoUrl =
+    selectedArt.video_url ||
     rawImageUrl
       ?.replace('/new_series/', '/new_series/videos/')
-      .replace('.jpg', '.mp4') || ''
+      .replace('.jpg', '.mp4') ||
+    ''
 
   return (
     <>
