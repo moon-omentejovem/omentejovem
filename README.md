@@ -10,8 +10,7 @@
 
 [![Vercel Deploy](https://deploy-badge.vercel.app/vercel/omentejovem-staging?style=flat-square)](https://omentejovem-staging.vercel.app/)
 
-[![CI](https://img.shields.io/github/actions/workflow/status/luismtns/omentejovem/ci.yml?branch=main&style=flat-square&logo=github&label=CI)](https://github.com/luismtns/omentejovem/actions/workflows/ci.yml)
-[![Lighthouse](https://img.shields.io/github/actions/workflow/status/luismtns/omentejovem/lighthouse.yml?branch=main&style=flat-square&logo=lighthouse&label=Performance)](https://github.com/luismtns/omentejovem/actions/workflows/lighthouse.yml)
+<!-- [![CI](https://img.shields.io/github/actions/workflow/status/luismtns/omentejovem/ci.yml?branch=main&style=flat-square&logo=github&label=CI)](https://github.com/luismtns/omentejovem/actions/workflows/ci.yml) -->
 
 A modern portfolio platform showcasing digital artworks and NFT collections with an integrated content management system for admins.
 
