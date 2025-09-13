@@ -30,6 +30,7 @@ import {
   SortingState
 } from '@tanstack/react-table'
 import { Button, Table, TextInput } from 'flowbite-react'
+import AdminTableActions from './AdminTableActions'
 
 interface AdminTableProps<T = any> {
   descriptor: ResourceDescriptor
@@ -152,60 +153,30 @@ export default function AdminTable<T extends Record<string, any>>({
         cell: ({ row }: { row: Row<T> }) =>
           defaultRenderCell(row.original as T, column)
       })),
-        {
-          id: 'actions',
-          header: () => (hasActions ? 'Actions' : null),
-          cell: ({ row }: { row: Row<T> }) => {
-            const item = row.original as T
-            return hasActions ? (
-            <div className="flex justify-end space-x-2">
-              {descriptor.actions?.edit && onEdit && (
-                <Button size="xs" color="light" onClick={() => onEdit(item)}>
-                  Edit
-                </Button>
-              )}
-              {descriptor.actions?.duplicate && onDuplicate && (
-                <Button
-                  size="xs"
-                  color="light"
-                  onClick={() => onDuplicate(item)}
-                >
-                  Duplicate
-                </Button>
-              )}
-              {typeof onToggleDraft === 'function' && (
-                <Button
-                  size="xs"
-                  color="light"
-                  onClick={() => onToggleDraft(item)}
-                >
-                  {item.status === 'draft' ? 'Publish' : 'Draft'}
-                </Button>
-              )}
-              {descriptor.actions?.delete && onDelete && (
-                <Button
-                  size="xs"
-                  color="failure"
-                  onClick={() => onDelete(item)}
-                >
-                  Delete
-                </Button>
-              )}
-            </div>
-          ) : null
-        }
+      {
+        id: 'actions',
+        header: () => (hasActions ? 'Actions' : null),
+        cell: ({ row }: { row: Row<T> }) => (
+          <AdminTableActions
+            item={row.original as T}
+            descriptor={descriptor}
+            onEdit={onEdit}
+            onDuplicate={onDuplicate}
+            onToggleDraft={onToggleDraft}
+            onDelete={onDelete}
+          />
+        )
       }
     ],
-    [
-      descriptor.list,
-      descriptor.actions,
-      onEdit,
-      onDuplicate,
-      onToggleDraft,
-      onDelete,
-      hasActions,
-      defaultRenderCell
-    ]
+      [
+        descriptor,
+        onEdit,
+        onDuplicate,
+        onToggleDraft,
+        onDelete,
+        hasActions,
+        defaultRenderCell
+      ]
   )
 
   const globalFilterFn = (
