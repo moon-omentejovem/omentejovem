@@ -106,12 +106,6 @@ export default function AdminForm<T extends Record<string, any>>({
         fieldValue !== null &&
         fieldValue !== ''
       ) {
-        if (
-          (field.type === 'url' || field.type === 'image') &&
-          !isValidUrl(fieldValue)
-        ) {
-          newErrors[field.key] = 'Please enter a valid URL'
-        }
         if (field.type === 'email' && !isValidEmail(fieldValue)) {
           newErrors[field.key] = 'Please enter a valid email'
         }
@@ -135,15 +129,6 @@ export default function AdminForm<T extends Record<string, any>>({
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
-  }
-
-  const isValidUrl = (string: string): boolean => {
-    try {
-      new URL(string)
-      return true
-    } catch (_) {
-      return false
-    }
   }
 
   const isValidEmail = (email: string): boolean => {
