@@ -1,4 +1,4 @@
-![Omentejovem Logo](/logo.png)
+![Omentejovem Logo](/logo.jpg)
 
 # Omentejovem
 
@@ -100,74 +100,6 @@ yarn start        # Start production server
 yarn lint         # Run ESLint
 yarn lintfix      # Fix ESLint issues
 ```
-
-## Recommended CI/CD Setup
-
-For optimal development workflow, consider implementing these GitHub Actions:
-
-<details>
-<summary>📋 Click to view recommended CI workflows</summary>
-
-### 1. Basic CI Pipeline (`.github/workflows/ci.yml`)
-
-```yaml
-name: CI
-on: [push, pull_request]
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          cache: 'yarn'
-      - run: yarn install --frozen-lockfile
-      - run: yarn lint
-      - run: yarn build
-```
-
-### 2. Lighthouse CI (`.github/workflows/lighthouse.yml`)
-
-```yaml
-name: Lighthouse CI
-on: [push]
-jobs:
-  lighthouse:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: treosh/lighthouse-ci-action@v10
-        with:
-          configPath: './lighthouserc.js'
-```
-
-### 3. Security Audit (`.github/workflows/security.yml`)
-
-```yaml
-name: Security Audit
-on: [push, pull_request]
-jobs:
-  security:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-      - run: yarn audit --audit-level moderate
-```
-
-### 4. Dependency Updates (`.github/dependabot.yml`)
-
-```yaml
-version: 2
-updates:
-  - package-ecosystem: 'npm'
-    directory: '/'
-    schedule:
-      interval: 'weekly'
-```
-
-</details>
 
 ## Documentation
 
