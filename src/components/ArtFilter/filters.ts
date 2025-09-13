@@ -1,24 +1,116 @@
 'use client'
 
-import { NFT } from '@/types/legacy'
-import {
-  MANIFOLD_NFTS,
-  RARIBLE_NFTS,
-  SUPERRARE_NFTS,
-  TRANSIENT_NFTS
-} from '@/utils/constants'
+// Simplified filters for current backend structure
+// This file needs to be refactored when NFT contract data is available
 
 export interface ChainedFilter {
   label?: string
-  filterApply?: (nft: NFT) => boolean
+  filterApply?: (artwork: any) => boolean // Using any for legacy compatibility
   sortApply?: SortOption
   children: ChainedFilter[]
   inPlace?: boolean
 }
 
 export interface SortOption {
-  key: keyof NFT
+  key: string // Simplified to string for now
   option: 'asc' | 'desc'
+}
+
+// Simplified date functions for legacy compatibility
+function extractYearFromISO(dateString: string): number {
+  const date = new Date(dateString)
+  return date.getFullYear()
+}
+
+function filterByDateMatchesYears(years: number[]) {
+  return (artwork: any) => {
+    const mintDate = artwork.mint_date || artwork.created_at
+    if (!mintDate) return false
+    const year = extractYearFromISO(mintDate)
+    return years.includes(year)
+  }
+}
+
+// Simplified filters - most legacy filters disabled for now
+export const chains: ChainedFilter = {
+  label: 'Chains',
+  children: [
+    {
+      label: 'All Chains',
+      children: []
+    }
+  ]
+}
+
+export const sortOptions: ChainedFilter = {
+  label: 'Sort By',
+  children: [
+    {
+      label: 'Date Created',
+      sortApply: {
+        key: 'created_at',
+        option: 'desc'
+      },
+      children: []
+    }
+  ]
+}
+
+export const platforms: ChainedFilter = {
+  label: 'Platform',
+  children: [
+    {
+      label: 'All Platforms',
+      children: []
+    }
+  ]
+}
+
+// Simplified date filters
+export const years: ChainedFilter = {
+  label: 'Year',
+  children: [
+    {
+      label: '2025',
+      filterApply: filterByDateMatchesYears([2025]),
+      children: []
+    },
+    {
+      label: '2024',
+      filterApply: filterByDateMatchesYears([2024]),
+      children: []
+    },
+    {
+      label: '2023',
+      filterApply: filterByDateMatchesYears([2023]),
+      children: []
+    },
+    {
+      label: '2022',
+      filterApply: filterByDateMatchesYears([2022]),
+      children: []
+    }
+  ]
+}
+
+export const status: ChainedFilter = {
+  label: 'Status',
+  children: [
+    {
+      label: 'All',
+      children: []
+    }
+  ]
+}
+
+export const dateAvailable: ChainedFilter = {
+  label: 'Date Available',
+  children: [
+    {
+      label: 'All',
+      children: []
+    }
+  ]
 }
 
 export function getLastFilterHistoryParent(
@@ -33,209 +125,17 @@ export function getLastFilterHistoryParent(
       return filterHistory[i]
     }
   }
-  return filterHistory[filterHistory.length - 1] // Return last filter if none have children
+  return filterHistory[filterHistory.length - 1]
 }
 
-function extractYearFromISO(dateString: string): number {
-  const date = new Date(dateString)
-  return date.getFullYear()
-}
-function getNftYearFilter(year: number) {
-  return (n: NFT) => {
-    return new Date(n.mint.timestamp ?? '').getFullYear() === year
-  }
-}
-
-const latestFilter: ChainedFilter = {
-  label: 'latest',
-  sortApply: {
-    key: 'mint',
-    option: 'desc'
-  },
-  children: []
-}
-
-const oldestFilter: ChainedFilter = {
-  label: 'oldest',
-  sortApply: {
-    key: 'mint',
-    option: 'asc'
-  },
-  children: []
-}
-
-const availableFilter: ChainedFilter = {
-  label: 'available',
-  filterApply: (n) => true, // todo n.available_purchase != null,
-  inPlace: true,
-  children: []
-}
-
-const ethContractFilter: ChainedFilter = {
-  label: 'contract',
-  children: [
-    {
-      label: 'manifold',
-      inPlace: true,
-      filterApply: (n) =>
-        MANIFOLD_NFTS.map((nft) => nft.toLowerCase()).includes(
-          n.contract.address?.toLowerCase() ?? ''
-        ),
-      children: []
-    },
-    {
-      label: 'transient labs',
-      inPlace: true,
-      filterApply: (n) =>
-        TRANSIENT_NFTS.map((nft) => nft.toLowerCase()).includes(
-          n.contract.address?.toLowerCase() ?? ''
-        ),
-      children: []
-    },
-    {
-      label: 'superrare',
-      inPlace: true,
-      filterApply: (n) =>
-        SUPERRARE_NFTS.map((nft) => nft.toLowerCase()).includes(
-          n.contract.address?.toLowerCase() ?? ''
-        ),
-      children: []
-    },
-    // {
-    //   label: 'opensea',
-    //   inPlace: true,
-    //   filterApply: (n) =>
-    //     POAP_NFTS.map((nft) => nft.toLowerCase()).includes(
-    //       n.contract_address?.toLowerCase() ?? ''
-    //     ),
-    //   children: []
-    // },
-    {
-      label: 'rarible',
-      inPlace: true,
-      filterApply: (n) =>
-        RARIBLE_NFTS.map((nft) => nft.toLowerCase()).includes(
-          n.contract.address?.toLowerCase() ?? ''
-        ),
-      children: []
-    }
-  ]
-}
-
-const xtzContractFilter: ChainedFilter = {
-  label: 'contract',
-  children: [
-    // {
-    //   label: 'hen',
-    //   inPlace: true,
-    //   filterApply: (n) => n.contract.name === 'hen',
-    //   children: []
-    // },
-    {
-      label: 'objkt',
-      inPlace: true,
-      filterApply: (n) => n.contract.name === 'OBJKTs',
-      children: []
-    },
-    {
-      label: 'objkt.one',
-      inPlace: true,
-      filterApply: (n) => n.contract.name === 'objkt one NFT',
-      children: []
-    }
-  ]
-}
-
-const ethYearFilter: ChainedFilter = {
-  label: 'year',
-  children: [
-    {
-      label: '2024',
-      filterApply: getNftYearFilter(2024),
-      inPlace: true,
-      children: []
-    },
-    {
-      label: '2023',
-      filterApply: getNftYearFilter(2023),
-      inPlace: true,
-      children: []
-    },
-    {
-      label: '2022',
-      filterApply: getNftYearFilter(2022),
-      inPlace: true,
-      children: []
-    },
-    {
-      label: '2021',
-      filterApply: getNftYearFilter(2021),
-      inPlace: true,
-      children: []
-    },
-    {
-      label: '2020',
-      filterApply: getNftYearFilter(2020),
-      inPlace: true,
-      children: []
-    }
-  ]
-}
-
-const xtzYearFilter: ChainedFilter = {
-  label: 'year',
-  children: [
-    {
-      label: '2023',
-      filterApply: getNftYearFilter(2023),
-      inPlace: true,
-      children: []
-    },
-    {
-      label: '2021',
-      filterApply: getNftYearFilter(2021),
-      inPlace: true,
-      children: []
-    }
-  ]
-}
-
+// Default export - simplified filter array
 const filters: ChainedFilter[] = [
-  {
-    children: [
-      {
-        label: 'minted',
-        filterApply: (n) => !!n.mint.timestamp,
-        children: [
-          {
-            label: 'eth',
-            filterApply: (n) => n.chain?.toLowerCase() === 'ethereum',
-            children: [
-              oldestFilter,
-              // availableFilter,
-              ethContractFilter,
-              ethYearFilter
-            ]
-          },
-          {
-            label: 'xtz',
-            filterApply: (n) => n.chain?.toLowerCase() === 'tezos',
-            children: [
-              oldestFilter,
-              // availableFilter,
-              xtzContractFilter,
-              xtzYearFilter
-            ]
-          }
-        ]
-      }
-      // {
-      //   label: 'non minted',
-      //   filterApply: (n) => !n.created_date,
-      //   children: [latestFilter, availableFilter, yearFilter]
-      // }
-    ]
-  }
+  chains,
+  sortOptions,
+  platforms,
+  years,
+  status,
+  dateAvailable
 ]
 
 export default filters

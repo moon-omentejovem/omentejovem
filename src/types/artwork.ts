@@ -37,78 +37,71 @@ export interface ArtworkImage {
   thumbnailUrl?: string
 }
 
-// Processed artwork for frontend consumption
-export interface ProcessedArtwork {
-  // Core artwork data
-  id: string
-  slug: string
-  title: string
-  description: any // JSON content from Tiptap
+// Main artwork type for frontend (using Supabase as source of truth)
+export type Artwork = ArtworkWithSeries
 
-  // NFT/Token data
-  tokenId: string
-  mintDate?: string
-  mintLink?: string
-  type: 'single' | 'edition'
-  editionsTotal?: number
-
-  // Images
-  image: ArtworkImage
-
-  // Flags
-  isFeatured: boolean
-  isOneOfOne: boolean
-
-  // Series/Collection info
-  series: {
-    name: string
-    slug: string
-  }[]
-
-  // Metadata
-  postedAt: string
-  createdAt: string
-  updatedAt: string
+// Simple external link interface (Backend-Oriented approach)
+export interface ExternalLink {
+  name: string
+  url: string
 }
 
-/**
- * Convert Supabase artwork to frontend-friendly format
- */
-export function processArtwork(artwork: ArtworkWithSeries): ProcessedArtwork {
-  const imageUrl = artwork.image_cached_path || artwork.image_url || ''
-
-  return {
-    id: artwork.id,
-    slug: artwork.slug,
-    title: artwork.title,
-    description: artwork.description,
-
-    tokenId: artwork.token_id || '',
-    mintDate: artwork.mint_date || undefined,
-    mintLink: artwork.mint_link || undefined,
-    type: artwork.type as 'single' | 'edition',
-    editionsTotal: artwork.editions_total || undefined,
-
-    image: {
-      url: imageUrl,
-      originalUrl: artwork.image_url || '',
-      cachedUrl: artwork.image_cached_path || undefined,
-      thumbnailUrl: imageUrl // Same as main for now
-    },
-
-    isFeatured: artwork.is_featured ?? false,
-    isOneOfOne: artwork.is_one_of_one ?? false,
-
-    series:
-      artwork.series_artworks
-        ?.map((sa) => ({
-          name: sa?.series?.name || 'Unknown Series',
-          slug: sa?.series?.slug || 'unknown'
-        }))
-        .filter((s) => s.name !== 'Unknown Series') || [],
-
-    postedAt: artwork.posted_at || artwork.created_at || '',
-    createdAt: artwork.created_at || '',
-    updatedAt: artwork.updated_at || artwork.created_at || ''
-  }
+// Owner information (simplified from legacy NFT system)
+export interface Owner {
+  owner_address: string
+  quantity: number
+  first_acquired_date: string
+  last_acquired_date: string
 }
+
+// Chain types for NFT data
+export type Chain = 'ethereum' | 'tezos'
+
+// Mint information from blockchain
+export interface Mint {
+  mintAddress: string
+  blockNumber: number
+  timestamp: string
+  transactionHash: string
+}
+
+// Transfer information (for future backend implementation)
+export interface TransferFromAPI {
+  batch_transfer_index: number
+  block_hash: string
+  block_number: number
+  chain: string
+  collection_id: string
+  contract_address: string
+  event_type: string
+  from_address: string
+  log_index: number
+  nft_id: string
+  quantity: number
+  quantity_string: string
+  sale_details: null | unknown
+  timestamp: string
+  to_address: string
+  token_id: string
+  transaction: string
+  transaction_fee: number
+  transaction_index: number
+  transaction_initiator: string
+  transaction_to_address: string
+  transaction_value: number
+}
+
+// Additional types for component compatibility
+export interface NftTransferEvent {
+  fromAddress: string
+  toAddress: string
+  eventDate: string
+  eventType: string
+  transactionUrl?: string
+}
+
+export type FirstCreated = Mint
+export type Sale = TransferFromAPI
+
+// Types for future API integration (NFT ownership and transfers)
+// These will be populated when the external NFT API is implemented

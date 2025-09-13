@@ -1,11 +1,11 @@
 'use client'
 
-import { ProcessedArtwork } from '@/types/artwork'
+import { Artwork } from '@/types/artwork'
 
 interface ArtFilterProperties {
   currentPage: number
-  artImages: ProcessedArtwork[]
-  onChangeArtImages: (artworks: ProcessedArtwork[]) => void
+  artImages: Artwork[]
+  onChangeArtImages: (artworks: Artwork[]) => void
 }
 
 export function ArtFilterNew({
@@ -14,7 +14,7 @@ export function ArtFilterNew({
   onChangeArtImages
 }: ArtFilterProperties) {
   // For now, just pass through the artImages without filtering
-  // TODO: Implement proper filtering for ProcessedArtwork
+  // TODO: Implement proper filtering for Artwork
   // Removed useEffect that was causing infinite loop
   // The filtering should be done based on user interaction, not on every render
 

@@ -172,7 +172,9 @@ export function useUpdateUserRole() {
       // Invalidar todas as queries de user roles
       queryClient.invalidateQueries(userRoleKeys.all)
       // Atualizar cache específico do user role
-      queryClient.setQueryData(userRoleKeys.detail(data.user_id), data)
+      if (data.user_id) {
+        queryClient.setQueryData(userRoleKeys.detail(data.user_id), data)
+      }
     }
   })
 }

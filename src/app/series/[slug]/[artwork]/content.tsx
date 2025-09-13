@@ -1,12 +1,12 @@
 'use client'
 
 import { ArtMainContent } from '@/components/ArtContent/ArtMainContent'
-import { ProcessedArtwork } from '@/types/artwork'
+import { Artwork } from '@/types/artwork'
 import { ReactElement, useCallback, useState } from 'react'
 
 interface ArtworkContentProps {
   email: string
-  initialArtworks: ProcessedArtwork[]
+  initialArtworks: Artwork[]
   initialSelectedIndex: number
   seriesSlug: string
 }
@@ -17,11 +17,11 @@ export default function ArtworkContent({
   initialSelectedIndex,
   seriesSlug
 }: ArtworkContentProps): ReactElement {
-  const [artworks, setArtworks] = useState<ProcessedArtwork[]>(initialArtworks)
+  const [artworks, setArtworks] = useState<Artwork[]>(initialArtworks)
   const [selectedArtworkIndex, setSelectedArtworkIndex] =
     useState(initialSelectedIndex)
 
-  const onChangeArtworks = useCallback((newArtworks: ProcessedArtwork[]) => {
+  const onChangeArtworks = useCallback((newArtworks: Artwork[]) => {
     setArtworks(newArtworks)
   }, [])
 

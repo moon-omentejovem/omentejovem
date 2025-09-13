@@ -1,4 +1,4 @@
-import { NFT } from '@/types/legacy'
+import { Artwork } from '@/types/artwork'
 
 export const COLLECTION_NFTS = [
   '0x826b11a95a9393e8a3cc0c2a7dfc9accb4ff4e43:5',
@@ -21,7 +21,7 @@ export const STORIES_ON_CIRCLES_COLLECTION_ADDRESS =
 
 export const STORIES_ON_CIRCLES_SLUG = 'storiesoncircles'
 
-export const FAKE_TOKENS: NFT[] = []
+export const FAKE_TOKENS: Artwork[] = []
 
 export const ALL_NFTS = async () => {
   try {

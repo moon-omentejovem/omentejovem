@@ -2,12 +2,12 @@
 
 import { ArtMainContent } from '@/components/ArtContent/ArtMainContent'
 import { useArtworks } from '@/hooks'
-import { ProcessedArtwork } from '@/types/artwork'
+import { Artwork } from '@/types/artwork'
 import { ReactElement, useCallback, useEffect, useState } from 'react'
 
 interface PortfolioContentProps {
   email: string
-  initialArtworks?: ProcessedArtwork[]
+  initialArtworks?: Artwork[]
   searchParams?: {
     type?: 'single' | 'edition'
     series?: string
@@ -34,11 +34,10 @@ export default function PortfolioContent({
   })
 
   // Local state for filtering and selection
-  const [filteredArtworks, setFilteredArtworks] =
-    useState<ProcessedArtwork[]>(artworks)
+  const [filteredArtworks, setFilteredArtworks] = useState<Artwork[]>(artworks)
   const [selectedArtworkIndex, setSelectedArtworkIndex] = useState(-1)
 
-  const onChangeArtworks = useCallback((newArtworks: ProcessedArtwork[]) => {
+  const onChangeArtworks = useCallback((newArtworks: Artwork[]) => {
     setFilteredArtworks(newArtworks)
   }, [])
 
@@ -53,7 +52,10 @@ export default function PortfolioContent({
     // Filter by series if specified
     if (searchParams.series) {
       filtered = artworks.filter((artwork) =>
-        artwork.series.some((series) => series.slug === searchParams.series)
+        artwork.series_artworks.some(
+          (seriesArtwork: any) =>
+            seriesArtwork.series.slug === searchParams.series
+        )
       )
     }
 

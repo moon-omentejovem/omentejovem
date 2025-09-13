@@ -12,25 +12,59 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: '13.0.4'
   }
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   public: {
     Tables: {
       about_page: {
         Row: {
           content: Json
           created_at: string | null
+          exhibitions: Json | null
           id: string
+          press: Json | null
+          socials: Json | null
           updated_at: string | null
         }
         Insert: {
           content: Json
           created_at?: string | null
+          exhibitions?: Json | null
           id?: string
+          press?: Json | null
+          socials?: Json | null
           updated_at?: string | null
         }
         Update: {
           content?: Json
           created_at?: string | null
+          exhibitions?: Json | null
           id?: string
+          press?: Json | null
+          socials?: Json | null
           updated_at?: string | null
         }
         Relationships: []
@@ -70,6 +104,9 @@ export type Database = {
       }
       artworks: {
         Row: {
+          blockchain: string | null
+          collection_slug: string | null
+          contract_address: string | null
           created_at: string | null
           description: Json | null
           editions_total: number | null
@@ -80,13 +117,18 @@ export type Database = {
           mint_date: string | null
           mint_link: string | null
           posted_at: string | null
+          raw_image_url: string | null
           slug: string
           title: string
           token_id: string | null
           type: string
           updated_at: string | null
+          video_url: string | null
         }
         Insert: {
+          blockchain?: string | null
+          collection_slug?: string | null
+          contract_address?: string | null
           created_at?: string | null
           description?: Json | null
           editions_total?: number | null
@@ -97,13 +139,18 @@ export type Database = {
           mint_date?: string | null
           mint_link?: string | null
           posted_at?: string | null
+          raw_image_url?: string | null
           slug: string
           title: string
           token_id?: string | null
           type: string
           updated_at?: string | null
+          video_url?: string | null
         }
         Update: {
+          blockchain?: string | null
+          collection_slug?: string | null
+          contract_address?: string | null
           created_at?: string | null
           description?: Json | null
           editions_total?: number | null
@@ -114,11 +161,13 @@ export type Database = {
           mint_date?: string | null
           mint_link?: string | null
           posted_at?: string | null
+          raw_image_url?: string | null
           slug?: string
           title?: string
           token_id?: string | null
           type?: string
           updated_at?: string | null
+          video_url?: string | null
         }
         Relationships: []
       }
@@ -191,38 +240,37 @@ export type Database = {
           id: string
           role: string
           updated_at: string
-          user_id: string
+          user_id: string | null
         }
         Insert: {
           created_at?: string
           id?: string
           role?: string
           updated_at?: string
-          user_id: string
+          user_id?: string | null
         }
         Update: {
           created_at?: string
           id?: string
           role?: string
           updated_at?: string
-          user_id?: string
+          user_id?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: 'user_roles_user_id_fkey'
-            columns: ['user_id']
-            isOneToOne: true
-            referencedRelation: 'users'
-            referencedColumns: ['id']
-          }
-        ]
+        Relationships: []
       }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: { required_role: string }
+        Returns: boolean
+      }
+      is_admin: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
@@ -351,6 +399,9 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {}
+  },
   public: {
     Enums: {}
   }

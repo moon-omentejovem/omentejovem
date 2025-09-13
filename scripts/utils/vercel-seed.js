@@ -220,7 +220,7 @@ function runSeed(supabase) {
 }
 
 // Import legacy migration function
-const { migrateLegacyData } = require('./migrate-legacy-data')
+const { migrateLegacyData } = require('../legacy/migrate-legacy-data')
 
 // Enhanced seeding function with legacy data option
 async function seedWithLegacyData() {

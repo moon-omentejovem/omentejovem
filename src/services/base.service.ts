@@ -28,9 +28,18 @@ export class BaseService {
       // Try to use the server client (works in runtime)
       return await createServerSupabaseClient()
     } catch (error) {
-      // Fallback to build client (works during static generation)
+      // Check if it's the specific static generation context error
+      if (
+        error instanceof Error &&
+        error.message === 'STATIC_GENERATION_CONTEXT'
+      ) {
+        // Silently fallback to build client during static generation
+        return createBuildSupabaseClient()
+      }
+
+      // For other errors, log and fallback
       console.debug(
-        'Falling back to build client for static generation due to error in createServerSupabaseClient:',
+        'Falling back to build client due to server client error:',
         error
       )
       return createBuildSupabaseClient()

@@ -5,12 +5,21 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "postbuild": "node scripts/vercel-seed.js",
+    "postbuild": "node scripts/utils/vercel-seed.js",
     "start": "next start",
     "lint": "next lint",
     "lintfix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "format": "prettier --write .",
-    "build:staging": "env-cmd -f .env.staging npx build && npx start"
+    "build:staging": "env-cmd -f .env.staging npx build && npx start",
+    "supabase:init": "npx supabase init",
+    "supabase:login": "npx supabase login",
+    "supabase:link": "npx supabase link",
+    "supabase:status": "npx supabase status",
+    "supabase:migration:new": "npx supabase migration new",
+    "supabase:migration:up": "npx supabase migration up",
+    "supabase:db:push": "npx supabase db push",
+    "supabase:db:pull": "npx supabase db pull",
+    "supabase:types": "npx supabase gen types typescript --linked > src/types/supabase.ts"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "1.0.5",
@@ -76,6 +85,7 @@
     "postcss": "^8",
     "prettier": "^3.1.0",
     "prettier-plugin-tailwindcss": "^0.5.7",
+    "supabase": "2.40.7",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   },

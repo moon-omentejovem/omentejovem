@@ -9,36 +9,43 @@ import { cookies } from 'next/headers'
  * For use in Server Components and API routes
  */
 export async function createServerSupabaseClient() {
-  const cookieStore = await cookies()
+  // Check if cookies() is available (not available during static generation)
+  try {
+    const cookieStore = await cookies()
 
-  return createServerClient<Database>(
-    supabaseConfig.url,
-    supabaseConfig.anonKey,
-    {
-      ...supabaseClientOptions,
-      auth: {
-        ...supabaseClientOptions.auth,
-        persistSession: false,
-        autoRefreshToken: false
-      },
-      cookies: {
-        getAll() {
-          return cookieStore.getAll()
+    return createServerClient<Database>(
+      supabaseConfig.url,
+      supabaseConfig.anonKey,
+      {
+        ...supabaseClientOptions,
+        auth: {
+          ...supabaseClientOptions.auth,
+          persistSession: false,
+          autoRefreshToken: false
         },
-        setAll(cookiesToSet) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
-            )
-          } catch {
-            // The `setAll` method was called from a Server Component.
-            // This can be ignored if you have middleware refreshing
-            // user sessions.
+        cookies: {
+          getAll() {
+            return cookieStore.getAll()
+          },
+          setAll(cookiesToSet) {
+            try {
+              cookiesToSet.forEach(({ name, value, options }) =>
+                cookieStore.set(name, value, options)
+              )
+            } catch {
+              // The `setAll` method was called from a Server Component.
+              // This can be ignored if you have middleware refreshing
+              // user sessions.
+            }
           }
         }
       }
-    }
-  )
+    )
+  } catch (error) {
+    // cookies() is not available, likely during static generation
+    // Throw a specific error that can be caught and handled
+    throw new Error('STATIC_GENERATION_CONTEXT')
+  }
 }
 
 /**

@@ -1,19 +1,22 @@
 'use client'
 
-import { NFT } from '@/components/ArtContent/types'
 import { Filter } from '@/components/Filter'
+import { Artwork } from '@/types/artwork'
+import { orderBy } from '@/utils/arrays'
 import { useEffect, useState } from 'react'
 import filters, { ChainedFilter, getLastFilterHistoryParent } from './filters'
-import { orderBy } from '@/utils/arrays'
 
 interface ArtFilterProperties {
   currentPage: number
-  artImages: NFT[]
-  onChangeArtImages: (images: NFT[]) => void
+  artImages: Artwork[]
+  onChangeArtImages: (images: Artwork[]) => void
 }
 
 interface FilterArtHistory extends ChainedFilter {
-  filteredImages: NFT[]
+  filteredImages: Artwork[]
+  label?: string
+  children: ChainedFilter[]
+  inPlace?: boolean
 }
 
 export function ArtFilter({
@@ -45,7 +48,7 @@ export function ArtFilter({
     return count
   }
 
-  function testFilter(filter: ChainedFilter, images: NFT[]): boolean {
+  function testFilter(filter: ChainedFilter, images: Artwork[]): boolean {
     if (!filter.filterApply) return true
 
     // Test if applying this filter would result in any items
@@ -53,12 +56,12 @@ export function ArtFilter({
   }
 
   function getAvailableFilters(
-    currentImages: NFT[],
+    currentImages: Artwork[],
     parentFilter: ChainedFilter
   ) {
     // If the filter has children, return only those that would produce results
     if (parentFilter.children.length > 0) {
-      return parentFilter.children.filter((filter) =>
+      return parentFilter.children.filter((filter: any) =>
         testFilter(filter, currentImages)
       )
     }
@@ -66,7 +69,7 @@ export function ArtFilter({
     // If no children, get the parent's children (siblings)
     const parent = getLastFilterHistoryParent([...filterHistory])
     if (parent) {
-      return parent.children.filter((filter) =>
+      return parent.children.filter((filter: any) =>
         testFilter(filter, currentImages)
       )
     }
@@ -105,7 +108,7 @@ export function ArtFilter({
       if (filter.sortApply) {
         appliedImages = orderBy(
           appliedImages,
-          filter.sortApply.key,
+          filter.sortApply.key as keyof Artwork,
           filter.sortApply.option
         )
       }
@@ -126,7 +129,7 @@ export function ArtFilter({
     if (filter.sortApply) {
       appliedImages = orderBy(
         appliedImages,
-        filter.sortApply.key,
+        filter.sortApply.key as keyof Artwork,
         filter.sortApply.option
       )
     }

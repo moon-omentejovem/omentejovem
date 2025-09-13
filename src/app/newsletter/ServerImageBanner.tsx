@@ -3,13 +3,13 @@
  * Não precisa de client component para as imagens
  */
 
-import { getArtworksServer } from '@/lib/server-queries'
+import { ArtworkService } from '@/services'
 import Image from 'next/image'
 
 export async function ServerImageBanner() {
-  // Buscar imagens diretamente no servidor
-  const artworks = await getArtworksServer({ limit: 10 })
-  const images = artworks.map((artwork) => artwork.image_url)
+  // Buscar imagens diretamente no servidor usando o novo service
+  const { artworks } = await ArtworkService.getArtworks({ limit: 10 })
+  const images = artworks.map((artwork) => artwork.image_url).filter(Boolean)
 
   return (
     <div className="fixed left-0 top-0 h-full overflow-hidden hidden md:block z-50">

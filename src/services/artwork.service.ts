@@ -5,7 +5,7 @@
  * Optimized for server components with React cache and proper error handling.
  */
 
-import { processArtwork, type ArtworkWithSeries } from '@/types/artwork'
+import { type Artwork, type ArtworkWithSeries } from '@/types/artwork'
 import type { Database } from '@/types/supabase'
 import { cache } from 'react'
 import { BaseService } from './base.service'
@@ -31,8 +31,8 @@ export interface ArtworkWithRelations extends DatabaseArtwork {
   }>
 }
 
-export interface ProcessedArtworkData {
-  artworks: ReturnType<typeof processArtwork>[]
+export interface ArtworkData {
+  artworks: Artwork[]
   total: number
   error: null | string
 }
@@ -45,7 +45,7 @@ export class ArtworkService extends BaseService {
    * Get artworks with flexible filtering options
    */
   static getArtworks = cache(
-    async (filters: ArtworkFilters = {}): Promise<ProcessedArtworkData> => {
+    async (filters: ArtworkFilters = {}): Promise<ArtworkData> => {
       return this.executeQuery(async (supabase) => {
         let query = supabase.from('artworks').select(`
           *,
@@ -115,16 +115,15 @@ export class ArtworkService extends BaseService {
         }
 
         const artworks = (data || []) as ArtworkWithSeries[]
-        let processedArtworks = artworks.map(processArtwork)
 
         // Apply random shuffle if requested
         if (filters.random) {
-          processedArtworks = processedArtworks.sort(() => Math.random() - 0.5)
+          artworks.sort(() => Math.random() - 0.5)
         }
 
         return {
-          artworks: processedArtworks,
-          total: count || processedArtworks.length,
+          artworks,
+          total: count || artworks.length,
           error: null
         }
       }, 'getArtworks')
@@ -222,7 +221,7 @@ export class ArtworkService extends BaseService {
         return null
       }
 
-      return data ? processArtwork(data as ArtworkWithSeries) : null
+      return data as ArtworkWithSeries | null
     }, 'getBySlug')
   })
 
