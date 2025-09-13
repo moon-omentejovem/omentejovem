@@ -9,13 +9,7 @@ import {
 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState
-} from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import {
   ColumnDef,
   Header,
@@ -29,7 +23,7 @@ import {
   Cell,
   SortingState
 } from '@tanstack/react-table'
-import { Button, Table, TextInput } from 'flowbite-react'
+import { Button, Table, TextInput, Select } from 'flowbite-react'
 import AdminTableActions from './AdminTableActions'
 
 interface AdminTableProps<T = any> {
@@ -39,10 +33,13 @@ interface AdminTableProps<T = any> {
   onEdit?: (item: T) => void
   onDuplicate?: (item: T) => void
   renderCell?: (item: T, column: ListColumn) => React.ReactNode
-  onLoadMore?: () => void
-  hasMore?: boolean
   onToggleDraft?: (item: T) => void
   onDelete?: (item: T) => void
+  page?: number
+  totalPages?: number
+  onPageChange?: (page: number) => void
+  statusFilter?: string
+  onStatusFilterChange?: (status: string) => void
 }
 
 export default function AdminTable<T extends Record<string, any>>({
@@ -52,10 +49,13 @@ export default function AdminTable<T extends Record<string, any>>({
   onEdit,
   onDuplicate,
   renderCell,
-  onLoadMore,
-  hasMore = false,
   onToggleDraft,
-  onDelete
+  onDelete,
+  page = 1,
+  totalPages = 1,
+  onPageChange,
+  statusFilter = 'all',
+  onStatusFilterChange
 }: AdminTableProps<T>) {
   const [globalFilter, setGlobalFilter] = useState('')
   const [sorting, setSorting] = useState<SortingState>(
@@ -68,22 +68,6 @@ export default function AdminTable<T extends Record<string, any>>({
         ]
       : []
   )
-  const loadMoreRef = useRef<HTMLDivElement | null>(null)
-
-  useEffect(() => {
-    if (!onLoadMore || !hasMore) return
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && !loading) {
-        onLoadMore()
-      }
-    })
-    const el = loadMoreRef.current
-    if (el) observer.observe(el)
-    return () => {
-      if (el) observer.unobserve(el)
-    }
-  }, [onLoadMore, hasMore, loading])
-
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setGlobalFilter(e.target.value)
   }
@@ -211,7 +195,7 @@ export default function AdminTable<T extends Record<string, any>>({
   return (
     <div className="space-y-4">
       <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-        <div>
+        <div className="flex items-center gap-2">
           {descriptor.actions?.create && (
             <Link href={`/admin/${descriptor.table}/new`}>
               <Button color="warning" size="sm" className="flex items-center">
@@ -219,6 +203,17 @@ export default function AdminTable<T extends Record<string, any>>({
                 Create New
               </Button>
             </Link>
+          )}
+          {onStatusFilterChange && (
+            <Select
+              sizing="sm"
+              value={statusFilter}
+              onChange={(e) => onStatusFilterChange(e.target.value)}
+            >
+              <option value="all">All</option>
+              <option value="draft">Draft</option>
+              <option value="published">Published</option>
+            </Select>
           )}
         </div>
         {descriptor.searchFields && (
@@ -301,9 +296,25 @@ export default function AdminTable<T extends Record<string, any>>({
           </Table>
         </div>
       )}
-      {hasMore && data.length > 0 && (
-        <div ref={loadMoreRef} className="py-4 text-center text-gray-500">
-          {loading ? 'Loading...' : ''}
+      {onPageChange && totalPages > 1 && (
+        <div className="flex items-center justify-end gap-2 pt-4">
+          <Button
+            size="xs"
+            disabled={page <= 1 || loading}
+            onClick={() => onPageChange(page - 1)}
+          >
+            Previous
+          </Button>
+          <span className="text-sm">
+            {page} / {totalPages}
+          </span>
+          <Button
+            size="xs"
+            disabled={page >= totalPages || loading}
+            onClick={() => onPageChange(page + 1)}
+          >
+            Next
+          </Button>
         </div>
       )}
     </div>

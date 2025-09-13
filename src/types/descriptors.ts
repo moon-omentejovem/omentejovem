@@ -91,14 +91,10 @@ export const artworksDescriptor: ResourceDescriptor = {
   list: [
     { key: 'image_path', label: 'Image', render: 'image', width: '140px' },
     { key: 'title', label: 'Title', render: 'text' },
-    { key: 'description', label: 'Description', render: 'clamp' },
     { key: 'mint_date', label: 'Mint Date', render: 'date' },
     { key: 'mint_link', label: 'Mint Link', render: 'link' },
     { key: 'type', label: 'Type', render: 'badge' },
-    { key: 'editions_total', label: 'Number of Editions', render: 'number' },
-    { key: 'blockchain', label: 'Blockchain', render: 'badge' },
-    { key: 'status', label: 'Status', render: 'badge' },
-    { key: 'video_url', label: 'Video', render: 'link' }
+    { key: 'status', label: 'Status', render: 'badge' }
   ],
   form: [
     {

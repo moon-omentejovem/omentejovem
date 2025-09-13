@@ -84,9 +84,10 @@ export default function RelationPicker({
             )
         }
 
-        const response = await fetch(endpoint)
+        const response = await fetch(`${endpoint}?limit=1000`)
         if (response.ok) {
-          const data: RelationItem[] = await response.json()
+          const json = await response.json()
+          const data: RelationItem[] = Array.isArray(json) ? json : json.data
           const formattedOptions = data.map((item: RelationItem) => ({
             id: item.id!,
             label: getItemLabel(item, field.relation!.labelKey)

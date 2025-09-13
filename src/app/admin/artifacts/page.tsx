@@ -10,35 +10,30 @@ import { toast } from 'sonner'
 
 type ArtifactRow = Database['public']['Tables']['artifacts']['Row']
 
-interface OperationState {
-  duplicating: string | null
-  updatingStatus: string | null
-}
-
 export default function ArtifactsPage() {
   const PAGE_SIZE = 10
   const [artifacts, setArtifacts] = useState<ArtifactRow[]>([])
   const [loading, setLoading] = useState(true)
-  const [hasMore, setHasMore] = useState(true)
-  const [operations, setOperations] = useState<OperationState>({
-    duplicating: null,
-    updatingStatus: null
-  })
+  const [page, setPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const [statusFilter, setStatusFilter] = useState('all')
   const router = useRouter()
 
-  const fetchArtifacts = async (reset = false) => {
+  const fetchArtifacts = async (targetPage = 1, status = statusFilter) => {
     try {
       setLoading(true)
-      const from = reset ? 0 : artifacts.length
-      const response = await fetch(
-        `/api/admin/artifacts?from=${from}&limit=${PAGE_SIZE}`
-      )
+      const params = new URLSearchParams({
+        page: String(targetPage),
+        limit: String(PAGE_SIZE)
+      })
+      if (status !== 'all') params.set('status', status)
+      const response = await fetch(`/api/admin/artifacts?${params.toString()}`)
       if (response.ok) {
-        const data = await response.json()
-        setArtifacts((prev) => (reset ? data : [...prev, ...data]))
-        setHasMore(data.length === PAGE_SIZE)
+        const { data, total } = await response.json()
+        setArtifacts(data)
+        setTotalPages(Math.max(1, Math.ceil(total / PAGE_SIZE)))
+        setPage(targetPage)
       } else {
-        console.error('Failed to fetch artifacts:', response.statusText)
         toast.error('Failed to load artifacts. Please try again.')
       }
     } catch (error) {
@@ -50,67 +45,54 @@ export default function ArtifactsPage() {
   }
 
   useEffect(() => {
-    fetchArtifacts(true)
+    fetchArtifacts(1, statusFilter)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [statusFilter])
 
   const handleEdit = (artifact: ArtifactRow) => {
     router.push(`/admin/artifacts/${artifact.id}`)
   }
 
   const handleDuplicate = async (artifact: ArtifactRow) => {
-    if (operations.duplicating) return // Prevent multiple simultaneous operations
+    if (confirm(`Are you sure you want to duplicate "${artifact.title}"?`)) {
+      try {
+        const duplicateData = {
+          ...artifact,
+          id: undefined,
+          title: `${artifact.title} (Copy)`,
+          created_at: undefined,
+          updated_at: undefined
+        }
 
-    try {
-      setOperations((prev) => ({ ...prev, duplicating: artifact.id }))
+        const response = await fetch('/api/admin/artifacts', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(duplicateData)
+        })
 
-      const duplicateData = {
-        ...artifact,
-        id: undefined,
-        title: `${artifact.title} (Copy)`,
-        created_at: undefined,
-        updated_at: undefined
+        if (response.ok) {
+          fetchArtifacts(page)
+          toast.success('Artifact duplicated successfully!')
+        } else {
+          const errorData = await response.json()
+          toast.error(
+            `Failed to duplicate artifact: ${errorData.error || 'Unknown error'}`
+          )
+        }
+      } catch (error) {
+        console.error('Error duplicating artifact:', error)
+        toast.error('Failed to duplicate artifact')
       }
-
-      const response = await fetch('/api/admin/artifacts', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(duplicateData)
-      })
-
-      if (response.ok) {
-        await fetchArtifacts(true)
-        toast.success('Artifact duplicated successfully!')
-      } else {
-        const errorData = await response.json()
-        console.error('Error duplicating artifact:', errorData)
-        toast.error(
-          `Failed to duplicate artifact: ${errorData.error || 'Unknown error'}`
-        )
-      }
-    } catch (error) {
-      console.error('Error duplicating artifact:', error)
-      toast.error(
-        error instanceof Error
-          ? `Failed to duplicate artifact: ${error.message}`
-          : 'Failed to duplicate artifact'
-      )
-    } finally {
-      setOperations((prev) => ({ ...prev, duplicating: null }))
     }
   }
 
   const handleDraft = async (artifact: ArtifactRow) => {
-    if (operations.updatingStatus) return // Prevent multiple simultaneous operations
-
     const currentStatus = artifact.status || 'published'
     const newStatus = currentStatus === 'draft' ? 'published' : 'draft'
 
     try {
-      setOperations((prev) => ({ ...prev, updatingStatus: artifact.id }))
-
       const response = await fetch(`/api/admin/artifacts/${artifact.id}`, {
         method: 'PATCH',
         headers: {
@@ -120,24 +102,17 @@ export default function ArtifactsPage() {
       })
 
       if (response.ok) {
-        await fetchArtifacts(true)
+        fetchArtifacts(page)
         toast.success(`Artifact marked as ${newStatus}`)
       } else {
         const errorData = await response.json()
-        console.error('Error updating artifact status:', errorData)
         toast.error(
           `Failed to update status: ${errorData.error || 'Unknown error'}`
         )
       }
     } catch (error) {
       console.error('Error updating artifact status:', error)
-      toast.error(
-        error instanceof Error
-          ? `Failed to update status: ${error.message}`
-          : 'Failed to update status'
-      )
-    } finally {
-      setOperations((prev) => ({ ...prev, updatingStatus: null }))
+      toast.error('Failed to update status')
     }
   }
 
@@ -155,7 +130,7 @@ export default function ArtifactsPage() {
           }
         })
         if (response.ok) {
-          fetchArtifacts(true)
+          fetchArtifacts(page)
           toast.success('Artifact deleted successfully')
         } else {
           const error = await response.json()
@@ -178,9 +153,15 @@ export default function ArtifactsPage() {
         onEdit={handleEdit}
         onDuplicate={handleDuplicate}
         onToggleDraft={handleDraft}
-        onLoadMore={() => fetchArtifacts()}
-        hasMore={hasMore}
         onDelete={handleDelete}
+        page={page}
+        totalPages={totalPages}
+        onPageChange={(p) => fetchArtifacts(p)}
+        statusFilter={statusFilter}
+        onStatusFilterChange={(s) => {
+          setStatusFilter(s)
+          fetchArtifacts(1, s)
+        }}
       />
     </AdminLayout>
   )
