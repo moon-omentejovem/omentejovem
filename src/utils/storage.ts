@@ -7,7 +7,7 @@ import { createClient } from '@/utils/supabase/client'
 
 /**
  * Gera URL pública a partir de um path do storage
- * Sempre retorna URL direta do Supabase para garantir consistência e SSR
+ * Usado apenas no contexto admin onde paths precisam ser convertidos dinamicamente
  */
 export function getPublicUrl(path: string | null): string | null {
   if (!path) return null
@@ -24,15 +24,12 @@ export function getPublicUrl(path: string | null): string | null {
 }
 
 /**
- * Gera URLs para imagem otimizada e original com suporte a campos legados
- * IMPORTANTE: Para o front-end público, as URLs já são processadas no servidor
- * via ArtworkService, então esta função apenas extrai os valores corretos
+ * Extrai URLs de imagem de um artwork
+ * SIMPLIFICADO: Agora apenas retorna as URLs que já vêm processadas do backend
  */
 export function getArtworkImageUrls(artwork: any) {
   return {
-    // URLs já processadas pelo servidor para front-end público
-    // Fallback para paths se URLs não estiverem disponíveis (admin)
-    optimized: artwork.image_url || getPublicUrl(artwork.image_path),
-    raw: artwork.raw_image_url || getPublicUrl(artwork.raw_image_path)
+    optimized: artwork.image_url,
+    raw: artwork.raw_image_url
   }
 }

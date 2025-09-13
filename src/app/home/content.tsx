@@ -22,7 +22,7 @@ export default function HomeContent({
     ? data.map((artwork) => ({
         title: artwork.title,
         imageUrl: artwork.image_url,
-        createdAt: artwork.createdAt
+        createdAt: artwork.posted_at
       }))
     : initialImages
 

@@ -12,7 +12,6 @@ import { ArtDetails } from '@/components/ArtDetails'
 import { ArtLinks } from '@/components/ArtLinks'
 import { cn } from '@/lib/utils'
 import { Artwork } from '@/types/artwork'
-import { getArtworkImageUrls } from '@/utils/storage'
 import { addHours, format } from 'date-fns'
 import { HorizontalInCarouselArtwork } from './HorizontalInCarousel/HorizontalInCarouselArtwork'
 import './styles.css'
@@ -148,17 +147,13 @@ export function ArtInfosNew({
       >
         <div className="md:flex-1 min-w-[200px] xl:min-w-[350px] flex flex-col max-h-full">
           <div className="xl:art-detail-inner-container overflow-hidden flex flex-1 justify-start xl:justify-end">
-            {(() => {
-              const imageUrls = getArtworkImageUrls(selectedArtwork)
-
-              return (
-                <ArtDetails
-                  detailedImage={imageUrls.raw || imageUrls.optimized || ''}
-                  image={imageUrls.optimized || ''}
-                  name={selectedArtwork.title || ''}
-                />
-              )
-            })()}
+            <ArtDetails
+              detailedImage={
+                selectedArtwork.raw_image_url || selectedArtwork.image_url || ''
+              }
+              image={selectedArtwork.image_url || ''}
+              name={selectedArtwork.title || ''}
+            />
           </div>
         </div>
 
@@ -328,8 +323,10 @@ export function ArtInfosNew({
               src={
                 selectedArtwork.video_url ||
                 (() => {
-                  const imageUrls = getArtworkImageUrls(selectedArtwork)
-                  const baseUrl = imageUrls.raw || imageUrls.optimized || ''
+                  const baseUrl =
+                    selectedArtwork.raw_image_url ||
+                    selectedArtwork.image_url ||
+                    ''
                   return baseUrl
                     .replace('/new_series/', '/new_series/videos/')
                     .replace('.jpg', '.mp4')
