@@ -233,13 +233,12 @@ export default function AdminTable<T extends Record<string, any>>({
       ) : (
         <div className="overflow-x-auto bg-white border border-gray-200 rounded-lg">
           <Table className="min-w-full text-sm">
-            <Table.Head className="bg-gray-50">
-              {table.getHeaderGroups().map((headerGroup: HeaderGroup<T>) => (
-                <Table.Row
-                  key={headerGroup.id}
-                  className="border-b border-gray-200"
-                >
-                  {headerGroup.headers.map((header: Header<T, unknown>) => (
+            <thead className="bg-gray-50">
+              <tr className="border-b border-gray-200">
+                {table
+                  .getHeaderGroups()
+                  .flatMap((headerGroup: HeaderGroup<T>) => headerGroup.headers)
+                  .map((header: Header<T, unknown>) => (
                     <Table.HeadCell
                       key={header.id}
                       className="py-3 px-4 text-left text-gray-600 font-medium"
@@ -260,9 +259,8 @@ export default function AdminTable<T extends Record<string, any>>({
                       </div>
                     </Table.HeadCell>
                   ))}
-                </Table.Row>
-              ))}
-            </Table.Head>
+              </tr>
+            </thead>
             <Table.Body className="divide-y divide-gray-200">
               {table.getRowModel().rows.length === 0 ? (
                 <Table.Row>
