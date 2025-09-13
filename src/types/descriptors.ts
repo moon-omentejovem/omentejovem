@@ -299,7 +299,7 @@ export const seriesDescriptor: ResourceDescriptor = {
   actions: {
     create: true,
     edit: true,
-    duplicate: false,
+    duplicate: true,
     delete: true
   }
 }

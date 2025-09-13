@@ -149,6 +149,7 @@ export default function ArtworksPage() {
         onLoadMore={() => fetchArtworks()}
         hasMore={hasMore}
         onToggleDraft={handleToggleDraft}
+        onDelete={handleDelete}
       />
     </AdminLayout>
   )

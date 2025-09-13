@@ -52,6 +52,57 @@ export default function SeriesPage() {
     router.push(`/admin/series/${seriesItem.id}`)
   }
 
+  const handleDuplicate = async (seriesItem: SeriesRow) => {
+    if (confirm(`Are you sure you want to duplicate "${seriesItem.name}"?`)) {
+      try {
+        const timestamp = Date.now()
+        const duplicateData = {
+          ...seriesItem,
+          name: `${seriesItem.name} (Copy)`,
+          slug: `${seriesItem.slug}-copy-${timestamp}`
+        }
+        const response = await fetch('/api/admin/series', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(duplicateData)
+        })
+        if (response.ok) {
+          fetchSeries(true)
+          toast.success('Series duplicated successfully!')
+        } else {
+          const error = await response.json()
+          toast.error('Failed to duplicate series: ' + (error.error || 'Unknown error'))
+        }
+      } catch (error) {
+        toast.error('Failed to duplicate series')
+      }
+    }
+  }
+
+  const handleToggleDraft = async (seriesItem: SeriesRow) => {
+    const newStatus = seriesItem.status === 'draft' ? 'published' : 'draft'
+    try {
+      const response = await fetch(`/api/admin/series/${seriesItem.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ status: newStatus })
+      })
+      if (response.ok) {
+        fetchSeries(true)
+        toast.success(`Series marked as ${newStatus}`)
+      } else {
+        const error = await response.json()
+        toast.error('Failed to update status: ' + (error.error || 'Unknown error'))
+      }
+    } catch (error) {
+      toast.error('Failed to update status')
+    }
+  }
+
   const handleDelete = async (seriesItem: SeriesRow) => {
     if (
       confirm(
@@ -115,11 +166,14 @@ export default function SeriesPage() {
         data={series}
         loading={loading}
         onEdit={handleEdit}
+        onDuplicate={handleDuplicate}
         onSearch={() => {}} // TODO: Implement search
         onSort={() => {}} // TODO: Implement sorting
         renderCell={renderCell}
         onLoadMore={() => fetchSeries()}
         hasMore={hasMore}
+        onToggleDraft={handleToggleDraft}
+        onDelete={handleDelete}
       />
     </AdminLayout>
   )

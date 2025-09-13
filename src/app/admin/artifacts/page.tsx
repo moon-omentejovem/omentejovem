@@ -182,6 +182,7 @@ export default function ArtifactsPage() {
         onSort={() => {}} // TODO: Implement sort functionality
         onLoadMore={() => fetchArtifacts()}
         hasMore={hasMore}
+        onDelete={handleDelete}
       />
     </AdminLayout>
   )
