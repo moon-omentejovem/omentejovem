@@ -1,3 +1,5 @@
+![Omentejovem Logo](/logo.png)
+
 # Omentejovem
 
 > Digital artist portfolio and NFT collection showcase built with Next.js 14 and Supabase.
@@ -6,8 +8,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
 [![Supabase](https://img.shields.io/badge/Supabase-Backend-green?style=flat-square&logo=supabase)](https://supabase.com/)
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-omentejovem--staging.vercel.app-brightgreen?style=flat-square&logo=vercel)](https://omentejovem-staging.vercel.app/)
-[![Deploy Status](https://img.shields.io/github/deployments/luismtns/omentejovem/production?style=flat-square&logo=vercel&label=Deploy)](https://github.com/luismtns/omentejovem/deployments)
+[![Vercel Deploy](https://deploy-badge.vercel.app/vercel/omentejovem-staging?style=flat-square)](https://omentejovem-staging.vercel.app/)
 
 <!-- CI/CD Badges - Ready to implement -->
 <!--
