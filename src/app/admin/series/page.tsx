@@ -121,6 +121,34 @@ export default function SeriesPage() {
         onLoadMore={() => fetchSeries()}
         hasMore={hasMore}
       />
+      
+      {/* Action Buttons Section */}
+      {series.length > 0 && (
+        <div className="mt-8 p-6 bg-white rounded-lg border border-gray-200">
+          <h3 className="text-lg font-semibold mb-4 text-gray-900">Quick Actions</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {series.map((seriesItem) => (
+              <div key={seriesItem.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                <div className="flex-1">
+                  <h4 className="font-medium text-gray-900 truncate">{seriesItem.name}</h4>
+                  <p className="text-sm text-gray-500">
+                    {seriesItem.series_artworks?.length || 0} artworks
+                  </p>
+                </div>
+                <div className="flex space-x-2 ml-4">
+                  <button
+                    onClick={() => handleDelete(seriesItem)}
+                    className="px-3 py-1 text-sm bg-red-100 text-red-700 hover:bg-red-200 rounded"
+                    title="Delete permanently"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </AdminLayout>
   )
 }

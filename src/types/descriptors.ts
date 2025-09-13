@@ -176,16 +176,6 @@ export const artworksDescriptor: ResourceDescriptor = {
       type: 'switch'
     },
     {
-      key: 'status',
-      label: 'Status',
-      type: 'select',
-      options: [
-        { value: 'published', label: 'Published' },
-        { value: 'draft', label: 'Draft' }
-      ],
-      required: true
-    },
-    {
       key: 'description',
       label: 'Description',
       type: 'tiptap'
@@ -229,7 +219,7 @@ export const artworksDescriptor: ResourceDescriptor = {
     create: true,
     edit: true,
     duplicate: true,
-    delete: false
+    delete: true
   }
 }
 
@@ -335,16 +325,6 @@ export const artifactsDescriptor: ResourceDescriptor = {
       label: 'Image',
       type: 'image',
       placeholder: 'Upload artifact image'
-    },
-    {
-      key: 'status',
-      label: 'Status',
-      type: 'select',
-      options: [
-        { value: 'published', label: 'Published' },
-        { value: 'draft', label: 'Draft' }
-      ],
-      required: true
     }
   ],
   defaultSort: {
@@ -356,7 +336,7 @@ export const artifactsDescriptor: ResourceDescriptor = {
     create: true,
     edit: true,
     duplicate: true,
-    delete: false
+    delete: true
   }
 }
 
