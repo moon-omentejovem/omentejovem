@@ -20,27 +20,28 @@ jobs:
           node-version: '18'
           cache: 'yarn'
 
-      - name: 📚 Install dependencies
-        run: yarn install --frozen-lockfile
+      - name: � Enable Corepack
+        run: corepack enable
+
+      - name: �📚 Install dependencies
+        run: yarn install --immutable
+
+      - name: 🔧 Setup build environment
+        run: |
+          echo "NEXT_PUBLIC_SUPABASE_URL=https://mock.supabase.co" >> $GITHUB_ENV
+          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9" >> $GITHUB_ENV
+          echo "SUPABASE_SERVICE_ROLE_KEY=mock-service-role-key" >> $GITHUB_ENV
+          echo "ADMIN_EMAIL=admin@test.com" >> $GITHUB_ENV
+          echo "SKIP_SEED=true" >> $GITHUB_ENV
 
       - name: 🏗️ Build project
         run: yarn build
-        env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://mock.supabase.co' }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'mock-key' }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY || 'mock-key' }}
-          ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL || 'admin@test.com' }}
-          SKIP_SEED: 'true'
 
       - name: 🚀 Start server
         run: |
           yarn start &
           echo $! > server.pid
           sleep 15
-        env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://mock.supabase.co' }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'mock-key' }}
-          SKIP_SEED: 'true'
 
       - name: ⏱️ Wait for server
         run: |

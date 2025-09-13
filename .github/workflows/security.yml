@@ -23,8 +23,11 @@ jobs:
           node-version: '18'
           cache: 'yarn'
 
-      - name: 📚 Install dependencies
-        run: yarn install --frozen-lockfile
+      - name: � Enable Corepack
+        run: corepack enable
+
+      - name: �📚 Install dependencies
+        run: yarn install --immutable
 
       - name: 🔒 Run yarn audit
         run: |
