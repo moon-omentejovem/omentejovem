@@ -3,27 +3,23 @@
 import type { ListColumn, ResourceDescriptor } from '@/types/descriptors'
 import { getPublicUrl } from '@/utils/storage'
 import {
-  ChevronDownIcon,
-  ChevronUpIcon,
-  PlusIcon
-} from 'lucide-react'
-import Image from 'next/image'
-import Link from 'next/link'
-import { useCallback, useMemo, useState } from 'react'
-import {
+  Cell,
   ColumnDef,
   Header,
   HeaderGroup,
+  Row,
+  SortingState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getSortedRowModel,
-  useReactTable,
-  Row,
-  Cell,
-  SortingState
+  useReactTable
 } from '@tanstack/react-table'
-import { Button, Table, TextInput, Select } from 'flowbite-react'
+import { Button, Select, Table, TextInput } from 'flowbite-react'
+import { ChevronDownIcon, ChevronUpIcon, PlusIcon } from 'lucide-react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { useCallback, useMemo, useState } from 'react'
 import AdminTableActions from './AdminTableActions'
 
 interface AdminTableProps<T = any> {
@@ -82,12 +78,7 @@ export default function AdminTable<T extends Record<string, any>>({
 
       switch (column.render) {
         case 'image':
-          const imageUrl =
-            typeof value === 'string'
-              ? value.startsWith('http')
-                ? value
-                : getPublicUrl(value)
-              : undefined
+          const imageUrl = getPublicUrl(value)
           return imageUrl ? (
             <Image
               src={imageUrl}
@@ -157,15 +148,15 @@ export default function AdminTable<T extends Record<string, any>>({
         )
       }
     ],
-      [
-        descriptor,
-        onEdit,
-        onDuplicate,
-        onToggleDraft,
-        onDelete,
-        hasActions,
-        defaultRenderCell
-      ]
+    [
+      descriptor,
+      onEdit,
+      onDuplicate,
+      onToggleDraft,
+      onDelete,
+      hasActions,
+      defaultRenderCell
+    ]
   )
 
   const globalFilterFn = (
@@ -178,7 +169,9 @@ export default function AdminTable<T extends Record<string, any>>({
     if (fields.length === 0) return true
     return fields.some((field) => {
       const value = row.original[field]
-      return String(value ?? '').toLowerCase().includes(search)
+      return String(value ?? '')
+        .toLowerCase()
+        .includes(search)
     })
   }
 

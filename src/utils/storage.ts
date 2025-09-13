@@ -9,21 +9,31 @@ import { createClient } from '@/utils/supabase/client'
  * Gera URL pública a partir de um path do storage
  * Usado apenas no contexto admin onde paths precisam ser convertidos dinamicamente
  */
-export function getPublicUrl(path: string | null): string | null {
-  if (!path) return null
+export function getPublicUrl(path: string | null): string {
+  if (!path) return ''
 
   // Se já é uma URL completa, retornar como está
   if (path.startsWith('http')) {
     return path
   }
 
-  // Gerar URL pública do storage
-  const supabase = createClient()
-  const { data } = supabase.storage.from('media').getPublicUrl(path)
-  return data.publicUrl
-}
+  try {
+    // Gerar URL pública do storage
+    const supabase = createClient()
+    const { data } = supabase.storage.from('media').getPublicUrl(path)
 
-/**
+    // Validar se o resultado é uma URL válida
+    if (data.publicUrl && data.publicUrl.startsWith('http')) {
+      return data.publicUrl
+    } else {
+      console.warn(`getPublicUrl: Invalid URL generated for path: ${path}`)
+      return ''
+    }
+  } catch (error) {
+    console.error(`getPublicUrl: Error generating URL for path: ${path}`, error)
+    return ''
+  }
+} /**
  * Extrai URLs de imagem de um artwork
  * SIMPLIFICADO: Agora apenas retorna as URLs que já vêm processadas do backend
  */

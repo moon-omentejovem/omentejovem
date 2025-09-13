@@ -1,5 +1,6 @@
 'use client'
 
+import { useConfirm } from '@/hooks/useConfirm'
 import type { FormField, ResourceDescriptor } from '@/types/descriptors'
 import { createClient } from '@/utils/supabase/client'
 import { Button } from 'flowbite-react'
@@ -8,7 +9,6 @@ import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import AdminFormField from './AdminFormField'
-import { useConfirm } from '@/hooks/useConfirm'
 
 interface AdminFormProps<T = any> {
   descriptor: ResourceDescriptor

@@ -2,12 +2,20 @@
 
 import { ImageUploadService } from '@/services/image-upload.service'
 import type { FormField, ResourceDescriptor } from '@/types/descriptors'
-import { FileInput, Label, Select, TextInput, Textarea, ToggleSwitch } from 'flowbite-react'
+import { getPublicUrl } from '@/utils/storage'
+import type { SupabaseClient } from '@supabase/supabase-js'
+import {
+  FileInput,
+  Label,
+  Select,
+  TextInput,
+  Textarea,
+  ToggleSwitch
+} from 'flowbite-react'
 import Image from 'next/image'
 import { toast } from 'sonner'
 import RelationPicker from './RelationPicker'
 import TiptapEditor from './TiptapEditor'
-import type { SupabaseClient } from '@supabase/supabase-js'
 
 interface AdminFormFieldProps {
   field: FormField
@@ -37,7 +45,13 @@ export default function AdminFormField({
           <Label htmlFor={field.key} value={field.label || field.key} />
           <TextInput
             id={field.key}
-            type={field.type === 'email' ? 'email' : field.type === 'url' ? 'url' : 'text'}
+            type={
+              field.type === 'email'
+                ? 'email'
+                : field.type === 'url'
+                  ? 'url'
+                  : 'text'
+            }
             value={value || ''}
             onChange={(e) => onChange(e.target.value)}
             placeholder={field.placeholder}
@@ -119,8 +133,10 @@ export default function AdminFormField({
           >
             <option value="">Select an option</option>
             {field.options?.map((option) => {
-              const optValue = typeof option === 'string' ? option : option.value
-              const optLabel = typeof option === 'string' ? option : option.label
+              const optValue =
+                typeof option === 'string' ? option : option.value
+              const optLabel =
+                typeof option === 'string' ? option : option.label
               return (
                 <option key={optValue} value={optValue}>
                   {optLabel}
@@ -155,6 +171,7 @@ export default function AdminFormField({
         </div>
       )
     case 'image':
+      const imageUrl = getPublicUrl(value)
       const handleFileChange = async (
         e: React.ChangeEvent<HTMLInputElement>
       ) => {
@@ -178,6 +195,7 @@ export default function AdminFormField({
           }
         )
       }
+
       return (
         <div className="space-y-2">
           <Label htmlFor={field.key} value={field.label || field.key} />
@@ -189,18 +207,14 @@ export default function AdminFormField({
               placeholder={field.placeholder || 'Upload an image'}
             />
           </div>
-          {value && (
+          {imageUrl && (
             <div className="mt-2">
               <Image
-                src={value}
+                src={imageUrl}
                 alt="Preview"
                 width={640}
                 height={640}
-                sizes="640px; (max-width: 640px) 100vw"
                 className="object-cover rounded-lg border border-gray-200"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none'
-                }}
               />
             </div>
           )}
@@ -220,4 +234,3 @@ export default function AdminFormField({
       return null
   }
 }
-
