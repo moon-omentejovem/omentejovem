@@ -378,8 +378,9 @@ export default function AdminForm<T extends Record<string, any>>({
                 <Image
                   src={value}
                   alt="Preview"
-                  width={0}
-                  height={0}
+                  width={192}
+                  height={192}
+                  sizes="192px"
                   className="w-48 h-48 object-cover rounded-lg border border-gray-200"
                   onError={(e) => {
                     e.currentTarget.style.display = 'none'

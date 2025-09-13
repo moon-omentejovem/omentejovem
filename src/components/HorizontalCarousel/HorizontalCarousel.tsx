@@ -128,11 +128,14 @@ export function HorizontalCarousel({
                       <Image
                         src={slide.nftCompressedHdUrl}
                         alt={slide.name}
-                        width={0}
-                        height={0}
+                        width={768}
+                        height={768}
+                        sizes="(max-width: 640px) 192px, (max-width: 1536px) 256px, 352px"
                         className="h-full w-48 object-cover sm:w-64 2xl:w-[22rem] lazy-load-img"
                         loading="lazy"
                         onLoad={addLoadedClass}
+                        placeholder="blur"
+                        blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkbHB0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                       />
                     </div>
                   </div>

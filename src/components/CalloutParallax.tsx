@@ -120,8 +120,9 @@ export function CalloutParallax({
           <div id="callout-element" className="flex flex-col items-center">
             <Image
               src={calloutImages[currentImageIndex].imageUrl}
-              width={0}
+              width={800}
               height={900}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 600px"
               alt={'omentejovem'}
               className="md:h-[32rem] w-auto object-contain invisible 2xl:h-[600px] select-none"
               onClick={() =>

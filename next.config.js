@@ -11,9 +11,30 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: '**.supabase.co'
+      },
+      {
+        protocol: 'https',
+        hostname: 'opensea.io'
+      },
+      {
+        protocol: 'https',
+        hostname: 'openseauserdata.com'
+      },
+      {
+        protocol: 'https',
+        hostname: 'img.seadn.io'
+      },
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com'
       }
     ],
-    minimumCacheTTL: 3600 // Cache por 1 hora
+    formats: ['image/webp', 'image/avif'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 3600, // Cache por 1 hora
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;"
   },
   logging: {
     fetches: {
