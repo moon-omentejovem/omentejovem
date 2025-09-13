@@ -148,7 +148,9 @@ export function ArtInfosNew({
         <div className="md:flex-1 min-w-[200px] xl:min-w-[350px] flex flex-col max-h-full">
           <div className="xl:art-detail-inner-container overflow-hidden flex flex-1 justify-start xl:justify-end">
             <ArtDetails
-              detailedImage={selectedArtwork.image_url}
+              detailedImage={
+                selectedArtwork.raw_image_url || selectedArtwork.image_url
+              }
               image={selectedArtwork.image_url || ''}
               name={selectedArtwork.title || ''}
             />
@@ -320,7 +322,7 @@ export function ArtInfosNew({
               autoPlay
               src={
                 selectedArtwork.video_url ||
-                `${selectedArtwork.image_url.replace('/new_series/', '/new_series/videos/').replace('.jpg', '.mp4')}`
+                `${(selectedArtwork.raw_image_url || selectedArtwork.image_url).replace('/new_series/', '/new_series/videos/').replace('.jpg', '.mp4')}`
               }
             >
               <track kind="captions" srcLang="en" label="English" />

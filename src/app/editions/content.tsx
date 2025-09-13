@@ -6,17 +6,18 @@ import { ReactElement, useCallback, useEffect, useState } from 'react'
 
 interface EditionsContentProps {
   email: string
-  artworks?: Artwork[]
+  initialArtworks?: Artwork[]
 }
 
 export default function EditionsContent({
   email,
-  artworks = []
+  initialArtworks = []
 }: EditionsContentProps): ReactElement {
   // Use hook with server data as initial data
 
   // Local state for filtering and selection
-  const [filteredArtworks, setFilteredArtworks] = useState<Artwork[]>(artworks)
+  const [filteredArtworks, setFilteredArtworks] =
+    useState<Artwork[]>(initialArtworks)
   const [selectedArtworkIndex, setSelectedArtworkIndex] = useState(-1)
 
   const onChangeArtworks = useCallback((newArtworks: Artwork[]) => {
@@ -29,10 +30,10 @@ export default function EditionsContent({
 
   // Update filtered artworks when data changes
   useEffect(() => {
-    if (artworks && artworks !== filteredArtworks) {
-      setFilteredArtworks(artworks)
+    if (initialArtworks && initialArtworks !== filteredArtworks) {
+      setFilteredArtworks(initialArtworks)
     }
-  }, [artworks, filteredArtworks])
+  }, [initialArtworks, filteredArtworks])
 
   return (
     <ArtMainContent
@@ -42,7 +43,7 @@ export default function EditionsContent({
       onChangeArtworks={onChangeArtworks}
       onChangeSelectedArtworkIndex={onChangeSelectedArtworkIndex}
       selectedArtworkIndex={selectedArtworkIndex}
-      unfilteredArtworks={artworks}
+      unfilteredArtworks={initialArtworks}
     />
   )
 }

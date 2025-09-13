@@ -1,5 +1,3 @@
-'use client'
-
 import { ReactElement, useEffect, useState } from 'react'
 
 import {
@@ -13,6 +11,7 @@ import { ArtDetails } from '@/components/ArtDetails'
 import { ArtLinks } from '@/components/ArtLinks'
 import { VideoProcessModal } from '@/components/Modals/VideoProcessModal'
 import { cn } from '@/lib/utils'
+import { StorageService } from '@/services/storage.service'
 import { Artwork } from '@/types/artwork'
 import { ArtDescription } from './ArtDescription'
 import './styles.css'
@@ -81,8 +80,9 @@ export function ArtInfos({
 
   const mintedOn = getMintedOn(selectedArt)
 
-  const optimizedImageUrl = selectedArt.image_url
-  const rawImageUrl = selectedArt.image_url
+  // Use StorageService to resolve correct image URLs
+  const { optimized: optimizedImageUrl, raw: rawImageUrl } =
+    StorageService.resolveArtworkImageUrls(selectedArt)
 
   // Use video_url field when available, fallback to legacy path conversion
   const videoUrl =
