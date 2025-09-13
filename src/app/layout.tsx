@@ -8,8 +8,16 @@ import { Toaster } from 'sonner'
 import { FraktionMono, NeueMachina } from './fonts'
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://omentejovem.vercel.app'),
   title: 'omentejovem',
-  description: 'omentejovem website'
+  description: 'omentejovem website',
+  manifest: '/manifest.json'
+}
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#000000'
 }
 
 export default function RootLayout({
@@ -18,21 +26,44 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
+      <head>
+        {/* Critical resource hints */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        
+        {/* DNS prefetch para domínios críticos */}
+        <link rel="dns-prefetch" href="//vercel.app" />
+        <link rel="dns-prefetch" href="//supabase.co" />
+      </head>
       <body
-        className={`${NeueMachina.variable} ${FraktionMono.variable} bg-background`}
+        className={`${NeueMachina.variable} ${FraktionMono.variable} bg-background min-h-screen`}
       >
         <Providers>
-          <div className="max-w-[1920px] mx-auto">
+          {/* Layout otimizado para evitar CLS */}
+          <div className="max-w-[1920px] mx-auto min-h-screen flex flex-col">
             <Cursor />
-            <Header />
-            {children}
+            {/* Header com altura fixa */}
+            <header className="h-16 flex-shrink-0">
+              <Header />
+            </header>
+            {/* Main content */}
+            <main className="flex-grow">
+              {children}
+            </main>
           </div>
           <Toaster
             theme="dark"
             position="bottom-right"
             richColors
             closeButton
+            toastOptions={{
+              style: {
+                background: '#1f2937',
+                border: '1px solid #374151',
+                color: '#f9fafb'
+              }
+            }}
           />
         </Providers>
       </body>
