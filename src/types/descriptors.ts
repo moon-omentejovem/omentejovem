@@ -176,6 +176,16 @@ export const artworksDescriptor: ResourceDescriptor = {
       type: 'switch'
     },
     {
+      key: 'status',
+      label: 'Status',
+      type: 'select',
+      options: [
+        { value: 'published', label: 'Published' },
+        { value: 'draft', label: 'Draft' }
+      ],
+      required: true
+    },
+    {
       key: 'description',
       label: 'Description',
       type: 'tiptap'
@@ -291,6 +301,7 @@ export const artifactsDescriptor: ResourceDescriptor = {
     { key: 'title', label: 'Title', render: 'text' },
     { key: 'image_path', label: 'Image', render: 'image', width: '80px' },
     { key: 'description', label: 'Description', render: 'clamp' },
+    { key: 'status', label: 'Status', render: 'badge' },
     { key: 'link_url', label: 'Link', render: 'link' }
   ],
   form: [
@@ -324,6 +335,16 @@ export const artifactsDescriptor: ResourceDescriptor = {
       label: 'Image',
       type: 'image',
       placeholder: 'Upload artifact image'
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      type: 'select',
+      options: [
+        { value: 'published', label: 'Published' },
+        { value: 'draft', label: 'Draft' }
+      ],
+      required: true
     }
   ],
   defaultSort: {

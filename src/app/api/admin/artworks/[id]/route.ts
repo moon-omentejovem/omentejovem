@@ -91,6 +91,39 @@ export async function PUT(
   }
 }
 
+// PATCH /api/admin/artworks/[id] - Partial update artwork
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const body = await request.json()
+
+    // For partial updates, we don't validate the entire schema
+    // Just update the provided fields
+    const { data: artwork, error } = await supabaseAdmin
+      .from('artworks')
+      .update({
+        ...body,
+        updated_at: new Date().toISOString()
+      } as Database['public']['Tables']['artworks']['Update'])
+      .eq('id', params.id)
+      .select()
+      .single()
+
+    if (error) throw error
+
+    // Revalidate cache
+    revalidateTag('artworks')
+    revalidateTag('featured-artworks')
+    revalidateTag('portfolio')
+
+    return NextResponse.json(artwork)
+  } catch (error) {
+    return handleApiError(error)
+  }
+}
+
 // DELETE /api/admin/artworks/[id] - Delete artwork
 export async function DELETE(
   request: NextRequest,

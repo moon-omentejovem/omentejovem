@@ -88,54 +88,27 @@ export default function ArtworksPage() {
     }
   }
 
-  const handleDelete = async (artwork: ArtworkRow) => {
-    const handleToggleDraft = async (artwork: ArtworkRow) => {
-      const newStatus = artwork.status === 'draft' ? 'published' : 'draft'
-      try {
-        const response = await fetch(`/api/admin/artworks/${artwork.id}`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ status: newStatus })
-        })
-        if (response.ok) {
-          fetchArtworks(true)
-          toast.success(`Artwork marked as ${newStatus}`)
-        } else {
-          const error = await response.json()
-          toast.error(
-            'Failed to update status: ' + (error.error || 'Unknown error')
-          )
-        }
-      } catch (error) {
-        toast.error('Failed to update status')
+  const handleToggleDraft = async (artwork: ArtworkRow) => {
+    const newStatus = artwork.status === 'draft' ? 'published' : 'draft'
+    try {
+      const response = await fetch(`/api/admin/artworks/${artwork.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ status: newStatus })
+      })
+      if (response.ok) {
+        fetchArtworks(true)
+        toast.success(`Artwork marked as ${newStatus}`)
+      } else {
+        const error = await response.json()
+        toast.error(
+          'Failed to update status: ' + (error.error || 'Unknown error')
+        )
       }
-    }
-    if (
-      confirm(
-        `Are you sure you want to delete "${artwork.title}"? This action cannot be undone.`
-      )
-    ) {
-      try {
-        const response = await fetch(`/api/admin/artworks/${artwork.id}`, {
-          method: 'DELETE'
-        })
-
-        if (response.ok) {
-          fetchArtworks(true) // Refresh the list
-          toast.success('Artwork deleted successfully!')
-        } else {
-          const error = await response.json()
-          console.error('Error deleting artwork:', error)
-          toast.error(
-            'Failed to delete artwork: ' + (error.error || 'Unknown error')
-          )
-        }
-      } catch (error) {
-        console.error('Error deleting artwork:', error)
-        toast.error('Failed to delete artwork')
-      }
+    } catch (error) {
+      toast.error('Failed to update status')
     }
   }
 
@@ -147,7 +120,6 @@ export default function ArtworksPage() {
         loading={loading}
         onEdit={handleEdit}
         onDuplicate={handleDuplicate}
-        onDelete={handleDelete}
         onSearch={() => {}} // TODO: Implement search
         onSort={() => {}} // TODO: Implement sorting
         onLoadMore={() => fetchArtworks()}
@@ -162,10 +134,6 @@ export default function ArtworksPage() {
               </span>
             )
           }
-        }}
-        actions={{
-          ...artworksDescriptor.actions,
-          toggleDraft: true
         }}
         onToggleDraft={handleToggleDraft}
       />

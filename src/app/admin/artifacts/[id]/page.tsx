@@ -102,11 +102,21 @@ export default function EditArtifactPage({
     )
   }
 
+  // Transform the artifact data to match the form schema expectations
+  const transformArtifactForForm = (artifact: ArtifactRow) => {
+    return {
+      ...artifact,
+      status: (artifact.status === 'draft' ? 'draft' : 'published') as
+        | 'draft'
+        | 'published'
+    }
+  }
+
   return (
     <AdminLayout>
       <AdminForm
         descriptor={artifactsDescriptor}
-        data={artifact}
+        data={transformArtifactForForm(artifact)}
         onSubmit={handleSubmit}
         onCancel={handleCancel}
         loading={loading}

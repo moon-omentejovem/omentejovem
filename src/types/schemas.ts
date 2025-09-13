@@ -22,6 +22,7 @@ export const ArtworkSchema = z.object({
   collection_slug: z.string().optional().nullable(),
   is_featured: z.boolean().nullable().optional(),
   is_one_of_one: z.boolean().nullable().optional(),
+  status: z.enum(['draft', 'published']).default('published'),
   posted_at: z.string().nullable().optional(),
   created_at: z.string().nullable().optional(),
   updated_at: z.string().nullable().optional()
@@ -53,6 +54,7 @@ export const ArtifactSchema = z.object({
   highlight_video_url: z.string().url().optional().nullable(),
   link_url: z.string().url().optional().nullable(),
   image_url: z.string().url().optional().nullable(),
+  status: z.enum(['draft', 'published']).default('published'),
   created_at: z.string().optional(),
   updated_at: z.string().optional()
 })

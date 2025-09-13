@@ -13,12 +13,12 @@ interface AdminTableProps<T = any> {
   loading?: boolean
   onEdit?: (item: T) => void
   onDuplicate?: (item: T) => void
-  onDelete?: (item: T) => void
   onSearch?: (term: string) => void
   onSort?: (field: string, direction: 'asc' | 'desc') => void
   renderCell?: (item: T, column: ListColumn) => React.ReactNode
   onLoadMore?: () => void
   hasMore?: boolean
+  onToggleDraft?: (item: T) => void
 }
 
 export default function AdminTable<T extends Record<string, any>>({
@@ -27,12 +27,12 @@ export default function AdminTable<T extends Record<string, any>>({
   loading = false,
   onEdit,
   onDuplicate,
-  onDelete,
   onSearch,
   onSort,
   renderCell,
   onLoadMore,
-  hasMore = false
+  hasMore = false,
+  onToggleDraft
 }: AdminTableProps<T>) {
   const [searchTerm, setSearchTerm] = useState('')
   const [sortField, setSortField] = useState(descriptor.defaultSort?.key || '')
@@ -331,13 +331,30 @@ export default function AdminTable<T extends Record<string, any>>({
                             Duplicate
                           </button>
                         )}
-                        {descriptor.actions?.delete && onDelete && (
+                        {typeof onToggleDraft === 'function' && (
                           <button
-                            onClick={() => onDelete(item)}
-                            className="text-red-600 hover:text-red-800 ml-2"
-                            title="Delete"
+                            onClick={() => onToggleDraft(item)}
+                            className={`ml-2 ${item.status === 'draft' ? 'text-yellow-700 hover:text-yellow-900' : 'text-gray-600 hover:text-green-700'}`}
+                            title={
+                              item.status === 'draft'
+                                ? 'Publicar'
+                                : 'Marcar como rascunho'
+                            }
                           >
-                            Delete
+                            {item.status === 'draft' ? 'Publicar' : 'Draft'}
+                          </button>
+                        )}
+                        {typeof onToggleDraft === 'function' && (
+                          <button
+                            onClick={() => onToggleDraft(item)}
+                            className={`ml-2 ${item.status === 'draft' ? 'text-yellow-700 hover:text-yellow-900' : 'text-gray-600 hover:text-green-700'}`}
+                            title={
+                              item.status === 'draft'
+                                ? 'Publicar'
+                                : 'Marcar como rascunho'
+                            }
+                          >
+                            {item.status === 'draft' ? 'Publicar' : 'Draft'}
                           </button>
                         )}
                       </td>

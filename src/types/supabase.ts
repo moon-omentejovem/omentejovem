@@ -78,6 +78,7 @@ export type Database = {
           image_path: string | null
           image_url: string | null
           link_url: string | null
+          status: string
           title: string
           updated_at: string | null
         }
@@ -89,6 +90,7 @@ export type Database = {
           image_path?: string | null
           image_url?: string | null
           link_url?: string | null
+          status?: string
           title: string
           updated_at?: string | null
         }
@@ -100,6 +102,7 @@ export type Database = {
           image_path?: string | null
           image_url?: string | null
           link_url?: string | null
+          status?: string
           title?: string
           updated_at?: string | null
         }
