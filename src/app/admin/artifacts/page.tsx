@@ -7,6 +7,7 @@ import type { Database } from '@/types/supabase'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
+import { useConfirm } from '@/hooks/useConfirm'
 
 type ArtifactRow = Database['public']['Tables']['artifacts']['Row']
 
@@ -18,6 +19,7 @@ export default function ArtifactsPage() {
   const [totalPages, setTotalPages] = useState(1)
   const [statusFilter, setStatusFilter] = useState('all')
   const router = useRouter()
+  const confirm = useConfirm()
 
   const fetchArtifacts = async (targetPage = 1, status = statusFilter) => {
     try {
@@ -54,37 +56,40 @@ export default function ArtifactsPage() {
   }
 
   const handleDuplicate = async (artifact: ArtifactRow) => {
-    if (confirm(`Are you sure you want to duplicate "${artifact.title}"?`)) {
-      try {
-        const duplicateData = {
-          ...artifact,
-          id: undefined,
-          title: `${artifact.title} (Copy)`,
-          created_at: undefined,
-          updated_at: undefined
-        }
-
-        const response = await fetch('/api/admin/artifacts', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(duplicateData)
-        })
-
-        if (response.ok) {
-          fetchArtifacts(page)
-          toast.success('Artifact duplicated successfully!')
-        } else {
-          const errorData = await response.json()
-          toast.error(
-            `Failed to duplicate artifact: ${errorData.error || 'Unknown error'}`
-          )
-        }
-      } catch (error) {
-        console.error('Error duplicating artifact:', error)
-        toast.error('Failed to duplicate artifact')
+    const ok = await confirm({
+      title: 'Duplicate artifact',
+      message: `Are you sure you want to duplicate "${artifact.title}"?`
+    })
+    if (!ok) return
+    try {
+      const duplicateData = {
+        ...artifact,
+        id: undefined,
+        title: `${artifact.title} (Copy)`,
+        created_at: undefined,
+        updated_at: undefined
       }
+
+      const response = await fetch('/api/admin/artifacts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(duplicateData)
+      })
+
+      if (response.ok) {
+        fetchArtifacts(page)
+        toast.success('Artifact duplicated successfully!')
+      } else {
+        const errorData = await response.json()
+        toast.error(
+          `Failed to duplicate artifact: ${errorData.error || 'Unknown error'}`
+        )
+      }
+    } catch (error) {
+      console.error('Error duplicating artifact:', error)
+      toast.error('Failed to duplicate artifact')
     }
   }
 
@@ -117,7 +122,11 @@ export default function ArtifactsPage() {
   }
 
   const handleDelete = async (artifact: ArtifactRow) => {
-    if (!confirm(`Delete "${artifact.title}" permanently?`)) return
+    const ok = await confirm({
+      title: 'Delete artifact',
+      message: `Delete "${artifact.title}" permanently?`
+    })
+    if (!ok) return
 
     try {
       const response = await fetch(`/api/admin/artifacts/${artifact.id}`, {

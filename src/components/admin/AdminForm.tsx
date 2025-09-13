@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import AdminFormField from './AdminFormField'
+import { useConfirm } from '@/hooks/useConfirm'
 
 interface AdminFormProps<T = any> {
   descriptor: ResourceDescriptor
@@ -28,6 +29,7 @@ export default function AdminForm<T extends Record<string, any>>({
   const [errors, setErrors] = useState<Record<string, string>>({})
   const supabase = createClient()
   const router = useRouter()
+  const confirm = useConfirm()
 
   useEffect(() => {
     if (data) {
@@ -172,12 +174,13 @@ export default function AdminForm<T extends Record<string, any>>({
   const handlePermanentDelete = async () => {
     if (!data || !descriptor.actions?.delete) return
 
-    const ok = confirm(
-      `Are you sure you want to permanently delete this ${descriptor.title.slice(
+    const ok = await confirm({
+      title: 'Delete permanently',
+      message: `Are you sure you want to permanently delete this ${descriptor.title.slice(
         0,
         -1
       )}? This action cannot be undone.`
-    )
+    })
 
     if (!ok) return
 

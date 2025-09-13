@@ -7,6 +7,7 @@ import type { Database } from '@/types/supabase'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
+import { useConfirm } from '@/hooks/useConfirm'
 
 type ArtworkRow = Database['public']['Tables']['artworks']['Row']
 
@@ -18,6 +19,7 @@ export default function ArtworksPage() {
   const [totalPages, setTotalPages] = useState(1)
   const [statusFilter, setStatusFilter] = useState('all')
   const router = useRouter()
+  const confirm = useConfirm()
 
   const fetchArtworks = async (targetPage = 1, status = statusFilter) => {
     try {
@@ -54,38 +56,41 @@ export default function ArtworksPage() {
   }
 
   const handleDuplicate = async (artwork: ArtworkRow) => {
-    if (confirm(`Are you sure you want to duplicate "${artwork.title}"?`)) {
-      try {
-        // Create a copy without id and with modified title and slug
-        const timestamp = Date.now()
-        const duplicateData = {
-          ...artwork,
-          title: `${artwork.title} (Copy)`,
-          slug: `${artwork.slug}-copy-${timestamp}`
-        }
-
-        const response = await fetch('/api/admin/artworks', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(duplicateData)
-        })
-
-        if (response.ok) {
-          fetchArtworks(page)
-          toast.success('Artwork duplicated successfully!')
-        } else {
-          const error = await response.json()
-          console.error('Error duplicating artwork:', error)
-          toast.error(
-            'Failed to duplicate artwork: ' + (error.error || 'Unknown error')
-          )
-        }
-      } catch (error) {
-        console.error('Error duplicating artwork:', error)
-        toast.error('Failed to duplicate artwork')
+    const ok = await confirm({
+      title: 'Duplicate artwork',
+      message: `Are you sure you want to duplicate "${artwork.title}"?`
+    })
+    if (!ok) return
+    try {
+      // Create a copy without id and with modified title and slug
+      const timestamp = Date.now()
+      const duplicateData = {
+        ...artwork,
+        title: `${artwork.title} (Copy)`,
+        slug: `${artwork.slug}-copy-${timestamp}`
       }
+
+      const response = await fetch('/api/admin/artworks', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(duplicateData)
+      })
+
+      if (response.ok) {
+        fetchArtworks(page)
+        toast.success('Artwork duplicated successfully!')
+      } else {
+        const error = await response.json()
+        console.error('Error duplicating artwork:', error)
+        toast.error(
+          'Failed to duplicate artwork: ' + (error.error || 'Unknown error')
+        )
+      }
+    } catch (error) {
+      console.error('Error duplicating artwork:', error)
+      toast.error('Failed to duplicate artwork')
     }
   }
 
@@ -114,7 +119,11 @@ export default function ArtworksPage() {
   }
 
   const handleDelete = async (artwork: ArtworkRow) => {
-    if (!confirm(`Delete "${artwork.title}" permanently?`)) return
+    const ok = await confirm({
+      title: 'Delete artwork',
+      message: `Delete "${artwork.title}" permanently?`
+    })
+    if (!ok) return
 
     try {
       const response = await fetch(`/api/admin/artworks/${artwork.id}`, {

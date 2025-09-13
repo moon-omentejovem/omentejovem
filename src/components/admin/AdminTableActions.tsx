@@ -9,6 +9,7 @@ import {
   CheckCircle2Icon,
   Trash2Icon
 } from 'lucide-react'
+import { useConfirm } from '@/hooks/useConfirm'
 
 interface AdminTableActionsProps<T extends { status?: string }> {
   item: T
@@ -29,6 +30,7 @@ export default function AdminTableActions<T extends { status?: string }>(
     onDelete
   }: AdminTableActionsProps<T>
 ) {
+  const confirm = useConfirm()
   const actions = descriptor.actions
   const hasActions =
     actions?.edit || actions?.duplicate || onToggleDraft || (actions?.delete && onDelete)
@@ -62,10 +64,14 @@ export default function AdminTableActions<T extends { status?: string }>(
           size="sm"
           color={item.status === 'draft' ? 'success' : 'warning'}
           aria-label={item.status === 'draft' ? 'Publish' : 'Draft'}
-          onClick={() => {
+          onClick={async () => {
             const current = item.status || 'published'
             const next = current === 'draft' ? 'published' : 'draft'
-            if (confirm(`Change status from ${current} to ${next}?`)) {
+            const ok = await confirm({
+              title: 'Change status',
+              message: `Change status from ${current} to ${next}?`
+            })
+            if (ok) {
               onToggleDraft(item)
             }
           }}
@@ -81,8 +87,12 @@ export default function AdminTableActions<T extends { status?: string }>(
         <Button
           size="sm"
           color="failure"
-          onClick={() => {
-            if (confirm('Are you sure you want to delete this item permanently?')) {
+          onClick={async () => {
+            const ok = await confirm({
+              title: 'Delete item',
+              message: 'Are you sure you want to delete this item permanently?'
+            })
+            if (ok) {
               onDelete(item)
             }
           }}

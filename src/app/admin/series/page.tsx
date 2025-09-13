@@ -7,6 +7,7 @@ import type { Database } from '@/types/supabase'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
+import { useConfirm } from '@/hooks/useConfirm'
 
 type SeriesRow = Database['public']['Tables']['series']['Row'] & {
   status?: 'draft' | 'published'
@@ -23,6 +24,7 @@ export default function SeriesPage() {
   const [totalPages, setTotalPages] = useState(1)
   const [statusFilter, setStatusFilter] = useState('all')
   const router = useRouter()
+  const confirm = useConfirm()
 
   const fetchSeries = async (targetPage = 1, status = statusFilter) => {
     try {
@@ -59,22 +61,25 @@ export default function SeriesPage() {
   }
 
   const handleDuplicate = async (seriesItem: SeriesRow) => {
-    if (confirm(`Are you sure you want to duplicate "${seriesItem.name}"?`)) {
-      try {
-        const response = await fetch(
-          `/api/admin/series/${seriesItem.id}/duplicate`,
-          { method: 'POST' }
-        )
-        if (response.ok) {
-          fetchSeries(page)
-          toast.success('Series duplicated successfully!')
-        } else {
-          const error = await response.json()
-          toast.error('Failed to duplicate series: ' + (error.error || 'Unknown error'))
-        }
-      } catch (error) {
-        toast.error('Failed to duplicate series')
+    const ok = await confirm({
+      title: 'Duplicate series',
+      message: `Are you sure you want to duplicate "${seriesItem.name}"?`
+    })
+    if (!ok) return
+    try {
+      const response = await fetch(
+        `/api/admin/series/${seriesItem.id}/duplicate`,
+        { method: 'POST' }
+      )
+      if (response.ok) {
+        fetchSeries(page)
+        toast.success('Series duplicated successfully!')
+      } else {
+        const error = await response.json()
+        toast.error('Failed to duplicate series: ' + (error.error || 'Unknown error'))
       }
+    } catch (error) {
+      toast.error('Failed to duplicate series')
     }
   }
 
@@ -101,7 +106,11 @@ export default function SeriesPage() {
   }
 
   const handleDelete = async (seriesItem: SeriesRow) => {
-    if (!confirm(`Delete "${seriesItem.name}" permanently?`)) return
+    const ok = await confirm({
+      title: 'Delete series',
+      message: `Delete "${seriesItem.name}" permanently?`
+    })
+    if (!ok) return
 
     try {
       const response = await fetch(`/api/admin/series/${seriesItem.id}`, {

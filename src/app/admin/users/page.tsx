@@ -4,6 +4,7 @@ import AdminLayout from '@/components/admin/AdminLayout'
 import { createClient } from '@/utils/supabase/client'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
+import { useConfirm } from '@/hooks/useConfirm'
 
 interface User {
   id: string
@@ -26,6 +27,7 @@ export default function UsersPage() {
   const [inviting, setInviting] = useState(false)
   const [showInviteForm, setShowInviteForm] = useState(false)
   const supabase = createClient()
+  const confirm = useConfirm()
 
   useEffect(() => {
     loadUsers()
@@ -107,11 +109,11 @@ export default function UsersPage() {
   }
 
   const handleRemoveUser = async (userId: string, userEmail: string) => {
-    if (
-      !confirm(
-        `Are you sure you want to remove ${userEmail} from the CMS? They will lose admin access.`
-      )
-    ) {
+    const ok = await confirm({
+      title: 'Remove admin',
+      message: `Are you sure you want to remove ${userEmail} from the CMS? They will lose admin access.`
+    })
+    if (!ok) {
       return
     }
 
