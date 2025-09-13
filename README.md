@@ -9,14 +9,9 @@
 [![Supabase](https://img.shields.io/badge/Supabase-Backend-green?style=flat-square&logo=supabase)](https://supabase.com/)
 
 [![Vercel Deploy](https://deploy-badge.vercel.app/vercel/omentejovem-staging?style=flat-square)](https://omentejovem-staging.vercel.app/)
-
-<!-- CI/CD Badges - Ready to implement -->
-<!--
 [![CI](https://img.shields.io/github/actions/workflow/status/luismtns/omentejovem/ci.yml?style=flat-square&logo=github&label=CI)](https://github.com/luismtns/omentejovem/actions)
-[![Test Coverage](https://img.shields.io/codecov/c/github/luismtns/omentejovem?style=flat-square&logo=codecov)](https://codecov.io/gh/luismtns/omentejovem)
-[![Lighthouse Score](https://img.shields.io/badge/Lighthouse-100-brightgreen?style=flat-square&logo=lighthouse)](https://pagespeed.web.dev/)
-[![Security Scan](https://img.shields.io/snyk/vulnerabilities/github/luismtns/omentejovem?style=flat-square&logo=snyk)](https://snyk.io/)
--->
+[![Lighthouse Score](https://img.shields.io/badge/Lighthouse-Performance-brightgreen?style=flat-square&logo=lighthouse)](https://github.com/luismtns/omentejovem/actions/workflows/lighthouse.yml)
+[![Security Scan](https://img.shields.io/github/actions/workflow/status/luismtns/omentejovem/security.yml?style=flat-square&logo=shield&label=Security)](https://github.com/luismtns/omentejovem/actions/workflows/security.yml)
 
 A modern portfolio platform showcasing digital artworks and NFT collections with an integrated content management system for admins.
 
