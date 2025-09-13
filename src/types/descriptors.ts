@@ -199,12 +199,6 @@ export const artworksDescriptor: ResourceDescriptor = {
       placeholder: '0x123...abc (blockchain contract address)'
     },
     {
-      key: 'collection_slug',
-      label: 'Collection Slug',
-      type: 'text',
-      placeholder: 'collection-identifier-for-grouping'
-    },
-    {
       key: 'series',
       label: 'Series',
       type: 'relation-multi',
