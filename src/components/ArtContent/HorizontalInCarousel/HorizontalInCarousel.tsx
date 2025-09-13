@@ -67,7 +67,7 @@ export function HorizontalInCarousel({
               <Image
                 src={(() => {
                   const imageUrls = getArtworkImageUrls(art)
-                  return art.image_cached_path || imageUrls.optimizedUrl || ''
+                  return art.image_cached_path || imageUrls.optimized || ''
                 })()}
                 alt={art.title || ''}
                 width={100}

@@ -153,10 +153,8 @@ export function ArtInfosNew({
 
               return (
                 <ArtDetails
-                  detailedImage={
-                    imageUrls.rawUrl || imageUrls.optimizedUrl || ''
-                  }
-                  image={imageUrls.optimizedUrl || ''}
+                  detailedImage={imageUrls.raw || imageUrls.optimized || ''}
+                  image={imageUrls.optimized || ''}
                   name={selectedArtwork.title || ''}
                 />
               )
@@ -331,8 +329,7 @@ export function ArtInfosNew({
                 selectedArtwork.video_url ||
                 (() => {
                   const imageUrls = getArtworkImageUrls(selectedArtwork)
-                  const baseUrl =
-                    imageUrls.rawUrl || imageUrls.optimizedUrl || ''
+                  const baseUrl = imageUrls.raw || imageUrls.optimized || ''
                   return baseUrl
                     .replace('/new_series/', '/new_series/videos/')
                     .replace('.jpg', '.mp4')

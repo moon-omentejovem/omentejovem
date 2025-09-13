@@ -72,7 +72,7 @@ export function ArtMainContent({
             const imageUrls = getArtworkImageUrls(artwork)
             return {
               name: artwork.title || '',
-              nftCompressedHdUrl: imageUrls.optimizedUrl || '',
+              nftCompressedHdUrl: imageUrls.optimized || '',
               slug: artwork.slug
             }
           })}
@@ -98,7 +98,7 @@ export function ArtMainContent({
           const imageUrls = getArtworkImageUrls(artwork)
           return {
             name: artwork.title || '',
-            nftCompressedHdUrl: imageUrls.optimizedUrl || '',
+            nftCompressedHdUrl: imageUrls.optimized || '',
             slug: artwork.slug
           }
         })}

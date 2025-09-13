@@ -278,22 +278,22 @@ async function verifyDataConsistency() {
     console.log(`   📊 Taxa de sucesso: ${((validation.validation_results.valid.length / validation.total_artworks) * 100).toFixed(1)}%`)
     
     console.log('\n📋 ANÁLISE POR CAMPO:')
-    console.log(`   Token ID:`)
+    console.log('   Token ID:')
     console.log(`     ✅ Presentes: ${validation.summary.with_token_id} (${validation.summary.valid_token_ids} válidos)`)
     console.log(`     ❌ Ausentes: ${validation.summary.without_token_id}`)
     console.log(`     ❌ Inválidos: ${validation.summary.invalid_token_ids}`)
     
-    console.log(`   Mint Link:`)
+    console.log('   Mint Link:')
     console.log(`     ✅ Presentes: ${validation.summary.with_mint_link} (${validation.summary.valid_mint_links} válidos)`)
     console.log(`     ❌ Ausentes: ${validation.summary.without_mint_link}`)
     console.log(`     ❌ Inválidos: ${validation.summary.invalid_mint_links}`)
     
-    console.log(`   Contract Address:`)
+    console.log('   Contract Address:')
     console.log(`     ✅ Presentes: ${validation.summary.with_contract_address} (${validation.summary.valid_contract_addresses} válidos)`)
     console.log(`     ❌ Ausentes: ${validation.summary.without_contract_address}`)
     console.log(`     ❌ Inválidos: ${validation.summary.invalid_contract_addresses}`)
     
-    console.log(`   Blockchain:`)
+    console.log('   Blockchain:')
     console.log(`     ✅ Presentes: ${validation.summary.with_blockchain}`)
     console.log(`     ❌ Ausentes: ${validation.summary.without_blockchain}`)
     

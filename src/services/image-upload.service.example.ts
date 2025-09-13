@@ -20,8 +20,8 @@ export async function handleImageUpload(file: File, resourceType = 'artworks') {
     )
 
     console.log('Upload successful:', {
-      optimized: result.optimizedUrl,
-      raw: result.rawUrl
+      optimized: result.optimizedPath,
+      raw: result.rawPath
     })
 
     return result
@@ -83,8 +83,8 @@ export function useImageUploadForm() {
       )
 
       // Atualizar campos do formulário
-      // setValue('image_url', result.optimizedUrl)
-      // setValue('raw_image_url', result.rawUrl)
+      // setValue('image_url', result.optimizedPath)
+      // setValue('raw_image_url', result.rawPath)
 
       return result
     } catch (error) {
