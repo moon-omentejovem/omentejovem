@@ -189,7 +189,9 @@ export class ArtifactService extends BaseService {
    * Get published artifacts for public pages
    */
   static getPublishedArtifacts = cache(
-    async (filters: Omit<ArtifactFilters, 'status' | 'includesDrafts'> = {}): Promise<ProcessedArtifactData> => {
+    async (
+      filters: Omit<ArtifactFilters, 'status' | 'includesDrafts'> = {}
+    ): Promise<ProcessedArtifactData> => {
       return this.getArtifacts({
         ...filters,
         status: 'published'

@@ -10,7 +10,8 @@ export const revalidate = 0
 
 export default async function Home() {
   // Use published artworks only for public homepage
-  const { artworks: featuredArtworks } = await ArtworkService.getPublishedFeatured()
+  const { artworks: featuredArtworks } =
+    await ArtworkService.getPublishedFeatured()
 
   const images: HomeImage[] = featuredArtworks.map((artwork: any) => ({
     title: artwork.title || '',

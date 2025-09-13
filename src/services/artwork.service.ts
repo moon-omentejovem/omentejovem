@@ -359,7 +359,9 @@ export class ArtworkService extends BaseService {
    * Get published artworks for public pages
    */
   static getPublishedArtworks = cache(
-    async (filters: Omit<ArtworkFilters, 'status' | 'includesDrafts'> = {}): Promise<ArtworkData> => {
+    async (
+      filters: Omit<ArtworkFilters, 'status' | 'includesDrafts'> = {}
+    ): Promise<ArtworkData> => {
       return this.getArtworks({
         ...filters,
         status: 'published'
@@ -383,23 +385,27 @@ export class ArtworkService extends BaseService {
   /**
    * Get published one-of-one artworks
    */
-  static getPublishedOneOfOne = cache(async (options: { limit?: number } = {}) => {
-    return this.getPublishedArtworks({
-      oneOfOne: true,
-      type: 'single',
-      limit: options.limit
-    })
-  })
+  static getPublishedOneOfOne = cache(
+    async (options: { limit?: number } = {}) => {
+      return this.getPublishedArtworks({
+        oneOfOne: true,
+        type: 'single',
+        limit: options.limit
+      })
+    }
+  )
 
   /**
    * Get published edition artworks
    */
-  static getPublishedEditions = cache(async (options: { limit?: number } = {}) => {
-    return this.getPublishedArtworks({
-      type: 'edition',
-      limit: options.limit
-    })
-  })
+  static getPublishedEditions = cache(
+    async (options: { limit?: number } = {}) => {
+      return this.getPublishedArtworks({
+        type: 'edition',
+        limit: options.limit
+      })
+    }
+  )
 
   /**
    * ADMIN METHODS - All artworks including drafts
