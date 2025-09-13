@@ -208,8 +208,7 @@ export const artworksDescriptor: ResourceDescriptor = {
         labelKey: 'name',
         valueKey: 'id'
       }
-    }
-    ,
+    },
     {
       key: 'status',
       label: 'Status',
@@ -280,8 +279,7 @@ export const seriesDescriptor: ResourceDescriptor = {
         labelKey: 'title',
         valueKey: 'id'
       }
-    }
-    ,
+    },
     {
       key: 'status',
       label: 'Status',
@@ -348,8 +346,7 @@ export const artifactsDescriptor: ResourceDescriptor = {
       label: 'Image',
       type: 'image',
       placeholder: 'Upload artifact image'
-    }
-    ,
+    },
     {
       key: 'status',
       label: 'Status',
