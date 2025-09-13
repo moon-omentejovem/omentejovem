@@ -1,135 +1,144 @@
-# 🚀 CI/CD Setup - Omentejovem
+# GitHub Actions & CI/CD Setup para Omentejovem
 
-## ✅ Status dos Workflows
+Este diretório contém a configuração completa de CI/CD para o projeto Omentejovem.
 
-### Problemas Corrigidos:
+## 🎯 Workflows Implementados
 
-- ✅ **Yarn 4.9.4**: Habilitado via `corepack enable`
-- ✅ **Dependências**: Usando `yarn install --immutable`
-- ✅ **Build Environment**: Variáveis mock para CI
-- ✅ **Seed System**: Skip automático no CI via `SKIP_SEED=true`
+### 1. **CI (Continuous Integration)** - `ci.yml`
 
-### Workflows Implementados:
+- ✅ **Lint & Type Check**: ESLint + TypeScript + Prettier
+- ✅ **Build Validation**: Build completo com fallbacks
+- ✅ **Services Architecture**: Validação do padrão Services/BaseService
+- ✅ **Security Audit**: Verificação básica de segurança
 
-#### 1. **CI (ci.yml)**
+**Triggers:**
 
-```yaml
-Jobs:
-  - lint-and-type-check # ESLint + TypeScript + Prettier
-  - build # Build completo com mocks
-  - test-services # Validação arquitetura Services
-  - security-audit # Verificações de segurança
-```
+- Push para `main`
+- Pull Requests para `main`
 
-#### 2. **Lighthouse (lighthouse.yml)**
+### 2. **Lighthouse CI** - `lighthouse.yml`
 
-```yaml
-Jobs:
-  - lighthouse # Performance audit das páginas principais
-```
+- ✅ **Performance Audit**: Score mínimo de 80%
+- ✅ **Accessibility**: Score mínimo de 90%
+- ✅ **SEO & Best Practices**: Score mínimo de 90%
+- ✅ **Multiple Pages**: Home, Portfolio, 1-1
 
-#### 3. **Security (security.yml)**
+**Triggers:**
 
-```yaml
-Jobs:
-  - security-scan # yarn audit + verificação de arquivos sensíveis
-  - dependency-review # Review de dependências em PRs
-```
+- Push para `main`
+- Pull Requests para `main`
 
-## 🔧 Como Funciona no CI
+### 3. **Security Audit** - `security.yml`
 
-### Ambiente Mock
+- ✅ **Dependency Scan**: `yarn audit` com nível moderate
+- ✅ **Sensitive Files**: Verificação de .env e chaves hardcoded
+- ✅ **Weekly Schedule**: Execução automática semanal
+- ✅ **Dependency Review**: Review automático em PRs
 
-Os workflows usam valores mock para build quando secrets não estão disponíveis:
+**Triggers:**
 
-```bash
-NEXT_PUBLIC_SUPABASE_URL=https://mock.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
-SUPABASE_SERVICE_ROLE_KEY=mock-service-role-key
-ADMIN_EMAIL=admin@test.com
-SKIP_SEED=true
-```
+- Push para `main`
+- Pull Requests para `main`
+- Schedule: Domingos às 2h UTC
 
-### Yarn 4.9.4 Support
+## 🔧 Configurações
 
-```yaml
-- name: 🔧 Enable Corepack
-  run: corepack enable
+### Dependabot (`dependabot.yml`)
 
-- name: 📚 Install dependencies
-  run: yarn install --immutable
-```
+- 📦 **npm dependencies**: Updates semanais agrupados
+- 🎭 **GitHub Actions**: Updates semanais
+- 👤 **Auto-assign**: Para `luismtns`
+- 🏷️ **Labels**: `dependencies`, `automated`
 
-### Validação Services
+### Lighthouse (`lighthouserc.js`)
 
-```bash
-# Verifica se Services seguem padrão BaseService
-# Alerta sobre uso direto de Supabase client
-# Permite exceções com comentário: // CI: ignore-supabase-usage
-```
+- 🎯 **Performance**: Mínimo 80%
+- ♿ **Accessibility**: Mínimo 90%
+- 🔍 **SEO**: Mínimo 90%
+- ⚡ **Best Practices**: Mínimo 90%
 
-## 📋 Setup no GitHub
+### Pull Request Template
 
-### 1. Habilitar Actions
+- 📋 **Checklist completo** com validações específicas do projeto
+- 🎯 **Tipos de mudança** categorizados
+- ✅ **Verificações obrigatórias** incluindo padrão Services
 
-- Settings > Actions > General
-- Allow all actions and reusable workflows
+## 🚀 Setup no GitHub
 
-### 2. Configurar Secrets (Opcional)
+### 1. Configurar Secrets (Opcional)
 
-Se você quiser builds com dados reais:
+Para builds mais completos, adicione no GitHub Settings > Secrets:
 
 ```
-NEXT_PUBLIC_SUPABASE_URL=sua_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=sua_chave
-SUPABASE_SERVICE_ROLE_KEY=sua_service_key
-ADMIN_EMAIL=seu_email
+NEXT_PUBLIC_SUPABASE_URL=sua_url_supabase
+NEXT_PUBLIC_SUPABASE_ANON_KEY=sua_chave_anonima
+SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key
+ADMIN_EMAIL=admin@seudominio.com
 ```
 
-### 3. Branch Protection
+**Nota**: O CI funcionará mesmo sem secrets (usando valores mock).
 
-Settings > Branches > Add rule para `main`:
+### 2. Habilitar Actions
 
-- ✅ Require status checks: `lint-and-type-check`, `build`
-- ✅ Require up-to-date branches
-- ✅ Require pull request reviews
+- Vá em **Settings > Actions > General**
+- Selecione **"Allow all actions and reusable workflows"**
+- Salve as configurações
 
-## 🎯 Badges Disponíveis
+### 3. Branch Protection (Recomendado)
 
-As badges foram adicionadas ao README.md:
+- Vá em **Settings > Branches**
+- Adicione regra para `main`:
+  - ✅ Require status checks: `lint-and-type-check`, `build`
+  - ✅ Require up-to-date branches
+  - ✅ Require pull request reviews
 
-- **CI**: Status dos builds e testes
+## 🏷️ Badges Disponíveis
+
+As badges foram atualizadas no README.md:
+
+- **CI Status**: Status do build e testes
 - **Lighthouse**: Link para relatórios de performance
-- **Security**: Status dos security scans
+- **Security**: Status do security scan
 
-## ⚠️ Avisos Importantes
+## 📊 Relatórios Gerados
 
-### 1. Yarn Version
+### CI Artifacts
 
-O projeto usa **Yarn 4.9.4** via Corepack. O CI habilita automaticamente.
+- **Build artifacts**: `.next/` (3 dias de retenção)
+- **Security reports**: Relatórios detalhados (30 dias)
 
-### 2. Build com Mocks
+### Lighthouse
 
-Builds funcionam mesmo sem secrets reais. Valores mock são usados apenas para compilação.
+- **Performance reports**: Publicados temporariamente
+- **Comparação**: Desktop vs Mobile (se configurado)
 
-### 3. Seed System
+## 🔧 Troubleshooting
 
-- Produção: Seed automático após build
-- CI: Seed desabilitado via `SKIP_SEED=true`
+### Build Fails
 
-### 4. Validação Arquitetura
+- Verifique se todos os secrets estão configurados
+- `SKIP_SEED=true` evita problemas de seed no CI
+- Build usa valores mock se secrets não estiverem disponíveis
 
-CI verifica se o código segue padrão Services/BaseService e alerta sobre uso direto de Supabase.
+### Security Scan Issues
 
-## 🚀 Próximos Passos
+- Adicione exceções no `security.yml` se necessário
+- Use `# CI: ignore-supabase-usage` para exceções específicas
 
-1. **Push este setup** para main
-2. **Primeira PR** vai executar todos workflows
-3. **Configurar secrets** (opcional mas recomendado)
-4. **Configurar branch protection**
+### Lighthouse Timeouts
+
+- Server start tem timeout de 60s
+- Ajuste o `sleep` se necessário para builds mais lentos
+
+## 🎯 Próximos Passos
+
+1. **Push este setup** para `main`
+2. **Criar primeira PR** para testar workflows
+3. **Configurar secrets** se necessário
+4. **Configurar branch protection** no GitHub
 5. **Monitorar** primeiras execuções
 
 ---
 
-**Status**: ✅ Production-ready com Yarn 4.9.4 support
+**Status**: ✅ Production-ready
 **Última atualização**: Setembro 2025

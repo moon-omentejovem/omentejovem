@@ -1,66 +1,48 @@
-name: Lighthouse CI
+name: Lighthouse Performance
 
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
+  schedule:
+    - cron: '0 2 * * 1' # Weekly on Monday at 2am
 
 jobs:
   lighthouse:
-    name: 🚨 Lighthouse Performance
+    name: Lighthouse Audit
     runs-on: ubuntu-latest
     steps:
-      - name: 📥 Checkout
-        uses: actions/checkout@v4
-
-      - name: 📦 Setup Node.js
+      - uses: actions/checkout@v4
+      
+      - name: Enable corepack
+        run: corepack enable
+        
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'yarn'
-
-      - name: � Enable Corepack
-        run: corepack enable
-
-      - name: �📚 Install dependencies
+          
+      - name: Install dependencies
         run: yarn install --immutable
-
-      - name: 🔧 Setup build environment
-        run: |
-          echo "NEXT_PUBLIC_SUPABASE_URL=https://mock.supabase.co" >> $GITHUB_ENV
-          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9" >> $GITHUB_ENV
-          echo "SUPABASE_SERVICE_ROLE_KEY=mock-service-role-key" >> $GITHUB_ENV
-          echo "ADMIN_EMAIL=admin@test.com" >> $GITHUB_ENV
-          echo "SKIP_SEED=true" >> $GITHUB_ENV
-
-      - name: 🏗️ Build project
+        
+      - name: Build for production
         run: yarn build
-
-      - name: 🚀 Start server
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          
+      - name: Start application
         run: |
           yarn start &
-          echo $! > server.pid
-          sleep 15
-
-      - name: ⏱️ Wait for server
-        run: |
-          timeout 60 bash -c 'until curl -f http://localhost:3000; do sleep 2; done'
-
-      - name: 🚨 Run Lighthouse CI
-        uses: treosh/lighthouse-ci-action@v11
+          sleep 10
+          
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v12
         with:
           urls: |
             http://localhost:3000
             http://localhost:3000/portfolio
             http://localhost:3000/1-1
+          configPath: ./lighthouserc.js
           uploadArtifacts: true
           temporaryPublicStorage: true
-
-      - name: 🛑 Stop server
-        if: always()
-        run: |
-          if [ -f server.pid ]; then
-            kill $(cat server.pid) || true
-            rm server.pid
-          fi

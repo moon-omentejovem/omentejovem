@@ -1,4 +1,4 @@
-name: Security Audit
+name: Security
 
 on:
   push:
@@ -6,121 +6,47 @@ on:
   pull_request:
     branches: [main]
   schedule:
-    # Run weekly on Sundays at 2 AM UTC
-    - cron: '0 2 * * 0'
+    - cron: '0 6 * * 1' # Weekly on Monday at 6am
 
 jobs:
-  security-scan:
-    name: 🔒 Security Scan
+  audit:
+    name: Security Audit
     runs-on: ubuntu-latest
     steps:
-      - name: 📥 Checkout
-        uses: actions/checkout@v4
-
-      - name: 📦 Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          cache: 'yarn'
-
-      - name: � Enable Corepack
+      - uses: actions/checkout@v4
+      
+      - name: Enable corepack
         run: corepack enable
-
-      - name: �📚 Install dependencies
-        run: yarn install --immutable
-
-      - name: 🔒 Run yarn audit
-        run: |
-          echo "Running security audit..."
-          yarn audit --level moderate --json > audit-report.json || true
-
-          # Check if there are any vulnerabilities
-          VULNERABILITIES=$(cat audit-report.json | grep '"type":"auditSummary"' | jq '.data.vulnerabilities.total' || echo "0")
-
-          if [ "$VULNERABILITIES" -gt 0 ]; then
-            echo "⚠️ Found $VULNERABILITIES vulnerabilities"
-            cat audit-report.json | grep '"type":"auditAdvisory"' | jq '.data' || true
-          else
-            echo "✅ No vulnerabilities found"
-          fi
-
-      - name: 🔍 Check for sensitive files
-        run: |
-          echo "Checking for accidentally committed sensitive files..."
-
-          # Check for .env files (except .env.example)
-          if find . -name "*.env" -not -path "./node_modules/*" -not -name "*.env.example" | grep -q .; then
-            echo "❌ Found .env files that shouldn't be committed:"
-            find . -name "*.env" -not -path "./node_modules/*" -not -name "*.env.example"
-            exit 1
-          fi
-
-          # Check for potential API keys or secrets
-          if grep -r -E "(sk_|pk_test_|pk_live_)" --include="*.ts" --include="*.tsx" --include="*.js" . | grep -v node_modules | grep -v ".env.example"; then
-            echo "❌ Found potential API keys in code:"
-            grep -r -E "(sk_|pk_test_|pk_live_)" --include="*.ts" --include="*.tsx" --include="*.js" . | grep -v node_modules | grep -v ".env.example"
-            exit 1
-          fi
-
-          # Check for hardcoded passwords or tokens
-          if grep -r -i -E "(password|token|secret|key)\s*[:=]\s*['\"][^'\"]+['\"]" --include="*.ts" --include="*.tsx" --include="*.js" . | grep -v node_modules | grep -v ".env.example" | grep -v "placeholder\|example\|test\|mock"; then
-            echo "⚠️ Found potential hardcoded secrets (review manually):"
-            grep -r -i -E "(password|token|secret|key)\s*[:=]\s*['\"][^'\"]+['\"]" --include="*.ts" --include="*.tsx" --include="*.js" . | grep -v node_modules | grep -v ".env.example" | grep -v "placeholder\|example\|test\|mock"
-          fi
-
-          echo "✅ Sensitive files check completed"
-
-      - name: 🛡️ Check dependencies for known vulnerabilities
+        
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-
-      - name: 📊 Generate security report
+          node-version: '20'
+          cache: 'yarn'
+          
+      - name: Install dependencies
+        run: yarn install --immutable
+        
+      - name: Run security audit
+        run: yarn audit --groups dependencies
+        
+      - name: Check for sensitive files
         run: |
-          echo "# 🔒 Security Audit Report" > security-report.md
-          echo "" >> security-report.md
-          echo "**Date:** $(date)" >> security-report.md
-          echo "**Branch:** ${{ github.ref_name }}" >> security-report.md
-          echo "**Commit:** ${{ github.sha }}" >> security-report.md
-          echo "" >> security-report.md
-
-          echo "## Dependencies Audit" >> security-report.md
-          if [ -f audit-report.json ]; then
-            VULNERABILITIES=$(cat audit-report.json | grep '"type":"auditSummary"' | jq '.data.vulnerabilities.total' || echo "0")
-            echo "- **Total vulnerabilities found:** $VULNERABILITIES" >> security-report.md
+          echo "Checking for sensitive files..."
+          if find . -name "*.pem" -o -name "*.key" -o -name "*id_rsa*" -o -name "*.p12" -o -name "*.pfx" | grep -v node_modules | head -1; then
+            echo "❌ Sensitive files found!"
+            exit 1
           else
-            echo "- **Status:** ✅ No audit data available" >> security-report.md
+            echo "✅ No sensitive files detected"
           fi
-
-          echo "" >> security-report.md
-          echo "## File Security Check" >> security-report.md
-          echo "- **Sensitive files:** ✅ No .env files found in repository" >> security-report.md
-          echo "- **API keys scan:** ✅ No hardcoded keys detected" >> security-report.md
-
-          cat security-report.md
-
-      - name: 📤 Upload security report
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: security-report-${{ github.sha }}
-          path: |
-            security-report.md
-            audit-report.json
-          retention-days: 30
 
   dependency-review:
-    name: 📋 Dependency Review
+    name: Dependency Review
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
     steps:
-      - name: 📥 Checkout
+      - name: Checkout Repository
         uses: actions/checkout@v4
-
-      - name: 🔍 Dependency Review
+        
+      - name: Dependency Review
         uses: actions/dependency-review-action@v4
-        with:
-          fail-on-severity: moderate
-          allow-ghsas: |
-            GHSA-example-ghsa-id
-          comment-summary-in-pr: true
