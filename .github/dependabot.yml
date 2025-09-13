@@ -7,9 +7,7 @@ updates:
       interval: 'weekly'
       day: 'monday'
       time: '09:00'
-    open-pull-requests-limit: 5
-    reviewers:
-      - 'luismtns'
+    open-pull-requests-limit: 0
     assignees:
       - 'luismtns'
     commit-message:
@@ -46,9 +44,7 @@ updates:
       interval: 'weekly'
       day: 'monday'
       time: '09:00'
-    open-pull-requests-limit: 3
-    reviewers:
-      - 'luismtns'
+    open-pull-requests-limit: 0
     commit-message:
       prefix: 'ci'
       include: 'scope'
