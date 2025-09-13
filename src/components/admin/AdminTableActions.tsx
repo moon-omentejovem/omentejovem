@@ -5,7 +5,6 @@ import type { ResourceDescriptor } from '@/types/descriptors'
 import {
   CopyIcon,
   PencilIcon,
-  Trash2Icon,
   FileQuestionIcon,
   CheckCircle2Icon
 } from 'lucide-react'
@@ -16,7 +15,6 @@ interface AdminTableActionsProps<T extends { status?: string }> {
   onEdit?: (item: T) => void
   onDuplicate?: (item: T) => void
   onToggleDraft?: (item: T) => void
-  onDelete?: (item: T) => void
 }
 
 export default function AdminTableActions<T extends { status?: string }>(
@@ -25,41 +23,39 @@ export default function AdminTableActions<T extends { status?: string }>(
     descriptor,
     onEdit,
     onDuplicate,
-    onToggleDraft,
-    onDelete
+    onToggleDraft
   }: AdminTableActionsProps<T>
 ) {
   const actions = descriptor.actions
-  const hasActions =
-    actions?.edit || actions?.duplicate || actions?.delete || onToggleDraft
+  const hasActions = actions?.edit || actions?.duplicate || onToggleDraft
 
   if (!hasActions) return null
 
   return (
-    <div className="flex justify-end space-x-2">
+    <div className="flex flex-wrap justify-end gap-3">
       {actions?.edit && onEdit && (
         <Button
-          size="xs"
+          size="sm"
           color="light"
           onClick={() => onEdit(item)}
           aria-label="Edit"
         >
-          <PencilIcon className="w-4 h-4" />
+          <PencilIcon className="w-5 h-5" />
         </Button>
       )}
       {actions?.duplicate && onDuplicate && (
         <Button
-          size="xs"
+          size="sm"
           color="light"
           onClick={() => onDuplicate(item)}
           aria-label="Duplicate"
         >
-          <CopyIcon className="w-4 h-4" />
+          <CopyIcon className="w-5 h-5" />
         </Button>
       )}
       {onToggleDraft && (
         <Button
-          size="xs"
+          size="sm"
           color={item.status === 'draft' ? 'success' : 'warning'}
           aria-label={item.status === 'draft' ? 'Publish' : 'Draft'}
           onClick={() => {
@@ -71,20 +67,10 @@ export default function AdminTableActions<T extends { status?: string }>(
           }}
         >
           {item.status === 'draft' ? (
-            <CheckCircle2Icon className="w-4 h-4" />
+            <CheckCircle2Icon className="w-5 h-5" />
           ) : (
-            <FileQuestionIcon className="w-4 h-4" />
+            <FileQuestionIcon className="w-5 h-5" />
           )}
-        </Button>
-      )}
-      {actions?.delete && onDelete && (
-        <Button
-          size="xs"
-          color="failure"
-          onClick={() => onDelete(item)}
-          aria-label="Delete"
-        >
-          <Trash2Icon className="w-4 h-4" />
         </Button>
       )}
     </div>

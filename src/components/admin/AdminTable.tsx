@@ -34,7 +34,6 @@ interface AdminTableProps<T = any> {
   onDuplicate?: (item: T) => void
   renderCell?: (item: T, column: ListColumn) => React.ReactNode
   onToggleDraft?: (item: T) => void
-  onDelete?: (item: T) => void
   page?: number
   totalPages?: number
   onPageChange?: (page: number) => void
@@ -50,7 +49,6 @@ export default function AdminTable<T extends Record<string, any>>({
   onDuplicate,
   renderCell,
   onToggleDraft,
-  onDelete,
   page = 1,
   totalPages = 1,
   onPageChange,
@@ -82,7 +80,12 @@ export default function AdminTable<T extends Record<string, any>>({
 
       switch (column.render) {
         case 'image':
-          const imageUrl = getPublicUrl(value)
+          const imageUrl =
+            typeof value === 'string'
+              ? value.startsWith('http')
+                ? value
+                : getPublicUrl(value)
+              : undefined
           return imageUrl ? (
             <Image
               src={imageUrl}
@@ -100,9 +103,9 @@ export default function AdminTable<T extends Record<string, any>>({
               href={value}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-600 hover:underline"
+              className="text-xs text-blue-600 hover:underline"
             >
-              {value}
+              link
             </a>
           ) : (
             <span className="text-gray-500">—</span>
@@ -125,7 +128,6 @@ export default function AdminTable<T extends Record<string, any>>({
   const hasActions = Boolean(
     descriptor.actions?.edit ||
       descriptor.actions?.duplicate ||
-      descriptor.actions?.delete ||
       onToggleDraft
   )
 
@@ -147,7 +149,6 @@ export default function AdminTable<T extends Record<string, any>>({
             onEdit={onEdit}
             onDuplicate={onDuplicate}
             onToggleDraft={onToggleDraft}
-            onDelete={onDelete}
           />
         )
       }
@@ -157,7 +158,6 @@ export default function AdminTable<T extends Record<string, any>>({
         onEdit,
         onDuplicate,
         onToggleDraft,
-        onDelete,
         hasActions,
         defaultRenderCell
       ]
@@ -231,8 +231,8 @@ export default function AdminTable<T extends Record<string, any>>({
       {loading && data.length === 0 ? (
         <div className="text-center py-8 text-gray-500">Loading...</div>
       ) : (
-        <div className="overflow-x-auto bg-white border border-gray-200 rounded-lg">
-          <Table className="min-w-full text-sm">
+        <div className="w-full overflow-x-auto bg-white border border-gray-200 rounded-lg">
+          <Table className="w-full text-sm">
             <thead className="bg-gray-50">
               <tr className="border-b border-gray-200">
                 {table

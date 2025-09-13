@@ -113,34 +113,6 @@ export default function ArtworksPage() {
     }
   }
 
-  const handleDelete = async (artwork: ArtworkRow) => {
-    if (
-      confirm(
-        `Are you sure you want to permanently delete "${artwork.title}"? This action cannot be undone.`
-      )
-    ) {
-      try {
-        const response = await fetch(`/api/admin/artworks/${artwork.id}`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        })
-          if (response.ok) {
-            fetchArtworks(page)
-          toast.success('Artwork deleted successfully')
-        } else {
-          const error = await response.json()
-          toast.error(
-            'Failed to delete artwork: ' + (error.error || 'Unknown error')
-          )
-        }
-      } catch (error) {
-        toast.error('Failed to delete artwork')
-      }
-    }
-  }
-
   return (
     <AdminLayout>
       <AdminTable
@@ -158,7 +130,6 @@ export default function ArtworksPage() {
           fetchArtworks(1, s)
         }}
         onToggleDraft={handleToggleDraft}
-        onDelete={handleDelete}
       />
     </AdminLayout>
   )

@@ -229,8 +229,8 @@ export default function AdminForm<T extends Record<string, any>>({
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
+    <div className="max-w-4xl mx-auto px-4">
+      <div className="flex flex-col gap-4 mb-6 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-2xl font-semibold text-gray-900">
           {data ? 'Edit' : 'Create'} {descriptor.title.slice(0, -1)}
         </h1>
@@ -238,17 +238,17 @@ export default function AdminForm<T extends Record<string, any>>({
 
       <form
         onSubmit={handleSubmit}
-        className="space-y-6 bg-white p-6 rounded-lg border border-gray-200"
+        className="space-y-6 bg-white p-4 sm:p-6 rounded-lg border border-gray-200"
       >
         {descriptor.form.map(renderField)}
 
-        <div className="flex justify-end space-x-4 pt-6 border-t border-gray-200">
+        <div className="flex flex-col items-stretch gap-4 pt-6 border-t border-gray-200 sm:flex-row sm:justify-end">
           {data && descriptor.actions?.delete && (
             <Button
               type="button"
               color="failure"
               onClick={handlePermanentDelete}
-              className="flex items-center space-x-2"
+              className="flex items-center justify-center space-x-2"
             >
               <span>Delete Permanently</span>
             </Button>
@@ -257,7 +257,7 @@ export default function AdminForm<T extends Record<string, any>>({
             type="button"
             onClick={onCancel}
             color="gray"
-            className="flex items-center space-x-2"
+            className="flex items-center justify-center space-x-2"
           >
             <XIcon className="w-4 h-4" />
             <span>Cancel</span>
@@ -266,7 +266,7 @@ export default function AdminForm<T extends Record<string, any>>({
             type="submit"
             disabled={loading}
             isProcessing={loading}
-            className="flex items-center space-x-2 bg-orange-500 hover:bg-orange-600 disabled:opacity-50"
+            className="flex items-center justify-center space-x-2 bg-orange-500 hover:bg-orange-600 disabled:opacity-50"
           >
             <SaveIcon className="w-4 h-4" />
             <span>{loading ? 'Saving...' : 'Save'}</span>

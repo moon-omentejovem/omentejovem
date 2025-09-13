@@ -116,34 +116,6 @@ export default function ArtifactsPage() {
     }
   }
 
-  const handleDelete = async (artifact: ArtifactRow) => {
-    if (
-      confirm(
-        `Are you sure you want to permanently delete "${artifact.title}"? This action cannot be undone.`
-      )
-    ) {
-      try {
-        const response = await fetch(`/api/admin/artifacts/${artifact.id}`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        })
-        if (response.ok) {
-          fetchArtifacts(page)
-          toast.success('Artifact deleted successfully')
-        } else {
-          const error = await response.json()
-          toast.error(
-            'Failed to delete artifact: ' + (error.error || 'Unknown error')
-          )
-        }
-      } catch (error) {
-        toast.error('Failed to delete artifact')
-      }
-    }
-  }
-
   return (
     <AdminLayout>
       <AdminTable
@@ -153,7 +125,6 @@ export default function ArtifactsPage() {
         onEdit={handleEdit}
         onDuplicate={handleDuplicate}
         onToggleDraft={handleDraft}
-        onDelete={handleDelete}
         page={page}
         totalPages={totalPages}
         onPageChange={(p) => fetchArtifacts(p)}
