@@ -1,8 +1,7 @@
 'use client'
 
-import { STORAGE_BUCKETS, STORAGE_FOLDERS } from '@/lib/supabase/config'
+import { ImageUploadService } from '@/services/image-upload.service'
 import type { FormField, ResourceDescriptor } from '@/types/descriptors'
-import { optimizeImageFile } from '@/utils/optimize-image'
 import { createClient } from '@/utils/supabase/client'
 import {
   Button,
@@ -341,43 +340,21 @@ export default function AdminForm<T extends Record<string, any>>({
 
           await toast.promise(
             (async () => {
-              const timestamp = Date.now()
-              const baseName = file.name.replace(/\.[^/.]+$/, '')
-              const bucket = STORAGE_BUCKETS.MEDIA
-              const rawPath = `${descriptor.table}/${STORAGE_FOLDERS.RAW}/${timestamp}-${file.name}`
-              const optimizedPath = `${descriptor.table}/${STORAGE_FOLDERS.OPTIMIZED}/${timestamp}-${baseName}.webp`
+              // Usar o serviço de upload
+              const result = await ImageUploadService.uploadImageWithValidation(
+                file,
+                supabase,
+                descriptor.table
+              )
 
-              // Upload original file
-              const { error: rawError } = await supabase.storage
-                .from(bucket)
-                .upload(rawPath, file, { contentType: file.type })
-              if (rawError) throw rawError
-
-              // Optimize and upload processed image
-              const optimized = await optimizeImageFile(file)
-              const { error: optError } = await supabase.storage
-                .from(bucket)
-                .upload(optimizedPath, optimized, {
-                  contentType: 'image/webp'
-                })
-              if (optError) throw optError
-
-              const {
-                data: { publicUrl }
-              } = supabase.storage.from(bucket).getPublicUrl(optimizedPath)
-
-              const {
-                data: { publicUrl: rawPublicUrl }
-              } = supabase.storage.from(bucket).getPublicUrl(rawPath)
-
-              // Save both optimized and raw image URLs
-              handleInputChange(field.key, publicUrl)
-              handleInputChange('raw_image_url', rawPublicUrl)
+              // Salvar ambas as URLs
+              handleInputChange(field.key, result.optimizedUrl)
+              handleInputChange('raw_image_url', result.rawUrl)
             })(),
             {
               loading: 'Uploading image...',
-              success: 'Image uploaded',
-              error: 'Failed to upload image'
+              success: 'Image uploaded successfully!',
+              error: (err) => `Upload failed: ${err.message}`
             }
           )
         }
