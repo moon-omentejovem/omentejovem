@@ -189,8 +189,7 @@ async function healthCheck() {
   return results
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
-  healthCheck().catch(console.error)
-}
+// Executar automaticamente
+healthCheck().catch(console.error)
 
 export { healthCheck }
