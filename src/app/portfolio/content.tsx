@@ -1,129 +1,26 @@
 'use client'
 
-import { ArtMainContent } from '@/components/ArtContent/ArtMainContent'
-import { useArtworks } from '@/hooks'
+import { ArtContent } from '@/components/ArtContent/ArtContent'
 import { Artwork } from '@/types/artwork'
-import { ReactElement, useCallback, useEffect, useState } from 'react'
+import { ReactElement } from 'react'
 
 interface PortfolioContentProps {
-  email: string
-  initialArtworks?: Artwork[]
-  searchParams?: {
-    type?: 'single' | 'edition'
-    series?: string
-    featured?: 'true'
-    one_of_one?: 'true'
-  }
+  artworks: Artwork[]
+  initialSelectedIndex?: number
 }
 
 export default function PortfolioContent({
-  email,
-  initialArtworks = [],
-  searchParams = {}
+  artworks,
+  initialSelectedIndex
 }: PortfolioContentProps): ReactElement {
-  // Use hook with server data as initial data and current filters
-  const {
-    data: artworks = initialArtworks,
-    isLoading,
-    error
-  } = useArtworks({
-    featured: searchParams.featured === 'true',
-    oneOfOne: searchParams.one_of_one === 'true',
-    type: searchParams.type,
-    enabled: true
-  })
-
-  // Local state for filtering and selection
-  const [filteredArtworks, setFilteredArtworks] = useState<Artwork[]>(artworks)
-  const [selectedArtworkIndex, setSelectedArtworkIndex] = useState(-1)
-
-  const onChangeArtworks = useCallback((newArtworks: Artwork[]) => {
-    setFilteredArtworks(newArtworks)
-  }, [])
-
-  const onChangeSelectedArtworkIndex = useCallback((index: number) => {
-    setSelectedArtworkIndex(index)
-  }, [])
-
-  // Update filtered artworks when data changes or series filter changes
-  useEffect(() => {
-    let filtered = artworks
-
-    // Filter by series if specified
-    if (searchParams.series) {
-      filtered = artworks.filter((artwork) =>
-        artwork.series_artworks.some(
-          (seriesArtwork: any) =>
-            seriesArtwork.series.slug === searchParams.series
-        )
-      )
-    }
-
-    setFilteredArtworks(filtered)
-  }, [artworks, searchParams.series])
-
-  // Filter options for the portfolio filter component
-  const filterGroups = [
-    {
-      key: 'type',
-      label: 'Type',
-      options: [
-        { label: 'All Types', value: '' },
-        { label: '1/1 Artworks', value: 'single' },
-        { label: 'Editions', value: 'edition' }
-      ]
-    },
-    {
-      key: 'featured',
-      label: 'Featured',
-      options: [
-        { label: 'All', value: '' },
-        { label: 'Featured Only', value: 'true' }
-      ]
-    },
-    {
-      key: 'one_of_one',
-      label: 'Rarity',
-      options: [
-        { label: 'All', value: '' },
-        { label: '1/1 Only', value: 'true' }
-      ]
-    }
-  ]
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screenflex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-white mx-auto mb-4"></div>
-          <p className="text-neutral-400">Loading portfolio...</p>
-        </div>
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold mb-4">Error Loading Portfolio</h1>
-          <p className="text-neutral-400">
-            {(error as Error)?.message || 'An error occurred'}
-          </p>
-        </div>
-      </div>
-    )
-  }
-
+  // Clean, simple component without complex state management
   return (
-    <ArtMainContent
-      email={email}
+    <ArtContent
+      artworks={artworks}
+      initialSelectedIndex={initialSelectedIndex}
       source="portfolio"
-      artworks={filteredArtworks}
-      onChangeArtworks={onChangeArtworks}
-      onChangeSelectedArtworkIndex={onChangeSelectedArtworkIndex}
-      selectedArtworkIndex={selectedArtworkIndex}
-      unfilteredArtworks={artworks}
+      email="contact@omentejovem.com"
+      showGridView={true}
     />
   )
 }

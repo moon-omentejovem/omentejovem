@@ -1,6 +1,7 @@
 'use client'
 
 import type { ListColumn, ResourceDescriptor } from '@/types/descriptors'
+import { getPublicUrl } from '@/utils/storage'
 import { ChevronDownIcon, ChevronUpIcon, PlusIcon } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -112,19 +113,20 @@ export default function AdminTable<T extends Record<string, any>>({
 
     switch (column.render) {
       case 'image':
-        return value ? (
+        const imageUrl = getPublicUrl(value)
+        return imageUrl ? (
           <Image
-            src={value}
+            src={imageUrl}
             alt={item.title || item.name || 'Image'}
-            width={64}
-            height={64}
-            className="rounded object-cover"
+            width={96}
+            height={96}
+            className="rounded-lg object-cover border border-gray-200"
             onError={(e) => {
               e.currentTarget.style.display = 'none'
             }}
           />
         ) : (
-          <div className="w-16 h-16 bg-gray-100 rounded flex items-center justify-center text-xs text-gray-500">
+          <div className="w-24 h-24 bg-gray-100 rounded-lg flex items-center justify-center text-xs text-gray-500">
             No image
           </div>
         )
@@ -300,10 +302,7 @@ export default function AdminTable<T extends Record<string, any>>({
                 </tr>
               ) : (
                 sortedData.map((item, index) => (
-                  <tr
-                    key={item.id || index}
-                    className="hover:bg-gray-50"
-                  >
+                  <tr key={item.id || index} className="hover:bg-gray-50">
                     {descriptor.list.map((column) => (
                       <td
                         key={column.key}

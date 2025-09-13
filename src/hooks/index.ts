@@ -6,13 +6,13 @@
 export * from './useArtworks'
 export * from './useHomeArtworks'
 
+// Navigation hooks
+export * from './useCarouselNavigation'
+
 // Series hooks
 export * from './useSeries'
 
 // Other hooks
 export * from './useAboutPage'
 export * from './useArtifacts'
-export * from './useDebounce'
-export * from './usePortfolio'
-export * from './useStorage'
 export * from './useUserRoles'

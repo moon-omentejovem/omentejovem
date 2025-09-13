@@ -1,16 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
-  eslint: {
-    // Disable ESLint during builds to prevent CRLF/LF conflicts in CI/CD
-    // ignoreDuringBuilds: process.env.NODE_ENV === 'production',
-  },
+  eslint: {},
   experimental: {
     // Improve server component stability
     serverComponentsExternalPackages: ['@supabase/supabase-js']
   },
   images: {
-    unoptimized: true, // Ativar otimização de imagens do Next.js
     remotePatterns: [
       {
         protocol: 'https',
@@ -22,26 +18,23 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: '**.opensea.io'
+        hostname: 'openseauserdata.com'
+      },
+      {
+        protocol: 'https',
+        hostname: 'img.seadn.io'
       },
       {
         protocol: 'https',
         hostname: 'lh3.googleusercontent.com'
-      },
-      {
-        protocol: 'https',
-        hostname: 'storage.googleapis.com'
-      },
-      {
-        protocol: 'https',
-        hostname: 'ipfs.io'
-      },
-      {
-        protocol: 'https',
-        hostname: '**.ipfs.nftstorage.link'
       }
     ],
-    minimumCacheTTL: 3600 // Cache por 1 hora
+    formats: ['image/webp', 'image/avif'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 3600, // Cache por 1 hora
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;"
   },
   logging: {
     fetches: {

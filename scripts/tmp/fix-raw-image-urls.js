@@ -131,7 +131,7 @@ async function processArtwork(artwork, rawFiles) {
   
   // Se não tem raw_image_url, tentar encontrar
   if (!raw_image_url) {
-    console.log(`   ⚠️ Sem raw_image_url definida`)
+    console.log('   ⚠️ Sem raw_image_url definida')
     
     const matchingFile = findMatchingRawFile(title, image_url, rawFiles)
     if (matchingFile) {
@@ -150,7 +150,7 @@ async function processArtwork(artwork, rawFiles) {
       console.log(`   ✅ Adicionada raw_image_url: ${newRawUrl}`)
       return { status: 'success', action: 'added', newUrl: newRawUrl }
     } else {
-      console.log(`   ⚠️ Nenhum arquivo raw encontrado para match`)
+      console.log('   ⚠️ Nenhum arquivo raw encontrado para match')
       return { status: 'warning', action: 'no_match' }
     }
   }
@@ -159,11 +159,11 @@ async function processArtwork(artwork, rawFiles) {
   const exists = await checkUrlExists(raw_image_url)
   
   if (exists) {
-    console.log(`   ✅ Raw URL existe e está acessível`)
+    console.log('   ✅ Raw URL existe e está acessível')
     return { status: 'success', action: 'valid' }
   }
   
-  console.log(`   ❌ Raw URL retorna 404`)
+  console.log('   ❌ Raw URL retorna 404')
   
   // Tentar encontrar arquivo correto
   const matchingFile = findMatchingRawFile(title, image_url, rawFiles)
@@ -203,7 +203,7 @@ async function processArtwork(artwork, rawFiles) {
     return { status: 'error', action: 'clear_failed' }
   }
   
-  console.log(`   🧹 Raw URL removida (arquivo não encontrado)`)
+  console.log('   🧹 Raw URL removida (arquivo não encontrado)')
   return { status: 'success', action: 'cleared' }
 }
 

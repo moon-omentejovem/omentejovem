@@ -1,10 +1,9 @@
-import { ReactNode } from 'react'
-import { useCallback, useEffect, useState } from 'react'
 import { CustomIcons } from '@/assets/icons'
-import * as Dialog from '@radix-ui/react-dialog'
 import { cn } from '@/lib/utils'
-import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'
+import * as Dialog from '@radix-ui/react-dialog'
 import Image from 'next/image'
+import { ReactNode, useCallback, useEffect, useState } from 'react'
+import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
 
 interface ImageModalProperties {
   children: ReactNode
@@ -111,8 +110,9 @@ export function ImageModal({
                   {!!detailedImage ? (
                     <Image
                       src={detailedImage}
-                      width={0}
-                      height={0}
+                      width={1920}
+                      height={1920}
+                      sizes="90vw"
                       alt={'High resolution'}
                       className="w-auto h-auto object-contain"
                       id="active-image"

@@ -75,6 +75,7 @@ export type Database = {
           description: string | null
           highlight_video_url: string | null
           id: string
+          image_path: string | null
           image_url: string | null
           link_url: string | null
           title: string
@@ -85,6 +86,7 @@ export type Database = {
           description?: string | null
           highlight_video_url?: string | null
           id?: string
+          image_path?: string | null
           image_url?: string | null
           link_url?: string | null
           title: string
@@ -95,6 +97,7 @@ export type Database = {
           description?: string | null
           highlight_video_url?: string | null
           id?: string
+          image_path?: string | null
           image_url?: string | null
           link_url?: string | null
           title?: string
@@ -111,12 +114,14 @@ export type Database = {
           description: Json | null
           editions_total: number | null
           id: string
+          image_path: string | null
           image_url: string
           is_featured: boolean | null
           is_one_of_one: boolean | null
           mint_date: string | null
           mint_link: string | null
           posted_at: string | null
+          raw_image_path: string | null
           raw_image_url: string | null
           slug: string
           title: string
@@ -133,12 +138,14 @@ export type Database = {
           description?: Json | null
           editions_total?: number | null
           id?: string
+          image_path?: string | null
           image_url: string
           is_featured?: boolean | null
           is_one_of_one?: boolean | null
           mint_date?: string | null
           mint_link?: string | null
           posted_at?: string | null
+          raw_image_path?: string | null
           raw_image_url?: string | null
           slug: string
           title: string
@@ -155,12 +162,14 @@ export type Database = {
           description?: Json | null
           editions_total?: number | null
           id?: string
+          image_path?: string | null
           image_url?: string
           is_featured?: boolean | null
           is_one_of_one?: boolean | null
           mint_date?: string | null
           mint_link?: string | null
           posted_at?: string | null
+          raw_image_path?: string | null
           raw_image_url?: string | null
           slug?: string
           title?: string
@@ -173,6 +182,7 @@ export type Database = {
       }
       series: {
         Row: {
+          cover_image_path: string | null
           cover_image_url: string | null
           created_at: string | null
           id: string
@@ -181,6 +191,7 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          cover_image_path?: string | null
           cover_image_url?: string | null
           created_at?: string | null
           id?: string
@@ -189,6 +200,7 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          cover_image_path?: string | null
           cover_image_url?: string | null
           created_at?: string | null
           id?: string

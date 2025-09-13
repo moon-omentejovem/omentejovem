@@ -11,11 +11,11 @@ export const revalidate = 0
 export default async function Home() {
   // Use new service architecture
   const { featuredArtworks, error } = await ArtworkService.getHomepageData()
-  
+
   const images: HomeImage[] = featuredArtworks.map((artwork: any) => ({
     title: artwork.title || '',
-    imageUrl: artwork.image?.url || '',
-    createdAt: artwork.postedAt || ''
+    imageUrl: artwork.image_url || '',
+    createdAt: artwork.posted_at || ''
   }))
 
   const closeNewsletter = cookies().get('newsletter_dismissed')

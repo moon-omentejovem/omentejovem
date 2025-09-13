@@ -89,15 +89,25 @@ export const artworksDescriptor: ResourceDescriptor = {
   table: 'artworks',
   title: 'Artworks',
   list: [
+    { key: 'image_path', label: 'Image', render: 'image', width: '140px' },
     { key: 'title', label: 'Title', render: 'text' },
-    { key: 'image_url', label: 'Image', render: 'image', width: '80px' },
     { key: 'description', label: 'Description', render: 'clamp' },
     { key: 'mint_date', label: 'Mint Date', render: 'date' },
     { key: 'mint_link', label: 'Mint Link', render: 'link' },
     { key: 'type', label: 'Type', render: 'badge' },
-    { key: 'editions_total', label: 'Number of Editions', render: 'number' }
+    { key: 'editions_total', label: 'Number of Editions', render: 'number' },
+    { key: 'blockchain', label: 'Blockchain', render: 'badge' },
+    { key: 'video_url', label: 'Video', render: 'link' }
   ],
   form: [
+    {
+      key: 'image_path',
+      label: 'Artwork Image',
+      type: 'image',
+      required: true,
+      placeholder:
+        'Upload or paste image URL - system will auto-optimize and store original'
+    },
     {
       key: 'title',
       label: 'Title',
@@ -149,11 +159,10 @@ export const artworksDescriptor: ResourceDescriptor = {
       validation: { min: 1 }
     },
     {
-      key: 'image_url',
-      label: 'Image',
-      type: 'image',
-      required: true,
-      placeholder: 'https://opensea.io/image.png'
+      key: 'video_url',
+      label: 'Video/Animation URL',
+      type: 'url',
+      placeholder: 'https://opensea.io/animation.mp4'
     },
     {
       key: 'is_featured',
@@ -169,6 +178,25 @@ export const artworksDescriptor: ResourceDescriptor = {
       key: 'description',
       label: 'Description',
       type: 'tiptap'
+    },
+    {
+      key: 'blockchain',
+      label: 'Blockchain',
+      type: 'select',
+      options: [
+        { value: 'ethereum', label: 'Ethereum' },
+        { value: 'tezos', label: 'Tezos' },
+        { value: 'polygon', label: 'Polygon' },
+        { value: 'solana', label: 'Solana' },
+        { value: 'bitcoin', label: 'Bitcoin' }
+      ],
+      placeholder: 'Select blockchain network'
+    },
+    {
+      key: 'contract_address',
+      label: 'Contract Address',
+      type: 'text',
+      placeholder: '0x123...abc (blockchain contract address)'
     },
     {
       key: 'series',
@@ -201,7 +229,7 @@ export const seriesDescriptor: ResourceDescriptor = {
   list: [
     { key: 'name', label: 'Name', render: 'text' },
     {
-      key: 'cover_image_url',
+      key: 'cover_image_path',
       label: 'Cover Image',
       render: 'image',
       width: '80px'
@@ -225,10 +253,10 @@ export const seriesDescriptor: ResourceDescriptor = {
       placeholder: 'auto-generated-from-name'
     },
     {
-      key: 'cover_image_url',
+      key: 'cover_image_path',
       label: 'Cover Image',
       type: 'image',
-      placeholder: 'https://opensea.io/image.png'
+      placeholder: 'Upload series cover image'
     },
     {
       key: 'artworks',
@@ -260,7 +288,7 @@ export const artifactsDescriptor: ResourceDescriptor = {
   title: 'Artifacts',
   list: [
     { key: 'title', label: 'Title', render: 'text' },
-    { key: 'image_url', label: 'Image', render: 'image', width: '80px' },
+    { key: 'image_path', label: 'Image', render: 'image', width: '80px' },
     { key: 'description', label: 'Description', render: 'clamp' },
     { key: 'link_url', label: 'Link', render: 'link' }
   ],
@@ -291,10 +319,10 @@ export const artifactsDescriptor: ResourceDescriptor = {
       placeholder: 'https://...'
     },
     {
-      key: 'image_url',
+      key: 'image_path',
       label: 'Image',
       type: 'image',
-      placeholder: 'https://example.com/image.png'
+      placeholder: 'Upload artifact image'
     }
   ],
   defaultSort: {
@@ -320,7 +348,8 @@ export const aboutPageDescriptor = {
       label: 'About Content',
       type: 'tiptap' as const,
       required: true,
-      placeholder: 'Write about the artist, their background, artistic vision...'
+      placeholder:
+        'Write about the artist, their background, artistic vision...'
     },
     {
       key: 'socials',
@@ -353,8 +382,8 @@ export const aboutPageDescriptor = {
             venue: { type: 'string', title: 'Venue' },
             location: { type: 'string', title: 'Location' },
             year: { type: 'string', title: 'Year' },
-            type: { 
-              type: 'string', 
+            type: {
+              type: 'string',
               title: 'Type',
               enum: ['solo', 'group', 'online']
             },
@@ -378,8 +407,8 @@ export const aboutPageDescriptor = {
             publication: { type: 'string', title: 'Publication' },
             date: { type: 'string', title: 'Date' },
             url: { type: 'string', title: 'URL' },
-            type: { 
-              type: 'string', 
+            type: {
+              type: 'string',
               title: 'Type',
               enum: ['feature', 'interview', 'review', 'news']
             }

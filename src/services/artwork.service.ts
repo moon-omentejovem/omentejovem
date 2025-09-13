@@ -7,6 +7,7 @@
 
 import { type Artwork, type ArtworkWithSeries } from '@/types/artwork'
 import type { Database } from '@/types/supabase'
+import { getPublicUrl } from '@/utils/storage'
 import { cache } from 'react'
 import { BaseService } from './base.service'
 
@@ -35,6 +36,27 @@ export interface ArtworkData {
   artworks: Artwork[]
   total: number
   error: null | string
+}
+
+/**
+ * Process image URLs for server-side rendering
+ * Ensures all image URLs are resolved on the server before sending to client
+ */
+function processArtworkImages(artwork: any): any {
+  return {
+    ...artwork,
+    // Process optimized image URL
+    image_url: artwork.image_path
+      ? getPublicUrl(artwork.image_path)
+      : artwork.image_url,
+    // Process raw image URL
+    raw_image_url: artwork.raw_image_path
+      ? getPublicUrl(artwork.raw_image_path)
+      : artwork.raw_image_url,
+    // Ensure paths are preserved for potential client-side use
+    image_path: artwork.image_path,
+    raw_image_path: artwork.raw_image_path
+  }
 }
 
 /**
@@ -114,7 +136,9 @@ export class ArtworkService extends BaseService {
           }
         }
 
-        const artworks = (data || []) as ArtworkWithSeries[]
+        const artworks = (data || []).map(
+          processArtworkImages
+        ) as ArtworkWithSeries[]
 
         // Apply random shuffle if requested
         if (filters.random) {
@@ -221,7 +245,7 @@ export class ArtworkService extends BaseService {
         return null
       }
 
-      return data as ArtworkWithSeries | null
+      return data ? (processArtworkImages(data) as ArtworkWithSeries) : null
     }, 'getBySlug')
   })
 

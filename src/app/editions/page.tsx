@@ -1,25 +1,20 @@
-import { ArtworkService } from '@/services'
+import { getEditionsData } from '@/lib/server-data'
 import EditionsContent from './content'
 
 export default async function EditionsPage() {
-  // Use new service architecture
-  const { artworks, error } = await ArtworkService.getEditions()
+  // Server-side data fetching with simplified structure
+  const data = await getEditionsData()
 
-  if (error) {
+  if (data.error) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-4xl font-bold mb-4">Error Loading Editions</h1>
-          <p className="text-neutral-400">{error}</p>
+          <p className="text-neutral-400">{data.error}</p>
         </div>
       </div>
     )
   }
 
-  return (
-    <EditionsContent
-      email="contact@omentejovem.com"
-      initialArtworks={artworks}
-    />
-  )
+  return <EditionsContent artworks={data.artworks} />
 }

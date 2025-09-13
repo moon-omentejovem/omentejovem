@@ -60,6 +60,7 @@ export function Cursor(): ReactElement {
         alt={'Animated cursor'}
         src={imageSource}
         className="min-h-fit min-w-fit select-none"
+        unoptimized
       />
     </div>
   )

@@ -16,7 +16,7 @@ import { addHours, format } from 'date-fns'
 import { HorizontalInCarouselArtwork } from './HorizontalInCarousel/HorizontalInCarouselArtwork'
 import './styles.css'
 
-interface ArtInfosProperties {
+interface ArtInfoProps {
   email: string
   selectedArtwork: Artwork
   slides: Artwork[]
@@ -24,13 +24,13 @@ interface ArtInfosProperties {
   onChangeSlideIndex: (index: number) => void
 }
 
-export function ArtInfosNew({
+export function ArtInfo({
   email,
   selectedArtwork,
   slides,
   source,
   onChangeSlideIndex
-}: ArtInfosProperties): ReactElement {
+}: ArtInfoProps): ReactElement {
   const [isOpenVideo, setIsOpenVideo] = useState(false)
   const [isAnimating, setIsAnimating] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
@@ -149,7 +149,7 @@ export function ArtInfosNew({
           <div className="xl:art-detail-inner-container overflow-hidden flex flex-1 justify-start xl:justify-end">
             <ArtDetails
               detailedImage={
-                selectedArtwork.raw_image_url || selectedArtwork.image_url
+                selectedArtwork.raw_image_url || selectedArtwork.image_url || ''
               }
               image={selectedArtwork.image_url || ''}
               name={selectedArtwork.title || ''}
@@ -322,7 +322,15 @@ export function ArtInfosNew({
               autoPlay
               src={
                 selectedArtwork.video_url ||
-                `${(selectedArtwork.raw_image_url || selectedArtwork.image_url).replace('/new_series/', '/new_series/videos/').replace('.jpg', '.mp4')}`
+                (() => {
+                  const baseUrl =
+                    selectedArtwork.raw_image_url ||
+                    selectedArtwork.image_url ||
+                    ''
+                  return baseUrl
+                    .replace('/new_series/', '/new_series/videos/')
+                    .replace('.jpg', '.mp4')
+                })()
               }
             >
               <track kind="captions" srcLang="en" label="English" />

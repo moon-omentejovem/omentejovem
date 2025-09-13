@@ -1,13 +1,8 @@
 'use client'
 
-import { STORAGE_BUCKETS, STORAGE_FOLDERS } from '@/lib/supabase/config'
+import { ImageUploadService } from '@/services/image-upload.service'
 import type { FormField, ResourceDescriptor } from '@/types/descriptors'
-import { optimizeImageFile } from '@/utils/optimize-image'
 import { createClient } from '@/utils/supabase/client'
-import { SaveIcon, XIcon } from 'lucide-react'
-import Image from 'next/image'
-import React, { useEffect, useState } from 'react'
-import { toast } from 'sonner'
 import {
   Button,
   FileInput,
@@ -17,6 +12,10 @@ import {
   Textarea,
   ToggleSwitch
 } from 'flowbite-react'
+import { SaveIcon, XIcon } from 'lucide-react'
+import Image from 'next/image'
+import React, { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 import RelationPicker from './RelationPicker'
 import TiptapEditor from './TiptapEditor'
 
@@ -205,8 +204,8 @@ export default function AdminForm<T extends Record<string, any>>({
               onChange={(e) => handleInputChange(field.key, e.target.value)}
               placeholder={field.placeholder}
               color={error ? 'failure' : undefined}
-                helperText={error}
-              />
+              helperText={error}
+            />
           </div>
         )
 
@@ -221,8 +220,8 @@ export default function AdminForm<T extends Record<string, any>>({
               onChange={(e) => handleInputChange(field.key, e.target.value)}
               placeholder={field.placeholder}
               color={error ? 'failure' : undefined}
-                helperText={error}
-              />
+              helperText={error}
+            />
           </div>
         )
 
@@ -241,8 +240,8 @@ export default function AdminForm<T extends Record<string, any>>({
               min={field.validation?.min}
               max={field.validation?.max}
               color={error ? 'failure' : undefined}
-                helperText={error}
-              />
+              helperText={error}
+            />
           </div>
         )
 
@@ -259,8 +258,8 @@ export default function AdminForm<T extends Record<string, any>>({
                 handleInputChange(field.key, dateValue)
               }}
               color={error ? 'failure' : undefined}
-                helperText={error}
-              />
+              helperText={error}
+            />
           </div>
         )
 
@@ -273,10 +272,10 @@ export default function AdminForm<T extends Record<string, any>>({
               value={value}
               onChange={(e) => handleInputChange(field.key, e.target.value)}
               placeholder={field.placeholder}
-                rows={4}
-                color={error ? 'failure' : undefined}
-              />
-              {error && <p className="text-red-600 text-sm">{error}</p>}
+              rows={4}
+              color={error ? 'failure' : undefined}
+            />
+            {error && <p className="text-red-600 text-sm">{error}</p>}
           </div>
         )
 
@@ -288,8 +287,8 @@ export default function AdminForm<T extends Record<string, any>>({
               id={field.key}
               value={value}
               onChange={(e) => handleInputChange(field.key, e.target.value)}
-                color={error ? 'failure' : undefined}
-              >
+              color={error ? 'failure' : undefined}
+            >
               <option value="">Select an option</option>
               {field.options?.map((option) => {
                 const optValue =
@@ -303,7 +302,7 @@ export default function AdminForm<T extends Record<string, any>>({
                 )
               })}
             </Select>
-              {error && <p className="text-red-600 text-sm">{error}</p>}
+            {error && <p className="text-red-600 text-sm">{error}</p>}
           </div>
         )
 
@@ -341,36 +340,21 @@ export default function AdminForm<T extends Record<string, any>>({
 
           await toast.promise(
             (async () => {
-              const timestamp = Date.now()
-              const baseName = file.name.replace(/\.[^/.]+$/, '')
-              const bucket = STORAGE_BUCKETS.MEDIA
-              const rawPath = `${descriptor.table}/${STORAGE_FOLDERS.RAW}/${timestamp}-${file.name}`
-              const optimizedPath = `${descriptor.table}/${STORAGE_FOLDERS.OPTIMIZED}/${timestamp}-${baseName}.webp`
+              // Usar o serviço de upload
+              const result = await ImageUploadService.uploadImageWithValidation(
+                file,
+                supabase,
+                descriptor.table
+              )
 
-              // Upload original file
-              const { error: rawError } = await supabase.storage
-                .from(bucket)
-                .upload(rawPath, file, { contentType: file.type })
-              if (rawError) throw rawError
-
-              // Optimize and upload processed image
-              const optimized = await optimizeImageFile(file)
-              const { error: optError } = await supabase.storage
-                .from(bucket)
-                .upload(optimizedPath, optimized, {
-                  contentType: 'image/webp'
-                })
-              if (optError) throw optError
-
-              const {
-                data: { publicUrl }
-              } = supabase.storage.from(bucket).getPublicUrl(optimizedPath)
-              handleInputChange(field.key, publicUrl)
+              // Salvar ambos os paths
+              handleInputChange(field.key, result.optimizedPath)
+              handleInputChange('raw_image_path', result.rawPath)
             })(),
             {
               loading: 'Uploading image...',
-              success: 'Image uploaded',
-              error: 'Failed to upload image'
+              success: 'Image uploaded successfully!',
+              error: (err) => `Upload failed: ${err.message}`
             }
           )
         }
@@ -386,7 +370,7 @@ export default function AdminForm<T extends Record<string, any>>({
                 onChange={(e) => handleInputChange(field.key, e.target.value)}
                 placeholder={field.placeholder}
                 color={error ? 'failure' : undefined}
-                />
+              />
               <FileInput accept="image/*" onChange={handleFileChange} />
             </div>
             {value && (
@@ -394,16 +378,17 @@ export default function AdminForm<T extends Record<string, any>>({
                 <Image
                   src={value}
                   alt="Preview"
-                  width={0}
-                  height={0}
-                  className="w-32 h-32 object-cover rounded-md"
+                  width={192}
+                  height={192}
+                  sizes="192px"
+                  className="w-48 h-48 object-cover rounded-lg border border-gray-200"
                   onError={(e) => {
                     e.currentTarget.style.display = 'none'
                   }}
                 />
               </div>
             )}
-              {error && <p className="text-red-600 text-sm">{error}</p>}
+            {error && <p className="text-red-600 text-sm">{error}</p>}
           </div>
         )
       }
@@ -425,40 +410,40 @@ export default function AdminForm<T extends Record<string, any>>({
   }
 
   return (
-      <div className="max-w-4xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-semibold text-gray-900">
-            {data ? 'Edit' : 'Create'} {descriptor.title.slice(0, -1)}
-          </h1>
-        </div>
-
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-6 bg-white p-6 rounded-lg border border-gray-200"
-        >
-          {descriptor.form.map(renderField)}
-
-          <div className="flex justify-end space-x-4 pt-6 border-t border-gray-200">
-            <Button
-              type="button"
-              onClick={onCancel}
-              color="gray"
-              className="flex items-center space-x-2"
-            >
-              <XIcon className="w-4 h-4" />
-              <span>Cancel</span>
-            </Button>
-            <Button
-              type="submit"
-              disabled={loading}
-              isProcessing={loading}
-              className="flex items-center space-x-2 bg-orange-500 hover:bg-orange-600 disabled:opacity-50"
-            >
-              <SaveIcon className="w-4 h-4" />
-              <span>{loading ? 'Saving...' : 'Save'}</span>
-            </Button>
-          </div>
-        </form>
+    <div className="max-w-4xl mx-auto">
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-semibold text-gray-900">
+          {data ? 'Edit' : 'Create'} {descriptor.title.slice(0, -1)}
+        </h1>
       </div>
-    )
-  }
+
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-6 bg-white p-6 rounded-lg border border-gray-200"
+      >
+        {descriptor.form.map(renderField)}
+
+        <div className="flex justify-end space-x-4 pt-6 border-t border-gray-200">
+          <Button
+            type="button"
+            onClick={onCancel}
+            color="gray"
+            className="flex items-center space-x-2"
+          >
+            <XIcon className="w-4 h-4" />
+            <span>Cancel</span>
+          </Button>
+          <Button
+            type="submit"
+            disabled={loading}
+            isProcessing={loading}
+            className="flex items-center space-x-2 bg-orange-500 hover:bg-orange-600 disabled:opacity-50"
+          >
+            <SaveIcon className="w-4 h-4" />
+            <span>{loading ? 'Saving...' : 'Save'}</span>
+          </Button>
+        </div>
+      </form>
+    </div>
+  )
+}

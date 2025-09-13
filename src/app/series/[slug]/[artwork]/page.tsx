@@ -87,8 +87,7 @@ export default async function ArtworkDetailPage({ params }: ArtworkPageProps) {
 
   return (
     <ArtworkContent
-      email="contact@omentejovem.com"
-      initialArtworks={artworks}
+      artworks={artworks}
       initialSelectedIndex={selectedIndex}
       seriesSlug={params.slug}
     />
