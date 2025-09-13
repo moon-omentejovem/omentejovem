@@ -1,4 +1,4 @@
-import { ArtworkService } from '@/services'
+import { getPortfolioData } from '@/lib/server-data'
 import PortfolioContent from './content'
 
 interface PortfolioPageProps {
@@ -6,29 +6,22 @@ interface PortfolioPageProps {
     type?: 'single' | 'edition'
     series?: string
     featured?: 'true'
-    one_of_one?: 'true'
+    slug?: string
   }
 }
 
 export default async function PortfolioPage({
   searchParams
 }: PortfolioPageProps) {
-  // Use new service architecture with proper filtering
-  const filters = {
-    type: searchParams.type,
-    seriesSlug: searchParams.series,
-    featured: searchParams.featured === 'true',
-    oneOfOne: searchParams.one_of_one === 'true'
-  }
+  // Server-side data fetching with simplified structure
+  const data = await getPortfolioData(searchParams)
 
-  const { artworks, error } = await ArtworkService.getPortfolio(filters)
-
-  if (error) {
+  if (data.error) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-4xl font-bold mb-4">Error Loading Portfolio</h1>
-          <p className="text-neutral-400">{error}</p>
+          <p className="text-neutral-400">{data.error}</p>
         </div>
       </div>
     )
@@ -36,9 +29,8 @@ export default async function PortfolioPage({
 
   return (
     <PortfolioContent
-      email="contact@omentejovem.com"
-      initialArtworks={artworks}
-      searchParams={searchParams}
+      artworks={data.artworks}
+      initialSelectedIndex={data.selectedIndex}
     />
   )
 }

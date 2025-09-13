@@ -1,4 +1,5 @@
-import { ArtworkService, SeriesService } from '@/services'
+import { getSeriesPageData } from '@/lib/server-data'
+import { SeriesService } from '@/services'
 import { notFound } from 'next/navigation'
 import SeriesContentWrapper from './content'
 
@@ -42,27 +43,20 @@ export async function generateMetadata({ params }: SeriesPageProps) {
 
 export default async function SeriesDetailPage({ params }: SeriesPageProps) {
   try {
-    // Check if series exists using the service
-    const seriesExists = await SeriesService.existsBySlug(params.slug)
+    // Get series data using simplified server function
+    const data = await getSeriesPageData(params.slug)
 
-    if (!seriesExists) {
-      notFound()
-    }
+    if (data.error) {
+      console.error('Error loading series:', data.error)
+      if (data.error.includes('not found')) {
+        notFound()
+      }
 
-    // Get artworks for this series using the service
-    const { artworks, error } = await ArtworkService.getBySeriesSlug(
-      params.slug
-    )
-
-    if (error) {
-      console.error('Error loading series artworks:', error)
       return (
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
             <h1 className="text-4xl font-bold mb-4">Error Loading Series</h1>
-            <p className="text-neutral-400">
-              Failed to load series data: {error}
-            </p>
+            <p className="text-neutral-400">{data.error}</p>
           </div>
         </div>
       )
@@ -70,9 +64,9 @@ export default async function SeriesDetailPage({ params }: SeriesPageProps) {
 
     return (
       <SeriesContentWrapper
-        email="contact@omentejovem.com"
-        slug={params.slug}
-        initialArtworks={artworks}
+        artworks={data.artworks}
+        initialSelectedIndex={data.selectedIndex}
+        seriesInfo={data.seriesInfo}
       />
     )
   } catch (error) {

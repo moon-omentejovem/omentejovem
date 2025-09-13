@@ -1,54 +1,21 @@
 'use client'
 
-import { ArtMainContent } from '@/components/ArtContent/ArtMainContent'
+import { SimplifiedArtMainContent } from '@/components/ArtContent/SimplifiedArtMainContent'
 import { Artwork } from '@/types/artwork'
-import { ReactElement, useCallback, useState } from 'react'
+import { ReactElement } from 'react'
 
 interface SeriesContentWrapperProperties {
-  email: string
-  slug: string
-  initialArtworks: Artwork[]
-}
-
-function InnerCollectionContent({
-  email,
-  slug,
-  artworks
-}: {
-  email: string
-  slug: string
   artworks: Artwork[]
-}): ReactElement {
-  const [currentArtworks, setCurrentArtworks] = useState<Artwork[]>(artworks)
-  const [selectedArtworkIndex, setSelectedArtworkIndex] = useState(-1)
-
-  const onChangeArtworks = useCallback((newArtworks: Artwork[]) => {
-    setCurrentArtworks([...newArtworks])
-  }, [])
-
-  const onChangeSelectedArtworkIndex = useCallback((index: number) => {
-    setSelectedArtworkIndex(index)
-  }, [])
-
-  return (
-    <ArtMainContent
-      email={email}
-      source={`series/${slug}`}
-      artworks={currentArtworks}
-      onChangeArtworks={onChangeArtworks}
-      onChangeSelectedArtworkIndex={onChangeSelectedArtworkIndex}
-      selectedArtworkIndex={selectedArtworkIndex}
-      unfilteredArtworks={artworks}
-    />
-  )
+  initialSelectedIndex?: number
+  seriesInfo?: any
 }
 
 export default function SeriesContentWrapper({
-  email,
-  slug,
-  initialArtworks
+  artworks,
+  initialSelectedIndex,
+  seriesInfo
 }: SeriesContentWrapperProperties): ReactElement {
-  if (initialArtworks.length === 0) {
+  if (artworks.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -62,10 +29,13 @@ export default function SeriesContentWrapper({
   }
 
   return (
-    <InnerCollectionContent
-      email={email}
-      slug={slug}
-      artworks={initialArtworks}
+    <SimplifiedArtMainContent
+      artworks={artworks}
+      initialSelectedIndex={initialSelectedIndex}
+      source={`series/${seriesInfo?.slug || 'unknown'}`}
+      email="contact@omentejovem.com"
+      enableFilters={false} // Series pages don't need filters
+      showGridView={true}
     />
   )
 }
