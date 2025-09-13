@@ -1,5 +1,5 @@
+import { fetchTransfersForToken } from '@/lib/legacy-api'
 import { NextResponse } from 'next/server'
-import { fetchTransfersForToken } from '@/api/requests/fetchTransfersForToken'
 
 export async function GET(
   request: Request,

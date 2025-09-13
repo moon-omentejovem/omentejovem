@@ -2,7 +2,7 @@
 
 import type { ReactElement } from 'react'
 
-import { aboutAnimations } from '@/animations'
+import { aboutAnimations } from '@/animations/client'
 import { useEffect, useState } from 'react'
 
 import Cookies from 'js-cookie'

@@ -1,4 +1,4 @@
-import { NFT } from '@/api/resolver/types'
+import { NFT } from '@/types/legacy'
 
 export const COLLECTION_NFTS = [
   '0x826b11a95a9393e8a3cc0c2a7dfc9accb4ff4e43:5',

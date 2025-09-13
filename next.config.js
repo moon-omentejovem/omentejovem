@@ -5,6 +5,10 @@ const nextConfig = {
     // Disable ESLint during builds to prevent CRLF/LF conflicts in CI/CD
     // ignoreDuringBuilds: process.env.NODE_ENV === 'production',
   },
+  experimental: {
+    // Improve server component stability
+    serverComponentsExternalPackages: ['@supabase/supabase-js']
+  },
   images: {
     unoptimized: true, // Ativar otimização de imagens do Next.js
     remotePatterns: [

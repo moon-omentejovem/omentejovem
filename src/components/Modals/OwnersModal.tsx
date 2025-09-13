@@ -1,8 +1,8 @@
+import { modalAnimations } from '@/animations/client'
+import { Owner } from '@/types/legacy'
 import * as Dialog from '@radix-ui/react-dialog'
 import { Dispatch, ReactNode, SetStateAction, useState } from 'react'
 import { Icons } from '../Icons'
-import { NftOwner, Owner } from '@/api/resolver/types'
-import { modalAnimations } from '@/animations'
 
 interface OwnersModalProps {
   owners: Owner[]

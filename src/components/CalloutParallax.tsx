@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import { calloutAnimation } from '@/animations'
+import { calloutAnimation } from '@/animations/client'
 import { HomeImage } from '@/types/home'
 
 interface CalloutParallaxProperties {

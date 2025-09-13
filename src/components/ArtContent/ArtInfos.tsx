@@ -2,23 +2,21 @@
 
 import { ReactElement, useEffect, useState } from 'react'
 
-import { ArtDetails } from '@/components/ArtDetails'
-import { ArtLinks } from '@/components/ArtLinks'
-import { ArtOwnership } from '@/components/ArtOwnership/ArtOwnership'
-import { Chain, NFT } from './types'
-import { cn } from '@/lib/utils'
-import { CustomIcons } from '@/assets/icons'
 import {
   artInfoButtonAnimation,
   resetArtInfo,
   resetButtonInfo
-} from '@/animations'
-import { HorizontalInCarousel } from '../Carousels/HorizontalInCarousel/HorizontalInCarousel'
-import './styles.css'
-import { ArtDescription } from './ArtDescription'
+} from '@/animations/client'
+import { CustomIcons } from '@/assets/icons'
+import { ArtDetails } from '@/components/ArtDetails'
+import { ArtLinks } from '@/components/ArtLinks'
 import { VideoProcessModal } from '@/components/Modals/VideoProcessModal'
-import { getNftLinks, resolveExternalLinks, getMintedOn } from './utils'
-import { Icons } from '@/components/Icons'
+import { cn } from '@/lib/utils'
+import { HorizontalInCarousel } from '../Carousels/HorizontalInCarousel/HorizontalInCarousel'
+import { ArtDescription } from './ArtDescription'
+import './styles.css'
+import { NFT } from './types'
+import { getMintedOn, resolveExternalLinks } from './utils'
 
 interface ArtInfosProperties {
   email: string

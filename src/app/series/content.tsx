@@ -1,7 +1,7 @@
 'use client'
 
-import { CollectionsResponse } from '@/api/resolver/types'
 import { CollectionLink } from '@/components/CollectionLink'
+import { CollectionsResponse } from '@/types/legacy'
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 

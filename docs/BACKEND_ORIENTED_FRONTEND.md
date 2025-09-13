@@ -1,162 +1,113 @@
-# Backend-Oriented Frontend Simplification
+# Arquitetura Backend-Oriented
 
-## 🎯 Objetivo
+> **Documentação da arquitetura backend-oriented do projeto**
+>
+> Como o backend Supabase serve como única fonte da verdade para simplificar o frontend.
 
-Simplificar os componentes frontend para serem orientados pelo backend, eliminando lógica complexa de negócio no cliente e usando o backend como única fonte da verdade.
+---
 
-## ⚡ Princípios
+## 🎯 Visão Geral
 
-### 1. Backend como Centro da Verdade
+O projeto foi arquitetado seguindo os princípios **backend-oriented**, onde o backend (Supabase) é a única fonte da verdade e o frontend apenas apresenta os dados sem lógica complexa de negócio.
 
-- ✅ **Use**: `ProcessedArtwork.mintLink` diretamente
-- ❌ **Evite**: Lógica complexa de detecção de plataformas no frontend
-- ❌ **Evite**: Arrays de constantes com contratos específicos
-- ❌ **Evite**: Múltiplas condicionais para diferentes marketplaces
+## ⚡ Princípios Implementados
 
-### 2. Simplificação de URLs Externas
+### 1. Backend como Fonte Única da Verdade
 
-#### ✅ Abordagem Correta (Backend-Oriented)
+- **✅ Implementado**: URLs de NFTs armazenadas no campo `mint_link`
+- **✅ Implementado**: Frontend usa `artwork.mintLink` diretamente
+- **✅ Implementado**: Sem detecção de plataformas no frontend
 
-```typescript
-// Simples e direto
-const externalLink = selectedArtwork.mintLink ? {
-  url: selectedArtwork.mintLink,
-  name: 'View NFT'
-} : null
-
-// Uso direto
-<ArtLinks externalLinks={externalLink ? [externalLink] : []} />
-```
-
-#### ❌ Abordagem Incorreta (Frontend-Oriented)
+### 2. Dados Simplificados
 
 ```typescript
-// Complexo e propenso a erros
-let externalLinkName = 'OpenSea'
-let externalLinkUrl = ''
-
-if (selectedArt.mintLink.includes('objkt.com')) {
-  externalLinkName = 'Objkt'
-} else if (selectedArt.mintLink.includes('superrare.com')) {
-  externalLinkName = 'SuperRare'
-} // ... mais 20 linhas de condicionais
-
-// Arrays de constantes desnecessárias
-if (MANIFOLD_NFTS.includes(address)) {
-  /* ... */
-}
-if (SUPERRARE_NFTS.includes(address)) {
-  /* ... */
-}
-```
-
-### 3. Estrutura de Dados Unificada
-
-#### ✅ Use ProcessedArtwork
-
-```typescript
+// Interface unificada
 interface ProcessedArtwork {
   id: string
+  slug: string
   title: string
-  mintLink?: string // Backend provê a URL correta
+  mintLink?: string // URL canônica do backend
   image: ArtworkImage
-  // ... outros campos do backend
+  type: 'single' | 'edition'
+  // ... outros campos diretos do backend
 }
 ```
 
-#### ❌ Evite conversões NFT
+### 3. Componentes Simplificados
 
 ```typescript
-// Redundante e desnecessário
-function convertToNFTFormat(artwork: ProcessedArtwork): NFT {
-  // 50+ linhas de conversão...
+// Abordagem atual (simplificada)
+function ArtworkLinks({ artwork }: { artwork: ProcessedArtwork }) {
+  const link = artwork.mintLink ? {
+    url: artwork.mintLink,
+    name: 'View NFT'
+  } : null
+
+  return link ? <a href={link.url}>{link.name}</a> : null
 }
 ```
 
-## 🔄 Componentes a Refatorar
-
-### 1. ArtInfos.tsx (Legado)
-
-- **Problema**: Usa `resolveExternalLinks()` com lógica complexa
-- **Solução**: Migrar para abordagem `ArtInfosNew.tsx`
-- **Status**: ⏳ Pendente
-
-### 2. ArtInfosCollections.tsx
-
-- **Problema**: Provavelmente usa mesma lógica complexa
-- **Solução**: Verificar e simplificar
-- **Status**: ⏳ Pendente
-
-### 3. Utils de External Links
-
-- **Problema**: `external-links.ts` com 70+ linhas de lógica
-- **Solução**: Remover completamente ou mover para backend
-- **Status**: ⏳ Pendente
-
-## 📋 Checklist de Refatoração
-
-### Para cada componente que exibe artworks:
-
-- [ ] Remove imports de `resolveExternalLinks`, `getNftLinks`, etc.
-- [ ] Remove constantes `MANIFOLD_NFTS`, `SUPERRARE_NFTS`, etc.
-- [ ] Usa `ProcessedArtwork` em vez de `NFT` quando possível
-- [ ] Simplifica lógica de external links para:
-  ```typescript
-  const externalLink = artwork.mintLink
-    ? {
-        url: artwork.mintLink,
-        name: 'View NFT'
-      }
-    : null
-  ```
-- [ ] Remove funções `convertToNFTFormat` desnecessárias
-- [ ] Usa carroseis nativos (`HorizontalInCarouselArtwork`) quando possível
-
-## 🏗️ Arquitetura Recomendada
+## 🏗️ Arquitetura Atual
 
 ```
 Backend (Supabase)
 ├── artworks.mint_link          → URL canônica da NFT
 ├── artworks.image_url          → Imagem original
 ├── artworks.image_cached_path  → Imagem otimizada
-└── artworks.*                  → Todos os metadados
+├── artworks.description        → Conteúdo Tiptap JSON
+└── series_artworks             → Relacionamentos N:N
 
-Frontend (Simplified)
-├── ProcessedArtwork            → Tipo unificado
-├── useArtworks()               → Hook unificado
-├── ArtInfosNew                 → Componente simplificado
-└── HorizontalInCarouselArtwork → Carrossel nativo
+Frontend (Next.js)
+├── Services/                   → Data fetching via BaseService
+├── Components/                 → Apresentação sem lógica de negócio
+├── ProcessedArtwork           → Interface unificada
+└── Static Generation          → 249+ páginas pré-geradas
 ```
 
-## 🎯 Próximos Passos
-
-1. **Imediato**: Refatorar `ArtInfos.tsx` para usar abordagem simplificada
-2. **Curto prazo**: Verificar e refatorar `ArtInfosCollections.tsx`
-3. **Médio prazo**: Remover arquivos `utils/external-links.ts` não utilizados
-4. **Longo prazo**: Mover lógica de detecção de plataformas para backend
-
-## ✅ Benefícios da Simplificação
+## ✅ Benefícios Alcançados
 
 ### Performance
 
-- ✅ Menos lógica no cliente = menos processamento
-- ✅ Menos imports = bundle menor
-- ✅ Menos re-renders desnecessários
+- **249+ páginas estáticas** geradas
+- **Bundle otimizado** sem lógica desnecessária
+- **Cache eficiente** via React cache()
 
 ### Manutenibilidade
 
-- ✅ Backend centraliza regras de negócio
-- ✅ Frontend apenas apresenta dados
-- ✅ Mudanças de URLs/plataformas não afetam frontend
-
-### Confiabilidade
-
-- ✅ Menos condicionais = menos bugs
-- ✅ Tipagem mais rigorosa
-- ✅ Teste mais simples
+- **Única fonte de verdade** no backend
+- **Frontend simplificado** sem regras de negócio
+- **Mudanças centralizadas** no Supabase
 
 ### Escalabilidade
 
-- ✅ Novos marketplaces: apenas update no backend
-- ✅ Novos tipos de artwork: apenas extend `ProcessedArtwork`
-- ✅ Novas funcionalidades: backend-first approach
+- **Novos marketplaces**: apenas update de `mint_link`
+- **Novas funcionalidades**: backend-first approach
+- **Multiple clients**: mesma API para web/mobile
+
+## 🔧 Implementação
+
+### Services Architecture
+
+- **BaseService**: Centraliza cliente Supabase
+- **Specialized Services**: Herdam de BaseService
+- **React Cache**: Otimização automática
+- **Error Handling**: Padronizado e robusto
+
+### Static Generation
+
+- **generateStaticParams**: Para todas rotas dinâmicas
+- **Server Components**: Por padrão
+- **Client Components**: Apenas quando necessário
+
+### Data Flow
+
+1. **Supabase** armazena dados canônicos
+2. **Services** fazem data fetching
+3. **Components** apresentam dados
+4. **No business logic** no frontend
+
+---
+
+**Status**: ✅ Implementado e funcionando
+**Performance**: 249+ páginas estáticas
+**Manutenção**: Simplificada via backend-oriented approach

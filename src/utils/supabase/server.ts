@@ -1,12 +1,14 @@
-import {
-  supabaseClientOptions,
-  supabaseConfig
-} from '@/lib/supabase/config'
+import { supabaseClientOptions, supabaseConfig } from '@/lib/supabase/config'
 import type { Database } from '@/types/supabase'
 import { createServerClient } from '@supabase/ssr'
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 
-export async function createClient() {
+/**
+ * Create server-side Supabase client with cookie support
+ * For use in Server Components and API routes
+ */
+export async function createServerSupabaseClient() {
   const cookieStore = await cookies()
 
   return createServerClient<Database>(
@@ -38,3 +40,24 @@ export async function createClient() {
     }
   )
 }
+
+/**
+ * Create build-time Supabase client without cookie dependencies
+ * For use during static generation (generateStaticParams, etc.)
+ */
+export function createBuildSupabaseClient() {
+  return createSupabaseClient<Database>(
+    supabaseConfig.url,
+    supabaseConfig.anonKey,
+    {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false
+      }
+    }
+  )
+}
+
+// Export backward compatibility aliases
+export const createClient = createServerSupabaseClient
+export const createBuildClient = createBuildSupabaseClient

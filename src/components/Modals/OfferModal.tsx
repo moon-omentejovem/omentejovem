@@ -1,12 +1,6 @@
-import { modalAnimations } from '@/animations'
+import { modalAnimations } from '@/animations/client'
 import * as Dialog from '@radix-ui/react-dialog'
-import {
-  Dispatch,
-  ReactNode,
-  SetStateAction,
-  useContext,
-  useState
-} from 'react'
+import { Dispatch, ReactNode, SetStateAction, useState } from 'react'
 import { Icons } from '../Icons'
 
 interface OfferModalProperties {

@@ -1,298 +1,124 @@
 # AGENTS.md — Omentejovem CMS (Supabase)
 
-> **Objetivo**
+> **ARQUIVO REORGANIZADO**
 >
-> CMS modular e replicável usando **Supabase** + **Next.js 14** para portfólio de NFTs (arte digital). Painel admin para gestão e páginas públicas: **Home**, **Portfolio**, **1/1**, **Series**, **Artifacts** e **Sobre**.
+> Este arquivo foi reorganizado em módulos menores para melhor manutenção. O contexto completo para agentes de IA agora está centralizado na pasta `.agents/`.
 
 ---
 
-## 1) Stack Técnica
+## 📋 Nova Estrutura de Documentação
 
-**✅ Implementado**
+### 🤖 Para Agentes de IA
 
-- **Frontend**: Next.js 14 (App Router), TypeScript, Tailwind CSS
-- **Banco**: Supabase Postgres + RLS
-- **Auth**: Supabase Auth (magic link) + middleware de proteção
-- **Storage**: Supabase Storage (`media`, `cached-images`)
-- **Editor**: Tiptap para rich text (descrições, página Sobre)
-- **UI**: Flowbite React, Sonner (notificações)
-- **Forms**: AdminForm + AdminTable reutilizáveis via descriptors
+**Contexto técnico completo** na pasta `.agents/`:
 
-**Padrões Estabelecidos**
+- **[AI_CONTEXT_MASTER.md](.agents/AI_CONTEXT_MASTER.md)** - 📋 Arquivo índice principal
+- **[ARCHITECTURE_PATTERNS.md](.agents/ARCHITECTURE_PATTERNS.md)** - 🏗️ Padrões Services e BaseService
+- **[TECH_STACK.md](.agents/TECH_STACK.md)** - 🛠️ Stack técnica completa
+- **[DEVELOPMENT_PATTERNS.md](.agents/DEVELOPMENT_PATTERNS.md)** - 📝 Convenções de código
+- **[DATABASE_SCHEMA.md](.agents/DATABASE_SCHEMA.md)** - 🗃️ Schema Supabase e RLS
+- **[BACKEND_ORIENTED_APPROACH.md](.agents/BACKEND_ORIENTED_APPROACH.md)** - 🎯 Abordagem backend-oriented
+- **[DATA_MIGRATION_CONTEXT.md](.agents/DATA_MIGRATION_CONTEXT.md)** - 📁 Contexto de migrações
+- **[DEPLOYMENT_CONTEXT.md](.agents/DEPLOYMENT_CONTEXT.md)** - 🚀 Deploy e produção
+- **[PR_GUIDELINES.md](.agents/PR_GUIDELINES.md)** - 📝 Diretrizes para PRs
 
-- Notificações: `toast.success`/`toast.error` (Sonner)
-- Cliente Supabase: `createClient` para browser/server
-- Upload de imagens: Storage bucket `media` com otimização
-- Admin protection: middleware + RLS policies
+### 📚 Para Desenvolvedores
 
----
+**Documentação geral** na pasta `docs/`:
 
-## 2) Schema do Banco
+- **[SUPABASE-INTEGRATION.md](docs/SUPABASE-INTEGRATION.md)** - Como usar Supabase corretamente
+- **[BACKEND_ORIENTED_FRONTEND.md](docs/BACKEND_ORIENTED_FRONTEND.md)** - Arquitetura backend-oriented
+- **[SEED-SYSTEM.md](docs/SEED-SYSTEM.md)** - Sistema de seed automático
 
-**✅ Implementado (ver `supabase-setup.sql`)**
+### 📖 Arquivo Principal
 
-```sql
--- Core tables
-artworks (id, slug, title, description JSONB, token_id, mint_date,
-         mint_link, type, editions_total, image_url, is_featured,
-         is_one_of_one, posted_at, created/updated_at)
-
-series (id, slug, name, cover_image_url, created/updated_at)
-
-series_artworks (series_id, artwork_id) -- N:N junction
-
-artifacts (id, title, description, highlight_video_url,
-          link_url, image_url, created/updated_at)
-
-about_page (id, content JSONB, updated_at) -- singleton
-
-user_roles (user_id, role) -- admin permissions
-```
-
-**RLS**: leitura pública, escrita apenas para admins (`is_admin()` function)
+- **[README.md](README.md)** - Visão geral completa do projeto
 
 ---
 
-## 3) Funcionalidades Implementadas
+## 🎯 Resumo Executivo
 
-**✅ Páginas Públicas**
+**Sistema funcional e pronto para produção**:
 
-- **Home**: artworks em destaque (`is_featured = true`)
-- **Portfolio**: todos artworks ordenados por `posted_at`
-- **1/1**: peças únicas (`is_one_of_one = true`)
-- **Series**: coleções com artworks relacionados
-- **Artifacts**: conteúdo adicional
-- **Sobre**: página singleton com rich text editor
-
-**✅ Painel Admin (`/admin`)**
-
-- **Auth**: magic link + middleware protection
-- **Artworks**: CRUD completo com upload/proxy de imagens
-- **Series**: gestão de coleções + relacionamentos N:N
-- **Artifacts**: conteúdo adicional simples
-- **About**: editor Tiptap para página única
-- **Users**: gestão de roles de admin
-
-**✅ Componentes Admin**
-
-- `AdminTable`: tabela reutilizável via descriptors
-- `AdminForm`: formulários dinâmicos (text, tiptap, upload, relations)
-- `TiptapEditor`: rich text com toolbar (bold, italic, lists, links, images)
-- `RelationPicker`: seleção múltipla para relacionamentos
-
-**✅ APIs Admin**
-
-- **REST CRUD**: `/api/admin/{artworks,series,artifacts}`
-- **Auth**: `/api/admin/auth`, user roles, logout
-- **Seeding**: `/api/admin/seed` (import JSONs)
-- **Image proxy**: `/api/images/proxy` (OpenSea URLs)
+- ✅ **CMS Completo** - Admin panel com CRUD para artworks, séries e artifacts
+- ✅ **Páginas Públicas** - Portfolio otimizado com 249+ páginas estáticas
+- ✅ **Arquitetura Services** - BaseService pattern production-ready
+- ✅ **Migração Concluída** - 95 artworks, 5 séries, 44 relacionamentos
+- ✅ **Performance Otimizada** - Build sem erros DYNAMIC_SERVER_USAGE
+- ✅ **Deploy Automático** - Seed system integrado ao Vercel
 
 ---
 
-## 4) Descriptor Pattern (Replicabilidade)
+## 🔧 Status Técnico Atual
 
-**Sistema de Descriptors** para criar CRUDs rapidamente:
+### Arquitetura Implementada
 
 ```typescript
-// Exemplo: artworksDescriptor
-{
-  table: 'artworks',
-  title: 'Artworks',
-  list: [
-    { key: 'title', label: 'Title', render: 'text' },
-    { key: 'image_url', label: 'Image', render: 'image' },
-    { key: 'description', label: 'Description', render: 'clamp' }
-  ],
-  form: [
-    { key: 'title', type: 'text', required: true },
-    { key: 'slug', type: 'slug', from: 'title' },
-    { key: 'description', type: 'tiptap' },
-    { key: 'series', type: 'relation-multi', relation: { table: 'series' }}
-  ]
+// Padrão BaseService (Production-Ready)
+export abstract class BaseService {
+  protected static async getSupabaseClient() {
+    // Context detection: build vs runtime
+    return await createProductionClient()
+  }
+
+  protected static async executeQuery<T>(queryFn) {
+    // Centralized error handling
+  }
+}
+
+// Services especializados
+export class ArtworkService extends BaseService {
+  static getArtworks = cache(async (filters) => {
+    // React cache() + error handling
+  })
 }
 ```
 
-**Para adicionar nova entidade**:
+### Resultados de Build
 
-1. Criar tabela no Supabase
-2. Gerar tipos TS (`supabase gen types`)
-3. Criar descriptor em `/types/descriptors.ts`
-4. Implementar rota API `/api/admin/{table}`
-5. Criar páginas admin usando `AdminTable`/`AdminForm`
-
----
-
-## 5) Setup & Configuração
-
-**Variáveis de Ambiente**
-
-```bash
-NEXT_PUBLIC_SUPABASE_URL=https://seu-projeto.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=sua_anon_key
-SUPABASE_SERVICE_ROLE_KEY=sua_service_role_key
-```
-
-**Primeira configuração**:
-
-1. Executar `supabase-setup.sql` no SQL Editor
-2. Configurar storage bucket `media` e `cached-images`
-3. Criar primeiro admin via `/admin/setup`
-4. Import dados via `/api/admin/seed`
+- **✅ 249+ páginas estáticas** geradas
+- **✅ Zero DYNAMIC_SERVER_USAGE** errors
+- **✅ Build time** ~60-90 segundos
+- **✅ Bundle size** < 2MB total
 
 ---
 
-## 6) Próximos Passos
+## 🚨 Diretrizes Importantes
 
-**🎯 Roadmap**
+### ✅ O que Usar
 
-- [ ] Sync automático OpenSea (metadados + cache de imagens)
-- [ ] Otimização de imagens (WebP/AVIF)
-- [ ] Paginação avançada (cursor-based)
-- [ ] Search/filtros avançados
-- [ ] Backup/restore de dados
-- [ ] Analytics e metrics
+- **Services APENAS** - Nunca cliente Supabase direto
+- **BaseService pattern** - Sempre herdar de BaseService
+- **React cache()** - Automático nos Services
+- **Static generation** - generateStaticParams implementado
 
-**🔧 Tech Debt**
+### ❌ O que Evitar
 
-- [ ] Testes unitários e E2E
-- [ ] Error boundaries
-- [ ] Loading states unificados
-- [ ] SEO optimization (meta tags, sitemap)
+- **Cliente Supabase direto** em pages/components
+- **Lógica de negócio** em utils/supabase
+- **Multiple sources of truth** - Backend é única fonte
+- **Páginas sem generateStaticParams** para rotas dinâmicas
 
 ---
 
-## 7) Agentes de Desenvolvimento
+## 📄 Migração do Contexto
 
-### 7.1 Schema Agent
+Este arquivo original foi **reorganizado** para melhor manutenção:
 
-**Tarefa**: Manter consistência do banco e tipos TS
-**Input**: Mudanças no schema
-**Output**: SQL migrations + tipos atualizados
+1. **Contexto técnico para IA** → `.agents/` (9 arquivos especializados)
+2. **Documentação geral** → `docs/` (3 arquivos principais)
+3. **Visão geral** → `README.md` (arquivo principal)
 
-### 7.2 CRUD Agent
+**Benefícios**:
 
-**Tarefa**: Gerar CRUDs via descriptors
-**Input**: Novo descriptor ou modificações
-**Output**: Páginas admin + APIs completas
-
-### 7.3 Content Agent
-
-**Tarefa**: Gerenciar rich content (Tiptap)
-**Input**: Texto/markdown simples
-**Output**: JSON Tiptap estruturado
-
-### 7.4 Sync Agent
-
-**Tarefa**: Integração OpenSea/external APIs
-**Input**: URLs de NFT/metadados
-**Output**: Dados normalizados + cache
+- ✅ Contexto modular e específico
+- ✅ Manutenção mais fácil
+- ✅ Melhor organização por tipo de uso
+- ✅ Referências centralizadas
 
 ---
 
-## 8) Padrões de Código
+**Para acesso rápido ao contexto completo, comece por**: [`.agents/AI_CONTEXT_MASTER.md`](.agents/AI_CONTEXT_MASTER.md)
 
-**✅ Boas práticas implementadas**
-
-- TypeScript strict mode
-- Supabase RLS + middleware auth
-- Error handling com try/catch + toast
-- Responsive design (Tailwind)
-- Performance: Next.js optimization + caching
-- Accessibility: semantic HTML + aria labels
-
-**🔄 Convenções**
-
-- Server Components por padrão
-- Client Components apenas quando necessário (`'use client'`)
-- Consistent naming: camelCase (TS), kebab-case (URLs)
-- Centralização: configs em `/lib`, utils em `/utils`
-
----
-
-## 9) PR Guidelines
-
-### 9.1 Título Padrão (Inglês)
-
-```
-<type>: <concise description in English>
-```
-
-**Tipos**: `feat`, `fix`, `refactor`, `style`, `docs`, `chore`, `perf`, `test`
-
-**Exemplo**: `refactor: unify artwork hooks and improve fetching logic`
-
-### 9.2 Conteúdo da PR (Português)
-
-Todo o conteúdo da PR deve ser em **português** para facilitar a legibilidade e apresentação para o cliente. Apenas o título deve permanecer em inglês para padronização.
-
-```markdown
-## 📋 Resumo das Alterações
-
-[Descrição concisa das mudanças principais em português]
-
-## ✨ Principais Funcionalidades
-
-### 🆕 Novas Funcionalidades
-
-- **Funcionalidade**: [`/caminho/para/arquivo`](caminho) - Descrição da nova funcionalidade
-
-### 🔧 Melhorias Existentes
-
-- **Componente**: Descrição das melhorias implementadas
-
-## 🔄 Mudanças Técnicas
-
-### 📦 Atualizações de Dependências
-
-- Pacote: versão anterior → nova versão (se aplicável)
-
-### 🗃️ Mudanças no Sistema de Dados
-
-- Descrição das alterações de schema/queries (se aplicável)
-
-## 🎯 Experiência do Usuário
-
-### ✅ Melhorias de Performance/Interface
-
-- Descrição das melhorias na interface e interações
-
-## 🔗 Arquivos Modificados
-
-### Novas funcionalidades
-
-- [`caminho/para/arquivo`](caminho) - Descrição da funcionalidade
-
-### Arquivos aprimorados
-
-- [`caminho/para/arquivo`](caminho) - Descrição das melhorias
-
-### Arquivos removidos (se aplicável)
-
-- **Removido**: `caminho/para/arquivo` - Motivo da remoção
-
-## ⚠️ Mudanças que Quebram Compatibilidade (se aplicável)
-
-- Descrição de breaking changes
-- Guia de migração quando necessário
-
-## 🧪 Testes Realizados
-
-- [x] Lista de verificações testadas
-- [x] Funcionalidades validadas
-
-## ✅ Impacto
-
-[Resumo do impacto geral das mudanças no projeto]
-```
-
-### 9.3 Diretrizes Importantes
-
-- **Título em inglês**: Para consistência técnica e padrões de versionamento
-- **Conteúdo em português**: Para clareza na comunicação com stakeholders e clientes
-- **Emojis**: Usar para melhor organização visual e quick scanning
-- **Links relativos**: Sempre usar links para arquivos modificados quando relevante
-- **Seções opcionais**: Incluir apenas seções relevantes para a PR específica
-
----
-
-**Status Atual**: Sistema funcional e pronto para produção. Admin completo, páginas públicas implementadas, infraestrutura de upload e proxy de imagens funcionando.
+**Última reorganização**: Setembro 2025
+**Status**: ✅ Produção-ready com documentação modular

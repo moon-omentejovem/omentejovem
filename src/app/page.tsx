@@ -1,4 +1,4 @@
-import { getArtworksServer } from '@/lib/server-queries'
+import { ArtworkService } from '@/services'
 import type { HomeImage } from '@/types/home'
 import { cookies } from 'next/headers'
 import HomeContent from './home/content'
@@ -9,15 +9,13 @@ export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
 export default async function Home() {
-  const artworks = await getArtworksServer({
-    limit: 10,
-    featured: true,
-    random: true
-  })
-  const images: HomeImage[] = artworks.map((artwork) => ({
+  // Use new service architecture
+  const { featuredArtworks, error } = await ArtworkService.getHomepageData()
+  
+  const images: HomeImage[] = featuredArtworks.map((artwork: any) => ({
     title: artwork.title || '',
-    imageUrl: artwork.image_url || '',
-    createdAt: artwork.posted_at || ''
+    imageUrl: artwork.image?.url || '',
+    createdAt: artwork.postedAt || ''
   }))
 
   const closeNewsletter = cookies().get('newsletter_dismissed')

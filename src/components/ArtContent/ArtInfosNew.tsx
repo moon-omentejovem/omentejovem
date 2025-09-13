@@ -6,7 +6,7 @@ import {
   artInfoButtonAnimation,
   resetArtInfo,
   resetButtonInfo
-} from '@/animations'
+} from '@/animations/client'
 import { CustomIcons } from '@/assets/icons'
 import { ArtDetails } from '@/components/ArtDetails'
 import { ArtLinks } from '@/components/ArtLinks'
@@ -44,12 +44,11 @@ export function ArtInfosNew({
     selectedArtwork.tokenId === '' ||
     selectedArtwork.tokenId === '0x0000000000000000000000000000000000000000'
 
-  console.log('hasVideo', hasVideo)
 
-  const onChangeToOtherSlide = (index: number) => {
+  const onChangeToOtherSlide = async (index: number) => {
     onChangeSlideIndex(index)
     setShowDetails(false)
-    resetButtonInfo()
+    await resetButtonInfo()
   }
 
   function handleMoreSlides() {
@@ -266,9 +265,9 @@ export function ArtInfosNew({
               <button
                 aria-label="Open art infos"
                 className="group relative flex items-center justify-center w-10 h-10"
-                onClick={() => {
+                onClick={async () => {
                   setShowDetails(!showDetails)
-                  artInfoButtonAnimation()
+                  await artInfoButtonAnimation()
                 }}
                 disabled={isAnimating}
               >

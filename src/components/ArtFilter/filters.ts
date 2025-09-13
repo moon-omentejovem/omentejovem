@@ -1,9 +1,8 @@
 'use client'
 
-import { NFT } from '@/api/resolver/types'
+import { NFT } from '@/types/legacy'
 import {
   MANIFOLD_NFTS,
-  POAP_NFTS,
   RARIBLE_NFTS,
   SUPERRARE_NFTS,
   TRANSIENT_NFTS

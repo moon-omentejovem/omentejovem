@@ -1,1 +1,1 @@
-export * from '@/api/resolver/types'
+export * from '@/types/legacy'
