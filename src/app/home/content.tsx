@@ -21,7 +21,7 @@ export default function HomeContent({
   const images: HomeImage[] = data
     ? data.map((artwork) => ({
         title: artwork.title,
-        imageUrl: artwork.image.url,
+        imageUrl: artwork.image_url,
         createdAt: artwork.createdAt
       }))
     : initialImages

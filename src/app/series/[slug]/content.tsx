@@ -1,13 +1,13 @@
 'use client'
 
 import { ArtMainContent } from '@/components/ArtContent/ArtMainContent'
-import { ProcessedArtwork } from '@/types/artwork'
+import { Artwork } from '@/types/artwork'
 import { ReactElement, useCallback, useState } from 'react'
 
 interface SeriesContentWrapperProperties {
   email: string
   slug: string
-  initialArtworks: ProcessedArtwork[]
+  initialArtworks: Artwork[]
 }
 
 function InnerCollectionContent({
@@ -17,13 +17,12 @@ function InnerCollectionContent({
 }: {
   email: string
   slug: string
-  artworks: ProcessedArtwork[]
+  artworks: Artwork[]
 }): ReactElement {
-  const [currentArtworks, setCurrentArtworks] =
-    useState<ProcessedArtwork[]>(artworks)
+  const [currentArtworks, setCurrentArtworks] = useState<Artwork[]>(artworks)
   const [selectedArtworkIndex, setSelectedArtworkIndex] = useState(-1)
 
-  const onChangeArtworks = useCallback((newArtworks: ProcessedArtwork[]) => {
+  const onChangeArtworks = useCallback((newArtworks: Artwork[]) => {
     setCurrentArtworks([...newArtworks])
   }, [])
 

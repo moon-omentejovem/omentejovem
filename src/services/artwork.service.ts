@@ -5,7 +5,7 @@
  * Optimized for server components with React cache and proper error handling.
  */
 
-import { type ArtworkWithSeries, type Artwork } from '@/types/artwork'
+import { type Artwork, type ArtworkWithSeries } from '@/types/artwork'
 import type { Database } from '@/types/supabase'
 import { cache } from 'react'
 import { BaseService } from './base.service'

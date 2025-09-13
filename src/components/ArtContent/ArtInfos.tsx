@@ -12,16 +12,16 @@ import { ArtDetails } from '@/components/ArtDetails'
 import { ArtLinks } from '@/components/ArtLinks'
 import { VideoProcessModal } from '@/components/Modals/VideoProcessModal'
 import { cn } from '@/lib/utils'
+import { Artwork } from '@/types/artwork'
 import { HorizontalInCarousel } from '../Carousels/HorizontalInCarousel/HorizontalInCarousel'
 import { ArtDescription } from './ArtDescription'
 import './styles.css'
-import { NFT } from './types'
 import { getMintedOn, resolveExternalLinks } from './utils'
 
 interface ArtInfosProperties {
   email: string
-  selectedArt: NFT
-  slides: NFT[]
+  selectedArt: Artwork
+  slides: Artwork[]
   source: 'portfolio' | '1-1' | 'editions' | string
   onChangeSlideIndex: (index: number) => void
 }
@@ -37,9 +37,8 @@ export function ArtInfos({
   const [isAnimating, setIsAnimating] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
 
-  const hasVideo =
-    selectedArt.contract.address.toLowerCase() ===
-    '0x0000000000000000000000000000000000000000'
+  // Simplified hasVideo logic - can be enhanced later
+  const hasVideo = false
 
   const onChangeToOtherSlide = (index: number) => {
     onChangeSlideIndex(index)
@@ -51,8 +50,12 @@ export function ArtInfos({
     // Busca mais slides
   }
 
-  function wasMinted(nft: NFT) {
-    return true // TODO!!nft.mintedEvent
+  function wasMinted(artwork: Artwork) {
+    return (
+      artwork.token_id &&
+      artwork.token_id !== '' &&
+      artwork.token_id !== '0x0000000000000000000000000000000000000000'
+    )
   }
 
   useEffect(() => {
@@ -78,18 +81,8 @@ export function ArtInfos({
 
   const mintedOn = getMintedOn(selectedArt)
 
-  const optimizedImageUrl =
-    selectedArt.image.cachedUrl ||
-    selectedArt.image.pngUrl ||
-    selectedArt.image.displayUrl ||
-    selectedArt.image.thumbnailUrl ||
-    selectedArt.image.originalUrl ||
-    ''
-
-  const rawImageUrl =
-    selectedArt.raw?.metadata.image ||
-    selectedArt.image.originalUrl ||
-    optimizedImageUrl
+  const optimizedImageUrl = selectedArt.image_url
+  const rawImageUrl = selectedArt.image_url
 
   const videoUrl =
     rawImageUrl
@@ -108,7 +101,7 @@ export function ArtInfos({
             <ArtDetails
               detailedImage={rawImageUrl}
               image={source === 'portfolio' ? optimizedImageUrl : rawImageUrl}
-              name={selectedArt.name || ''}
+              name={selectedArt.title || ''}
             />
           </div>
         </div>
@@ -142,8 +135,12 @@ export function ArtInfos({
               )}
             >
               <ArtDescription
-                description={selectedArt.description || ''}
-                name={selectedArt.name || ''}
+                description={
+                  typeof selectedArt.description === 'string'
+                    ? selectedArt.description
+                    : ''
+                }
+                name={selectedArt.title || ''}
                 mintedOn={mintedOn}
               />
 
@@ -181,12 +178,13 @@ export function ArtInfos({
                         active: false,
                         buttonText: 'Make Offer'
                       }}
-                      views={{
-                        explorer:
-                          selectedArt.chain?.toLowerCase() === 'tezos'
-                            ? `https://tzkt.io/${selectedArt.contract.address}/tokens/${selectedArt.tokenId}`
-                            : `https://etherscan.io/token/${selectedArt.contract.address}?a=${selectedArt.tokenId}`
-                      }}
+                      views={
+                        selectedArt.token_id
+                          ? {
+                              explorer: `https://etherscan.io/token/${selectedArt.token_id}`
+                            }
+                          : {}
+                      }
                     />
                   </div>
 
@@ -230,9 +228,13 @@ export function ArtInfos({
         ) : (
           <div className="flex flex-col w-full max-w-sm justify-end text-sm text-secondary-100 h-full">
             <div className="flex flex-col-reverse mt-4 mb-10 gap-4 xl:flex-col">
-              <p className="break-words">{selectedArt['description']}</p>
+              <p className="break-words">
+                {typeof selectedArt.description === 'string'
+                  ? selectedArt.description
+                  : ''}
+              </p>
 
-              <p className="text-primary-50 underline">{selectedArt['name']}</p>
+              <p className="text-primary-50 underline">{selectedArt.title}</p>
             </div>
             {/* {!(selectedArt as NFT).availablePurchase && (
               <p className="mt-2 grid content-center justify-start border-y-[1px] border-secondary-100 text-sm h-16 px-8 font-bold text-secondary-100">

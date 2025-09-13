@@ -2,12 +2,12 @@
 
 import { ArtMainContent } from '@/components/ArtContent/ArtMainContent'
 import { useArtworks } from '@/hooks'
-import { ProcessedArtwork } from '@/types/artwork'
+import { Artwork } from '@/types/artwork'
 import { ReactElement, useCallback, useEffect, useState } from 'react'
 
 interface EditionsContentProps {
   email: string
-  initialArtworks?: ProcessedArtwork[]
+  initialArtworks?: Artwork[]
 }
 
 export default function EditionsContent({
@@ -23,10 +23,10 @@ export default function EditionsContent({
 
   // Local state for filtering and selection
   const [filteredArtworks, setFilteredArtworks] =
-    useState<ProcessedArtwork[]>(artworks)
+    useState<Artwork[]>(artworks)
   const [selectedArtworkIndex, setSelectedArtworkIndex] = useState(-1)
 
-  const onChangeArtworks = useCallback((newArtworks: ProcessedArtwork[]) => {
+  const onChangeArtworks = useCallback((newArtworks: Artwork[]) => {
     setFilteredArtworks(newArtworks)
   }, [])
 

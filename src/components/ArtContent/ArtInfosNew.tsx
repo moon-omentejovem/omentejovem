@@ -11,15 +11,15 @@ import { CustomIcons } from '@/assets/icons'
 import { ArtDetails } from '@/components/ArtDetails'
 import { ArtLinks } from '@/components/ArtLinks'
 import { cn } from '@/lib/utils'
-import { ProcessedArtwork } from '@/types/artwork'
+import { Artwork } from '@/types/artwork'
 import { addHours, format } from 'date-fns'
 import { HorizontalInCarouselArtwork } from '../Carousels/HorizontalInCarousel/HorizontalInCarouselArtwork'
 import './styles.css'
 
 interface ArtInfosProperties {
   email: string
-  selectedArtwork: ProcessedArtwork
-  slides: ProcessedArtwork[]
+  selectedArtwork: Artwork
+  slides: Artwork[]
   source: 'portfolio' | '1-1' | 'editions' | string
   onChangeSlideIndex: (index: number) => void
 }
@@ -40,10 +40,9 @@ export function ArtInfosNew({
 
   // Check if artwork has video - base on if there's no real token_id (fake/local artworks)
   const hasVideo =
-    !selectedArtwork.tokenId ||
-    selectedArtwork.tokenId === '' ||
-    selectedArtwork.tokenId === '0x0000000000000000000000000000000000000000'
-
+    !selectedArtwork.token_id ||
+    selectedArtwork.token_id === '' ||
+    selectedArtwork.token_id === '0x0000000000000000000000000000000000000000'
 
   const onChangeToOtherSlide = async (index: number) => {
     onChangeSlideIndex(index)
@@ -55,11 +54,11 @@ export function ArtInfosNew({
     // Busca mais slides
   }
 
-  function wasMinted(artwork: ProcessedArtwork) {
+  function wasMinted(artwork: Artwork) {
     return (
-      artwork.tokenId &&
-      artwork.tokenId !== '' &&
-      artwork.tokenId !== '0x0000000000000000000000000000000000000000'
+      artwork.token_id &&
+      artwork.token_id !== '' &&
+      artwork.token_id !== '0x0000000000000000000000000000000000000000'
     )
   }
 
@@ -81,19 +80,19 @@ export function ArtInfosNew({
   }
 
   // Setup external links - use mint_link from backend as single source of truth
-  const externalLink = selectedArtwork.mintLink
+  const externalLink = selectedArtwork.mint_link
     ? {
-        url: selectedArtwork.mintLink,
+        url: selectedArtwork.mint_link,
         name: 'View NFT'
       }
     : null
 
   // Format mint date
   let mintedOn = ''
-  if (selectedArtwork.mintDate) {
+  if (selectedArtwork.mint_date) {
     try {
       mintedOn = format(
-        addHours(new Date(selectedArtwork.mintDate), 3),
+        addHours(new Date(selectedArtwork.mint_date), 3),
         'd LLLL, yyyy'
       )
     } catch (error) {
@@ -152,11 +151,12 @@ export function ArtInfosNew({
         <div className="md:flex-1 min-w-[200px] xl:min-w-[350px] flex flex-col max-h-full">
           <div className="xl:art-detail-inner-container overflow-hidden flex flex-1 justify-start xl:justify-end">
             <ArtDetails
-              detailedImage={selectedArtwork.image.originalUrl}
+              detailedImage={selectedArtwork.image_url}
               image={
                 source === 'portfolio'
-                  ? selectedArtwork.image.url
-                  : selectedArtwork.image.originalUrl
+                  ? selectedArtwork.image_cached_path ||
+                    selectedArtwork.image_url
+                  : selectedArtwork.image_url
               }
               name={selectedArtwork.title || ''}
             />
@@ -251,7 +251,7 @@ export function ArtInfosNew({
                       views={
                         wasMinted(selectedArtwork)
                           ? {
-                              explorer: `https://etherscan.io/token/${selectedArtwork.tokenId}`
+                              explorer: `https://etherscan.io/token/${selectedArtwork.token_id}`
                             }
                           : {}
                       }
@@ -326,7 +326,7 @@ export function ArtInfosNew({
               className="w-auto h-auto max-w-full max-h-[90vh] rounded-lg"
               controls
               autoPlay
-              src={`${selectedArtwork.image.originalUrl.replace('/new_series/', '/new_series/videos/').replace('.jpg', '.mp4')}`}
+              src={`${selectedArtwork.image_url.replace('/new_series/', '/new_series/videos/').replace('.jpg', '.mp4')}`}
             >
               <track kind="captions" srcLang="en" label="English" />
               Your browser does not support the video tag.

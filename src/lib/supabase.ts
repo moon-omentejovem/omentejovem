@@ -9,8 +9,8 @@
 
 import { TABLES } from '@/lib/supabase/config'
 import type { Database } from '@/types/supabase'
-import { createClient } from '@/utils/supabase/client'
 import { shuffle } from '@/utils/arrays'
+import { createClient } from '@/utils/supabase/client'
 
 // Client-side helper functions - use only in client components
 const supabase = createClient()

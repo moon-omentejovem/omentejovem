@@ -6,12 +6,12 @@ import { artInfosCollectionsAnimation } from '@/animations/client'
 import { VerticalCarousel } from '../Carousels/VerticalCarousel/VerticalCarousel'
 import { ArtInfos } from './ArtInfos'
 import './styles.css'
-import { NFT } from './types'
+import { Artwork } from './types'
 
 interface ArtInfosCollectionsProperties {
   email: string
-  selectedArt: NFT
-  slides: NFT[]
+  selectedArt: Artwork
+  slides: Artwork[]
   onChangeSlideIndex: (index: number) => void
   currentImageIndex: number
 }
@@ -73,12 +73,8 @@ export function ArtInfosCollections({
         slideIndex={currentImageIndex}
         onChangeSlideIndex={onChangeSlideIndex}
         slides={slides.map((art) => ({
-          name: art.name || '',
-          nftCompressedHdUrl:
-            art.image.pngUrl ||
-            art.image.cachedUrl ||
-            art.image.originalUrl ||
-            ''
+          name: art.title || '',
+          nftCompressedHdUrl: art.image_cached_path || ''
         }))}
       />
       {renderContent()}

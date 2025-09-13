@@ -1,7 +1,7 @@
 'use client'
 
 import { useCarouselNavigation } from '@/hooks/useCarouselNavigation'
-import { ProcessedArtwork } from '@/types/artwork'
+import { Artwork } from '@/types/artwork'
 import { ReactElement, useCallback, useState } from 'react'
 import { ArtFilterNew as ArtFilter } from '../ArtFilter/ArtFilterNew'
 import { HorizontalCarousel } from '../Carousels/HorizontalCarousel/HorizontalCarousel'
@@ -11,9 +11,9 @@ import { ArtInfosNew as ArtInfos } from './ArtInfosNew'
 interface ArtMainContentProperties {
   email: string
   source: 'portfolio' | '1-1' | 'editions' | string
-  unfilteredArtworks: ProcessedArtwork[]
-  onChangeArtworks: (artworks: ProcessedArtwork[]) => void
-  artworks: ProcessedArtwork[]
+  unfilteredArtworks: Artwork[]
+  onChangeArtworks: (artworks: Artwork[]) => void
+  artworks: Artwork[]
   selectedArtworkIndex: number
   onChangeSelectedArtworkIndex: (index: number) => void
 }
@@ -69,7 +69,7 @@ export function ArtMainContent({
           loading={loading}
           slides={artworks?.map((artwork) => ({
             name: artwork.title || '',
-            nftCompressedHdUrl: artwork.image.url,
+            nftCompressedHdUrl: artwork.image_url,
             slug: artwork.slug
           }))}
           redirectSource={source}
@@ -92,7 +92,7 @@ export function ArtMainContent({
         onChangeSlideIndex={onChangeSelectedArtworkIndex}
         slides={artworks.map((artwork) => ({
           name: artwork.title || '',
-          nftCompressedHdUrl: artwork.image.url,
+          nftCompressedHdUrl: artwork.image_url,
           slug: artwork.slug
         }))}
         redirectSource={source}
