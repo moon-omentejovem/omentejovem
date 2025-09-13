@@ -6,10 +6,10 @@
  * Útil antes de migrações importantes ou como backup de segurança
  */
 
-import { createClient } from '@supabase/supabase-js'
+const {  createClient  } = require('@supabase/supabase-js')
 import * as dotenv from 'dotenv'
-import fs from 'fs/promises'
-import path from 'path'
+const fs = require('fs/promises')
+const path = require('path')
 
 dotenv.config()
 
@@ -113,8 +113,8 @@ async function backupDatabase() {
   console.log(`   ⏰ ${timestamp}`)
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (require.main === module) {
   backupDatabase().catch(console.error)
 }
 
-export { backupDatabase }
+module.exports = { backupDatabase  }

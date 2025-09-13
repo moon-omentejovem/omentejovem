@@ -7,17 +7,17 @@
  * 3. Atualiza o campo video_url na tabela artworks
  */
 
-import { createClient } from '@supabase/supabase-js'
-import dotenv from 'dotenv'
-import fs from 'fs'
-import path from 'path'
-import { fileURLToPath } from 'url'
+const {  createClient  } = require('@supabase/supabase-js')
+const dotenv = require('dotenv')
+const fs = require('fs')
+const path = require('path')
+const {  fileURLToPath  } = require('url')
 
 // Carregar variáveis de ambiente
 dotenv.config()
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+
+
 
 // Configuração do Supabase
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL

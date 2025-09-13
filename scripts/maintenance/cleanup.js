@@ -8,7 +8,7 @@
  * - Otimiza relacionamentos
  */
 
-import { createClient } from '@supabase/supabase-js'
+const {  createClient  } = require('@supabase/supabase-js')
 import * as dotenv from 'dotenv'
 
 dotenv.config()
@@ -224,11 +224,11 @@ async function cleanup(options = {}) {
 }
 
 // CLI
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (require.main === module) {
   const args = process.argv.slice(2)
   const dryRun = args.includes('--dry-run')
 
   cleanup({ dryRun }).catch(console.error)
 }
 
-export { cleanup }
+module.exports = { cleanup  }

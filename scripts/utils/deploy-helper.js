@@ -8,9 +8,9 @@
  * - Valida integridade do sistema
  */
 
-import { createClient } from '@supabase/supabase-js'
+const {  createClient  } = require('@supabase/supabase-js')
 import * as dotenv from 'dotenv'
-import { healthCheck } from './health-check.js'
+const {  healthCheck  } = require('./health-check.js')
 
 dotenv.config()
 
@@ -100,8 +100,8 @@ async function main() {
   await deployHelper()
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (require.main === module) {
   main().catch(console.error)
 }
 
-export { deployHelper, validateEnvironment }
+module.exports = { deployHelper, validateEnvironment  }

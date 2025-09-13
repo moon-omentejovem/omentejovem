@@ -9,8 +9,8 @@
  * - Performance básica
  */
 
-import { createClient } from '@supabase/supabase-js'
-import * as dotenv from 'dotenv'
+const { createClient } = require('@supabase/supabase-js')
+const dotenv = require('dotenv')
 
 dotenv.config()
 
@@ -192,4 +192,4 @@ async function healthCheck() {
 // Executar automaticamente
 healthCheck().catch(console.error)
 
-export { healthCheck }
+module.exports = { healthCheck  }

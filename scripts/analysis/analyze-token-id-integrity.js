@@ -1,12 +1,12 @@
-import { readFileSync } from 'fs'
-import { createClient } from '@supabase/supabase-js'
-import dotenv from 'dotenv'
-import path from 'path'
-import { fileURLToPath } from 'url'
+const fs = require('fs')
+const { createClient } = require('@supabase/supabase-js')
+const dotenv = require('dotenv')
+const path = require('path')
+const {  fileURLToPath  } = require('url')
 
 // Configure environment
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+
+
 const projectRoot = path.resolve(__dirname, '../..')
 dotenv.config({ path: path.join(projectRoot, '.env') })
 
@@ -77,7 +77,7 @@ async function analyzeTokenIdIntegrity() {
     // 1. Ler dados do token-metadata.json
     console.log('📖 Lendo token-metadata.json...')
     const tokenMetadataPath = path.join(projectRoot, 'public', 'token-metadata.json')
-    const tokenMetadata = JSON.parse(readFileSync(tokenMetadataPath, 'utf8'))
+    const tokenMetadata = JSON.parse(fs.readFileSync(tokenMetadataPath, 'utf8'))
     
     console.log(`✅ Encontrados ${tokenMetadata.length} NFTs no arquivo\n`)
     
@@ -278,9 +278,7 @@ async function analyzeTokenIdIntegrity() {
     const analysisPath = path.join(projectRoot, 'scripts', 'analysis', 'token-id-analysis-result.json')
     console.log(`💾 Salvando análise detalhada em: ${analysisPath}`)
     
-    import('fs').then(fs => {
-      fs.writeFileSync(analysisPath, JSON.stringify(analysis, null, 2))
-    })
+    fs.writeFileSync(analysisPath, JSON.stringify(analysis, null, 2))
     
     console.log('\n🎯 PRÓXIMOS PASSOS')
     console.log('=================')
@@ -307,4 +305,4 @@ analyzeTokenIdIntegrity()
     process.exit(1)
   })
 
-export default analyzeTokenIdIntegrity
+module.exports = analyzeTokenIdIntegrity

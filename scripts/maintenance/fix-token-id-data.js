@@ -1,12 +1,9 @@
-import { readFileSync } from 'fs'
-import { createClient } from '@supabase/supabase-js'
-import dotenv from 'dotenv'
-import path from 'path'
-import { fileURLToPath } from 'url'
+const { readFileSync, writeFileSync } = require('fs')
+const { createClient } = require('@supabase/supabase-js')
+const dotenv = require('dotenv')
+const path = require('path')
 
 // Configure environment
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
 const projectRoot = path.resolve(__dirname, '../..')
 dotenv.config({ path: path.join(projectRoot, '.env') })
 
@@ -253,9 +250,7 @@ async function fixTokenIdData(dryRun = false) {
     const fixesPath = path.join(projectRoot, 'scripts', 'maintenance', 'token-id-fixes-result.json')
     console.log(`\n💾 Salvando resultado das correções em: ${fixesPath}`)
     
-    import('fs').then(fs => {
-      fs.writeFileSync(fixesPath, JSON.stringify(fixes, null, 2))
-    })
+    writeFileSync(fixesPath, JSON.stringify(fixes, null, 2))
     
     if (dryRun) {
       console.log('\n🏃‍♂️ MODO DRY-RUN CONCLUÍDO')
@@ -295,4 +290,4 @@ fixTokenIdData(dryRun)
     process.exit(1)
   })
 
-export default fixTokenIdData
+module.exports = fixTokenIdData
