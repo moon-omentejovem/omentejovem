@@ -15,6 +15,11 @@ export const ArtworkSchema = z.object({
   type: z.string().min(1), // Changed from enum to match DB
   editions_total: z.number().int().positive().nullable().optional(),
   image_url: z.string().min(1), // Required field to match DB
+  raw_image_url: z.string().url().optional().nullable(),
+  video_url: z.string().url().optional().nullable(),
+  blockchain: z.string().optional().nullable(),
+  contract_address: z.string().optional().nullable(),
+  collection_slug: z.string().optional().nullable(),
   is_featured: z.boolean().nullable().optional(),
   is_one_of_one: z.boolean().nullable().optional(),
   posted_at: z.string().nullable().optional(),
@@ -59,7 +64,7 @@ export const SocialSchema = z.object({
   url: z.string().url()
 })
 
-// Exhibition schema  
+// Exhibition schema
 export const ExhibitionSchema = z.object({
   title: z.string().min(1),
   venue: z.string().min(1),
@@ -92,7 +97,8 @@ export const AboutPageSchema = z.object({
 export const CreateArtworkSchema = ArtworkSchema.omit({
   id: true,
   created_at: true,
-  updated_at: true
+  updated_at: true,
+  raw_image_url: true // This is auto-populated during image upload
 })
 
 export const UpdateArtworkSchema = CreateArtworkSchema.partial()
