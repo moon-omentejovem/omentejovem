@@ -100,6 +100,27 @@ export default function SeriesPage() {
     }
   }
 
+  const handleDelete = async (seriesItem: SeriesRow) => {
+    if (!confirm(`Delete "${seriesItem.name}" permanently?`)) return
+
+    try {
+      const response = await fetch(`/api/admin/series/${seriesItem.id}`, {
+        method: 'DELETE'
+      })
+      if (response.ok) {
+        fetchSeries(page)
+        toast.success('Series deleted')
+      } else {
+        const error = await response.json()
+        toast.error(
+          'Failed to delete series: ' + (error.error || 'Unknown error')
+        )
+      }
+    } catch (error) {
+      toast.error('Failed to delete series')
+    }
+  }
+
   // Custom rendering for artworks column to show count and names
   const renderCell = (
     item: SeriesRow,
@@ -146,6 +167,7 @@ export default function SeriesPage() {
           fetchSeries(1, s)
         }}
         onToggleDraft={handleToggleDraft}
+        onDelete={handleDelete}
       />
     </AdminLayout>
   )

@@ -34,6 +34,7 @@ interface AdminTableProps<T = any> {
   onDuplicate?: (item: T) => void
   renderCell?: (item: T, column: ListColumn) => React.ReactNode
   onToggleDraft?: (item: T) => void
+  onDelete?: (item: T) => void
   page?: number
   totalPages?: number
   onPageChange?: (page: number) => void
@@ -49,6 +50,7 @@ export default function AdminTable<T extends Record<string, any>>({
   onDuplicate,
   renderCell,
   onToggleDraft,
+  onDelete,
   page = 1,
   totalPages = 1,
   onPageChange,
@@ -128,7 +130,8 @@ export default function AdminTable<T extends Record<string, any>>({
   const hasActions = Boolean(
     descriptor.actions?.edit ||
       descriptor.actions?.duplicate ||
-      onToggleDraft
+      onToggleDraft ||
+      (descriptor.actions?.delete && onDelete)
   )
 
   const columns = useMemo<ColumnDef<T>[]>(
@@ -149,6 +152,7 @@ export default function AdminTable<T extends Record<string, any>>({
             onEdit={onEdit}
             onDuplicate={onDuplicate}
             onToggleDraft={onToggleDraft}
+            onDelete={onDelete}
           />
         )
       }
@@ -158,6 +162,7 @@ export default function AdminTable<T extends Record<string, any>>({
         onEdit,
         onDuplicate,
         onToggleDraft,
+        onDelete,
         hasActions,
         defaultRenderCell
       ]
@@ -297,7 +302,7 @@ export default function AdminTable<T extends Record<string, any>>({
       {onPageChange && totalPages > 1 && (
         <div className="flex items-center justify-end gap-2 pt-4">
           <Button
-            size="xs"
+            size="sm"
             disabled={page <= 1 || loading}
             onClick={() => onPageChange(page - 1)}
           >
@@ -307,7 +312,7 @@ export default function AdminTable<T extends Record<string, any>>({
             {page} / {totalPages}
           </span>
           <Button
-            size="xs"
+            size="sm"
             disabled={page >= totalPages || loading}
             onClick={() => onPageChange(page + 1)}
           >

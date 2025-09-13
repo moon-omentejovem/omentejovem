@@ -6,7 +6,8 @@ import {
   CopyIcon,
   PencilIcon,
   FileQuestionIcon,
-  CheckCircle2Icon
+  CheckCircle2Icon,
+  Trash2Icon
 } from 'lucide-react'
 
 interface AdminTableActionsProps<T extends { status?: string }> {
@@ -15,6 +16,7 @@ interface AdminTableActionsProps<T extends { status?: string }> {
   onEdit?: (item: T) => void
   onDuplicate?: (item: T) => void
   onToggleDraft?: (item: T) => void
+  onDelete?: (item: T) => void
 }
 
 export default function AdminTableActions<T extends { status?: string }>(
@@ -23,11 +25,13 @@ export default function AdminTableActions<T extends { status?: string }>(
     descriptor,
     onEdit,
     onDuplicate,
-    onToggleDraft
+    onToggleDraft,
+    onDelete
   }: AdminTableActionsProps<T>
 ) {
   const actions = descriptor.actions
-  const hasActions = actions?.edit || actions?.duplicate || onToggleDraft
+  const hasActions =
+    actions?.edit || actions?.duplicate || onToggleDraft || (actions?.delete && onDelete)
 
   if (!hasActions) return null
 
@@ -71,6 +75,20 @@ export default function AdminTableActions<T extends { status?: string }>(
           ) : (
             <FileQuestionIcon className="w-5 h-5" />
           )}
+        </Button>
+      )}
+      {actions?.delete && onDelete && (
+        <Button
+          size="sm"
+          color="failure"
+          onClick={() => {
+            if (confirm('Are you sure you want to delete this item permanently?')) {
+              onDelete(item)
+            }
+          }}
+          aria-label="Delete"
+        >
+          <Trash2Icon className="w-5 h-5" />
         </Button>
       )}
     </div>
