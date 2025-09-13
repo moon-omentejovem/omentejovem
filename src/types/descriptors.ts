@@ -209,6 +209,17 @@ export const artworksDescriptor: ResourceDescriptor = {
         valueKey: 'id'
       }
     }
+    ,
+    {
+      key: 'status',
+      label: 'Status',
+      type: 'select',
+      options: [
+        { value: 'draft', label: 'Draft' },
+        { value: 'published', label: 'Published' }
+      ],
+      required: true
+    }
   ],
   defaultSort: {
     key: 'posted_at',
@@ -235,7 +246,8 @@ export const seriesDescriptor: ResourceDescriptor = {
       render: 'image',
       width: '80px'
     },
-    { key: 'artworks', label: 'Artworks', render: 'text' } // Will show count or names
+    { key: 'artworks', label: 'Artworks', render: 'text' }, // Will show count or names
+    { key: 'status', label: 'Status', render: 'badge' }
   ],
   form: [
     {
@@ -268,6 +280,17 @@ export const seriesDescriptor: ResourceDescriptor = {
         labelKey: 'title',
         valueKey: 'id'
       }
+    }
+    ,
+    {
+      key: 'status',
+      label: 'Status',
+      type: 'select',
+      options: [
+        { value: 'draft', label: 'Draft' },
+        { value: 'published', label: 'Published' }
+      ],
+      required: false
     }
   ],
   defaultSort: {
@@ -325,6 +348,17 @@ export const artifactsDescriptor: ResourceDescriptor = {
       label: 'Image',
       type: 'image',
       placeholder: 'Upload artifact image'
+    }
+    ,
+    {
+      key: 'status',
+      label: 'Status',
+      type: 'select',
+      options: [
+        { value: 'draft', label: 'Draft' },
+        { value: 'published', label: 'Published' }
+      ],
+      required: false
     }
   ],
   defaultSort: {

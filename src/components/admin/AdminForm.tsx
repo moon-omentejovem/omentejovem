@@ -15,6 +15,7 @@ import {
 import { SaveIcon, XIcon } from 'lucide-react'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import RelationPicker from './RelationPicker'
 import TiptapEditor from './TiptapEditor'
@@ -37,6 +38,7 @@ export default function AdminForm<T extends Record<string, any>>({
   const [formData, setFormData] = useState<Record<string, any>>({})
   const [errors, setErrors] = useState<Record<string, string>>({})
   const supabase = createClient()
+  const router = useRouter()
 
   useEffect(() => {
     if (data) {
@@ -175,6 +177,48 @@ export default function AdminForm<T extends Record<string, any>>({
     } catch (error) {
       console.error('Form submission error:', error)
       toast.error('Failed to submit form')
+    }
+  }
+
+  const handlePermanentDelete = async () => {
+    if (!data || !descriptor.actions?.delete) return
+
+    const ok = confirm(
+      `Are you sure you want to permanently delete this ${descriptor.title.slice(
+        0,
+        -1
+      )}? This action cannot be undone.`
+    )
+
+    if (!ok) return
+
+    try {
+      await toast.promise(
+        (async () => {
+          const id = (data as any).id
+          const response = await fetch(`/api/admin/${descriptor.table}/${id}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' }
+          })
+
+          if (!response.ok) {
+            const err = await response.json()
+            throw new Error(err?.error || 'Failed to delete')
+          }
+
+          return true
+        })(),
+        {
+          loading: 'Deleting...',
+          success: `${descriptor.title.slice(0, -1)} deleted`,
+          error: (e) => `Delete failed: ${e.message}`
+        }
+      )
+
+      // Navigate back to list
+      router.push(`/admin/${descriptor.table}`)
+    } catch (error) {
+      console.error('Delete error:', error)
     }
   }
 
@@ -363,14 +407,11 @@ export default function AdminForm<T extends Record<string, any>>({
           <div key={field.key} className="space-y-2">
             <Label htmlFor={field.key} value={field.label || field.key} />
             <div className="flex items-center gap-2">
-              <Label className="mb-2 block" htmlFor="large-file-upload">
-                {!!formData['image_url'] ? 'Change image' : 'Upload image'}
-              </Label>
-              <FileInput id="large-file-upload" />
               <FileInput
                 accept="image/*"
                 onChange={handleFileChange}
                 sizing="lg"
+                placeholder={field.placeholder || 'Upload an image'}
               />
             </div>
             {formData['image_url'] && (
@@ -424,6 +465,16 @@ export default function AdminForm<T extends Record<string, any>>({
         {descriptor.form.map(renderField)}
 
         <div className="flex justify-end space-x-4 pt-6 border-t border-gray-200">
+          {data && descriptor.actions?.delete && (
+            <Button
+              type="button"
+              color="failure"
+              onClick={handlePermanentDelete}
+              className="flex items-center space-x-2"
+            >
+              <span>Delete Permanently</span>
+            </Button>
+          )}
           <Button
             type="button"
             onClick={onCancel}
