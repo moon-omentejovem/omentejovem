@@ -5,51 +5,32 @@ import AdminTable from '@/components/admin/AdminTable'
 import { artifactsDescriptor } from '@/types/descriptors'
 import type { Database } from '@/types/supabase'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { toast } from 'sonner'
 import { useConfirm } from '@/hooks/useConfirm'
+import { useArtifactsPaginated, useDeleteArtifact, useCreateArtifact } from '@/hooks/useArtifacts'
 
 type ArtifactRow = Database['public']['Tables']['artifacts']['Row']
 
 export default function ArtifactsPage() {
   const PAGE_SIZE = 10
-  const [artifacts, setArtifacts] = useState<ArtifactRow[]>([])
-  const [loading, setLoading] = useState(true)
   const [page, setPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
   const [statusFilter, setStatusFilter] = useState('all')
   const router = useRouter()
   const confirm = useConfirm()
 
-  const fetchArtifacts = async (targetPage = 1, status = statusFilter) => {
-    try {
-      setLoading(true)
-      const params = new URLSearchParams({
-        page: String(targetPage),
-        limit: String(PAGE_SIZE)
-      })
-      if (status !== 'all') params.set('status', status)
-      const response = await fetch(`/api/admin/artifacts?${params.toString()}`)
-      if (response.ok) {
-        const { data, total } = await response.json()
-        setArtifacts(data)
-        setTotalPages(Math.max(1, Math.ceil(total / PAGE_SIZE)))
-        setPage(targetPage)
-      } else {
-        toast.error('Failed to load artifacts. Please try again.')
-      }
-    } catch (error) {
-      console.error('Error fetching artifacts:', error)
-      toast.error('Failed to load artifacts. Please check your connection.')
-    } finally {
-      setLoading(false)
-    }
-  }
+  // Use hooks instead of manual fetch
+  const { 
+    data: paginatedData, 
+    isLoading: loading, 
+    error 
+  } = useArtifactsPaginated(page, PAGE_SIZE)
 
-  useEffect(() => {
-    fetchArtifacts(1, statusFilter)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [statusFilter])
+  const deleteArtifactMutation = useDeleteArtifact()
+  const createArtifactMutation = useCreateArtifact()
+
+  const artifacts = paginatedData?.data || []
+  const totalPages = paginatedData?.totalPages || 1
 
   const handleEdit = (artifact: ArtifactRow) => {
     router.push(`/admin/artifacts/${artifact.id}`)
@@ -61,6 +42,7 @@ export default function ArtifactsPage() {
       message: `Are you sure you want to duplicate "${artifact.title}"?`
     })
     if (!ok) return
+
     try {
       const duplicateData = {
         ...artifact,
@@ -70,54 +52,11 @@ export default function ArtifactsPage() {
         updated_at: undefined
       }
 
-      const response = await fetch('/api/admin/artifacts', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(duplicateData)
-      })
-
-      if (response.ok) {
-        fetchArtifacts(page)
-        toast.success('Artifact duplicated successfully!')
-      } else {
-        const errorData = await response.json()
-        toast.error(
-          `Failed to duplicate artifact: ${errorData.error || 'Unknown error'}`
-        )
-      }
-    } catch (error) {
+      await createArtifactMutation.mutateAsync(duplicateData)
+      toast.success('Artifact duplicated successfully!')
+    } catch (error: any) {
       console.error('Error duplicating artifact:', error)
-      toast.error('Failed to duplicate artifact')
-    }
-  }
-
-  const handleDraft = async (artifact: ArtifactRow) => {
-    const currentStatus = artifact.status || 'published'
-    const newStatus = currentStatus === 'draft' ? 'published' : 'draft'
-
-    try {
-      const response = await fetch(`/api/admin/artifacts/${artifact.id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ status: newStatus })
-      })
-
-      if (response.ok) {
-        fetchArtifacts(page)
-        toast.success(`Artifact marked as ${newStatus}`)
-      } else {
-        const errorData = await response.json()
-        toast.error(
-          `Failed to update status: ${errorData.error || 'Unknown error'}`
-        )
-      }
-    } catch (error) {
-      console.error('Error updating artifact status:', error)
-      toast.error('Failed to update status')
+      toast.error(`Failed to duplicate artifact: ${error?.message || 'Unknown error'}`)
     }
   }
 
@@ -129,43 +68,38 @@ export default function ArtifactsPage() {
     if (!ok) return
 
     try {
-      const response = await fetch(`/api/admin/artifacts/${artifact.id}`, {
-        method: 'DELETE'
-      })
-
-      if (response.ok) {
-        fetchArtifacts(page)
-        toast.success('Artifact deleted')
-      } else {
-        const errorData = await response.json()
-        toast.error(
-          `Failed to delete artifact: ${errorData.error || 'Unknown error'}`
-        )
-      }
-    } catch (error) {
-      toast.error('Failed to delete artifact')
+      await deleteArtifactMutation.mutateAsync(artifact.id)
+      toast.success('Artifact deleted successfully!')
+    } catch (error: any) {
+      console.error('Error deleting artifact:', error)
+      toast.error(`Failed to delete artifact: ${error?.message || 'Unknown error'}`)
     }
+  }
+
+  if (error) {
+    return (
+      <AdminLayout>
+        <div className="p-6">
+          <div className="text-red-500">
+            Error loading artifacts. Please try again.
+          </div>
+        </div>
+      </AdminLayout>
+    )
   }
 
   return (
     <AdminLayout>
-      <AdminTable
-        descriptor={artifactsDescriptor}
-        data={artifacts}
-        loading={loading}
-        onEdit={handleEdit}
-        onDuplicate={handleDuplicate}
-        onToggleDraft={handleDraft}
-        onDelete={handleDelete}
-        page={page}
-        totalPages={totalPages}
-        onPageChange={(p) => fetchArtifacts(p)}
-        statusFilter={statusFilter}
-        onStatusFilterChange={(s) => {
-          setStatusFilter(s)
-          fetchArtifacts(1, s)
-        }}
-      />
+      <div className="p-6">
+        <AdminTable
+          descriptor={artifactsDescriptor}
+          data={artifacts}
+          onEdit={handleEdit}
+          onDuplicate={handleDuplicate}
+          onDelete={handleDelete}
+          loading={loading}
+        />
+      </div>
     </AdminLayout>
   )
 }

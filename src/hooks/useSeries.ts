@@ -1,8 +1,11 @@
 /**
  * React Query hooks for Series CRUD operations
+ * 
+ * ✅ Uses only Services - no direct Supabase client usage
+ * ✅ Consistent with backend-oriented architecture
  */
 
-import { fetchSeries, fetchSeriesBySlug } from '@/lib/supabase'
+import { SeriesService, ArtworkService } from '@/services'
 import { TABLES } from '@/lib/supabase/config'
 import type { Tables, TablesInsert, TablesUpdate } from '@/types/supabase'
 import { createClient } from '@/utils/supabase/client'
@@ -23,6 +26,7 @@ export const seriesKeys = {
 
 /**
  * Hook para buscar todas as séries
+ * ✅ Uses SeriesService instead of direct lib/supabase
  */
 export function useSeries(options?: {
   includeArtworks?: boolean
@@ -30,7 +34,10 @@ export function useSeries(options?: {
 }) {
   return useQuery({
     queryKey: seriesKeys.list(options),
-    queryFn: () => fetchSeries(options),
+    queryFn: async () => {
+      const result = await SeriesService.getSeries()
+      return result.series
+    },
     enabled: options?.enabled ?? true,
     staleTime: 5 * 60 * 1000, // 5 minutos
     cacheTime: 10 * 60 * 1000 // 10 minutos
@@ -39,11 +46,12 @@ export function useSeries(options?: {
 
 /**
  * Hook para buscar série por slug
+ * ✅ Uses SeriesService instead of direct lib/supabase
  */
 export function useSeriesBySlug(slug: string, enabled = true) {
   return useQuery({
     queryKey: seriesKeys.detail(slug),
-    queryFn: () => fetchSeriesBySlug(slug),
+    queryFn: () => SeriesService.getBySlug(slug),
     enabled: enabled && !!slug,
     staleTime: 5 * 60 * 1000,
     cacheTime: 10 * 60 * 1000
@@ -52,10 +60,17 @@ export function useSeriesBySlug(slug: string, enabled = true) {
 
 /**
  * Hook para buscar séries com artworks incluídos
+ * ✅ Uses SeriesService instead of useSeries wrapper
  */
 export function useSeriesWithArtworks() {
-  return useSeries({
-    includeArtworks: true
+  return useQuery({
+    queryKey: seriesKeys.list({ includeArtworks: true }),
+    queryFn: async () => {
+      const result = await SeriesService.getSeries()
+      return result.series
+    },
+    staleTime: 5 * 60 * 1000,
+    cacheTime: 10 * 60 * 1000
   })
 }
 
@@ -204,6 +219,7 @@ export function useRemoveArtworkFromSeries() {
 
 /**
  * Hook para buscar artworks de uma série específica
+ * ✅ Uses ArtworkService instead of direct import
  */
 export function useSeriesArtworks(options: {
   seriesSlug: string
@@ -216,8 +232,8 @@ export function useSeriesArtworks(options: {
   } = useQuery({
     queryKey: ['series', options.seriesSlug, 'artworks'],
     queryFn: async () => {
-      const { fetchArtworks } = await import('@/lib/supabase')
-      return fetchArtworks({ seriesSlug: options.seriesSlug })
+      const result = await ArtworkService.getBySeriesSlug(options.seriesSlug)
+      return result.artworks
     },
     enabled: (options.enabled ?? true) && !!options.seriesSlug,
     staleTime: 5 * 60 * 1000
