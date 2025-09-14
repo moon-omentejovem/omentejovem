@@ -1,6 +1,6 @@
 /**
  * Auth utilities
- * 
+ *
  * ⚠️  DEPRECATED: Logic moved to AuthService
  * ✅  Use AuthService instead
  */
@@ -20,9 +20,7 @@ export const signInWithMagicLink = async (
 /**
  * @deprecated Use AuthService.signInWithOAuth instead
  */
-export const signInWithGoogle = async (
-  redirectPath = '/admin/artworks'
-) => {
+export const signInWithGoogle = async (redirectPath = '/admin/artworks') => {
   return AuthService.signInWithOAuth({ provider: 'google', redirectPath })
 }
 

@@ -2,13 +2,17 @@
 
 import AdminLayout from '@/components/admin/AdminLayout'
 import AdminTable from '@/components/admin/AdminTable'
+import {
+  useArtifactsPaginated,
+  useCreateArtifact,
+  useDeleteArtifact
+} from '@/hooks/useArtifacts'
+import { useConfirm } from '@/hooks/useConfirm'
 import { artifactsDescriptor } from '@/types/descriptors'
 import type { Database } from '@/types/supabase'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
-import { useConfirm } from '@/hooks/useConfirm'
-import { useArtifactsPaginated, useDeleteArtifact, useCreateArtifact } from '@/hooks/useArtifacts'
 
 type ArtifactRow = Database['public']['Tables']['artifacts']['Row']
 
@@ -20,10 +24,10 @@ export default function ArtifactsPage() {
   const confirm = useConfirm()
 
   // Use hooks instead of manual fetch
-  const { 
-    data: paginatedData, 
-    isLoading: loading, 
-    error 
+  const {
+    data: paginatedData,
+    isLoading: loading,
+    error
   } = useArtifactsPaginated(page, PAGE_SIZE)
 
   const deleteArtifactMutation = useDeleteArtifact()
@@ -56,7 +60,9 @@ export default function ArtifactsPage() {
       toast.success('Artifact duplicated successfully!')
     } catch (error: any) {
       console.error('Error duplicating artifact:', error)
-      toast.error(`Failed to duplicate artifact: ${error?.message || 'Unknown error'}`)
+      toast.error(
+        `Failed to duplicate artifact: ${error?.message || 'Unknown error'}`
+      )
     }
   }
 
@@ -72,7 +78,9 @@ export default function ArtifactsPage() {
       toast.success('Artifact deleted successfully!')
     } catch (error: any) {
       console.error('Error deleting artifact:', error)
-      toast.error(`Failed to delete artifact: ${error?.message || 'Unknown error'}`)
+      toast.error(
+        `Failed to delete artifact: ${error?.message || 'Unknown error'}`
+      )
     }
   }
 

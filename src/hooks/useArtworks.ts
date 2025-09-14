@@ -1,12 +1,12 @@
 /**
  * React Query hooks for Artworks CRUD operations
- * 
+ *
  * ✅ Uses only Services - no direct Supabase client usage
  * ✅ Consistent with backend-oriented architecture
  */
 
-import { ArtworkService } from '@/services'
 import { TABLES } from '@/lib/supabase/config'
+import { ArtworkService } from '@/services'
 import type { Tables, TablesInsert, TablesUpdate } from '@/types/supabase'
 import { createClient } from '@/utils/supabase/client'
 import { useMutation, useQuery, useQueryClient } from 'react-query'

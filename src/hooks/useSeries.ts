@@ -1,12 +1,12 @@
 /**
  * React Query hooks for Series CRUD operations
- * 
+ *
  * ✅ Uses only Services - no direct Supabase client usage
  * ✅ Consistent with backend-oriented architecture
  */
 
-import { SeriesService, ArtworkService } from '@/services'
 import { TABLES } from '@/lib/supabase/config'
+import { ArtworkService, SeriesService } from '@/services'
 import type { Tables, TablesInsert, TablesUpdate } from '@/types/supabase'
 import { createClient } from '@/utils/supabase/client'
 import { useMutation, useQuery, useQueryClient } from 'react-query'

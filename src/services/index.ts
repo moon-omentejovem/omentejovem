@@ -42,11 +42,11 @@ export type { ProcessedArtifactData } from './artifact.service'
 
 export type { AboutPageData, ProcessedAboutData } from './about.service'
 
-export type { 
-  AuthUser, 
-  AuthState, 
-  LoginOptions, 
-  OAuthOptions 
+export type {
+  AuthState,
+  AuthUser,
+  LoginOptions,
+  OAuthOptions
 } from './auth.service'
 
 export type { ImageUploadResult } from './image-upload.service'

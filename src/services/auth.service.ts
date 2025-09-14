@@ -69,7 +69,7 @@ export class AuthService {
       return { error }
     } catch (error) {
       console.error('Magic link sign in error:', error)
-      return { 
+      return {
         error: error instanceof Error ? error : new Error('Unknown error')
       }
     }
@@ -92,7 +92,7 @@ export class AuthService {
       return { error }
     } catch (error) {
       console.error('OAuth sign in error:', error)
-      return { 
+      return {
         error: error instanceof Error ? error : new Error('Unknown error')
       }
     }
@@ -107,7 +107,7 @@ export class AuthService {
       return { error }
     } catch (error) {
       console.error('Sign out error:', error)
-      return { 
+      return {
         error: error instanceof Error ? error : new Error('Unknown error')
       }
     }
@@ -118,8 +118,11 @@ export class AuthService {
    */
   static async getCurrentUser(): Promise<AuthUser | null> {
     try {
-      const { data: { user }, error } = await this.supabase.auth.getUser()
-      
+      const {
+        data: { user },
+        error
+      } = await this.supabase.auth.getUser()
+
       if (error || !user) {
         return null
       }
@@ -152,7 +155,7 @@ export class AuthService {
         return []
       }
 
-      return data?.map(item => item.role) || []
+      return data?.map((item) => item.role) || []
     } catch (error) {
       console.error('Get user roles error:', error)
       return []
@@ -200,12 +203,15 @@ export class AuthService {
    */
   static async getSession() {
     try {
-      const { data: { session }, error } = await this.supabase.auth.getSession()
+      const {
+        data: { session },
+        error
+      } = await this.supabase.auth.getSession()
       return { session, error }
     } catch (error) {
       console.error('Get session error:', error)
-      return { 
-        session: null, 
+      return {
+        session: null,
         error: error instanceof Error ? error : new Error('Unknown error')
       }
     }
@@ -216,12 +222,15 @@ export class AuthService {
    */
   static async refreshSession() {
     try {
-      const { data: { session }, error } = await this.supabase.auth.refreshSession()
+      const {
+        data: { session },
+        error
+      } = await this.supabase.auth.refreshSession()
       return { session, error }
     } catch (error) {
       console.error('Refresh session error:', error)
-      return { 
-        session: null, 
+      return {
+        session: null,
         error: error instanceof Error ? error : new Error('Unknown error')
       }
     }
