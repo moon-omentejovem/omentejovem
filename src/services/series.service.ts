@@ -6,8 +6,10 @@
  */
 
 import type { Database } from '@/types/supabase'
+import type { SupabaseClient } from '@supabase/supabase-js'
 import { cache } from 'react'
 import { BaseService } from './base.service'
+import { ClientBaseService } from './client-base.service'
 
 // Import types for collections response
 interface CollectionRes {
@@ -257,4 +259,101 @@ export class SeriesService extends BaseService {
 
     return result || { collections: [] }
   })
+
+  // ===============================
+  // CLIENT-SIDE METHODS (for hooks)
+  // ===============================
+
+  /**
+   * Get series with client-side Supabase client
+   * Used in hooks and client components
+   */
+  static async getSeriesWithClient(
+    client: SupabaseClient<Database>,
+    filters: SeriesFilters = {}
+  ): Promise<SeriesData[]> {
+    const { limit, orderBy = 'created_at', ascending = false } = filters
+
+    return ClientBaseService.executeClientQuery(
+      client,
+      async (supabase) => {
+        let query = supabase.from('series').select(`
+            *,
+            artwork_count:series_artworks(count)
+          `)
+
+        if (orderBy) {
+          query = query.order(orderBy, { ascending })
+        }
+
+        if (limit) {
+          query = query.limit(limit)
+        }
+
+        const { data, error } = await query
+
+        if (error) {
+          console.error('Error fetching series:', error)
+          throw error
+        }
+
+        return (data || []).map((series) => ({
+          ...series,
+          artwork_count: Array.isArray(series.artwork_count)
+            ? series.artwork_count.length
+            : 0
+        })) as SeriesData[]
+      },
+      'getSeriesWithClient'
+    )
+  }
+
+  /**
+   * Get series by slug with client-side Supabase client
+   */
+  static async getSeriesBySlugWithClient(
+    client: SupabaseClient<Database>,
+    slug: string
+  ): Promise<SeriesWithArtworks | null> {
+    return ClientBaseService.executeClientQuery(
+      client,
+      async (supabase) => {
+        const { data, error } = await supabase
+          .from('series')
+          .select(
+            `
+            *,
+            artworks:series_artworks(
+              artwork:artworks(
+                id,
+                title,
+                slug,
+                image_url
+              )
+            )
+          `
+          )
+          .eq('slug', slug)
+          .single()
+
+        if (error) {
+          console.error('Error fetching series by slug:', error)
+          throw error
+        }
+
+        if (!data) return null
+
+        // Transform the data structure
+        const transformedData: SeriesWithArtworks = {
+          ...data,
+          artworks: data.artworks
+            ? data.artworks.map((item: any) => item.artwork).filter(Boolean)
+            : []
+        }
+
+        return transformedData
+      },
+      'getSeriesBySlugWithClient'
+    )
+  }
 }

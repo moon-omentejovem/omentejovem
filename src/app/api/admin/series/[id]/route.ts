@@ -99,6 +99,38 @@ export async function PUT(
   }
 }
 
+// PATCH /api/admin/series/[id] - Partial update series (e.g., status)
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const body = await request.json()
+
+    const { data: series, error } = await supabaseAdmin
+      .from('series')
+      .update({
+        ...body,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', params.id)
+      .select()
+      .single()
+
+    if (error) throw error
+
+    revalidateTag('series')
+
+    return NextResponse.json(series)
+  } catch (error) {
+    console.error('Error updating series:', error)
+    return NextResponse.json(
+      { error: 'Failed to update series' },
+      { status: 500 }
+    )
+  }
+}
+
 // DELETE /api/admin/series/[id] - Delete series
 export async function DELETE(
   request: NextRequest,

@@ -1,24 +1,14 @@
 'use client'
 
-import { ImageUploadService } from '@/services/image-upload.service'
+import { useConfirm } from '@/hooks/useConfirm'
 import type { FormField, ResourceDescriptor } from '@/types/descriptors'
 import { createClient } from '@/utils/supabase/client'
-import {
-  Button,
-  FileInput,
-  Label,
-  Select,
-  TextInput,
-  Textarea,
-  ToggleSwitch
-} from 'flowbite-react'
+import { Button } from 'flowbite-react'
 import { SaveIcon, XIcon } from 'lucide-react'
-import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'sonner'
-import RelationPicker from './RelationPicker'
-import TiptapEditor from './TiptapEditor'
+import AdminFormField from './AdminFormField'
 
 interface AdminFormProps<T = any> {
   descriptor: ResourceDescriptor
@@ -39,6 +29,7 @@ export default function AdminForm<T extends Record<string, any>>({
   const [errors, setErrors] = useState<Record<string, string>>({})
   const supabase = createClient()
   const router = useRouter()
+  const confirm = useConfirm()
 
   useEffect(() => {
     if (data) {
@@ -115,12 +106,6 @@ export default function AdminForm<T extends Record<string, any>>({
         fieldValue !== null &&
         fieldValue !== ''
       ) {
-        if (
-          (field.type === 'url' || field.type === 'image') &&
-          !isValidUrl(fieldValue)
-        ) {
-          newErrors[field.key] = 'Please enter a valid URL'
-        }
         if (field.type === 'email' && !isValidEmail(fieldValue)) {
           newErrors[field.key] = 'Please enter a valid email'
         }
@@ -144,15 +129,6 @@ export default function AdminForm<T extends Record<string, any>>({
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
-  }
-
-  const isValidUrl = (string: string): boolean => {
-    try {
-      new URL(string)
-      return true
-    } catch (_) {
-      return false
-    }
   }
 
   const isValidEmail = (email: string): boolean => {
@@ -183,12 +159,13 @@ export default function AdminForm<T extends Record<string, any>>({
   const handlePermanentDelete = async () => {
     if (!data || !descriptor.actions?.delete) return
 
-    const ok = confirm(
-      `Are you sure you want to permanently delete this ${descriptor.title.slice(
+    const ok = await confirm({
+      title: 'Delete permanently',
+      message: `Are you sure you want to permanently delete this ${descriptor.title.slice(
         0,
         -1
       )}? This action cannot be undone.`
-    )
+    })
 
     if (!ok) return
 
@@ -225,234 +202,23 @@ export default function AdminForm<T extends Record<string, any>>({
   const renderField = (field: FormField) => {
     if (!shouldShowField(field)) return null
 
-    const value = formData[field.key] || ''
-    const error = errors[field.key]
-
-    switch (field.type) {
-      case 'text':
-      case 'email':
-      case 'url':
-        return (
-          <div key={field.key} className="space-y-2">
-            <Label htmlFor={field.key} value={field.label || field.key} />
-            <TextInput
-              id={field.key}
-              type={
-                field.type === 'email'
-                  ? 'email'
-                  : field.type === 'url'
-                    ? 'url'
-                    : 'text'
-              }
-              value={value}
-              onChange={(e) => handleInputChange(field.key, e.target.value)}
-              placeholder={field.placeholder}
-              color={error ? 'failure' : undefined}
-              helperText={error}
-            />
-          </div>
-        )
-
-      case 'slug':
-        return (
-          <div key={field.key} className="space-y-2">
-            <Label htmlFor={field.key} value={field.label || field.key} />
-            <TextInput
-              id={field.key}
-              type="text"
-              value={value}
-              onChange={(e) => handleInputChange(field.key, e.target.value)}
-              placeholder={field.placeholder}
-              color={error ? 'failure' : undefined}
-              helperText={error}
-            />
-          </div>
-        )
-
-      case 'number':
-        return (
-          <div key={field.key} className="space-y-2">
-            <Label htmlFor={field.key} value={field.label || field.key} />
-            <TextInput
-              id={field.key}
-              type="number"
-              value={value}
-              onChange={(e) =>
-                handleInputChange(field.key, Number(e.target.value))
-              }
-              placeholder={field.placeholder}
-              min={field.validation?.min}
-              max={field.validation?.max}
-              color={error ? 'failure' : undefined}
-              helperText={error}
-            />
-          </div>
-        )
-
-      case 'date':
-        return (
-          <div key={field.key} className="space-y-2">
-            <Label htmlFor={field.key} value={field.label || field.key} />
-            <TextInput
-              id={field.key}
-              type="date"
-              value={value ? value.split('T')[0] : ''}
-              onChange={(e) => {
-                const dateValue = e.target.value || null
-                handleInputChange(field.key, dateValue)
-              }}
-              color={error ? 'failure' : undefined}
-              helperText={error}
-            />
-          </div>
-        )
-
-      case 'textarea':
-        return (
-          <div key={field.key} className="space-y-2">
-            <Label htmlFor={field.key} value={field.label || field.key} />
-            <Textarea
-              id={field.key}
-              value={value}
-              onChange={(e) => handleInputChange(field.key, e.target.value)}
-              placeholder={field.placeholder}
-              rows={4}
-              color={error ? 'failure' : undefined}
-            />
-            {error && <p className="text-red-600 text-sm">{error}</p>}
-          </div>
-        )
-
-      case 'select':
-        return (
-          <div key={field.key} className="space-y-2">
-            <Label htmlFor={field.key} value={field.label || field.key} />
-            <Select
-              id={field.key}
-              value={value}
-              onChange={(e) => handleInputChange(field.key, e.target.value)}
-              color={error ? 'failure' : undefined}
-            >
-              <option value="">Select an option</option>
-              {field.options?.map((option) => {
-                const optValue =
-                  typeof option === 'string' ? option : option.value
-                const optLabel =
-                  typeof option === 'string' ? option : option.label
-                return (
-                  <option key={optValue} value={optValue}>
-                    {optLabel}
-                  </option>
-                )
-              })}
-            </Select>
-            {error && <p className="text-red-600 text-sm">{error}</p>}
-          </div>
-        )
-
-      case 'switch':
-        return (
-          <div key={field.key} className="py-2">
-            <ToggleSwitch
-              checked={!!value}
-              label={field.label || field.key}
-              onChange={(val) => handleInputChange(field.key, val)}
-            />
-            {error && <p className="text-red-400 text-sm mt-1">{error}</p>}
-          </div>
-        )
-
-      case 'tiptap':
-        return (
-          <div key={field.key} className="space-y-2">
-            <Label htmlFor={field.key} value={field.label || field.key} />
-            <TiptapEditor
-              content={value}
-              onChange={(content) => handleInputChange(field.key, content)}
-              placeholder={field.placeholder}
-            />
-            {error && <p className="text-red-400 text-sm">{error}</p>}
-          </div>
-        )
-
-      case 'image': {
-        const handleFileChange = async (
-          e: React.ChangeEvent<HTMLInputElement>
-        ) => {
-          const file = e.target.files?.[0]
-          if (!file) return
-
-          await toast.promise(
-            (async () => {
-              // Usar o serviço de upload
-              const result = await ImageUploadService.uploadImageWithValidation(
-                file,
-                supabase,
-                descriptor.table
-              )
-
-              // Salvar ambos os paths
-              handleInputChange(field.key, result.optimizedPath)
-              handleInputChange('raw_image_path', result.rawPath)
-            })(),
-            {
-              loading: 'Uploading image...',
-              success: 'Image uploaded successfully!',
-              error: (err) => `Upload failed: ${err.message}`
-            }
-          )
-        }
-
-        return (
-          <div key={field.key} className="space-y-2">
-            <Label htmlFor={field.key} value={field.label || field.key} />
-            <div className="flex items-center gap-2">
-              <FileInput
-                accept="image/*"
-                onChange={handleFileChange}
-                sizing="lg"
-                placeholder={field.placeholder || 'Upload an image'}
-              />
-            </div>
-            {formData['image_url'] && (
-              <div className="mt-2">
-                <Image
-                  src={formData['image_url']}
-                  alt="Preview"
-                  width={640}
-                  height={640}
-                  sizes="640px; (max-width: 640px) 100vw"
-                  className="object-cover rounded-lg border border-gray-200"
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none'
-                  }}
-                />
-              </div>
-            )}
-            {error && <p className="text-red-600 text-sm">{error}</p>}
-          </div>
-        )
-      }
-
-      case 'relation-multi':
-        return (
-          <RelationPicker
-            key={field.key}
-            field={field}
-            value={Array.isArray(value) ? value : []}
-            onChange={(newValue) => handleInputChange(field.key, newValue)}
-            error={error}
-          />
-        )
-
-      default:
-        return null
-    }
+    return (
+      <AdminFormField
+        key={field.key}
+        field={field}
+        value={formData[field.key]}
+        error={errors[field.key]}
+        onChange={(value) => handleInputChange(field.key, value)}
+        onExtraChange={(key, value) => handleInputChange(key, value)}
+        descriptor={descriptor}
+        supabase={supabase}
+      />
+    )
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
+    <div className="max-w-4xl mx-auto px-4">
+      <div className="flex flex-col gap-4 mb-6 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-2xl font-semibold text-gray-900">
           {data ? 'Edit' : 'Create'} {descriptor.title.slice(0, -1)}
         </h1>
@@ -460,17 +226,17 @@ export default function AdminForm<T extends Record<string, any>>({
 
       <form
         onSubmit={handleSubmit}
-        className="space-y-6 bg-white p-6 rounded-lg border border-gray-200"
+        className="space-y-6 bg-white p-4 sm:p-6 rounded-lg border border-gray-200"
       >
         {descriptor.form.map(renderField)}
 
-        <div className="flex justify-end space-x-4 pt-6 border-t border-gray-200">
+        <div className="flex flex-col items-stretch gap-4 pt-6 border-t border-gray-200 sm:flex-row sm:justify-end">
           {data && descriptor.actions?.delete && (
             <Button
               type="button"
               color="failure"
               onClick={handlePermanentDelete}
-              className="flex items-center space-x-2"
+              className="flex items-center justify-center space-x-2 mr-auto"
             >
               <span>Delete Permanently</span>
             </Button>
@@ -479,7 +245,7 @@ export default function AdminForm<T extends Record<string, any>>({
             type="button"
             onClick={onCancel}
             color="gray"
-            className="flex items-center space-x-2"
+            className="flex items-center justify-center space-x-2"
           >
             <XIcon className="w-4 h-4" />
             <span>Cancel</span>
@@ -488,7 +254,7 @@ export default function AdminForm<T extends Record<string, any>>({
             type="submit"
             disabled={loading}
             isProcessing={loading}
-            className="flex items-center space-x-2 bg-orange-500 hover:bg-orange-600 disabled:opacity-50"
+            className="flex items-center justify-center space-x-2 bg-orange-500 hover:bg-orange-600 disabled:opacity-50"
           >
             <SaveIcon className="w-4 h-4" />
             <span>{loading ? 'Saving...' : 'Save'}</span>

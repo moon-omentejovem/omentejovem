@@ -47,14 +47,14 @@ export interface ArtworkData {
 function processArtworkImages(artwork: any): any {
   return {
     ...artwork,
-    // Process optimized image URL
-    image_url: artwork.image_path
-      ? getPublicUrl(artwork.image_path)
-      : artwork.image_url,
+    // Use existing URLs if available, fallback to generating from paths
+    image_url:
+      artwork.image_url ||
+      (artwork.image_path ? getPublicUrl(artwork.image_path) : null),
     // Process raw image URL
-    raw_image_url: artwork.raw_image_path
-      ? getPublicUrl(artwork.raw_image_path)
-      : artwork.raw_image_url,
+    raw_image_url:
+      artwork.raw_image_url ||
+      (artwork.raw_image_path ? getPublicUrl(artwork.raw_image_path) : null),
     // Ensure paths are preserved for potential client-side use
     image_path: artwork.image_path,
     raw_image_path: artwork.raw_image_path

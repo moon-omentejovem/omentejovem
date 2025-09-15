@@ -7,19 +7,26 @@ import { NextRequest, NextResponse } from 'next/server'
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = request.nextUrl
-    const from = parseInt(searchParams.get('from') || '0')
+    const page = parseInt(searchParams.get('page') || '1')
     const limit = parseInt(searchParams.get('limit') || '20')
+    const from = (page - 1) * limit
     const to = from + limit - 1
+    const status = searchParams.get('status')
 
-    const { data, error } = await supabaseAdmin
+    let query = supabaseAdmin
       .from('artifacts')
-      .select('*')
+      .select('*', { count: 'exact' })
       .order('created_at', { ascending: false })
-      .range(from, to)
+
+    if (status && status !== 'all') {
+      query = query.eq('status', status)
+    }
+
+    const { data, count, error } = await query.range(from, to)
 
     if (error) throw error
 
-    return NextResponse.json(data)
+    return NextResponse.json({ data, total: count })
   } catch (error) {
     console.error('Error fetching artifacts:', error)
     return NextResponse.json(

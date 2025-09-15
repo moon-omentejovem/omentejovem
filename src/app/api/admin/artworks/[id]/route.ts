@@ -2,8 +2,29 @@ import { handleApiError } from '@/lib/api-utils'
 import { supabaseAdmin } from '@/lib/supabase-admin'
 import { UpdateArtworkSchema } from '@/types/schemas'
 import type { Database } from '@/types/supabase'
+import { getPublicUrl } from '@/utils/storage'
 import { revalidateTag } from 'next/cache'
 import { NextRequest, NextResponse } from 'next/server'
+
+/**
+ * Process artwork images to ensure URLs are valid
+ */
+function processArtworkImages(artwork: any): any {
+  return {
+    ...artwork,
+    // Use existing URLs if available, fallback to generating from paths
+    image_url:
+      artwork.image_url ||
+      (artwork.image_path ? getPublicUrl(artwork.image_path) : null),
+    // Process raw image URL
+    raw_image_url:
+      artwork.raw_image_url ||
+      (artwork.raw_image_path ? getPublicUrl(artwork.raw_image_path) : null),
+    // Ensure paths are preserved for potential client-side use
+    image_path: artwork.image_path,
+    raw_image_path: artwork.raw_image_path
+  }
+}
 
 // GET /api/admin/artworks/[id] - Get single artwork
 export async function GET(
@@ -26,7 +47,7 @@ export async function GET(
 
     if (error) throw error
 
-    return NextResponse.json(data)
+    return NextResponse.json(processArtworkImages(data))
   } catch (error) {
     console.error('Error fetching artwork:', error)
     return NextResponse.json({ error: 'Artwork not found' }, { status: 404 })

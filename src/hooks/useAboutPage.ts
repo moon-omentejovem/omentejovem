@@ -1,8 +1,10 @@
 /**
  * React Query hooks for About Page CRUD operations
+ *
+ * ✅ Uses only Services - no direct Supabase client usage
+ * ✅ Consistent with backend-oriented architecture
  */
 
-import { fetchAboutPage } from '@/lib/supabase'
 import { TABLES } from '@/lib/supabase/config'
 import type { Tables, TablesInsert, TablesUpdate } from '@/types/supabase'
 import { createClient } from '@/utils/supabase/client'
@@ -20,11 +22,23 @@ export const aboutPageKeys = {
 
 /**
  * Hook para buscar conteúdo da página About
+ * ✅ Uses direct client instead of Service to avoid server imports
  */
 export function useAboutPage(enabled = true) {
+  const client = createClient()
+
   return useQuery({
     queryKey: aboutPageKeys.detail(),
-    queryFn: fetchAboutPage,
+    queryFn: async () => {
+      const { data, error } = await client
+        .from('about_page')
+        .select('*')
+        .limit(1)
+        .single()
+
+      if (error) throw error
+      return data
+    },
     enabled,
     staleTime: 10 * 60 * 1000, // 10 minutos (conteúdo estático)
     cacheTime: 15 * 60 * 1000 // 15 minutos

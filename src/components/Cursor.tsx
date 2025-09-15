@@ -11,7 +11,7 @@ export function Cursor(): ReactElement {
   const cursor = useRef<HTMLDivElement>(null)
   const [mouseX, setMouseX] = useState(0)
   const [mouseY, setMouseY] = useState(0)
-  const [imageSource, setImageSource] = useState(cursorLoop.src)
+  const [imageSource, setImageSource] = useState(cursorLoop)
 
   const changeCursor = useCallback((event: MouseEvent): void => {
     setMouseX(event.clientX)
@@ -21,10 +21,10 @@ export function Cursor(): ReactElement {
   const handleMouseClick = useCallback((event: MouseEvent): void => {
     gsap.to(cursor.current, {
       onStart: () => {
-        setImageSource(cursorClick.src)
+        setImageSource(cursorClick)
       },
       onComplete: () => {
-        setImageSource(cursorLoop.src)
+        setImageSource(cursorLoop)
       }
     })
   }, [])
