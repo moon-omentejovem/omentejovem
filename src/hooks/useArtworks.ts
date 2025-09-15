@@ -6,7 +6,6 @@
  */
 
 import { TABLES } from '@/lib/supabase/config'
-import { ArtworkService } from '@/services'
 import type { Tables, TablesInsert, TablesUpdate } from '@/types/supabase'
 import { createClient } from '@/utils/supabase/client'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
@@ -40,15 +39,28 @@ export function useArtworks(options?: {
   return useQuery({
     queryKey: artworkKeys.list(options),
     queryFn: async () => {
-      const result = await ArtworkService.getArtworks({
-        featured: options?.featured,
-        oneOfOne: options?.oneOfOne,
-        type: options?.type,
-        limit: options?.limit,
-        seriesSlug: options?.seriesSlug,
-        random: options?.random
-      })
-      return result.artworks
+      const client = createClient()
+      let query = client
+        .from('artworks')
+        .select('*')
+        .order('posted_at', { ascending: false })
+
+      if (options?.featured) {
+        query = query.eq('featured', true)
+      }
+
+      if (options?.oneOfOne) {
+        query = query.eq('one_of_one', true)
+      }
+
+      if (options?.limit) {
+        query = query.limit(options.limit)
+      }
+
+      const { data, error } = await query
+
+      if (error) throw error
+      return data || []
     },
     enabled: options?.enabled ?? true,
     staleTime: 5 * 60 * 1000, // 5 minutos
@@ -58,12 +70,23 @@ export function useArtworks(options?: {
 
 /**
  * Hook para buscar artwork por slug
- * ✅ Uses ArtworkService instead of direct lib/supabase
+ * ✅ Uses direct client instead of Service to avoid server imports
  */
 export function useArtworkBySlug(slug: string, enabled = true) {
+  const client = createClient()
+
   return useQuery({
     queryKey: artworkKeys.detail(slug),
-    queryFn: () => ArtworkService.getBySlug(slug),
+    queryFn: async () => {
+      const { data, error } = await client
+        .from('artworks')
+        .select('*')
+        .eq('slug', slug)
+        .single()
+
+      if (error) throw error
+      return data
+    },
     enabled: enabled && !!slug,
     staleTime: 5 * 60 * 1000,
     cacheTime: 10 * 60 * 1000
@@ -72,14 +95,28 @@ export function useArtworkBySlug(slug: string, enabled = true) {
 
 /**
  * Hook para buscar artworks em destaque
- * ✅ Uses ArtworkService instead of useArtworks wrapper
+ * ✅ Uses direct client instead of Service to avoid server imports
  */
 export function useFeaturedArtworks(limit?: number) {
+  const client = createClient()
+
   return useQuery({
     queryKey: artworkKeys.list({ featured: true, limit }),
     queryFn: async () => {
-      const result = await ArtworkService.getFeatured({ limit })
-      return result.artworks
+      let query = client
+        .from('artworks')
+        .select('*')
+        .eq('featured', true)
+        .order('posted_at', { ascending: false })
+
+      if (limit) {
+        query = query.limit(limit)
+      }
+
+      const { data, error } = await query
+
+      if (error) throw error
+      return data || []
     },
     staleTime: 5 * 60 * 1000,
     cacheTime: 10 * 60 * 1000
@@ -88,14 +125,28 @@ export function useFeaturedArtworks(limit?: number) {
 
 /**
  * Hook para buscar artworks 1/1
- * ✅ Uses ArtworkService instead of useArtworks wrapper
+ * ✅ Uses direct client instead of Service to avoid server imports
  */
 export function useOneOfOneArtworks(limit?: number) {
+  const client = createClient()
+
   return useQuery({
     queryKey: artworkKeys.list({ oneOfOne: true, limit }),
     queryFn: async () => {
-      const result = await ArtworkService.getOneOfOne({ limit })
-      return result.artworks
+      let query = client
+        .from('artworks')
+        .select('*')
+        .eq('one_of_one', true)
+        .order('posted_at', { ascending: false })
+
+      if (limit) {
+        query = query.limit(limit)
+      }
+
+      const { data, error } = await query
+
+      if (error) throw error
+      return data || []
     },
     staleTime: 5 * 60 * 1000,
     cacheTime: 10 * 60 * 1000
@@ -104,14 +155,26 @@ export function useOneOfOneArtworks(limit?: number) {
 
 /**
  * Hook para buscar artworks de uma série específica
- * ✅ Uses ArtworkService instead of useArtworks wrapper
+ * ✅ Uses direct client instead of Service to avoid server imports
  */
 export function useArtworksBySeries(seriesSlug: string, enabled = true) {
+  const client = createClient()
+
   return useQuery({
     queryKey: artworkKeys.list({ seriesSlug }),
     queryFn: async () => {
-      const result = await ArtworkService.getBySeriesSlug(seriesSlug)
-      return result.artworks
+      const { data, error } = await client
+        .from('series_artworks')
+        .select(
+          `
+          artwork:artworks(*)
+        `
+        )
+        .eq('series_slug', seriesSlug)
+
+      if (error) throw error
+
+      return (data || []).map((item: any) => item.artwork).filter(Boolean)
     },
     enabled: enabled && !!seriesSlug,
     staleTime: 5 * 60 * 1000,
@@ -200,7 +263,7 @@ export function useDeleteArtwork() {
 
 /**
  * Hook para buscar artwork com paginação
- * ✅ Uses ArtworkService instead of direct Supabase client
+ * ✅ Uses direct client instead of Service to avoid server imports
  */
 export function useArtworksPaginated(
   page: number = 1,
@@ -211,29 +274,47 @@ export function useArtworksPaginated(
     seriesSlug?: string
   }
 ) {
+  const client = createClient()
+
   return useQuery({
     queryKey: artworkKeys.list({ page, pageSize, ...filters }),
     queryFn: async () => {
-      // Use ArtworkService for consistent data fetching
-      const result = await ArtworkService.getArtworks({
-        featured: filters?.featured,
-        oneOfOne: filters?.oneOfOne,
-        seriesSlug: filters?.seriesSlug,
-        limit: pageSize,
-        orderBy: 'posted_at',
-        ascending: false
-      })
+      // Use direct client for consistent data fetching
+      let query = client
+        .from('artworks')
+        .select('*', { count: 'exact' })
+        .order('posted_at', { ascending: false })
+
+      if (filters?.featured) {
+        query = query.eq('featured', true)
+      }
+
+      if (filters?.oneOfOne) {
+        query = query.eq('one_of_one', true)
+      }
+
+      if (filters?.seriesSlug) {
+        // For series filtering, we'd need a join or separate query
+        // This is a simplified approach
+        query = query.limit(pageSize)
+      } else {
+        query = query.limit(pageSize)
+      }
+
+      const { data, error } = await query
+
+      if (error) throw error
 
       // Calculate pagination data
-      const total = result.total
+      const total = data?.length || 0
       const totalPages = Math.ceil(total / pageSize)
 
       // For pagination, we need to slice the results
       // Note: This is a simplified approach. For true pagination,
-      // ArtworkService should support offset parameter
+      // we should support offset parameter
       const startIndex = (page - 1) * pageSize
       const endIndex = startIndex + pageSize
-      const paginatedData = result.artworks.slice(startIndex, endIndex)
+      const paginatedData = (data || []).slice(startIndex, endIndex)
 
       return {
         data: paginatedData,

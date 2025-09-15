@@ -6,7 +6,6 @@
  */
 
 import { TABLES } from '@/lib/supabase/config'
-import { ArtworkService, SeriesService } from '@/services'
 import type { Tables, TablesInsert, TablesUpdate } from '@/types/supabase'
 import { createClient } from '@/utils/supabase/client'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
@@ -32,11 +31,29 @@ export function useSeries(options?: {
   includeArtworks?: boolean
   enabled?: boolean
 }) {
+  const client = createClient()
+
   return useQuery({
     queryKey: seriesKeys.list(options),
     queryFn: async () => {
-      const result = await SeriesService.getSeries()
-      return result.series
+      const { data, error } = await client
+        .from('series')
+        .select(
+          `
+          *,
+          artwork_count:series_artworks(count)
+        `
+        )
+        .order('created_at', { ascending: false })
+
+      if (error) throw error
+
+      return (data || []).map((series) => ({
+        ...series,
+        artwork_count: Array.isArray(series.artwork_count)
+          ? series.artwork_count.length
+          : 0
+      }))
     },
     enabled: options?.enabled ?? true,
     staleTime: 5 * 60 * 1000, // 5 minutos
@@ -49,9 +66,40 @@ export function useSeries(options?: {
  * ✅ Uses SeriesService instead of direct lib/supabase
  */
 export function useSeriesBySlug(slug: string, enabled = true) {
+  const client = createClient()
+
   return useQuery({
     queryKey: seriesKeys.detail(slug),
-    queryFn: () => SeriesService.getBySlug(slug),
+    queryFn: async () => {
+      const { data, error } = await client
+        .from('series')
+        .select(
+          `
+          *,
+          artworks:series_artworks(
+            artwork:artworks(
+              id,
+              title,
+              slug,
+              image_url
+            )
+          )
+        `
+        )
+        .eq('slug', slug)
+        .single()
+
+      if (error) throw error
+      if (!data) return null
+
+      // Transform the data structure
+      return {
+        ...data,
+        artworks: data.artworks
+          ? data.artworks.map((item: any) => item.artwork).filter(Boolean)
+          : []
+      }
+    },
     enabled: enabled && !!slug,
     staleTime: 5 * 60 * 1000,
     cacheTime: 10 * 60 * 1000
@@ -63,11 +111,29 @@ export function useSeriesBySlug(slug: string, enabled = true) {
  * ✅ Uses SeriesService instead of useSeries wrapper
  */
 export function useSeriesWithArtworks() {
+  const client = createClient()
+
   return useQuery({
     queryKey: seriesKeys.list({ includeArtworks: true }),
     queryFn: async () => {
-      const result = await SeriesService.getSeries()
-      return result.series
+      const { data, error } = await client
+        .from('series')
+        .select(
+          `
+          *,
+          artwork_count:series_artworks(count)
+        `
+        )
+        .order('created_at', { ascending: false })
+
+      if (error) throw error
+
+      return (data || []).map((series) => ({
+        ...series,
+        artwork_count: Array.isArray(series.artwork_count)
+          ? series.artwork_count.length
+          : 0
+      }))
     },
     staleTime: 5 * 60 * 1000,
     cacheTime: 10 * 60 * 1000
@@ -225,6 +291,8 @@ export function useSeriesArtworks(options: {
   seriesSlug: string
   enabled?: boolean
 }) {
+  const client = createClient()
+
   const {
     data: artworks = [],
     isLoading,
@@ -232,8 +300,18 @@ export function useSeriesArtworks(options: {
   } = useQuery({
     queryKey: ['series', options.seriesSlug, 'artworks'],
     queryFn: async () => {
-      const result = await ArtworkService.getBySeriesSlug(options.seriesSlug)
-      return result.artworks
+      const { data, error } = await client
+        .from('series_artworks')
+        .select(
+          `
+          artwork:artworks(*)
+        `
+        )
+        .eq('series_slug', options.seriesSlug)
+
+      if (error) throw error
+
+      return (data || []).map((item: any) => item.artwork).filter(Boolean)
     },
     enabled: (options.enabled ?? true) && !!options.seriesSlug,
     staleTime: 5 * 60 * 1000

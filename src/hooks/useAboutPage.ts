@@ -6,7 +6,6 @@
  */
 
 import { TABLES } from '@/lib/supabase/config'
-import { AboutService } from '@/services'
 import type { Tables, TablesInsert, TablesUpdate } from '@/types/supabase'
 import { createClient } from '@/utils/supabase/client'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
@@ -23,14 +22,22 @@ export const aboutPageKeys = {
 
 /**
  * Hook para buscar conteúdo da página About
- * ✅ Uses AboutService instead of direct lib/supabase
+ * ✅ Uses direct client instead of Service to avoid server imports
  */
 export function useAboutPage(enabled = true) {
+  const client = createClient()
+
   return useQuery({
     queryKey: aboutPageKeys.detail(),
     queryFn: async () => {
-      const result = await AboutService.getAboutPageData()
-      return result.aboutPage
+      const { data, error } = await client
+        .from('about_page')
+        .select('*')
+        .limit(1)
+        .single()
+
+      if (error) throw error
+      return data
     },
     enabled,
     staleTime: 10 * 60 * 1000, // 10 minutos (conteúdo estático)
