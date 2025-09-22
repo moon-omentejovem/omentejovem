@@ -148,7 +148,7 @@ export function AboutContent({
   return (
     <main
       id="about-page"
-      className="flex flex-col px-6 font-heading xl:px-20 xl:pt-6"
+      className="flex flex-col px-6 pt-12 font-heading xl:px-20 xl:pt-16"
     >
       <h1
         id="about-title"
