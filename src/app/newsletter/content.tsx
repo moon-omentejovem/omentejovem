@@ -5,6 +5,7 @@ import type { ReactElement } from 'react'
 import { aboutAnimations } from '@/animations/client'
 import { useEffect, useState } from 'react'
 
+import { cn } from '@/lib/utils'
 import Cookies from 'js-cookie'
 import './style.css'
 
@@ -143,7 +144,13 @@ export function Newsletter(): ReactElement {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Your email here"
-              className="w-full text-2xl sm:text-4xl bg-transparent border-b border-secondary-100 text-secondary-100 placeholder-secondary-100/50 outline-none pr-14"
+              className={cn(
+                'w-full text-2xl sm:text-4xl bg-transparent border-l-0 border-r-0 border-t-0 border-b border-b-secondary-100 text-secondary-100 placeholder-secondary-100/50 outline-none focus:outline-none focus:ring-0 focus:border-b-neutral-500 pr-14',
+                {
+                  'border-b-green-500': isValidEmail,
+                  'border-b-red-500': !isValidEmail && email.length > 0
+                }
+              )}
             />
             {isValidEmail && !isSubmitted && (
               <button
