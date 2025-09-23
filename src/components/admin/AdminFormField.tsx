@@ -171,7 +171,11 @@ export default function AdminFormField({
         </div>
       )
     case 'image':
+      // For new slug-based system, we need to determine the slug from the form data
+      // For artworks and series, we use their slug field
+      // For artifacts, we use their ID
       const imageUrl = getPublicUrl(value)
+      
       const handleFileChange = async (
         e: React.ChangeEvent<HTMLInputElement>
       ) => {
@@ -180,6 +184,8 @@ export default function AdminFormField({
 
         await toast.promise(
           (async () => {
+            // For backward compatibility, still use the old method
+            // This will be updated once we have proper slug access
             const result = await ImageUploadService.uploadImageWithValidation(
               file,
               supabase,

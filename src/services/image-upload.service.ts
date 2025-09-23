@@ -1,8 +1,8 @@
 /**
- * Image Upload Service - Omentejovem
+ * Simplified Image Upload Service - Omentejovem
  *
- * Serviço responsável por fazer upload e otimização de imagens
- * para o Supabase Storage, seguindo a arquitetura de pastas raw/ e optimized/
+ * Novo serviço simplificado que usa slug-based paths para organizar imagens
+ * no Supabase Storage sem necessidade de salvar paths no banco de dados
  */
 
 import { STORAGE_BUCKETS, STORAGE_FOLDERS } from '@/lib/supabase/config'
@@ -10,57 +10,88 @@ import { optimizeImageFile } from '@/utils/optimize-image'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
 export interface ImageUploadResult {
+  success: boolean
+  slug: string
   optimizedPath: string
   rawPath: string
 }
 
 export class ImageUploadService {
   /**
-   * Faz upload de uma imagem com otimização automática
-   * @param file - Arquivo de imagem a ser enviado
-   * @param supabase - Cliente Supabase
-   * @param resourceType - Tipo de recurso (artworks, series, artifacts, etc.)
-   * @returns Paths da imagem otimizada e original no storage
+   * Gera slug limpo a partir de um título ou nome de arquivo
    */
-  static async uploadImage(
+  private static generateSlug(input: string): string {
+    return input
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '') // Remove acentos
+      .replace(/[^a-z0-9\s-]/g, '') // Remove caracteres especiais
+      .replace(/\s+/g, '-') // Substitui espaços por hífens
+      .replace(/-+/g, '-') // Remove hífens duplicados
+      .replace(/^-|-$/g, '') // Remove hífens do início e fim
+  }
+
+  /**
+   * Gera paths baseados em slug para diferentes tipos de recurso
+   */
+  private static generatePaths(
+    slug: string, 
+    resourceType: string = 'artworks'
+  ): { optimizedPath: string; rawPath: string } {
+    return {
+      optimizedPath: `${resourceType}/${STORAGE_FOLDERS.OPTIMIZED}/${slug}.webp`,
+      rawPath: `${resourceType}/${STORAGE_FOLDERS.RAW}/${slug}-raw.jpg`
+    }
+  }
+
+  /**
+   * Upload simplificado baseado em slug
+   * @param file - Arquivo de imagem a ser enviado
+   * @param slug - Slug único que será usado para nomear os arquivos
+   * @param supabase - Cliente Supabase
+   * @param resourceType - Tipo de recurso (artworks, series, artifacts)
+   * @returns Resultado do upload com paths gerados
+   */
+  static async uploadImageBySlug(
     file: File,
+    slug: string,
     supabase: SupabaseClient,
     resourceType: string = 'artworks'
   ): Promise<ImageUploadResult> {
-    const timestamp = Date.now()
-    const baseName = file.name.replace(/\.[^/.]+$/, '')
+    const cleanSlug = this.generateSlug(slug)
     const bucket = STORAGE_BUCKETS.MEDIA
-
-    // Paths para raw e otimizada
-    const rawPath = `${resourceType}/${STORAGE_FOLDERS.RAW}/${timestamp}-${file.name}`
-    const optimizedPath = `${resourceType}/${STORAGE_FOLDERS.OPTIMIZED}/${timestamp}-${baseName}.webp`
+    const { optimizedPath, rawPath } = this.generatePaths(cleanSlug, resourceType)
 
     try {
-      // 1. Upload do arquivo original
+      // 1. Upload do arquivo original como raw
       const { error: rawError } = await supabase.storage
         .from(bucket)
-        .upload(rawPath, file, { contentType: file.type })
+        .upload(rawPath, file, { 
+          contentType: file.type,
+          upsert: true // Permite sobrescrever arquivo existente
+        })
 
       if (rawError) {
         throw new Error(`Failed to upload raw image: ${rawError.message}`)
       }
 
-      // 2. Otimizar imagem
+      // 2. Otimizar e fazer upload da versão otimizada
       const optimized = await optimizeImageFile(file)
 
-      // 3. Upload da imagem otimizada
       const { error: optError } = await supabase.storage
         .from(bucket)
         .upload(optimizedPath, optimized, {
-          contentType: 'image/webp'
+          contentType: 'image/webp',
+          upsert: true // Permite sobrescrever arquivo existente
         })
 
       if (optError) {
         throw new Error(`Failed to upload optimized image: ${optError.message}`)
       }
 
-      // 4. Retornar paths para salvar no banco
       return {
+        success: true,
+        slug: cleanSlug,
         optimizedPath,
         rawPath
       }
@@ -68,6 +99,32 @@ export class ImageUploadService {
       // Limpar uploads parciais em caso de erro
       await this.cleanupFailedUpload(supabase, bucket, rawPath, optimizedPath)
       throw error
+    }
+  }
+
+  /**
+   * Upload com validação automática - compatibilidade com sistema antigo
+   * @deprecated Use uploadImageBySlug instead
+   */
+  static async uploadImageWithValidation(
+    file: File,
+    supabase: SupabaseClient,
+    resourceType: string = 'artworks'
+  ): Promise<{ optimizedPath: string; rawPath: string }> {
+    // Validar arquivo antes do upload
+    this.validateImageFile(file)
+
+    // Gerar slug temporário baseado no nome do arquivo
+    const tempSlug = this.generateSlug(file.name.replace(/\.[^/.]+$/, ''))
+    const timestamp = Date.now()
+    const slugWithTimestamp = `${tempSlug}-${timestamp}`
+
+    // Fazer upload
+    const result = await this.uploadImageBySlug(file, slugWithTimestamp, supabase, resourceType)
+    
+    return {
+      optimizedPath: result.optimizedPath,
+      rawPath: result.rawPath
     }
   }
 
@@ -81,7 +138,6 @@ export class ImageUploadService {
     optimizedPath: string
   ): Promise<void> {
     try {
-      // Tentar remover ambos os arquivos (pode ser que um tenha sido enviado)
       await Promise.allSettled([
         supabase.storage.from(bucket).remove([rawPath]),
         supabase.storage.from(bucket).remove([optimizedPath])
@@ -97,7 +153,7 @@ export class ImageUploadService {
   static validateImageFile(file: File): void {
     const validTypes = [
       'image/jpeg',
-      'image/jpg',
+      'image/jpg', 
       'image/png',
       'image/webp',
       'image/gif'
@@ -105,31 +161,46 @@ export class ImageUploadService {
 
     if (!validTypes.includes(file.type)) {
       throw new Error(
-        `Invalid file type: ${file.type}. Only images are allowed.`
+        `Invalid file type: ${file.type}. Supported: ${validTypes.join(', ')}`
       )
     }
 
-    // Limite de 10MB
-    const maxSize = 10 * 1024 * 1024
+    const maxSize = 50 * 1024 * 1024 // 50MB
     if (file.size > maxSize) {
       throw new Error(
-        `File too large: ${(file.size / 1024 / 1024).toFixed(1)}MB. Maximum size is 10MB.`
+        `File too large: ${(file.size / 1024 / 1024).toFixed(2)}MB. Max size: 50MB`
       )
     }
   }
 
   /**
-   * Upload com validação automática
+   * Gera URL pública a partir de um slug (helper function)
    */
-  static async uploadImageWithValidation(
-    file: File,
+  static getPublicUrl(slug: string, resourceType: string = 'artworks', imageType: 'optimized' | 'raw' = 'optimized'): string {
+    const { optimizedPath, rawPath } = this.generatePaths(slug, resourceType)
+    const path = imageType === 'raw' ? rawPath : optimizedPath
+    
+    return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${STORAGE_BUCKETS.MEDIA}/${path}`
+  }
+
+  /**
+   * Remove imagens baseado no slug
+   */
+  static async removeImagesBySlug(
+    slug: string,
     supabase: SupabaseClient,
     resourceType: string = 'artworks'
-  ): Promise<ImageUploadResult> {
-    // Validar arquivo antes do upload
-    this.validateImageFile(file)
+  ): Promise<void> {
+    const { optimizedPath, rawPath } = this.generatePaths(slug, resourceType)
+    const bucket = STORAGE_BUCKETS.MEDIA
 
-    // Fazer upload
-    return await this.uploadImage(file, supabase, resourceType)
+    try {
+      await Promise.allSettled([
+        supabase.storage.from(bucket).remove([rawPath]),
+        supabase.storage.from(bucket).remove([optimizedPath])
+      ])
+    } catch (error) {
+      console.warn(`Failed to remove images for slug ${slug}:`, error)
+    }
   }
 }
