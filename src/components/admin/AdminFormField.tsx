@@ -25,6 +25,7 @@ interface AdminFormFieldProps {
   onExtraChange?: (key: string, value: any) => void
   descriptor: ResourceDescriptor
   supabase: SupabaseClient
+  formData?: Record<string, any>
 }
 
 export default function AdminFormField({
@@ -34,7 +35,8 @@ export default function AdminFormField({
   onChange,
   onExtraChange,
   descriptor,
-  supabase
+  supabase,
+  formData
 }: AdminFormFieldProps) {
   switch (field.type) {
     case 'text':
@@ -171,22 +173,22 @@ export default function AdminFormField({
         </div>
       )
     case 'image':
-      // Novo sistema: upload e preview baseados em slug
-      // O slug deve estar disponível no form (ex: via onExtraChange, prop, ou contexto)
-      // Aqui assumimos que o valor do campo slug está em onExtraChange ou value do slug
-      // Ajuste conforme a estrutura do seu form
-      const slug =
-        (typeof onExtraChange === 'function' &&
-          (descriptor as any).currentSlug) ||
-        value?.slug ||
-        value ||
-        ''
-      // Importa o helper correto para gerar a URL baseada em slug
-      // Supondo que existe getImageUrlFromSlug(slug, tipo, variante)
-      // Ajuste o import se necessário
-      const imageUrl = slug
-        ? getImageUrlFromSlug(slug, descriptor.table, 'optimized')
-        : undefined
+      // Usa o valor do campo slug do formData (React state)
+      let slug = ''
+      if (formData) {
+        if (descriptor.table === 'artworks' || descriptor.table === 'series') {
+          slug = formData.slug || ''
+        } else if (descriptor.table === 'artifacts') {
+          slug = formData.id || ''
+        }
+      }
+      // Usa image_url da API se disponível, senão gera localmente
+      const imageUrl =
+        formData && formData.image_url
+          ? formData.image_url
+          : slug
+            ? getImageUrlFromSlug(slug, descriptor.table, 'optimized')
+            : undefined
 
       const handleFileChange = async (
         e: React.ChangeEvent<HTMLInputElement>
@@ -205,8 +207,6 @@ export default function AdminFormField({
               supabase,
               descriptor.table
             )
-            // Não salva path, apenas garante que slug está salvo no registro
-            // Se o campo de imagem não for mais necessário, pode deixar onChange vazio
             onChange(slug)
           })(),
           {

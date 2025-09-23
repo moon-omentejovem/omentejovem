@@ -114,6 +114,13 @@ export const artworksDescriptor: ResourceDescriptor = {
       placeholder: 'auto-generated-from-title'
     },
     {
+      key: 'image',
+      label: 'Artwork Image',
+      type: 'image',
+      required: true,
+      placeholder: 'Upload artwork image'
+    },
+    {
       key: 'token_id',
       label: 'Token ID',
       type: 'text',
@@ -250,6 +257,14 @@ export const seriesDescriptor: ResourceDescriptor = {
     },
 
     {
+      key: 'image',
+      label: 'Series Cover Image',
+      type: 'image',
+      required: true,
+      placeholder: 'Upload series cover image'
+    },
+
+    {
       key: 'artworks',
       label: 'Artworks',
       type: 'relation-multi',
@@ -300,6 +315,13 @@ export const artifactsDescriptor: ResourceDescriptor = {
       type: 'text',
       required: true,
       placeholder: 'Enter artifact title'
+    },
+    {
+      key: 'image',
+      label: 'Artifact Image',
+      type: 'image',
+      required: true,
+      placeholder: 'Upload artifact image'
     },
     {
       key: 'description',

@@ -1,6 +1,7 @@
 import { supabaseAdmin } from '@/lib/supabase-admin'
 import { CreateArtworkSchema } from '@/types/schemas'
 import type { Database } from '@/types/supabase'
+import { getImageUrlFromSlug } from '@/utils/storage'
 import { revalidateTag } from 'next/cache'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -41,7 +42,14 @@ export async function GET(request: NextRequest) {
 
     if (error) throw error
 
-    return NextResponse.json({ data: data || [], total: count })
+    // Adiciona campo image_url resolvido para cada artwork
+    const artworksWithImage = (data || []).map((artwork) => ({
+      ...artwork,
+      image_url: artwork.slug
+        ? getImageUrlFromSlug(artwork.slug, 'artworks', 'optimized')
+        : null
+    }))
+    return NextResponse.json({ data: artworksWithImage, total: count })
   } catch (error) {
     console.error('Error fetching artworks:', error)
     return NextResponse.json({
@@ -90,7 +98,14 @@ export async function POST(request: NextRequest) {
     revalidateTag('featured-artworks')
     revalidateTag('portfolio')
 
-    return NextResponse.json(artwork, { status: 201 })
+    // Adiciona campo image_url resolvido
+    const artworkWithImage = {
+      ...artwork,
+      image_url: artwork.slug
+        ? getImageUrlFromSlug(artwork.slug, 'artworks', 'optimized')
+        : null
+    }
+    return NextResponse.json(artworkWithImage, { status: 201 })
   } catch (error) {
     console.error('Error creating artwork:', error)
 
