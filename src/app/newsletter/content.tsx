@@ -3,9 +3,12 @@
 import type { ReactElement } from 'react'
 
 import { aboutAnimations } from '@/animations/client'
+import Cookies from 'js-cookie'
 import { useEffect, useState } from 'react'
 
-import Cookies from 'js-cookie'
+import { cn } from '@/lib/utils'
+
+import { useRouter } from 'next/navigation'
 import './style.css'
 
 const KIT_API_KEY =
@@ -21,27 +24,24 @@ interface SubscriberData {
 }
 
 export function Newsletter(): ReactElement {
+  const router = useRouter()
   const [email, setEmail] = useState('')
   const [isSubmitted, setIsSubmitted] = useState(false)
   const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-  const [isHidden, setIsHidden] = useState(false)
 
   useEffect(() => {
-    // Check for existing cookie on component mount
-    const hasUserDismissed = Cookies.get('newsletter_dismissed')
-    if (hasUserDismissed) {
-      setIsHidden(true)
+    // Verifica status dismissed via API
+    const checkDismissed = () => {
+      if (Cookies.get('newsletter_dismissed') === 'true') {
+        router.replace('/')
+      }
     }
-  }, [])
+    checkDismissed()
+  }, [router])
 
   const handleDismiss = () => {
-    if (email?.length > 0) {
-      // Set cookie for 7 days
-      Cookies.set('newsletter_dismissed', 'true', { expires: 7 })
-      setIsHidden(true)
-    } else {
-      setIsHidden(true)
-    }
+    Cookies.set('newsletter_dismissed', 'true', { expires: 7 })
+    router.replace('/')
   }
 
   const handleSubmit = async () => {
@@ -90,17 +90,13 @@ export function Newsletter(): ReactElement {
     aboutAnimations()
   }, [])
 
-  if (isHidden) {
-    return <></>
-  }
-
   return (
     <main
       id="about-page"
       className="fixed max-w-[1920px] z-40 mx-auto top-0 h-full w-full sm:p-0 p-8 flex flex-col bg-background justify-center"
     >
       <button
-        onClick={handleDismiss}
+        onClick={() => handleDismiss()}
         className="absolute top-8 right-8 text-secondary-100 hover:text-primary-100 transition-colors"
         aria-label="Close newsletter"
       >
@@ -143,7 +139,13 @@ export function Newsletter(): ReactElement {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Your email here"
-              className="w-full text-2xl sm:text-4xl bg-transparent border-b border-secondary-100 text-secondary-100 placeholder-secondary-100/50 outline-none pr-14"
+              className={cn(
+                'w-full text-2xl sm:text-4xl bg-transparent border-l-0 border-r-0 border-t-0 border-b border-b-secondary-100 text-secondary-100 placeholder-secondary-100/50 outline-none focus:outline-none focus:ring-0 focus:border-b-neutral-500 pr-14',
+                {
+                  'border-b-green-500': isValidEmail,
+                  'border-b-red-500': !isValidEmail && email.length > 0
+                }
+              )}
             />
             {isValidEmail && !isSubmitted && (
               <button
