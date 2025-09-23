@@ -3,10 +3,12 @@
 import type { ReactElement } from 'react'
 
 import { aboutAnimations } from '@/animations/client'
+import Cookies from 'js-cookie'
 import { useEffect, useState } from 'react'
 
 import { cn } from '@/lib/utils'
-import Cookies from 'js-cookie'
+
+import { useRouter } from 'next/navigation'
 import './style.css'
 
 const KIT_API_KEY =
@@ -22,27 +24,24 @@ interface SubscriberData {
 }
 
 export function Newsletter(): ReactElement {
+  const router = useRouter()
   const [email, setEmail] = useState('')
   const [isSubmitted, setIsSubmitted] = useState(false)
   const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-  const [isHidden, setIsHidden] = useState(false)
 
   useEffect(() => {
-    // Check for existing cookie on component mount
-    const hasUserDismissed = Cookies.get('newsletter_dismissed')
-    if (hasUserDismissed) {
-      setIsHidden(true)
+    // Verifica status dismissed via API
+    const checkDismissed = () => {
+      if (Cookies.get('newsletter_dismissed') === 'true') {
+        router.replace('/')
+      }
     }
-  }, [])
+    checkDismissed()
+  }, [router])
 
   const handleDismiss = () => {
-    if (email?.length > 0) {
-      // Set cookie for 7 days
-      Cookies.set('newsletter_dismissed', 'true', { expires: 7 })
-      setIsHidden(true)
-    } else {
-      setIsHidden(true)
-    }
+    Cookies.set('newsletter_dismissed', 'true', { expires: 7 })
+    router.replace('/')
   }
 
   const handleSubmit = async () => {
@@ -91,17 +90,13 @@ export function Newsletter(): ReactElement {
     aboutAnimations()
   }, [])
 
-  if (isHidden) {
-    return <></>
-  }
-
   return (
     <main
       id="about-page"
       className="fixed max-w-[1920px] z-40 mx-auto top-0 h-full w-full sm:p-0 p-8 flex flex-col bg-background justify-center"
     >
       <button
-        onClick={handleDismiss}
+        onClick={() => handleDismiss()}
         className="absolute top-8 right-8 text-secondary-100 hover:text-primary-100 transition-colors"
         aria-label="Close newsletter"
       >

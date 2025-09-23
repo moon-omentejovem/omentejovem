@@ -89,16 +89,12 @@ export const artworksDescriptor: ResourceDescriptor = {
   table: 'artworks',
   title: 'Artworks',
   list: [
-    { key: 'image_path', label: 'Image', render: 'image', width: '140px' },
+    { key: 'image_url', label: 'Image', render: 'image', width: '140px' },
     { key: 'title', label: 'Title', render: 'text' },
-    { key: 'description', label: 'Description', render: 'clamp' },
     { key: 'mint_date', label: 'Mint Date', render: 'date' },
     { key: 'mint_link', label: 'Mint Link', render: 'link' },
     { key: 'type', label: 'Type', render: 'badge' },
-    { key: 'editions_total', label: 'Number of Editions', render: 'number' },
-    { key: 'blockchain', label: 'Blockchain', render: 'badge' },
-    { key: 'status', label: 'Status', render: 'badge' },
-    { key: 'video_url', label: 'Video', render: 'link' }
+    { key: 'status', label: 'Status', render: 'badge' }
   ],
   form: [
     {
@@ -239,12 +235,7 @@ export const seriesDescriptor: ResourceDescriptor = {
   title: 'Series',
   list: [
     { key: 'name', label: 'Name', render: 'text' },
-    {
-      key: 'cover_image_path',
-      label: 'Cover Image',
-      render: 'image',
-      width: '80px'
-    },
+    { key: 'cover_image_url', label: 'Cover Image', render: 'image', width: '80px' },
     { key: 'artworks', label: 'Artworks', render: 'text' }, // Will show count or names
     { key: 'status', label: 'Status', render: 'badge' }
   ],
@@ -299,7 +290,7 @@ export const seriesDescriptor: ResourceDescriptor = {
   actions: {
     create: true,
     edit: true,
-    duplicate: false,
+    duplicate: true,
     delete: true
   }
 }
@@ -310,8 +301,7 @@ export const artifactsDescriptor: ResourceDescriptor = {
   title: 'Artifacts',
   list: [
     { key: 'title', label: 'Title', render: 'text' },
-    { key: 'image_path', label: 'Image', render: 'image', width: '80px' },
-    { key: 'description', label: 'Description', render: 'clamp' },
+    { key: 'image_url', label: 'Image', render: 'image', width: '80px' },
     { key: 'status', label: 'Status', render: 'badge' },
     { key: 'link_url', label: 'Link', render: 'link' }
   ],

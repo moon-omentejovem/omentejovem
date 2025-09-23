@@ -6,10 +6,6 @@
  */
 
 import type { Database } from '@/types/supabase'
-import {
-  createBuildSupabaseClient,
-  createServerSupabaseClient
-} from '@/utils/supabase/server'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
 /**
@@ -18,12 +14,16 @@ import type { SupabaseClient } from '@supabase/supabase-js'
  */
 export class BaseService {
   /**
-   * Get production-safe Supabase client
-   * Automatically handles server vs build context
+   * Get production-safe Supabase client for server context
+   * Only to be used in server components and API routes
    */
-  protected static async getSupabaseClient(): Promise<
+  protected static async getServerSupabaseClient(): Promise<
     SupabaseClient<Database>
   > {
+    // Use dynamic import to avoid build-time issues
+    const { createBuildSupabaseClient, createServerSupabaseClient } =
+      await import('@/utils/supabase/server')
+
     try {
       // Try to use the server client (works in runtime)
       return await createServerSupabaseClient()
@@ -48,13 +48,14 @@ export class BaseService {
 
   /**
    * Execute a Supabase query with standardized error handling
+   * For server context - auto-gets server client
    */
   protected static async executeQuery<T>(
     queryFn: (client: SupabaseClient<Database>) => Promise<T>,
     errorContext?: string
   ): Promise<T> {
     try {
-      const client = await this.getSupabaseClient()
+      const client = await this.getServerSupabaseClient()
       return await queryFn(client)
     } catch (error) {
       const context = errorContext ? ` in ${errorContext}` : ''

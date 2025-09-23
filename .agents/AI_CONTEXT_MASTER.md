@@ -17,8 +17,7 @@
 ### 🛠️ Desenvolvimento
 
 - [`DEVELOPMENT_PATTERNS.md`](./DEVELOPMENT_PATTERNS.md) - Padrões de código e convenções
-- [`COMPONENT_SYSTEM.md`](./COMPONENT_SYSTEM.md) - Sistema de componentes admin
-- [`API_PATTERNS.md`](./API_PATTERNS.md) - Padrões de API e rotas
+- [`PERFORMANCE_OPTIMIZATIONS.md`](./PERFORMANCE_OPTIMIZATIONS.md) - Otimizações de performance
 
 ### 📁 Sistema de Dados
 
@@ -29,12 +28,11 @@
 ### 🔧 Deploy e Configuração
 
 - [`DEPLOYMENT_CONTEXT.md`](./DEPLOYMENT_CONTEXT.md) - Contexto de deploy e produção
-- [`ENVIRONMENT_SETUP.md`](./ENVIRONMENT_SETUP.md) - Setup de ambiente
+- [`SUPABASE_CLI_GUIDE.md`](./SUPABASE_CLI_GUIDE.md) - Guia do CLI Supabase
 
 ### 📝 Fluxos de Trabalho
 
 - [`PR_GUIDELINES.md`](./PR_GUIDELINES.md) - Diretrizes para PRs
-- [`AGENT_WORKFLOWS.md`](./AGENT_WORKFLOWS.md) - Fluxos específicos para agentes
 
 ---
 

@@ -19,6 +19,7 @@
 export { AboutService } from './about.service'
 export { ArtifactService } from './artifact.service'
 export { ArtworkService } from './artwork.service'
+export { AuthService } from './auth.service'
 export { BaseService } from './base.service'
 export { ImageUploadService } from './image-upload.service'
 export { SeriesService } from './series.service'
@@ -40,5 +41,12 @@ export type {
 export type { ProcessedArtifactData } from './artifact.service'
 
 export type { AboutPageData, ProcessedAboutData } from './about.service'
+
+export type {
+  AuthState,
+  AuthUser,
+  LoginOptions,
+  OAuthOptions
+} from './auth.service'
 
 export type { ImageUploadResult } from './image-upload.service'

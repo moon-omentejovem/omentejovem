@@ -8,7 +8,9 @@ import { Toaster } from 'sonner'
 import { FraktionMono, NeueMachina } from './fonts'
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://omentejovem.vercel.app'),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || 'https://omentejovem.vercel.app'
+  ),
   title: 'omentejovem',
   description: 'omentejovem website',
   manifest: '/manifest.json'
@@ -30,8 +32,12 @@ export default function RootLayout({
       <head>
         {/* Critical resource hints */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+
         {/* DNS prefetch para domínios críticos */}
         <link rel="dns-prefetch" href="//vercel.app" />
         <link rel="dns-prefetch" href="//supabase.co" />
@@ -44,13 +50,9 @@ export default function RootLayout({
           <div className="max-w-[1920px] mx-auto min-h-screen flex flex-col">
             <Cursor />
             {/* Header com altura fixa */}
-            <header className="h-16 flex-shrink-0">
-              <Header />
-            </header>
+            <Header />
             {/* Main content */}
-            <main className="flex-grow">
-              {children}
-            </main>
+            <main className="flex-grow">{children}</main>
           </div>
           <Toaster
             theme="dark"

@@ -36,6 +36,10 @@ const nextConfig = {
       },
       {
         protocol: 'https',
+        hostname: 'i.seadn.io'
+      },
+      {
+        protocol: 'https',
         hostname: 'lh3.googleusercontent.com'
       }
     ],
@@ -45,6 +49,7 @@ const nextConfig = {
     minimumCacheTTL: 86400, // Cache por 24 horas
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    path: '/_next/image/',
     // Melhorar performance de imagens
     unoptimized: false,
     loader: 'default'
@@ -58,7 +63,7 @@ const nextConfig = {
     if (dev) {
       config.devtool = 'source-map'
     }
-    
+
     // Optimization for production
     if (!dev && !isServer) {
       config.optimization.splitChunks = {
@@ -73,7 +78,10 @@ const nextConfig = {
           },
           lib: {
             test(module) {
-              return module.size() > 160000 && /node_modules[/\\]/.test(module.identifier())
+              return (
+                module.size() > 160000 &&
+                /node_modules[/\\]/.test(module.identifier())
+              )
             },
             name(module) {
               const hash = require('crypto').createHash('sha1')
@@ -87,7 +95,7 @@ const nextConfig = {
         }
       }
     }
-    
+
     return config
   },
   headers: () => [

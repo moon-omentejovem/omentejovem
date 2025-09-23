@@ -6,9 +6,9 @@
  */
 
 import { Artwork } from '@/types/artwork'
-import { createClient } from '@/utils/supabase/server'
+import { BaseService } from './base.service'
 
-export class StorageService {
+export class StorageService extends BaseService {
   private static readonly BUCKET_NAME = 'media'
   private static readonly RAW_FOLDER = 'raw'
   private static readonly OPTIMIZED_FOLDER = 'optimized'
@@ -17,24 +17,26 @@ export class StorageService {
    * Gera URL pública para imagem otimizada
    */
   static async getOptimizedImageUrl(filename: string): Promise<string> {
-    const supabase = await createClient()
-    const { data } = supabase.storage
-      .from(this.BUCKET_NAME)
-      .getPublicUrl(`${this.OPTIMIZED_FOLDER}/${filename}`)
+    return this.executeQuery(async (supabase) => {
+      const { data } = supabase.storage
+        .from(this.BUCKET_NAME)
+        .getPublicUrl(`${this.OPTIMIZED_FOLDER}/${filename}`)
 
-    return data.publicUrl
+      return data.publicUrl
+    }, 'getOptimizedImageUrl')
   }
 
   /**
    * Gera URL pública para imagem original (raw)
    */
   static async getRawImageUrl(filename: string): Promise<string> {
-    const supabase = await createClient()
-    const { data } = supabase.storage
-      .from(this.BUCKET_NAME)
-      .getPublicUrl(`${this.RAW_FOLDER}/${filename}`)
+    return this.executeQuery(async (supabase) => {
+      const { data } = supabase.storage
+        .from(this.BUCKET_NAME)
+        .getPublicUrl(`${this.RAW_FOLDER}/${filename}`)
 
-    return data.publicUrl
+      return data.publicUrl
+    }, 'getRawImageUrl')
   }
 
   /**
@@ -81,16 +83,17 @@ export class StorageService {
   static async listFiles(
     folder: 'raw' | 'optimized' = 'raw'
   ): Promise<string[]> {
-    const supabase = await createClient()
-    const { data, error } = await supabase.storage
-      .from(this.BUCKET_NAME)
-      .list(folder)
+    return this.executeQuery(async (supabase) => {
+      const { data, error } = await supabase.storage
+        .from(this.BUCKET_NAME)
+        .list(folder)
 
-    if (error) {
-      console.error(`Erro ao listar arquivos da pasta ${folder}:`, error)
-      return []
-    }
+      if (error) {
+        console.error(`Erro ao listar arquivos da pasta ${folder}:`, error)
+        return []
+      }
 
-    return data?.map((file: any) => file.name) || []
+      return data?.map((file: any) => file.name) || []
+    }, 'listFiles')
   }
 }

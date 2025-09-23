@@ -1,38 +1,32 @@
-import { supabase } from '@/lib/supabase'
+/**
+ * Auth utilities
+ *
+ * ⚠️  DEPRECATED: Logic moved to AuthService
+ * ✅  Use AuthService instead
+ */
 
-export const getBaseUrl = () => {
-  return `${window.location.origin}`
-}
+import { AuthService } from '@/services/auth.service'
 
+/**
+ * @deprecated Use AuthService.signInWithMagicLink instead
+ */
 export const signInWithMagicLink = async (
   email: string,
   redirectPath = '/admin/artworks'
 ) => {
-  const baseUrl = getBaseUrl()
-  const redirectTo = `${baseUrl}/auth/callback?next=${redirectPath}`
-
-  const { error } = await supabase.auth.signInWithOtp({
-    email,
-    options: {
-      emailRedirectTo: redirectTo
-    }
-  })
-
-  return { error }
+  return AuthService.signInWithMagicLink({ email, redirectPath })
 }
 
-export const signInWithGoogle = async (
-  redirectPath = '/admin/artworks'
-) => {
-  const baseUrl = getBaseUrl()
-  const redirectTo = `${baseUrl}/auth/callback?next=${redirectPath}`
+/**
+ * @deprecated Use AuthService.signInWithOAuth instead
+ */
+export const signInWithGoogle = async (redirectPath = '/admin/artworks') => {
+  return AuthService.signInWithOAuth({ provider: 'google', redirectPath })
+}
 
-  const { error } = await supabase.auth.signInWithOAuth({
-    provider: 'google',
-    options: {
-      redirectTo
-    }
-  })
-
-  return { error }
+/**
+ * @deprecated Use AuthService directly
+ */
+export const getBaseUrl = () => {
+  return `${window.location.origin}`
 }

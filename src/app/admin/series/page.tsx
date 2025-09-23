@@ -5,122 +5,102 @@ import AdminTable from '@/components/admin/AdminTable'
 import { seriesDescriptor } from '@/types/descriptors'
 import type { Database } from '@/types/supabase'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { toast } from 'sonner'
+import { useConfirm } from '@/hooks/useConfirm'
+import { useSeries, useDeleteSeries, useCreateSeries } from '@/hooks/useSeries'
 
 type SeriesRow = Database['public']['Tables']['series']['Row'] & {
+  status?: 'draft' | 'published'
   series_artworks?: {
     artworks: Database['public']['Tables']['artworks']['Row']
   }[]
 }
 
 export default function SeriesPage() {
-  const PAGE_SIZE = 10
-  const [series, setSeries] = useState<SeriesRow[]>([])
-  const [loading, setLoading] = useState(true)
-  const [hasMore, setHasMore] = useState(true)
+  const [statusFilter, setStatusFilter] = useState('all')
   const router = useRouter()
+  const confirm = useConfirm()
 
-  const fetchSeries = async (reset = false) => {
+  // Use hooks instead of manual fetch
+  const { 
+    data: series = [], 
+    isLoading: loading, 
+    error 
+  } = useSeries()
+
+  const deleteSeriesMutation = useDeleteSeries()
+  const createSeriesMutation = useCreateSeries()
+
+  const handleEdit = (series: SeriesRow) => {
+    router.push(`/admin/series/${series.id}`)
+  }
+
+  const handleDuplicate = async (series: SeriesRow) => {
+    const ok = await confirm({
+      title: 'Duplicate series',
+      message: `Are you sure you want to duplicate "${series.name}"?`
+    })
+    if (!ok) return
+
     try {
-      setLoading(true)
-      const from = reset ? 0 : series.length
-      const response = await fetch(
-        `/api/admin/series?from=${from}&limit=${PAGE_SIZE}`
-      )
-      if (response.ok) {
-        const data = await response.json()
-        setSeries((prev) => (reset ? data : [...prev, ...data]))
-        setHasMore(data.length === PAGE_SIZE)
-      } else {
-        toast.error('Failed to load series')
+      const duplicateData = {
+        ...series,
+        id: undefined,
+        name: `${series.name} (Copy)`,
+        slug: `${series.slug}-copy`,
+        created_at: undefined,
+        updated_at: undefined
       }
-    } catch (error) {
-      console.error('Error fetching series:', error)
-      toast.error('Failed to load series')
-    } finally {
-      setLoading(false)
+
+      await createSeriesMutation.mutateAsync(duplicateData)
+      toast.success('Series duplicated successfully!')
+    } catch (error: any) {
+      console.error('Error duplicating series:', error)
+      toast.error(`Failed to duplicate series: ${error?.message || 'Unknown error'}`)
     }
   }
 
-  useEffect(() => {
-    fetchSeries(true)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const handleDelete = async (series: SeriesRow) => {
+    const ok = await confirm({
+      title: 'Delete series',
+      message: `Delete "${series.name}" permanently?`
+    })
+    if (!ok) return
 
-  const handleEdit = (seriesItem: SeriesRow) => {
-    router.push(`/admin/series/${seriesItem.id}`)
-  }
-
-  const handleDelete = async (seriesItem: SeriesRow) => {
-    if (
-      confirm(
-        `Are you sure you want to delete "${seriesItem.name}"? This action cannot be undone.`
-      )
-    ) {
-      try {
-        const response = await fetch(`/api/admin/series/${seriesItem.id}`, {
-          method: 'DELETE'
-        })
-
-        if (response.ok) {
-          fetchSeries(true) // Refresh the list
-          toast.success('Series deleted successfully!')
-        } else {
-          const error = await response.json()
-          console.error('Error deleting series:', error)
-          toast.error(
-            'Failed to delete series: ' + (error.error || 'Unknown error')
-          )
-        }
-      } catch (error) {
-        console.error('Error deleting series:', error)
-        toast.error('Failed to delete series')
-      }
+    try {
+      await deleteSeriesMutation.mutateAsync(series.id)
+      toast.success('Series deleted successfully!')
+    } catch (error: any) {
+      console.error('Error deleting series:', error)
+      toast.error(`Failed to delete series: ${error?.message || 'Unknown error'}`)
     }
   }
 
-  // Custom rendering for artworks column to show count and names
-  const renderCell = (
-    item: SeriesRow,
-    column: { key: string; label: string }
-  ) => {
-    if (column.key === 'artworks') {
-      const artworks = item.series_artworks?.map((sa) => sa.artworks) || []
-      if (artworks.length === 0) {
-        return <span className="text-gray-500">No artworks</span>
-      }
-      return (
-        <div>
-          <div className="text-sm text-gray-500 mb-1">
-            {artworks.length} artwork{artworks.length !== 1 ? 's' : ''}
-          </div>
-          <div className="text-xs text-gray-400 max-w-xs truncate">
-            {artworks
-              .slice(0, 3)
-              .map((a) => a.title)
-              .join(', ')}
-            {artworks.length > 3 && '...'}
+  if (error) {
+    return (
+      <AdminLayout>
+        <div className="p-6">
+          <div className="text-red-500">
+            Error loading series. Please try again.
           </div>
         </div>
-      )
-    }
-    return undefined // Use default rendering
+      </AdminLayout>
+    )
   }
 
   return (
     <AdminLayout>
-      <AdminTable
-        descriptor={seriesDescriptor}
-        data={series}
-        loading={loading}
-        onEdit={handleEdit}
-        onSearch={() => {}} // TODO: Implement search
-        onSort={() => {}} // TODO: Implement sorting
-        renderCell={renderCell}
-        onLoadMore={() => fetchSeries()}
-        hasMore={hasMore}
-      />
+      <div className="p-6">
+        <AdminTable
+          descriptor={seriesDescriptor}
+          data={series}
+          onEdit={handleEdit}
+          onDuplicate={handleDuplicate}
+          onDelete={handleDelete}
+          loading={loading}
+        />
+      </div>
     </AdminLayout>
   )
 }
