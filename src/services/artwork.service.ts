@@ -41,21 +41,24 @@ export interface ArtworkData {
 }
 
 /**
- * Process image URLs for server-side rendering
- * Ensures all image URLs are resolved on the server before sending to client
+ * Process image URLs for server-side rendering using new slug-based system
+ * Generates URLs dynamically from slug instead of relying on stored paths
  */
 function processArtworkImages(artwork: any): any {
+  const { getImageUrlFromSlug, getPublicUrl } = require('@/utils/storage')
+  
   return {
     ...artwork,
-    // Use existing URLs if available, fallback to generating from paths
-    image_url:
-      artwork.image_url ||
-      (artwork.image_path ? getPublicUrl(artwork.image_path) : null),
-    // Process raw image URL
-    raw_image_url:
-      artwork.raw_image_url ||
-      (artwork.raw_image_path ? getPublicUrl(artwork.raw_image_path) : null),
-    // Ensure paths are preserved for potential client-side use
+    // Generate URLs from slug (new system)
+    image_url: artwork.slug 
+      ? getImageUrlFromSlug(artwork.slug, 'artworks', 'optimized')
+      : artwork.image_url || (artwork.image_path ? getPublicUrl(artwork.image_path) : null),
+    
+    raw_image_url: artwork.slug 
+      ? getImageUrlFromSlug(artwork.slug, 'artworks', 'raw')
+      : artwork.raw_image_url || (artwork.raw_image_path ? getPublicUrl(artwork.raw_image_path) : null),
+    
+    // Keep paths for backward compatibility during transition
     image_path: artwork.image_path,
     raw_image_path: artwork.raw_image_path
   }
