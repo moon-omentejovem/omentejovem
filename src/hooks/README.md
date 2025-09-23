@@ -217,8 +217,8 @@ function AdminPanel() {
     createArtwork.mutate({
       title: 'Novo Artwork',
       slug: 'novo-artwork',
-      image_url: 'https://...',
       type: 'digital'
+      // Imagem será resolvida via helpers getImageUrlFromSlug(slug)
     })
   }
 

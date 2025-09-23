@@ -2,13 +2,13 @@
 
 import Image from 'next/image'
 import type { ReactElement } from 'react'
-import { AboutData, PressTalk } from './@types/wordpress'
+import { PressTalk } from './@types/wordpress'
 
 import { aboutAnimations } from '@/animations/client'
 import { AboutArt } from '@/assets/images'
 import { Footer, FooterProperties } from '@/components/Footer'
 import { decodeRenderedString } from '@/utils/decodeRenderedString'
-import { useCallback, useEffect, useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 
 import parse from 'html-react-parser'
 import { BioRenderer } from './bio-renderer'
@@ -43,7 +43,6 @@ interface AboutPageData {
 }
 
 interface AboutContentProperties {
-  data: AboutData | undefined
   aboutPageData?: AboutPageData | null
   press: PressTalk[]
   exhibitions: PressTalk[]
@@ -61,7 +60,6 @@ function AboutBio({ text }: { text: string }): ReactElement {
 }
 
 export function AboutContent({
-  data,
   aboutPageData,
   press,
   exhibitions
@@ -88,9 +86,7 @@ export function AboutContent({
     [exhibitions]
   )
 
-  const renderAboutInfo = useCallback((aboutString: string): ReactElement => {
-    return <AboutBio key={'about-bio'} text={aboutString} />
-  }, [])
+  // Removido: renderAboutInfo e uso de data
 
   useEffect(() => {
     const anchorElements = document.getElementsByTagName(
@@ -216,18 +212,7 @@ export function AboutContent({
             Socials
           </p>
           <div className="flex flex-col gap-2">
-            {data &&
-              Object.entries(data.social_media).map(([key, value]) => (
-                <a
-                  key={key}
-                  target="_blank"
-                  rel="noreferrer"
-                  href={value}
-                  className="socials font-heading text-xs text-secondary-100 hover:text-primary-50 sm:text-base xl:text-lg"
-                >
-                  {key}
-                </a>
-              ))}
+            {/* Socials legacy removido. Adapte para usar aboutPageData se necessário. */}
           </div>
         </div>
       </section>
@@ -237,7 +222,7 @@ export function AboutContent({
       <Footer
         interviews={parsedPress}
         exhibitions={parsedExhibitions}
-        email={data?.contact['e-mail']}
+        email={undefined}
       />
     </main>
   )
