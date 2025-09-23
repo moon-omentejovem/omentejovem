@@ -34,9 +34,7 @@ export async function generateMetadata({ params }: SeriesPageProps) {
     openGraph: {
       title: seriesMetadata.name,
       description: `Collection: ${seriesMetadata.name}`,
-      images: seriesMetadata.cover_image_url
-        ? [seriesMetadata.cover_image_url]
-        : []
+      images: []
     }
   }
 }

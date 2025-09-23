@@ -118,16 +118,16 @@ async function migrateArtworkImages() {
 
     if (success) {
       migrated++
-      console.log(`   ✅ Successfully migrated`)
+      console.log('   ✅ Successfully migrated')
     } else {
       skipped++
-      console.log(`   ⚠️ Partially migrated or failed`)
+      console.log('   ⚠️ Partially migrated or failed')
     }
     
     console.log('')
   }
 
-  console.log(`📊 Artwork Migration Summary:`)
+  console.log('📊 Artwork Migration Summary:')
   console.log(`   ✅ Successfully migrated: ${migrated}`)
   console.log(`   ⚠️ Skipped/Failed: ${skipped}\n`)
 }
@@ -164,16 +164,16 @@ async function migrateSeriesImages() {
     
     if (moved) {
       migrated++
-      console.log(`   ✅ Successfully migrated`)
+      console.log('   ✅ Successfully migrated')
     } else {
       skipped++
-      console.log(`   ⚠️ Migration failed`)
+      console.log('   ⚠️ Migration failed')
     }
     
     console.log('')
   }
 
-  console.log(`📊 Series Migration Summary:`)
+  console.log('📊 Series Migration Summary:')
   console.log(`   ✅ Successfully migrated: ${migrated}`)
   console.log(`   ⚠️ Skipped/Failed: ${skipped}\n`)
 }
@@ -210,16 +210,16 @@ async function migrateArtifactImages() {
     
     if (moved) {
       migrated++
-      console.log(`   ✅ Successfully migrated`)
+      console.log('   ✅ Successfully migrated')
     } else {
       skipped++
-      console.log(`   ⚠️ Migration failed`)
+      console.log('   ⚠️ Migration failed')
     }
     
     console.log('')
   }
 
-  console.log(`📊 Artifacts Migration Summary:`)
+  console.log('📊 Artifacts Migration Summary:')
   console.log(`   ✅ Successfully migrated: ${migrated}`)
   console.log(`   ⚠️ Skipped/Failed: ${skipped}\n`)
 }

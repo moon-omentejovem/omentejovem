@@ -24,47 +24,30 @@ COMMENT ON COLUMN artworks.slug IS 'Slug used to generate image paths dynamicall
 COMMENT ON COLUMN series.slug IS 'Slug used to generate image paths dynamically: series/optimized/{slug}.webp and series/raw/{slug}-raw.jpg';
 COMMENT ON TABLE artifacts IS 'Artifact images use ID-based paths: artifacts/optimized/{id}.webp and artifacts/raw/{id}-raw.jpg';
 
--- Step 5: Update views to ensure they work without the old columns
+
+-- Views sem colunas antigas e sem duplicidade
 CREATE OR REPLACE VIEW artworks_with_images AS
-SELECT 
-  a.*,
+SELECT
+  a.id,
+  a.slug,
   get_image_path(a.slug, 'optimized') as optimized_image_path,
-  get_image_path(a.slug, 'raw') as raw_image_path,
-  -- Generate full URLs for API compatibility
-  CONCAT(
-    current_setting('app.supabase_url', true),
-    '/storage/v1/object/public/media/',
-    get_image_path(a.slug, 'optimized')
-  ) as optimized_image_url,
-  CONCAT(
-    current_setting('app.supabase_url', true),
-    '/storage/v1/object/public/media/',
-    get_image_path(a.slug, 'raw')
-  ) as raw_image_url
+  get_image_path(a.slug, 'raw') as raw_image_path
 FROM artworks a;
 
 CREATE OR REPLACE VIEW series_with_images AS
-SELECT 
-  s.*,
+SELECT
+  s.id,
+  s.slug,
   get_series_image_path(s.slug, 'optimized') as optimized_image_path,
-  get_series_image_path(s.slug, 'raw') as raw_image_path,
-  CONCAT(
-    current_setting('app.supabase_url', true),
-    '/storage/v1/object/public/media/',
-    get_series_image_path(s.slug, 'optimized')
-  ) as optimized_image_url
+  get_series_image_path(s.slug, 'raw') as raw_image_path
 FROM series s;
 
 CREATE OR REPLACE VIEW artifacts_with_images AS
-SELECT 
-  ar.*,
+SELECT
+  ar.id,
+  ar.slug,
   get_artifact_image_path(ar.id, 'optimized') as optimized_image_path,
-  get_artifact_image_path(ar.id, 'raw') as raw_image_path,
-  CONCAT(
-    current_setting('app.supabase_url', true),
-    '/storage/v1/object/public/media/',
-    get_artifact_image_path(ar.id, 'optimized')
-  ) as optimized_image_url
+  get_artifact_image_path(ar.id, 'raw') as raw_image_path
 FROM artifacts ar;
 
 -- Step 6: Create a setting for the Supabase URL (used in views)

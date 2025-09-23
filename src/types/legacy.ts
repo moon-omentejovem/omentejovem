@@ -125,7 +125,7 @@ export interface CollectionsResponse {
     name: string
     year: string
     slug: string
-    nftImageUrls: string[]
+    nftSlugs: string[]
   }>
 }
 

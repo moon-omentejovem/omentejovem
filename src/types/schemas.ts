@@ -14,8 +14,7 @@ export const ArtworkSchema = z.object({
   mint_link: z.string().url().optional().nullable(),
   type: z.string().min(1), // Changed from enum to match DB
   editions_total: z.number().int().positive().nullable().optional(),
-  image_url: z.string().min(1), // Required field to match DB
-  raw_image_url: z.string().url().optional().nullable(),
+  // Nenhum campo de imagem: resolução via slug/id e helpers
   video_url: z.string().url().optional().nullable(),
   blockchain: z.string().optional().nullable(),
   contract_address: z.string().optional().nullable(),
@@ -33,8 +32,7 @@ export const SeriesSchema = z.object({
   id: z.string().uuid().optional(),
   slug: z.string().min(1),
   name: z.string().min(1),
-  cover_image_url: z.string().url().optional().nullable(),
-  cover_image_cached_path: z.string().optional().nullable(),
+  // Nenhum campo de imagem: resolução via slug/id e helpers
   created_at: z.string().optional(),
   updated_at: z.string().optional()
 })
@@ -53,7 +51,7 @@ export const ArtifactSchema = z.object({
   description: z.string().optional().nullable(),
   highlight_video_url: z.string().url().optional().nullable(),
   link_url: z.string().url().optional().nullable(),
-  image_url: z.string().url().optional().nullable(),
+  // Nenhum campo de imagem: resolução via slug/id e helpers
   status: z.enum(['draft', 'published']).default('published'),
   created_at: z.string().optional(),
   updated_at: z.string().optional()
@@ -99,8 +97,8 @@ export const AboutPageSchema = z.object({
 export const CreateArtworkSchema = ArtworkSchema.omit({
   id: true,
   created_at: true,
-  updated_at: true,
-  raw_image_url: true // This is auto-populated during image upload
+  updated_at: true
+  // Nenhum campo de imagem: resolução via slug/id e helpers
 })
 
 export const UpdateArtworkSchema = CreateArtworkSchema.partial()

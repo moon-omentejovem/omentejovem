@@ -2,7 +2,7 @@
 
 import { ImageUploadService } from '@/services/image-upload.service'
 import type { FormField, ResourceDescriptor } from '@/types/descriptors'
-import { getPublicUrl } from '@/utils/storage'
+import { getImageUrlFromSlug } from '@/utils/storage'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import {
   FileInput,
@@ -171,33 +171,48 @@ export default function AdminFormField({
         </div>
       )
     case 'image':
-      // For new slug-based system, we need to determine the slug from the form data
-      // For artworks and series, we use their slug field
-      // For artifacts, we use their ID
-      const imageUrl = getPublicUrl(value)
-      
+      // Novo sistema: upload e preview baseados em slug
+      // O slug deve estar disponível no form (ex: via onExtraChange, prop, ou contexto)
+      // Aqui assumimos que o valor do campo slug está em onExtraChange ou value do slug
+      // Ajuste conforme a estrutura do seu form
+      const slug =
+        (typeof onExtraChange === 'function' &&
+          (descriptor as any).currentSlug) ||
+        value?.slug ||
+        value ||
+        ''
+      // Importa o helper correto para gerar a URL baseada em slug
+      // Supondo que existe getImageUrlFromSlug(slug, tipo, variante)
+      // Ajuste o import se necessário
+      const imageUrl = slug
+        ? getImageUrlFromSlug(slug, descriptor.table, 'optimized')
+        : undefined
+
       const handleFileChange = async (
         e: React.ChangeEvent<HTMLInputElement>
       ) => {
         const file = e.target.files?.[0]
-        if (!file) return
+        if (!file || !slug) {
+          toast.error('Slug obrigatório para upload de imagem.')
+          return
+        }
 
         await toast.promise(
           (async () => {
-            // For backward compatibility, still use the old method
-            // This will be updated once we have proper slug access
-            const result = await ImageUploadService.uploadImageWithValidation(
+            await ImageUploadService.uploadImageBySlug(
               file,
+              slug,
               supabase,
               descriptor.table
             )
-            onChange(result.optimizedPath)
-            onExtraChange?.('raw_image_path', result.rawPath)
+            // Não salva path, apenas garante que slug está salvo no registro
+            // Se o campo de imagem não for mais necessário, pode deixar onChange vazio
+            onChange(slug)
           })(),
           {
-            loading: 'Uploading image...',
-            success: 'Image uploaded successfully!',
-            error: (err) => `Upload failed: ${err.message}`
+            loading: 'Enviando imagem...',
+            success: 'Imagem enviada com sucesso!',
+            error: (err) => `Falha no upload: ${err.message}`
           }
         )
       }

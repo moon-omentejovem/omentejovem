@@ -74,6 +74,8 @@ export class ArtworkService extends BaseService {
 }
 ```
 
+**Atenção:** Não existe mais campo de path de imagem no banco. Use apenas image_url ou cover_image_url para armazenar referências de imagem.
+
 ### Resultados de Build
 
 - **✅ 249+ páginas estáticas** geradas
@@ -83,7 +85,7 @@ export class ArtworkService extends BaseService {
 
 ---
 
-## 🚨 Diretrizes Importantes
+### 🚨 Diretrizes Importantes
 
 ### ✅ O que Usar
 
@@ -91,6 +93,7 @@ export class ArtworkService extends BaseService {
 - **BaseService pattern** - Sempre herdar de BaseService
 - **React cache()** - Automático nos Services
 - **Static generation** - generateStaticParams implementado
+- **Campos de imagem:** Use apenas image_url ou cover_image_url. Não crie nem utilize campos de path de imagem.
 
 ### ❌ O que Evitar
 
@@ -98,6 +101,7 @@ export class ArtworkService extends BaseService {
 - **Lógica de negócio** em utils/supabase
 - **Multiple sources of truth** - Backend é única fonte
 - **Páginas sem generateStaticParams** para rotas dinâmicas
+- **Campos de path de imagem** - Não utilize, não crie, não migre.
 
 ---
 

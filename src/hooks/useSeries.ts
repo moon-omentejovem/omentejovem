@@ -80,8 +80,7 @@ export function useSeriesBySlug(slug: string, enabled = true) {
             artwork:artworks(
               id,
               title,
-              slug,
-              image_url
+              slug
             )
           )
         `

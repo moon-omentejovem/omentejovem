@@ -12,6 +12,7 @@ import { ArtDetails } from '@/components/ArtDetails'
 import { ArtLinks } from '@/components/ArtLinks'
 import { cn } from '@/lib/utils'
 import { Artwork } from '@/types/artwork'
+import { getImageUrlFromSlug } from '@/utils/storage'
 import { addHours, format } from 'date-fns'
 import { HorizontalInCarouselArtwork } from './HorizontalInCarousel/HorizontalInCarouselArtwork'
 import './styles.css'
@@ -145,10 +146,12 @@ export function ArtInfo({
         <div className="md:flex-1 min-w-[200px] xl:min-w-[350px] flex flex-col max-h-full">
           <div className="xl:art-detail-inner-container overflow-hidden flex flex-1 justify-start xl:justify-end">
             <ArtDetails
-              detailedImage={
-                selectedArtwork.raw_image_url || selectedArtwork.image_url || ''
-              }
-              image={selectedArtwork.image_url || ''}
+              detailedImage={getImageUrlFromSlug(
+                selectedArtwork.slug,
+                'artworks',
+                'raw'
+              )}
+              image={getImageUrlFromSlug(selectedArtwork.slug, 'artworks')}
               name={selectedArtwork.title || ''}
             />
           </div>
@@ -327,12 +330,13 @@ export function ArtInfo({
               src={
                 selectedArtwork.video_url ||
                 (() => {
-                  const baseUrl =
-                    selectedArtwork.raw_image_url ||
-                    selectedArtwork.image_url ||
-                    ''
-                  return baseUrl
-                    .replace('/new_series/', '/new_series/videos/')
+                  const rawUrl = getImageUrlFromSlug(
+                    selectedArtwork.slug,
+                    'artworks',
+                    'raw'
+                  )
+                  return rawUrl
+                    .replace('/raw/', '/videos/')
                     .replace('.jpg', '.mp4')
                 })()
               }

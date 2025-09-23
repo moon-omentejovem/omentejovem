@@ -75,8 +75,6 @@ export type Database = {
           description: string | null
           highlight_video_url: string | null
           id: string
-          image_path: string | null
-          image_url: string | null
           link_url: string | null
           status: string
           title: string
@@ -87,8 +85,6 @@ export type Database = {
           description?: string | null
           highlight_video_url?: string | null
           id?: string
-          image_path?: string | null
-          image_url?: string | null
           link_url?: string | null
           status?: string
           title: string
@@ -99,8 +95,6 @@ export type Database = {
           description?: string | null
           highlight_video_url?: string | null
           id?: string
-          image_path?: string | null
-          image_url?: string | null
           link_url?: string | null
           status?: string
           title?: string
@@ -117,15 +111,11 @@ export type Database = {
           description: Json | null
           editions_total: number | null
           id: string
-          image_path: string | null
-          image_url: string
           is_featured: boolean | null
           is_one_of_one: boolean | null
           mint_date: string | null
           mint_link: string | null
           posted_at: string | null
-          raw_image_path: string | null
-          raw_image_url: string | null
           slug: string
           status: string
           title: string
@@ -142,15 +132,11 @@ export type Database = {
           description?: Json | null
           editions_total?: number | null
           id?: string
-          image_path?: string | null
-          image_url: string
           is_featured?: boolean | null
           is_one_of_one?: boolean | null
           mint_date?: string | null
           mint_link?: string | null
           posted_at?: string | null
-          raw_image_path?: string | null
-          raw_image_url?: string | null
           slug: string
           status?: string
           title: string
@@ -167,15 +153,11 @@ export type Database = {
           description?: Json | null
           editions_total?: number | null
           id?: string
-          image_path?: string | null
-          image_url?: string
           is_featured?: boolean | null
           is_one_of_one?: boolean | null
           mint_date?: string | null
           mint_link?: string | null
           posted_at?: string | null
-          raw_image_path?: string | null
-          raw_image_url?: string | null
           slug?: string
           status?: string
           title?: string
@@ -188,8 +170,6 @@ export type Database = {
       }
       series: {
         Row: {
-          cover_image_path: string | null
-          cover_image_url: string | null
           created_at: string | null
           id: string
           name: string
@@ -197,8 +177,6 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
-          cover_image_path?: string | null
-          cover_image_url?: string | null
           created_at?: string | null
           id?: string
           name: string
@@ -206,8 +184,6 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
-          cover_image_path?: string | null
-          cover_image_url?: string | null
           created_at?: string | null
           id?: string
           name?: string
@@ -249,7 +225,7 @@ export type Database = {
             isOneToOne: false
             referencedRelation: 'series'
             referencedColumns: ['id']
-          }
+          },
         ]
       }
       user_roles: {
@@ -312,7 +288,7 @@ export type Tables<
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])
-    : never = never
+    : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -340,7 +316,7 @@ export type TablesInsert<
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
-    : never = never
+    : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -365,7 +341,7 @@ export type TablesUpdate<
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
-    : never = never
+    : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -390,7 +366,7 @@ export type Enums<
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums']
-    : never = never
+    : never = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -407,7 +383,7 @@ export type CompositeTypes<
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes']
-    : never = never
+    : never = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -418,9 +394,9 @@ export type CompositeTypes<
 
 export const Constants = {
   graphql_public: {
-    Enums: {}
+    Enums: {},
   },
   public: {
-    Enums: {}
-  }
+    Enums: {},
+  },
 } as const

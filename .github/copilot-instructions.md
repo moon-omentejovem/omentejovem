@@ -35,10 +35,14 @@ supabase gen types typescript --project-id YOUR_PROJECT_ID > src/types/supabase.
 
 ### Image Handling Pipeline
 
-- **Upload**: Supabase Storage (`media` bucket)
+- **Upload**: Supabase Storage (`media` bucket`), usando o slug como chave única para artworks, series e artifacts.
+- **Padrão de organização**: O caminho no storage é sempre derivado do slug (ou id para artifacts):
+  - Artworks: `slug/arquivo.ext`
+  - Series: `series/slug/arquivo.ext`
+  - Artifacts: `artifacts/id/arquivo.ext`
 - **Caching**: External URLs proxied via `/api/images/proxy`
-- **Optimization**: Next.js Image with `src/utils/images.ts` helpers
-- **Database**: Store both `image_url` (original) and `image_cached_path` (optimized)
+- **Optimization**: Next.js Image com helpers de `src/utils/images.ts`
+- **Database**: O banco NÃO armazena nenhum campo de imagem (nem image_url, nem cover_image_url, nem path). O slug (ou id) é a única referência e chave para imagens no storage. Toda resolução de imagem é feita via convenção de path baseada no slug/id.
 
 ## Code Patterns & Conventions
 

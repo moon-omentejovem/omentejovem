@@ -74,32 +74,23 @@ function getSeriesMapping() {
   return {
     the3cycle: {
       slug: 'the-cycle',
-      name: 'The Cycle',
-      cover_image_url:
-        'https://i.seadn.io/s/raw/files/ed5d5b2508bd188b00832ac86adb57ba.jpg?w=500&auto=format'
+      name: 'The Cycle'
     },
     omentejovem: {
       slug: 'omentejovem-1-1s',
-      name: 'OMENTEJOVEM 1/1s',
-      cover_image_url:
-        'https://i.seadn.io/gcs/files/cacbfeb217dd1be2d79a65a765ca550f.jpg?w=500&auto=format'
+      name: 'OMENTEJOVEM 1/1s'
     },
     shapesncolors: {
       slug: 'shapes-colors',
-      name: 'Shapes & Colors',
-      cover_image_url:
-        'https://i.seadn.io/gcs/files/9d7eb58db2c4fa4cc9dd93273c6d3e51.png?w=500&auto=format'
+      name: 'Shapes & Colors'
     },
     'omentejovem-editions': {
       slug: 'omentejovem-editions',
-      name: "OMENTEJOVEM's Editions",
-      cover_image_url:
-        'https://i.seadn.io/gae/_ZzhhYKfpH4to7PQ0RJkr8REqu_BamJNFNe17NnOkFg1rhFiC_xcioL969hFj5Hri7FIm1hruaKEfUOupzhz3uQk6XwoApIPtgcKFw?w=500&auto=format'
+      name: "OMENTEJOVEM's Editions"
     },
     'new-series': {
       slug: 'new-series',
-      name: 'Stories on Circles',
-      cover_image_url: '/new_series/1_Sitting_at_the_Edge.jpg'
+      name: 'Stories on Circles'
     }
   }
 }
@@ -158,7 +149,6 @@ function getStoriesOnCirclesArtworks() {
     mint_date: '2025-05-30',
     mint_link: null,
     type: 'single',
-    image_url: `/new_series/${item.filename}`,
     video_url: `/new_series/videos/${item.filename.replace('.jpg', '.mp4')}`,
     is_featured: item.id === 1, // Feature the first one
     is_one_of_one: true,
@@ -173,15 +163,13 @@ function getCoreArtifacts() {
       title: 'Stories on Circles Collection',
       description: 'Physical and digital exploration of circular narratives',
       highlight_video_url: '/crate.mp4',
-      link_url: 'https://www.omentejovem.com/',
-      image_url: '/S&C Cover.jpg'
+      link_url: 'https://www.omentejovem.com/'
     },
     {
       title: 'The Cycle Collection',
       description: 'A meditation on cycles of nature and existence',
       highlight_video_url: null,
-      link_url: 'https://opensea.io/collection/the3cycle',
-      image_url: '/TheCycleCover.jpg'
+      link_url: 'https://opensea.io/collection/the3cycle'
     }
   ]
 }
@@ -302,7 +290,6 @@ function processMetadataToArtwork(
     mint_date: mintDate.split('T')[0], // Just the date part
     mint_link: getOpenSeaUrl(metadata),
     type: getArtworkType(metadata),
-    image_url: getBestImageUrl(metadata),
     is_featured: false, // Will be set manually for specific pieces
     is_one_of_one: isOneOfOne(metadata),
     posted_at: mintDate

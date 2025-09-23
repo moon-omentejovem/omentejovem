@@ -5,17 +5,6 @@
 
 BEGIN;
 
--- Step 1: Add backup columns to preserve existing data temporarily
-COMMENT ON COLUMN artworks.image_url IS 'DEPRECATED: Will be removed after migration. Use slug-based paths instead.';
-COMMENT ON COLUMN artworks.image_path IS 'DEPRECATED: Will be removed after migration. Use slug-based paths instead.';
-COMMENT ON COLUMN artworks.raw_image_path IS 'DEPRECATED: Will be removed after migration. Use slug-based paths instead.';
-COMMENT ON COLUMN artworks.raw_image_url IS 'DEPRECATED: Will be removed after migration. Use slug-based paths instead.';
-
-COMMENT ON COLUMN series.cover_image_url IS 'DEPRECATED: Will be removed after migration. Use slug-based paths instead.';
-COMMENT ON COLUMN series.cover_image_path IS 'DEPRECATED: Will be removed after migration. Use slug-based paths instead.';
-
-COMMENT ON COLUMN artifacts.image_url IS 'DEPRECATED: Will be removed after migration. Use slug-based paths instead.';
-COMMENT ON COLUMN artifacts.image_path IS 'DEPRECATED: Will be removed after migration. Use slug-based paths instead.';
 
 -- Step 2: Add new function to generate image paths from slug
 CREATE OR REPLACE FUNCTION get_image_path(slug_value TEXT, image_type TEXT DEFAULT 'optimized')
@@ -53,24 +42,28 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql IMMUTABLE;
 
--- Step 5: Create views that dynamically generate image URLs
+
+-- As views não devem conflitar nomes de colunas, então não selecione colunas antigas duplicadas
 CREATE OR REPLACE VIEW artworks_with_images AS
-SELECT 
-  a.*,
+SELECT
+  a.id,
+  a.slug,
   get_image_path(a.slug, 'optimized') as optimized_image_path,
   get_image_path(a.slug, 'raw') as raw_image_path
 FROM artworks a;
 
 CREATE OR REPLACE VIEW series_with_images AS
-SELECT 
-  s.*,
+SELECT
+  s.id,
+  s.slug,
   get_series_image_path(s.slug, 'optimized') as optimized_image_path,
   get_series_image_path(s.slug, 'raw') as raw_image_path
 FROM series s;
 
 CREATE OR REPLACE VIEW artifacts_with_images AS
-SELECT 
-  ar.*,
+SELECT
+  ar.id,
+  ar.slug,
   get_artifact_image_path(ar.id, 'optimized') as optimized_image_path,
   get_artifact_image_path(ar.id, 'raw') as raw_image_path
 FROM artifacts ar;

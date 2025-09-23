@@ -5,16 +5,8 @@ Este documento descreve o novo sistema de gerenciamento de imagens simplificado 
 ## 🎯 Objetivo
 
 **Problema anterior**: Sistema complexo com múltiplos campos para imagens:
-- `image_url`, `image_path`, `raw_image_url`, `raw_image_path`
-- Necessidade de salvar paths no banco de dados
-- Inconsistências entre URLs e paths
-- Dificuldade de manutenção
 
 **Solução implementada**: Sistema simplificado baseado em slug:
-- Imagens são nomeadas usando slug: `{slug}.webp` e `{slug}-raw.jpg`
-- Paths são gerados dinamicamente a partir do slug
-- Eliminação de campos redundantes no banco
-- Fácil backup e organização de arquivos
 
 ## 📁 Estrutura de Armazenamento
 
@@ -73,10 +65,6 @@ node scripts/migrate-to-slug-based-images.js
 
 ### 4. **Testar Sistema**
 
-- Testar upload de novas imagens no admin
-- Verificar se URLs são geradas corretamente
-- Validar que imagens antigas ainda funcionam
-
 ### 5. **Cleanup (Opcional)**
 
 Após confirmação que tudo funciona:
@@ -102,7 +90,7 @@ const result = await ImageUploadService.uploadImageBySlug(
   'artworks' // tipo de recurso
 )
 
-// Resultado: 
+// Resultado:
 // {
 //   success: true,
 //   slug: 'my-artwork-slug',
@@ -117,7 +105,11 @@ const result = await ImageUploadService.uploadImageBySlug(
 import { getImageUrlFromSlug } from '@/utils/storage'
 
 // Gerar URL otimizada
-const optimizedUrl = getImageUrlFromSlug('my-artwork-slug', 'artworks', 'optimized')
+const optimizedUrl = getImageUrlFromSlug(
+  'my-artwork-slug',
+  'artworks',
+  'optimized'
+)
 
 // Gerar URL raw
 const rawUrl = getImageUrlFromSlug('my-artwork-slug', 'artworks', 'raw')
@@ -178,29 +170,20 @@ const result = await ImageUploadService.uploadImageWithValidation(
 ### Funções SQL Criadas
 
 ```sql
--- Gerar path de artwork
-SELECT get_image_path('my-slug', 'optimized'); 
--- retorna: artworks/optimized/my-slug.webp
+SELECT get_image_path('my-slug', 'optimized');
 
--- Gerar path de série  
 SELECT get_series_image_path('my-series', 'raw');
--- retorna: series/raw/my-series-raw.jpg
 
--- Gerar path de artifact
 SELECT get_artifact_image_path(uuid, 'optimized');
--- retorna: artifacts/optimized/{uuid}.webp
 ```
 
 ### Views Disponíveis
 
 ```sql
--- Artworks com paths e URLs gerados automaticamente
 SELECT * FROM artworks_with_images;
 
--- Series com paths e URLs gerados automaticamente  
 SELECT * FROM series_with_images;
 
--- Artifacts com paths e URLs gerados automaticamente
 SELECT * FROM artifacts_with_images;
 ```
 
@@ -221,8 +204,3 @@ SELECT * FROM artifacts_with_images;
 4. **URLs externas**: Sistema não funciona com URLs externas (IPFS, etc)
 
 ## 📝 Scripts Disponíveis
-
-- `scripts/test-image-system.js` - Testa e valida o sistema
-- `scripts/migrate-to-slug-based-images.js` - Migra imagens existentes
-- `supabase/migrations/20250924000000_simplify_image_management.sql` - Migration inicial
-- `supabase/migrations/20250924000001_cleanup_image_columns.sql` - Cleanup final

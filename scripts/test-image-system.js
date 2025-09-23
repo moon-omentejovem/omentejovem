@@ -168,7 +168,7 @@ async function validateArtworkSlugs() {
       }
     })
 
-    console.log(`\n📊 Slug validation summary:`)
+    console.log('\n📊 Slug validation summary:')
     console.log(`   ✅ Valid slugs: ${validSlugs}`)
     console.log(`   ❌ Invalid slugs: ${invalidSlugs}`)
 
@@ -220,7 +220,7 @@ async function generateMissingSlugs() {
       if (updateError) {
         console.error(`   ❌ Failed to update slug: ${updateError.message}`)
       } else {
-        console.log(`   ✅ Slug updated successfully`)
+        console.log('   ✅ Slug updated successfully')
       }
     }
 

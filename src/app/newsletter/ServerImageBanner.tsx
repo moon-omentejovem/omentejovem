@@ -4,12 +4,19 @@
  */
 
 import { ArtworkService } from '@/services'
+import { getImageUrlFromSlug } from '@/utils/storage'
 import Image from 'next/image'
 
 export async function ServerImageBanner() {
   // Buscar imagens diretamente no servidor usando o novo service
   const { artworks } = await ArtworkService.getArtworks({ limit: 10 })
-  const images = artworks.map((artwork) => artwork.image_url).filter(Boolean)
+  const images = artworks
+    .map((artwork) =>
+      artwork.slug
+        ? getImageUrlFromSlug(artwork.slug, 'artworks', 'optimized')
+        : null
+    )
+    .filter(Boolean)
 
   return (
     <div className="fixed left-0 top-0 h-full overflow-hidden hidden md:block z-50">
@@ -17,7 +24,7 @@ export async function ServerImageBanner() {
         {[...images, ...images].map((src, index) => (
           <Image
             key={index}
-            src={src}
+            src={src as string}
             alt={`Banner image ${index + 1}`}
             width={200}
             height={200}
