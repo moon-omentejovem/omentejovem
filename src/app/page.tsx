@@ -1,8 +1,8 @@
 import { ArtworkService } from '@/services'
 import type { HomeImage } from '@/types/home'
 import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
 import HomeContent from './home/content'
-import NewsletterPage from './newsletter/page'
 
 // Disable caching - fetch fresh data on every request
 export const dynamic = 'force-dynamic'
@@ -21,22 +21,17 @@ export default async function Home() {
 
   const closeNewsletter = cookies().get('newsletter_dismissed')
 
-  const content = (
-    <HomeContent
-      initialImages={images}
-      title="Thales Machado"
-      subtitle="omentejovem"
-    />
-  )
-
-  if (closeNewsletter) {
-    return content
+  if (!closeNewsletter) {
+    return redirect('/newsletter')
   }
 
   return (
     <div className="fixed sm:z-20 bg-background w-full h-full max-w-[1920px]">
-      <NewsletterPage />
-      {content}
+      <HomeContent
+        initialImages={images}
+        title="Thales Machado"
+        subtitle="omentejovem"
+      />
     </div>
   )
 }
