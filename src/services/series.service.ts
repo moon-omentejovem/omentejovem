@@ -6,7 +6,7 @@
  */
 
 import type { Database } from '@/types/supabase'
-import { getImageUrlFromSlug } from '@/utils/storage'
+import { getImageUrlFromId } from '@/utils/storage'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { cache } from 'react'
 import { BaseService } from './base.service'
@@ -244,10 +244,17 @@ export class SeriesService extends BaseService {
           .map((sa: any) => sa.artworks?.slug)
           .filter(Boolean)
 
-        // Generate cover image URL from series slug
-        const coverImage = series.slug
-          ? getImageUrlFromSlug(series.slug, 'series', 'optimized')
-          : undefined
+        // Usa o id do primeiro artwork relacionado como identificador para coverImage
+        const firstArtwork = artworks[0]?.artworks
+        const coverImage =
+          firstArtwork && series.slug
+            ? getImageUrlFromId(
+                firstArtwork.id,
+                series.slug,
+                'series',
+                'optimized'
+              )
+            : undefined
 
         return {
           name: series.name,
