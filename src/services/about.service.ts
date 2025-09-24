@@ -5,7 +5,6 @@
  * Handles rich text content, sections, and about page metadata.
  */
 
-import { socialConfigs } from '@/configs/documents'
 import type { Database } from '@/types/supabase'
 import { cache } from 'react'
 import { BaseService } from './base.service'
@@ -16,33 +15,32 @@ type DatabaseAboutPage = Database['public']['Tables']['about_page']['Row']
 export interface AboutPageData {
   id: string
   content: any // JSON content from Tiptap
+  socials: Array<{
+    platform: string
+    handle: string
+    url: string
+  }>
+  exhibitions: Array<{
+    title: string
+    venue: string
+    location: string
+    year: string
+    type: 'solo' | 'group' | 'online'
+    description?: string
+  }>
+  press: Array<{
+    title: string
+    publication: string
+    date: string
+    url?: string
+    type: 'feature' | 'interview' | 'review' | 'news'
+  }>
   created_at: string | null
   updated_at: string | null
 }
 
-// Legacy AboutData interface for compatibility
-export interface AboutData {
-  title: string
-  subtitle: string
-  subtitle_art: string | false
-  bio: string
-  social_media: {
-    twitter: string
-    instagram: string
-    aotm: string
-    superrare: string
-    foundation: string
-    opensea: string
-    objkt: string
-  }
-  contact: {
-    'e-mail': string
-  }
-}
-
 export interface ProcessedAboutData {
   aboutPage: AboutPageData | null
-  aboutData: AboutData | null
   error: null | string
 }
 
@@ -50,33 +48,7 @@ export interface ProcessedAboutData {
  * About Service Class
  */
 export class AboutService extends BaseService {
-  /**
-   * Get default about data for legacy compatibility
-   */
-  private static getDefaultLegacyAboutData(): AboutData {
-    return {
-      title: 'THALES MACHADO',
-      subtitle: '"omentejovem"',
-      subtitle_art: false,
-      bio: 'Artist and creator exploring digital narratives through NFTs.',
-      social_media: {
-        twitter: socialConfigs.find((s) => s.name === 'Twitter')?.link || '',
-        instagram:
-          socialConfigs.find((s) => s.name === 'Instagram')?.link || '',
-        aotm: socialConfigs.find((s) => s.name === 'AOTM')?.link || '',
-        superrare:
-          socialConfigs.find((s) => s.name === 'SuperRare')?.link || '',
-        foundation:
-          socialConfigs.find((s) => s.name === 'Foundation')?.link || '',
-        opensea: socialConfigs.find((s) => s.name === 'OpenSea')?.link || '',
-        objkt: socialConfigs.find((s) => s.name === 'Objkt')?.link || ''
-      },
-      contact: {
-        'e-mail': 'contact@omentejovem.com'
-      }
-    }
-  }
-
+  // Legacy method removido
   /**
    * Get default about page data structure
    */
@@ -97,6 +69,9 @@ export class AboutService extends BaseService {
           }
         ]
       },
+      socials: [],
+      exhibitions: [],
+      press: [],
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     }
@@ -113,14 +88,13 @@ export class AboutService extends BaseService {
         .single()
 
       // Always provide legacy data for compatibility
-      const aboutData = this.getDefaultLegacyAboutData()
+      const aboutData = null // Legacy data removed
 
       // If no data found (first time), use defaults
       if (error && error.code === 'PGRST116') {
         const defaultData = this.getDefaultAboutData()
         return {
           aboutPage: defaultData,
-          aboutData,
           error: null
         }
       }
@@ -129,14 +103,12 @@ export class AboutService extends BaseService {
         console.error('Error fetching about page data:', error)
         return {
           aboutPage: null,
-          aboutData,
           error: error.message
         }
       }
 
       return {
         aboutPage: aboutPageData as AboutPageData,
-        aboutData,
         error: null
       }
     }, 'getAboutPageData')

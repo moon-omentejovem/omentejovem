@@ -1,10 +1,9 @@
 import { ArtworkService } from '@/services'
-import type { HomeImage } from '@/types/home'
+import { getImageUrlFromSlugCompat } from '@/utils/storage'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import HomeContent from './home/content'
 
-// Disable caching - fetch fresh data on every request
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
@@ -13,9 +12,11 @@ export default async function Home() {
   const { artworks: featuredArtworks } =
     await ArtworkService.getPublishedFeatured()
 
-  const images: HomeImage[] = featuredArtworks.map((artwork: any) => ({
+  const images = featuredArtworks.map((artwork: any) => ({
     title: artwork.title || '',
-    imageUrl: artwork.image_url || '',
+    imageUrl: artwork.slug
+      ? getImageUrlFromSlugCompat(artwork.slug, 'artworks', 'optimized')
+      : '',
     createdAt: artwork.posted_at || ''
   }))
 

@@ -2,28 +2,24 @@
 
 import Image from 'next/image'
 import type { ReactElement } from 'react'
-import { AboutData, PressTalk } from './@types/wordpress'
 
 import { aboutAnimations } from '@/animations/client'
 import { AboutArt } from '@/assets/images'
 import { Footer, FooterProperties } from '@/components/Footer'
-import { decodeRenderedString } from '@/utils/decodeRenderedString'
-import { useCallback, useEffect, useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 
-import parse from 'html-react-parser'
 import { BioRenderer } from './bio-renderer'
-import HardCodedBio from './hardcoded-bio'
 import './style.css'
 
 interface AboutPageData {
   id: string
   content: any
-  socials?: Array<{
+  socials: Array<{
     platform: string
     handle: string
     url: string
   }>
-  exhibitions?: Array<{
+  exhibitions: Array<{
     title: string
     venue: string
     location: string
@@ -31,7 +27,7 @@ interface AboutPageData {
     type: 'solo' | 'group' | 'online'
     description?: string
   }>
-  press?: Array<{
+  press: Array<{
     title: string
     publication: string
     date: string
@@ -43,28 +39,11 @@ interface AboutPageData {
 }
 
 interface AboutContentProperties {
-  data: AboutData | undefined
   aboutPageData?: AboutPageData | null
-  press: PressTalk[]
-  exhibitions: PressTalk[]
-}
-
-function AboutBio({ text }: { text: string }): ReactElement {
-  return (
-    <>
-      <div id="bio-content" className="bio">
-        {parse(text)}
-      </div>
-      <br />
-    </>
-  )
 }
 
 export function AboutContent({
-  data,
-  aboutPageData,
-  press,
-  exhibitions
+  aboutPageData
 }: AboutContentProperties): ReactElement {
   useEffect(() => {
     aboutAnimations()
@@ -72,25 +51,23 @@ export function AboutContent({
 
   const parsedPress = useMemo<FooterProperties['interviews']>(
     () =>
-      press.map((interview) => ({
-        interviewName: decodeRenderedString(interview.title.rendered),
-        interviewUrl: interview.acf.link
+      (aboutPageData?.press || []).map((press) => ({
+        interviewName: press.title,
+        interviewUrl: press.url || '#'
       })),
-    [press]
+    [aboutPageData?.press]
   )
 
   const parsedExhibitions = useMemo<FooterProperties['exhibitions']>(
     () =>
-      exhibitions.map((exhibition) => ({
-        exhibitionName: decodeRenderedString(exhibition.title.rendered),
-        exhibitionUrl: exhibition.acf.link
+      (aboutPageData?.exhibitions || []).map((exhibition) => ({
+        exhibitionName: exhibition.title,
+        exhibitionUrl: '#'
       })),
-    [exhibitions]
+    [aboutPageData?.exhibitions]
   )
 
-  const renderAboutInfo = useCallback((aboutString: string): ReactElement => {
-    return <AboutBio key={'about-bio'} text={aboutString} />
-  }, [])
+  // Removido: renderAboutInfo e uso de data
 
   useEffect(() => {
     const anchorElements = document.getElementsByTagName(
@@ -207,7 +184,10 @@ export function AboutContent({
           {aboutPageData?.content ? (
             <BioRenderer content={aboutPageData.content} />
           ) : (
-            <HardCodedBio />
+            <div className="text-gray-500 italic">
+              Bio content not available. Please add content through the admin
+              panel.
+            </div>
           )}
         </div>
 
@@ -216,18 +196,23 @@ export function AboutContent({
             Socials
           </p>
           <div className="flex flex-col gap-2">
-            {data &&
-              Object.entries(data.social_media).map(([key, value]) => (
+            {aboutPageData?.socials && aboutPageData.socials.length > 0 ? (
+              aboutPageData.socials.map((social, index) => (
                 <a
-                  key={key}
+                  key={index}
+                  href={social.url}
                   target="_blank"
-                  rel="noreferrer"
-                  href={value}
-                  className="socials font-heading text-xs text-secondary-100 hover:text-primary-50 sm:text-base xl:text-lg"
+                  rel="noopener noreferrer"
+                  className="text-secondary-100 hover:text-orange-400 transition-colors text-sm"
                 >
-                  {key}
+                  {social.platform}: {social.handle}
                 </a>
-              ))}
+              ))
+            ) : (
+              <span className="text-gray-500 text-sm">
+                No social media profiles added yet.
+              </span>
+            )}
           </div>
         </div>
       </section>
@@ -237,7 +222,7 @@ export function AboutContent({
       <Footer
         interviews={parsedPress}
         exhibitions={parsedExhibitions}
-        email={data?.contact['e-mail']}
+        email={undefined}
       />
     </main>
   )

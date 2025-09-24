@@ -2,7 +2,7 @@
 
 import { ImageUploadService } from '@/services/image-upload.service'
 import type { FormField, ResourceDescriptor } from '@/types/descriptors'
-import { getPublicUrl } from '@/utils/storage'
+import { getImageUrlFromSlugCompat } from '@/utils/storage'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import {
   FileInput,
@@ -25,6 +25,7 @@ interface AdminFormFieldProps {
   onExtraChange?: (key: string, value: any) => void
   descriptor: ResourceDescriptor
   supabase: SupabaseClient
+  formData?: Record<string, any>
 }
 
 export default function AdminFormField({
@@ -34,7 +35,8 @@ export default function AdminFormField({
   onChange,
   onExtraChange,
   descriptor,
-  supabase
+  supabase,
+  formData
 }: AdminFormFieldProps) {
   switch (field.type) {
     case 'text':
@@ -171,27 +173,49 @@ export default function AdminFormField({
         </div>
       )
     case 'image':
-      const imageUrl = getPublicUrl(value)
+      // Usa o valor do campo slug do formData (React state)
+      let slug = ''
+      if (formData) {
+        if (descriptor.table === 'artworks' || descriptor.table === 'series') {
+          slug = formData.slug || ''
+        } else if (descriptor.table === 'artifacts') {
+          slug = formData.id || ''
+        }
+      }
+
+      console.log({ formData, slug })
+
+      // Usa image_url da API se disponível, senão gera localmente
+      const imageUrl =
+        formData && formData.image_url
+          ? formData.image_url
+          : slug
+            ? getImageUrlFromSlugCompat(slug, descriptor.table, 'optimized')
+            : undefined
+
       const handleFileChange = async (
         e: React.ChangeEvent<HTMLInputElement>
       ) => {
         const file = e.target.files?.[0]
-        if (!file) return
+        if (!file || !slug) {
+          toast.error('Slug obrigatório para upload de imagem.')
+          return
+        }
 
         await toast.promise(
           (async () => {
-            const result = await ImageUploadService.uploadImageWithValidation(
+            await ImageUploadService.uploadImageBySlug(
               file,
+              slug,
               supabase,
               descriptor.table
             )
-            onChange(result.optimizedPath)
-            onExtraChange?.('raw_image_path', result.rawPath)
+            onChange(slug)
           })(),
           {
-            loading: 'Uploading image...',
-            success: 'Image uploaded successfully!',
-            error: (err) => `Upload failed: ${err.message}`
+            loading: 'Enviando imagem...',
+            success: 'Imagem enviada com sucesso!',
+            error: (err) => `Falha no upload: ${err.message}`
           }
         )
       }

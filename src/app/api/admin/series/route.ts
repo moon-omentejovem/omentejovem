@@ -1,5 +1,6 @@
 import { supabaseAdmin } from '@/lib/supabase-admin'
 import { CreateSeriesSchema } from '@/types/schemas'
+import { getImageUrlFromId } from '@/utils/storage'
 import { revalidateTag } from 'next/cache'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -34,7 +35,25 @@ export async function GET(request: NextRequest) {
 
     if (error) throw error
 
-    return NextResponse.json({ data, total: count })
+    // Adiciona campo image_url resolvido para cada série
+    const toSlug = (str: string) =>
+      str
+        ?.toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '')
+    const seriesWithImage = (data || []).map((series) => ({
+      ...series,
+      image_url:
+        series.id && series.slug
+          ? getImageUrlFromId(
+              series.id,
+              toSlug(series.slug),
+              'series',
+              'optimized'
+            )
+          : null
+    }))
+    return NextResponse.json({ data: seriesWithImage, total: count })
   } catch (error) {
     console.error('Error fetching series:', error)
     return NextResponse.json(
@@ -78,7 +97,25 @@ export async function POST(request: NextRequest) {
     // Revalidate cache
     revalidateTag('series')
 
-    return NextResponse.json(series, { status: 201 })
+    // Adiciona campo image_url resolvido
+    const toSlug = (str: string) =>
+      str
+        ?.toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '')
+    const seriesWithImage = {
+      ...series,
+      image_url:
+        series.id && series.slug
+          ? getImageUrlFromId(
+              series.id,
+              toSlug(series.slug),
+              'series',
+              'optimized'
+            )
+          : null
+    }
+    return NextResponse.json(seriesWithImage, { status: 201 })
   } catch (error) {
     console.error('Error creating series:', error)
 

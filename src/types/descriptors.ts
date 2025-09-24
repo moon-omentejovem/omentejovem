@@ -89,7 +89,7 @@ export const artworksDescriptor: ResourceDescriptor = {
   table: 'artworks',
   title: 'Artworks',
   list: [
-    { key: 'image_url', label: 'Image', render: 'image', width: '140px' },
+    // Nenhum campo de imagem: resolução via slug/id e helpers
     { key: 'title', label: 'Title', render: 'text' },
     { key: 'mint_date', label: 'Mint Date', render: 'date' },
     { key: 'mint_link', label: 'Mint Link', render: 'link' },
@@ -97,14 +97,7 @@ export const artworksDescriptor: ResourceDescriptor = {
     { key: 'status', label: 'Status', render: 'badge' }
   ],
   form: [
-    {
-      key: 'image_path',
-      label: 'Artwork Image',
-      type: 'image',
-      required: true,
-      placeholder:
-        'Upload or paste image URL - system will auto-optimize and store original'
-    },
+    // Nenhum campo de imagem: resolução via slug/id e helpers
     {
       key: 'title',
       label: 'Title',
@@ -119,6 +112,13 @@ export const artworksDescriptor: ResourceDescriptor = {
       from: 'title',
       required: true,
       placeholder: 'auto-generated-from-title'
+    },
+    {
+      key: 'image',
+      label: 'Artwork Image',
+      type: 'image',
+      required: true,
+      placeholder: 'Upload artwork image'
     },
     {
       key: 'token_id',
@@ -235,7 +235,7 @@ export const seriesDescriptor: ResourceDescriptor = {
   title: 'Series',
   list: [
     { key: 'name', label: 'Name', render: 'text' },
-    { key: 'cover_image_url', label: 'Cover Image', render: 'image', width: '80px' },
+    // Nenhum campo de imagem: resolução via slug/id e helpers
     { key: 'artworks', label: 'Artworks', render: 'text' }, // Will show count or names
     { key: 'status', label: 'Status', render: 'badge' }
   ],
@@ -255,12 +255,15 @@ export const seriesDescriptor: ResourceDescriptor = {
       required: true,
       placeholder: 'auto-generated-from-name'
     },
+
     {
-      key: 'cover_image_path',
-      label: 'Cover Image',
+      key: 'image',
+      label: 'Series Cover Image',
       type: 'image',
+      required: true,
       placeholder: 'Upload series cover image'
     },
+
     {
       key: 'artworks',
       label: 'Artworks',
@@ -301,7 +304,7 @@ export const artifactsDescriptor: ResourceDescriptor = {
   title: 'Artifacts',
   list: [
     { key: 'title', label: 'Title', render: 'text' },
-    { key: 'image_url', label: 'Image', render: 'image', width: '80px' },
+    // Nenhum campo de imagem: resolução via slug/id e helpers
     { key: 'status', label: 'Status', render: 'badge' },
     { key: 'link_url', label: 'Link', render: 'link' }
   ],
@@ -312,6 +315,13 @@ export const artifactsDescriptor: ResourceDescriptor = {
       type: 'text',
       required: true,
       placeholder: 'Enter artifact title'
+    },
+    {
+      key: 'image',
+      label: 'Artifact Image',
+      type: 'image',
+      required: true,
+      placeholder: 'Upload artifact image'
     },
     {
       key: 'description',
@@ -331,12 +341,7 @@ export const artifactsDescriptor: ResourceDescriptor = {
       type: 'url',
       placeholder: 'https://...'
     },
-    {
-      key: 'image_path',
-      label: 'Image',
-      type: 'image',
-      placeholder: 'Upload artifact image'
-    },
+    // Nenhum campo de imagem: resolução via slug/id e helpers
     {
       key: 'status',
       label: 'Status',

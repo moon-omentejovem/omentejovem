@@ -6,6 +6,7 @@
  */
 
 import type { Database } from '@/types/supabase'
+import { getImageUrlFromSlug } from '@/utils/storage'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { cache } from 'react'
 import { BaseService } from './base.service'
@@ -16,7 +17,8 @@ interface CollectionRes {
   name: string
   year: string
   slug: string
-  nftImageUrls: string[]
+  nftSlugs: string[]
+  coverImage?: string
 }
 
 interface CollectionsResponse {
@@ -41,7 +43,6 @@ export interface SeriesWithArtworks extends SeriesData {
     id: string
     title: string
     slug: string
-    image_url: string | null
   }>
 }
 
@@ -127,11 +128,14 @@ export class SeriesService extends BaseService {
   static getMetadataBySlug = cache(
     async (
       slug: string
-    ): Promise<Pick<SeriesData, 'name' | 'cover_image_url'> | null> => {
+    ): Promise<{
+      name: string
+      slug: string
+    } | null> => {
       return this.safeExecuteQuery(async (supabase) => {
         const { data, error } = await supabase
           .from('series')
-          .select('name, cover_image_url')
+          .select('name, slug')
           .eq('slug', slug)
           .single()
 
@@ -143,7 +147,7 @@ export class SeriesService extends BaseService {
           return null
         }
 
-        return data as Pick<SeriesData, 'name' | 'cover_image_url'>
+        return { name: data.name, slug: data.slug }
       }, 'getMetadataBySlug')
     }
   )
@@ -209,10 +213,11 @@ export class SeriesService extends BaseService {
           name,
           slug,
           created_at,
-          cover_image_url,
+          slug,
           series_artworks(
             artworks(
-              image_url
+              id,
+              slug
             )
           )
         `
@@ -233,22 +238,23 @@ export class SeriesService extends BaseService {
           ? new Date(series.created_at).getFullYear().toString()
           : new Date().getFullYear().toString()
 
-        // Get image URLs from related artworks
+        // Get slugs from related artworks
         const artworks = (series as any).series_artworks || []
-        const nftImageUrls = artworks
-          .map((sa: any) => sa.artworks?.image_url)
+        const nftSlugs = artworks
+          .map((sa: any) => sa.artworks?.slug)
           .filter(Boolean)
 
-        // Use cover image as fallback
-        if (nftImageUrls.length === 0 && series.cover_image_url) {
-          nftImageUrls.push(series.cover_image_url)
-        }
+        // Generate cover image URL from series slug
+        const coverImage = series.slug
+          ? getImageUrlFromSlug(series.slug, 'series', 'optimized')
+          : undefined
 
         return {
           name: series.name,
           year,
           slug: series.slug,
-          nftImageUrls
+          nftSlugs,
+          coverImage
         }
       })
 
@@ -327,8 +333,7 @@ export class SeriesService extends BaseService {
               artwork:artworks(
                 id,
                 title,
-                slug,
-                image_url
+                slug
               )
             )
           `

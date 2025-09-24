@@ -120,15 +120,5 @@ export interface NFT {
   timeLastUpdated: string
 }
 
-export interface CollectionsResponse {
-  collections: Array<{
-    name: string
-    year: string
-    slug: string
-    nftImageUrls: string[]
-  }>
-}
-
 // Tipos específicos para componentes
-export type FirstCreated = Mint
-export type Sale = TransferFromAPI
+// FirstCreated e Sale foram movidos para artwork.ts

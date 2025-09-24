@@ -7,7 +7,6 @@
 
 import { type Artwork, type ArtworkWithSeries } from '@/types/artwork'
 import type { Database } from '@/types/supabase'
-import { getPublicUrl } from '@/utils/storage'
 import { cache } from 'react'
 import { BaseService } from './base.service'
 
@@ -41,25 +40,10 @@ export interface ArtworkData {
 }
 
 /**
- * Process image URLs for server-side rendering
- * Ensures all image URLs are resolved on the server before sending to client
+ * Process image URLs for server-side rendering using new slug-based system
+ * Generates URLs dynamically from slug instead of relying on stored paths
  */
-function processArtworkImages(artwork: any): any {
-  return {
-    ...artwork,
-    // Use existing URLs if available, fallback to generating from paths
-    image_url:
-      artwork.image_url ||
-      (artwork.image_path ? getPublicUrl(artwork.image_path) : null),
-    // Process raw image URL
-    raw_image_url:
-      artwork.raw_image_url ||
-      (artwork.raw_image_path ? getPublicUrl(artwork.raw_image_path) : null),
-    // Ensure paths are preserved for potential client-side use
-    image_path: artwork.image_path,
-    raw_image_path: artwork.raw_image_path
-  }
-}
+// Não processa mais campos de imagem: resolução via slug/id e helpers apenas no frontend/componente
 
 /**
  * Artwork Service Class
@@ -77,8 +61,7 @@ export class ArtworkService extends BaseService {
             series(
               id,
               name,
-              slug,
-              cover_image_url
+              slug
             )
           )
         `)
@@ -149,7 +132,7 @@ export class ArtworkService extends BaseService {
         }
 
         const artworks = (data || []).map(
-          processArtworkImages
+          (artwork: any) => artwork
         ) as ArtworkWithSeries[]
 
         // Apply random shuffle if requested
@@ -243,8 +226,7 @@ export class ArtworkService extends BaseService {
             series(
               id,
               name,
-              slug,
-              cover_image_url
+              slug
             )
           )
         `
@@ -257,7 +239,7 @@ export class ArtworkService extends BaseService {
         return null
       }
 
-      return data ? (processArtworkImages(data) as ArtworkWithSeries) : null
+      return data ? (data as ArtworkWithSeries) : null
     }, 'getBySlug')
   })
 

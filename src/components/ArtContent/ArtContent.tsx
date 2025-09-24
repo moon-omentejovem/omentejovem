@@ -9,6 +9,7 @@
 
 import { useCarouselNavigation } from '@/hooks/useCarouselNavigation'
 import { Artwork } from '@/types/artwork'
+import { getImageUrlFromSlugCompat } from '@/utils/storage'
 import { ReactElement, useCallback, useState } from 'react'
 import { HorizontalCarousel } from '../HorizontalCarousel/HorizontalCarousel'
 import { VerticalCarousel } from '../VerticalCarousel/VerticalCarousel'
@@ -59,7 +60,7 @@ export function ArtContent({
   // Transform artworks to carousel format
   const carouselSlides = filteredArtworks.map((artwork) => ({
     name: artwork.title || '',
-    nftCompressedHdUrl: artwork.image_url || '',
+    imageUrl: getImageUrlFromSlugCompat(artwork.slug, 'artworks', 'optimized'),
     slug: artwork.slug
   }))
 
@@ -123,49 +124,4 @@ export function ArtContent({
       />
     </main>
   )
-}
-
-/**
- * Legacy wrapper for backward compatibility
- * @deprecated Use ArtContent instead
- */
-export function ArtMainContent({
-  email,
-  source,
-  artworks,
-  selectedArtworkIndex,
-  onChangeSelectedArtworkIndex,
-  onChangeArtworks,
-  unfilteredArtworks
-}: {
-  email: string
-  source: 'portfolio' | '1-1' | 'editions' | string
-  artworks: Artwork[]
-  selectedArtworkIndex: number
-  onChangeSelectedArtworkIndex: (index: number) => void
-  onChangeArtworks: (artworks: Artwork[]) => void
-  unfilteredArtworks: Artwork[]
-}): ReactElement {
-  console.warn('ArtMainContent is deprecated. Use ArtContent instead.')
-
-  return (
-    <ArtContent
-      artworks={artworks}
-      initialSelectedIndex={selectedArtworkIndex}
-      source={source}
-      email={email}
-    />
-  )
-}
-
-/**
- * Legacy wrapper for backward compatibility
- * @deprecated Use ArtContent instead
- */
-export function SimplifiedArtMainContent(props: ArtContentProps): ReactElement {
-  console.warn(
-    'SimplifiedArtMainContent is deprecated. Use ArtContent instead.'
-  )
-
-  return <ArtContent {...props} />
 }

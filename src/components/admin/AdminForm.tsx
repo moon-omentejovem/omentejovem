@@ -202,6 +202,7 @@ export default function AdminForm<T extends Record<string, any>>({
   const renderField = (field: FormField) => {
     if (!shouldShowField(field)) return null
 
+    // Passa o formData inteiro para o AdminFormField para acesso ao slug/id
     return (
       <AdminFormField
         key={field.key}
@@ -212,6 +213,7 @@ export default function AdminForm<T extends Record<string, any>>({
         onExtraChange={(key, value) => handleInputChange(key, value)}
         descriptor={descriptor}
         supabase={supabase}
+        formData={formData}
       />
     )
   }

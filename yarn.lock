@@ -2155,6 +2155,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/swiper@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "@types/swiper@npm:6.0.0"
+  dependencies:
+    swiper: "npm:*"
+  checksum: 10c0/096a4a8017b296752d5a72bf5da07e2507eed0ae32603ce560060c9aee6134431c2d34fcde42bde3f4790ec498aa6e697d0e02d2b6a3e58d99c72a4794d3e9ba
+  languageName: node
+  linkType: hard
+
 "@types/tedious@npm:^4.0.14":
   version: 4.0.14
   resolution: "@types/tedious@npm:4.0.14"
@@ -6432,6 +6441,7 @@ __metadata:
     "@types/react-dom": "npm:^18"
     "@types/react-transition-group": "npm:4.4.10"
     "@types/sanitize-html": "npm:2.9.5"
+    "@types/swiper": "npm:^6.0.0"
     "@types/uuid": "npm:9.0.8"
     autoprefixer: "npm:^10.0.1"
     axios: "npm:1.6.2"
@@ -6471,7 +6481,7 @@ __metadata:
     sonner: "npm:^2.0.7"
     split-type: "npm:0.3.4"
     supabase: "npm:2.40.7"
-    swiper: "npm:^11.0.6"
+    swiper: "npm:^12.0.2"
     tailwind-merge: "npm:2.2.0"
     tailwindcss: "npm:^3.4.1"
     typescript: "npm:^5"
@@ -8299,10 +8309,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swiper@npm:^11.0.6":
-  version: 11.2.10
-  resolution: "swiper@npm:11.2.10"
-  checksum: 10c0/b7e3a7c79d92ccc62af77744edc376c9aefc771a0abd50c4adf07b5e3450b5da9ca7f84f5809e275ff65e1bc9d4500d930628e84a76fc7f2db403291c69b7fac
+"swiper@npm:*, swiper@npm:^12.0.2":
+  version: 12.0.2
+  resolution: "swiper@npm:12.0.2"
+  checksum: 10c0/e7826eb5973828c622a30f321dc7740300a32666d26810b381e2498ad60f2f84e070058a1aa0ee32acce8a6d31f2d2919c388b2e5921db45690c59af41b1c7b8
   languageName: node
   linkType: hard
 

@@ -17,7 +17,7 @@ interface VerticalCarouselProperties {
   onChangeSlideIndex: (index: number) => void
   slides: {
     name: string
-    nftCompressedHdUrl: string
+    imageUrl: string
     slug?: string
   }[]
   getMoreSlides?: () => void
@@ -62,13 +62,13 @@ export function VerticalCarousel({
         initialSlide={slideIndex}
         className="vertical-slider"
         centeredSlides={true}
-        onSlideChange={(e) => {
+        onSlideChange={(e: SwiperType) => {
           const newIndex = e.realIndex % slides.length
           // Atualiza o índice local e navega sem recarregar (usando replace)
           onChangeSlideIndex(newIndex)
           onRedirect?.(newIndex, true) // true = replace (não adiciona ao histórico)
         }}
-        onSlideChangeTransitionEnd={(swiperInstance) => {
+        onSlideChangeTransitionEnd={(swiperInstance: SwiperType) => {
           handleGetMoreslides(swiperInstance)
         }}
       >
@@ -95,7 +95,7 @@ export function VerticalCarousel({
                 aria-label={`View ${art.name}`}
               >
                 <Image
-                  src={art.nftCompressedHdUrl}
+                  src={art.imageUrl}
                   alt={art.name}
                   width={150}
                   height={150}

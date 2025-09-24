@@ -107,6 +107,14 @@ yarn lintfix      # Fix ESLint issues
 - **[Backend Patterns](docs/BACKEND_ORIENTED_FRONTEND.md)**: Service architecture patterns
 - **[AI Context](.agents/AI_CONTEXT_MASTER.md)**: Technical documentation for AI agents
 
+## Legacy Data Migration
+
+For legacy NFT seeding and migration instructions, see:
+
+[`scripts/legacy/README.md`](scripts/legacy/README.md)
+
+More details in [docs/SEED-SYSTEM.md](docs/SEED-SYSTEM.md).
+
 ## License
 
 This project is private and proprietary.

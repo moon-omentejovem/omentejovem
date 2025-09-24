@@ -1,5 +1,6 @@
 import { supabaseAdmin } from '@/lib/supabase-admin'
 import { CreateArtifactSchema } from '@/types/schemas'
+import { getImageUrlFromId } from '@/utils/storage'
 import { revalidateTag } from 'next/cache'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -26,7 +27,25 @@ export async function GET(request: NextRequest) {
 
     if (error) throw error
 
-    return NextResponse.json({ data, total: count })
+    // Adiciona campo image_url resolvido para cada artifact
+    const toSlug = (str: string) =>
+      str
+        ?.toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '')
+    const artifactsWithImage = (data || []).map((artifact) => ({
+      ...artifact,
+      image_url:
+        artifact.id && artifact.title
+          ? getImageUrlFromId(
+              artifact.id,
+              toSlug(artifact.title),
+              'artifacts',
+              'optimized'
+            )
+          : null
+    }))
+    return NextResponse.json({ data: artifactsWithImage, total: count })
   } catch (error) {
     console.error('Error fetching artifacts:', error)
     return NextResponse.json(
@@ -56,7 +75,25 @@ export async function POST(request: NextRequest) {
     // Revalidate cache
     revalidateTag('artifacts')
 
-    return NextResponse.json(artifact, { status: 201 })
+    // Adiciona campo image_url resolvido
+    const toSlug = (str: string) =>
+      str
+        ?.toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '')
+    const artifactWithImage = {
+      ...artifact,
+      image_url:
+        artifact.id && artifact.title
+          ? getImageUrlFromId(
+              artifact.id,
+              toSlug(artifact.title),
+              'artifacts',
+              'optimized'
+            )
+          : null
+    }
+    return NextResponse.json(artifactWithImage, { status: 201 })
   } catch (error) {
     console.error('Error creating artifact:', error)
 

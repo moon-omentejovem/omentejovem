@@ -21,7 +21,7 @@ interface HorizontalCarouselProperties {
   loading?: boolean
   slides: {
     name: string
-    nftCompressedHdUrl: string
+    imageUrl: string
     slug?: string
   }[]
   redirectSource?: string
@@ -75,7 +75,7 @@ export function HorizontalCarousel({
         centeredSlides={true}
         slidesPerView={'auto'}
         speed={800}
-        onSlideChangeTransitionEnd={(swiperInstance) => {
+        onSlideChangeTransitionEnd={(swiperInstance: SwiperType) => {
           slideOnChangeAnimationHandler()
           handleGetMoreslides(swiperInstance)
         }}
@@ -126,7 +126,7 @@ export function HorizontalCarousel({
                       aria-label={`View ${slide.name}`}
                     >
                       <Image
-                        src={slide.nftCompressedHdUrl}
+                        src={slide.imageUrl}
                         alt={slide.name}
                         width={768}
                         height={768}

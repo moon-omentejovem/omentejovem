@@ -1,45 +1,115 @@
 /**
  * Storage Utils - Omentejovem
- * Utilitários simplificados para trabalhar com Supabase Storage
+ * Utilitários para trabalhar com o sistema de imagens
+ * Suporta tanto estrutura antiga (slug-based) quanto nova (id-based)
  */
 
+import { STORAGE_BUCKETS } from '@/lib/supabase/config'
 import { createClient } from '@/utils/supabase/client'
 
 /**
- * Gera URL pública a partir de um path do storage
- * Usado apenas no contexto admin onde paths precisam ser convertidos dinamicamente
+ * Gera path da imagem baseado no slug (estrutura antiga)
  */
-export function getPublicUrl(path: string | null): string {
-  if (!path) return ''
-
-  // Se já é uma URL completa, retornar como está
-  if (path.startsWith('http')) {
-    return path
+function generateImagePath(
+  slug: string,
+  resourceType: string = 'artworks',
+  imageType: 'optimized' | 'raw' = 'optimized'
+): string {
+  if (imageType === 'raw') {
+    return `${resourceType}/raw/${slug}-raw.jpg`
   }
+  return `${resourceType}/optimized/${slug}.webp`
+}
+
+/**
+ * Gera path da imagem baseado no ID (nova estrutura)
+ */
+function generateImagePathById(
+  id: string,
+  filename: string,
+  resourceType: string = 'artworks',
+  imageType: 'optimized' | 'raw' = 'optimized'
+): string {
+  const baseName = filename.replace(/\.(webp|jpg|jpeg|png)$/i, '')
+
+  if (imageType === 'raw') {
+    return `${resourceType}/${id}/raw/${baseName}.jpg`
+  }
+  return `${resourceType}/${id}/optimized/${baseName}.webp`
+}
+
+/**
+ * Gera URL pública a partir de um slug (estrutura antiga)
+ * Por padrão retorna a imagem otimizada (optimized). Para obter a raw, passe imageType='raw'.
+ * Use imageType='raw' apenas para casos especiais (ex: modal de página única).
+ */
+export function getImageUrlFromSlug(
+  slug: string | null,
+  resourceType: string = 'artworks',
+  imageType: 'optimized' | 'raw' = 'optimized'
+): string {
+  if (!slug) return ''
 
   try {
-    // Gerar URL pública do storage
     const supabase = createClient()
-    const { data } = supabase.storage.from('media').getPublicUrl(path)
-
-    // Validar se o resultado é uma URL válida
-    if (data.publicUrl && data.publicUrl.startsWith('http')) {
-      return data.publicUrl
-    } else {
-      console.warn(`getPublicUrl: Invalid URL generated for path: ${path}`)
-      return ''
-    }
+    const path = generateImagePath(slug, resourceType, imageType)
+    const { data } = supabase.storage
+      .from(STORAGE_BUCKETS.MEDIA)
+      .getPublicUrl(path)
+    return data.publicUrl || ''
   } catch (error) {
-    console.error(`getPublicUrl: Error generating URL for path: ${path}`, error)
+    console.error(
+      `getImageUrlFromSlug: Error generating URL for slug: ${slug}`,
+      error
+    )
     return ''
   }
-} /**
- * Extrai URLs de imagem de um artwork
- * SIMPLIFICADO: Agora apenas retorna as URLs que já vêm processadas do backend
+}
+
+/**
+ * Gera URL pública a partir de um ID e filename (nova estrutura)
+ * Por padrão retorna a imagem otimizada (optimized). Para obter a raw, passe imageType='raw'.
  */
-export function getArtworkImageUrls(artwork: any) {
-  return {
-    optimized: artwork.image_url,
-    raw: artwork.raw_image_url
+export function getImageUrlFromId(
+  id: string | null,
+  filename: string | null,
+  resourceType: string = 'artworks',
+  imageType: 'optimized' | 'raw' = 'optimized'
+): string {
+  if (!id || !filename) return ''
+
+  try {
+    const supabase = createClient()
+    const path = generateImagePathById(id, filename, resourceType, imageType)
+    const { data } = supabase.storage
+      .from(STORAGE_BUCKETS.MEDIA)
+      .getPublicUrl(path)
+    return data.publicUrl || ''
+  } catch (error) {
+    console.error(
+      `getImageUrlFromId: Error generating URL for id: ${id}, filename: ${filename}`,
+      error
+    )
+    return ''
   }
+}
+
+/**
+ * Função de compatibilidade para migração gradual
+ * Tenta usar nova estrutura primeiro, fallback para antiga
+ */
+export function getImageUrlFromSlugCompat(
+  slug: string | null,
+  resourceType: string = 'artworks',
+  imageType: 'optimized' | 'raw' = 'optimized'
+): string {
+  // Por enquanto, usa a estrutura antiga
+  // Esta função será atualizada quando a migração estiver completa
+  return getImageUrlFromSlug(slug, resourceType, imageType)
+}
+export function getArtifactImageUrl(
+  artifact: any,
+  imageType: 'optimized' | 'raw' = 'optimized'
+) {
+  return getImageUrlFromSlugCompat(artifact.id, 'artifacts', imageType)
 }

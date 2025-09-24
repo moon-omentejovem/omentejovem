@@ -1,135 +1,34 @@
-# 🗄️ Scripts Legacy
+# Legacy Data Migration & Seeding
 
-Scripts para migração de dados do sistema legado para o novo sistema Supabase.
+Este módulo permite importar NFTs históricos para o banco Supabase a partir dos arquivos JSON em `public/legacy_data`.
 
-## 📁 Scripts Disponíveis
+## Como usar
 
-### `migrate-legacy-data.js` ✅ ESSENCIAL
+### Seed básico
 
-**Principal script de migração de dados legados**
-
-Migra todos os dados do `public/token-metadata.json` para o Supabase:
-
-- ✅ 95 artworks migrados
-- ✅ 5 séries criadas automaticamente
-- ✅ 44 relacionamentos série-artwork
-- ✅ Descrições convertidas para Tiptap
-- ✅ Slugs únicos gerados
+Roda o seed mínimo (series/artworks/artifacts/about):
 
 ```bash
-# Execução principal (uma vez apenas)
-node scripts/legacy/migrate-legacy-data.js
-
-# Verificar antes de executar
-node scripts/legacy/migrate-legacy-data.js --dry-run
+node ../utils/vercel-seed.js
 ```
 
-### `migrate-essential-nft-data.js` ✅ ESSENCIAL
+### Seed + Migração dos dados legados
 
-**Migração de metadados NFT essenciais**
-
-Popula campos essenciais NFT no banco:
-
-- `contract_address` - Endereço do contrato
-- `blockchain` - Ethereum/Tezos
-- `collection_slug` - Identificador da coleção
+Roda o seed básico e depois importa todos NFTs históricos dos arquivos JSON:
 
 ```bash
-# Executar após migrate-legacy-data.js
-node scripts/legacy/migrate-essential-nft-data.js
+node ../utils/vercel-seed.js --legacy
 ```
 
-**Resultados**: 81 artworks com dados NFT essenciais
+- Idempotente: nunca duplica registros já existentes (checa pelo slug)
+- Migração inclui artworks, séries e relacionamentos
+- Não popula campos de imagem (novo padrão: imagens resolvidas por slug via storage)
+- Logs detalhados no console (contagem de inseridos/ignorados)
 
-## 🔄 Ordem de Execução
-
-### Primeira Migração (Sistema Novo)
+### Rodar só a migração manualmente
 
 ```bash
-# 1. Migrar dados base
-node scripts/legacy/migrate-legacy-data.js
-
-# 2. Migrar metadados NFT
-node scripts/legacy/migrate-essential-nft-data.js
-
-# 3. Verificar resultado
-node scripts/analysis/complete-migration-summary.js
+node migrate-legacy-data.js
 ```
 
-### Re-execução (se necessário)
-
-⚠️ **ATENÇÃO**: Estes scripts verificam dados existentes e **NÃO** duplicam informações.
-
-## 📊 Dados Migrados
-
-### De: `public/token-metadata.json`
-
-- **78 tokens NFT** com metadata completa
-- **Attributes, tags, URLs** preservados no legacy
-- **Contratos, blockchains** mapeados
-
-### Para: **Supabase Database**
-
-- **Campos essenciais** para performance
-- **Relacionamentos** otimizados
-- **Dados ricos** acessíveis via API futura
-
-## 🏗️ Arquitetura
-
-### **Database (Essencial)**
-
-```sql
--- Campos migrados
-contract_address VARCHAR   -- Para identificação
-blockchain VARCHAR        -- ethereum/tezos
-collection_slug VARCHAR   -- Agrupamento
-title, description        -- Dados base
-slug, image_url          -- Frontend
-```
-
-### **Legacy (Rico)**
-
-```json
-// Preservado em public/token-metadata.json
-{
-  "attributes": [...],    // Metadata NFT completa
-  "tags": [...],         // Classificações
-  "tokenUri": "...",     // URI original
-  "image": { ... },      // URLs originais
-  "contract": { ... }    // Dados detalhados
-}
-```
-
-## 🎯 Benefícios
-
-### ✅ **Performance**
-
-- Queries rápidas com campos indexados
-- Relacionamentos otimizados no banco
-- Dados ricos via API quando necessário
-
-### ✅ **Escalabilidade**
-
-- Schema lean no banco principal
-- Metadata rica preservada no legacy
-- Arquitetura preparada para API
-
-### ✅ **Manutenibilidade**
-
-- Scripts idempotentes (re-executáveis)
-- Verificações de integridade automáticas
-- Logs detalhados para debugging
-
-## ⚠️ Importante
-
-- **Executar apenas uma vez** em produção
-- **Backup antes** de re-executar em dev
-- **Verificar logs** para possíveis issues
-- **Dados ricos** permanecem no legacy para API futura
-
-## 📈 Status Final
-
-- ✅ **100% migração concluída**
-- ✅ **81 NFTs** com dados essenciais
-- ✅ **95 artworks** total no sistema
-- ✅ **Correspondência perfeita** legacy ↔ Supabase
+Mais detalhes em [../../docs/SEED-SYSTEM.md](../../docs/SEED-SYSTEM.md).

@@ -1,4 +1,5 @@
 import { ArtworkService } from '@/services'
+import { getImageUrlFromId } from '@/utils/storage'
 import { notFound } from 'next/navigation'
 import ArtworkContent from './content'
 
@@ -33,7 +34,17 @@ export async function generateMetadata({ params }: ArtworkPageProps) {
     openGraph: {
       title: artwork.title,
       description: artwork.description || '',
-      images: artwork.image_url ? [artwork.image_url] : []
+      images:
+        artwork.id && artwork.slug
+          ? [
+              getImageUrlFromId(
+                artwork.id,
+                artwork.slug,
+                'artworks',
+                'optimized'
+              )
+            ]
+          : []
     }
   }
 }
