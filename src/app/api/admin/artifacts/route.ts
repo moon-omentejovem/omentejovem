@@ -1,6 +1,6 @@
 import { supabaseAdmin } from '@/lib/supabase-admin'
 import { CreateArtifactSchema } from '@/types/schemas'
-import { getImageUrlFromId, getImageUrlFromSlugCompat } from "@/utils/storage"
+import { getImageUrlFromId, getImageUrlFromSlugCompat } from '@/utils/storage'
 import { revalidateTag } from 'next/cache'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
     const artifactsWithImage = (data || []).map((artifact) => ({
       ...artifact,
       image_url: artifact.id
-        ? getImageUrlFromId(artifact.id.id, artifact.id.filename || artifact.id.slug, "artifacts", "optimized")
+        ? getImageUrlFromId(artifact.id.id, artifact.id.filename || artifact.id.slug, 'artifacts', 'optimized')
         : null
     }))
     return NextResponse.json({ data: artifactsWithImage, total: count })
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
     const artifactWithImage = {
       ...artifact,
       image_url: artifact.id
-        ? getImageUrlFromId(artifact.id.id, artifact.id.filename || artifact.id.slug, "artifacts", "optimized")
+        ? getImageUrlFromId(artifact.id.id, artifact.id.filename || artifact.id.slug, 'artifacts', 'optimized')
         : null
     }
     return NextResponse.json(artifactWithImage, { status: 201 })

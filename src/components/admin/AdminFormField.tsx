@@ -1,8 +1,8 @@
 'use client'
 
-import { ImageUploadService } from "@/services/image-upload.service"
+import { ImageUploadService } from '@/services/image-upload.service'
 import type { FormField, ResourceDescriptor } from '@/types/descriptors'
-import { getImageUrlFromSlugCompat } from "@/utils/storage"
+import { getImageUrlFromSlugCompat } from '@/utils/storage'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import {
   FileInput,

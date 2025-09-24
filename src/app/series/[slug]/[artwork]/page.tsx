@@ -1,5 +1,5 @@
 import { ArtworkService, SeriesService } from '@/services'
-import { getImageUrlFromId, getImageUrlFromSlugCompat } from "@/utils/storage"
+import { getImageUrlFromId } from '@/utils/storage'
 import { notFound } from 'next/navigation'
 import ArtworkContent from './content'
 
@@ -55,7 +55,14 @@ export async function generateMetadata({ params }: ArtworkPageProps) {
       title: artwork.title,
       description: artwork.description || '',
       images: artwork.slug
-        ? [getImageUrlFromId(artwork.slug.id, artwork.slug.filename || artwork.slug.slug, "artworks", "optimized")]
+        ? [
+            getImageUrlFromId(
+              artwork.slug.id,
+              artwork.slug.filename || artwork.slug.slug,
+              'artworks',
+              'optimized'
+            )
+          ]
         : []
     }
   }

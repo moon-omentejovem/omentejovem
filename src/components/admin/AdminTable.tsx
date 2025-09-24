@@ -1,7 +1,7 @@
 'use client'
 
 import type { ListColumn, ResourceDescriptor } from '@/types/descriptors'
-import { getImageUrlFromSlugCompat } from "@/utils/storage"
+import { getImageUrlFromSlugCompat } from '@/utils/storage'
 import {
   Cell,
   ColumnDef,
