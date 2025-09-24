@@ -219,9 +219,6 @@ function runSeed(supabase) {
   })
 }
 
-// Import legacy migration function
-const { migrateLegacyData } = require('../legacy/migrate-legacy-data')
-
 // Enhanced seeding function with legacy data option
 async function seedWithLegacyData() {
   console.log('🌱 Starting enhanced seeding with legacy data...')
@@ -230,10 +227,23 @@ async function seedWithLegacyData() {
   await seedOnDeploy()
 
   // Then migrate legacy data
-  console.log('📦 Migrating legacy NFT data...')
-  await migrateLegacyData()
+  if (migrateLegacyData) {
+    console.log('📦 Migrating legacy NFT data...')
+    await migrateLegacyData()
+  } else {
+    console.log('ℹ️ Legacy migration não executada (no-op).')
+  }
 
   console.log('🎉 Enhanced seeding completed!')
+}
+
+// Importa migrateLegacyData do script legado
+let migrateLegacyData
+try {
+  ;({ migrateLegacyData } = require('../legacy/migrate-legacy-data'))
+} catch (e) {
+  migrateLegacyData = undefined
+  console.warn('⚠️ Não foi possível importar migrateLegacyData:', e.message)
 }
 
 // Export functions
