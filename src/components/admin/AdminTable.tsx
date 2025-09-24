@@ -1,7 +1,7 @@
 'use client'
 
 import type { ListColumn, ResourceDescriptor } from '@/types/descriptors'
-import { getImageUrlFromId } from '@/utils/storage'
+import { getImageUrlFromSlugCompat } from '@/utils/storage'
 import {
   Cell,
   ColumnDef,
@@ -81,12 +81,7 @@ export default function AdminTable<T extends Record<string, any>>({
           // Inferir resourceType do descriptor ou do contexto da tabela
           // Use descriptor.table como resourceType (artworks, series, artifacts)
           const resourceType = descriptor?.table || 'artworks'
-          const imageUrl = getImageUrlFromId(
-            item.id,
-            value,
-            resourceType,
-            'optimized'
-          )
+          const imageUrl = getImageUrlFromSlugCompat(value, resourceType, 'optimized')
           return imageUrl ? (
             <Image
               src={imageUrl}

@@ -12,7 +12,7 @@ import { ArtDetails } from '@/components/ArtDetails'
 import { ArtLinks } from '@/components/ArtLinks'
 import { cn } from '@/lib/utils'
 import { Artwork } from '@/types/artwork'
-import { getImageUrlFromId } from '@/utils/storage'
+import { getImageUrlFromSlugCompat } from '@/utils/storage'
 import { addHours, format } from 'date-fns'
 import { HorizontalInCarouselArtwork } from './HorizontalInCarousel/HorizontalInCarouselArtwork'
 import './styles.css'
@@ -146,14 +146,12 @@ export function ArtInfo({
         <div className="md:flex-1 min-w-[200px] xl:min-w-[350px] flex flex-col max-h-full">
           <div className="xl:art-detail-inner-container overflow-hidden flex flex-1 justify-start xl:justify-end">
             <ArtDetails
-              detailedImage={getImageUrlFromId(
-                selectedArtwork.id,
+              detailedImage={getImageUrlFromSlugCompat(
                 selectedArtwork.slug,
                 'artworks',
                 'raw'
               )}
-              image={getImageUrlFromId(
-                selectedArtwork.id,
+              image={getImageUrlFromSlugCompat(
                 selectedArtwork.slug,
                 'artworks',
                 'optimized'
@@ -336,8 +334,7 @@ export function ArtInfo({
               src={
                 selectedArtwork.video_url ||
                 (() => {
-                  const rawUrl = getImageUrlFromId(
-                    selectedArtwork.id,
+                  const rawUrl = getImageUrlFromSlugCompat(
                     selectedArtwork.slug,
                     'artworks',
                     'raw'

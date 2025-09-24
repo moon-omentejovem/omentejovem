@@ -9,7 +9,7 @@ import { ImageUploadService } from '@/services/image-upload.service'
 import { createClient } from '@/utils/supabase/client'
 
 export interface UploadOptions {
-  resourceType: string // agora aceita qualquer scaffold, ex: 'editor', 'artworks', etc
+  resourceType: 'artworks' | 'series' | 'artifacts'
   id: string
   filename: string
 }
@@ -57,7 +57,47 @@ export async function uploadImage(
 /**
  * Helper para upload de artwork
  */
-// ...existing code...
+export async function uploadArtworkImage(
+  file: File,
+  artworkId: string,
+  filename: string
+): Promise<UploadResult> {
+  return uploadImage(file, {
+    resourceType: 'artworks',
+    id: artworkId,
+    filename
+  })
+}
+
+/**
+ * Helper para upload de série
+ */
+export async function uploadSeriesImage(
+  file: File,
+  seriesId: string,
+  filename: string
+): Promise<UploadResult> {
+  return uploadImage(file, {
+    resourceType: 'series',
+    id: seriesId,
+    filename
+  })
+}
+
+/**
+ * Helper para upload de artifact
+ */
+export async function uploadArtifactImage(
+  file: File,
+  artifactId: string,
+  filename: string
+): Promise<UploadResult> {
+  return uploadImage(file, {
+    resourceType: 'artifacts',
+    id: artifactId,
+    filename
+  })
+}
 
 /**
  * Helper para gerar filename baseado no título

@@ -5,20 +5,26 @@
  * da estrutura de imagens de slug-based para id-based.
  */
 
-import { getImageUrlFromId } from '@/utils/storage'
+import { getImageUrlFromId, getImageUrlFromSlugCompat } from '@/utils/storage'
 
 /**
  * Helper para gerar URL de imagem com fallback
  */
 export function getImageUrlWithFallback(
-  item: { id?: string; filename?: string },
+  item: { id?: string; slug?: string; filename?: string },
   resourceType: string = 'artworks',
   imageType: 'optimized' | 'raw' = 'optimized'
 ): string {
-  // Apenas nova estrutura
+  // Tentar nova estrutura primeiro
   if (item.id && item.filename) {
     return getImageUrlFromId(item.id, item.filename, resourceType, imageType)
   }
+
+  // Fallback para estrutura antiga
+  if (item.slug) {
+    return getImageUrlFromSlugCompat(item.slug, resourceType, imageType)
+  }
+
   return ''
 }
 
@@ -26,7 +32,7 @@ export function getImageUrlWithFallback(
  * Helper para processar lista de artworks
  */
 export function processArtworksForDisplay(artworks: any[]) {
-  return artworks.map((artwork) => ({
+  return artworks.map(artwork => ({
     ...artwork,
     imageUrl: getImageUrlWithFallback(artwork, 'artworks', 'optimized'),
     detailedImageUrl: getImageUrlWithFallback(artwork, 'artworks', 'raw')
@@ -37,7 +43,7 @@ export function processArtworksForDisplay(artworks: any[]) {
  * Helper para processar lista de séries
  */
 export function processSeriesForDisplay(series: any[]) {
-  return series.map((serie) => ({
+  return series.map(serie => ({
     ...serie,
     imageUrl: getImageUrlWithFallback(serie, 'series', 'optimized'),
     detailedImageUrl: getImageUrlWithFallback(serie, 'series', 'raw')
@@ -48,7 +54,7 @@ export function processSeriesForDisplay(series: any[]) {
  * Helper para processar lista de artifacts
  */
 export function processArtifactsForDisplay(artifacts: any[]) {
-  return artifacts.map((artifact) => ({
+  return artifacts.map(artifact => ({
     ...artifact,
     imageUrl: getImageUrlWithFallback(artifact, 'artifacts', 'optimized'),
     detailedImageUrl: getImageUrlWithFallback(artifact, 'artifacts', 'raw')

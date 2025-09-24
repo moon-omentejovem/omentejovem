@@ -1,5 +1,5 @@
 import { ArtworkService } from '@/services'
-import { getImageUrlFromId } from '@/utils/storage'
+import { getImageUrlFromSlugCompat } from '@/utils/storage'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import HomeContent from './home/content'
@@ -14,10 +14,9 @@ export default async function Home() {
 
   const images = featuredArtworks.map((artwork: any) => ({
     title: artwork.title || '',
-    imageUrl:
-      artwork.id && artwork.slug
-        ? getImageUrlFromId(artwork.id, artwork.slug, 'artworks', 'optimized')
-        : '',
+    imageUrl: artwork.slug
+      ? getImageUrlFromSlugCompat(artwork.slug, 'artworks', 'optimized')
+      : '',
     createdAt: artwork.posted_at || ''
   }))
 

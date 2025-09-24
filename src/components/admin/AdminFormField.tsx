@@ -2,7 +2,7 @@
 
 import { ImageUploadService } from '@/services/image-upload.service'
 import type { FormField, ResourceDescriptor } from '@/types/descriptors'
-import { getImageUrlFromId } from '@/utils/storage'
+import { getImageUrlFromSlugCompat } from '@/utils/storage'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import {
   FileInput,
@@ -161,15 +161,6 @@ export default function AdminFormField({
         </div>
       )
     case 'tiptap':
-      // Usa slug/id do formData para path do editor
-      let editorSlug = ''
-      if (formData) {
-        if (descriptor.table === 'artworks' || descriptor.table === 'series') {
-          editorSlug = formData.slug || ''
-        } else if (descriptor.table === 'artifacts') {
-          editorSlug = formData.id || ''
-        }
-      }
       return (
         <div className="space-y-2">
           <Label htmlFor={field.key} value={field.label || field.key} />
@@ -177,7 +168,6 @@ export default function AdminFormField({
             content={value}
             onChange={(content) => onChange(content)}
             placeholder={field.placeholder}
-            editorSlug={editorSlug}
           />
           {error && <p className="text-red-400 text-sm">{error}</p>}
         </div>
@@ -199,13 +189,8 @@ export default function AdminFormField({
       const imageUrl =
         formData && formData.image_url
           ? formData.image_url
-          : slug && formData?.id
-            ? getImageUrlFromId(
-                formData.id,
-                slug,
-                descriptor.table,
-                'optimized'
-              )
+          : slug
+            ? getImageUrlFromSlugCompat(slug, descriptor.table, 'optimized')
             : undefined
 
       const handleFileChange = async (

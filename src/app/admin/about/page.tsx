@@ -3,7 +3,7 @@
 import AdminLayout from '@/components/admin/AdminLayout'
 import TiptapEditor from '@/components/admin/TiptapEditor'
 import type { Database } from '@/types/supabase'
-import { PlusIcon, SaveIcon, TrashIcon } from 'lucide-react'
+import { SaveIcon, PlusIcon, TrashIcon, ExternalLinkIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
@@ -111,14 +111,14 @@ export default function AboutPage() {
   }
 
   const addSocial = () => {
-    setData((prev) => ({
+    setData(prev => ({
       ...prev,
       socials: [...prev.socials, { platform: '', handle: '', url: '' }]
     }))
   }
 
   const updateSocial = (index: number, field: keyof Social, value: string) => {
-    setData((prev) => ({
+    setData(prev => ({
       ...prev,
       socials: prev.socials.map((social, i) =>
         i === index ? { ...social, [field]: value } : social
@@ -127,35 +127,28 @@ export default function AboutPage() {
   }
 
   const removeSocial = (index: number) => {
-    setData((prev) => ({
+    setData(prev => ({
       ...prev,
       socials: prev.socials.filter((_, i) => i !== index)
     }))
   }
 
   const addExhibition = () => {
-    setData((prev) => ({
+    setData(prev => ({
       ...prev,
-      exhibitions: [
-        ...prev.exhibitions,
-        {
-          title: '',
-          venue: '',
-          location: '',
-          year: '',
-          type: 'group' as const,
-          description: ''
-        }
-      ]
+      exhibitions: [...prev.exhibitions, {
+        title: '',
+        venue: '',
+        location: '',
+        year: '',
+        type: 'group' as const,
+        description: ''
+      }]
     }))
   }
 
-  const updateExhibition = (
-    index: number,
-    field: keyof Exhibition,
-    value: string
-  ) => {
-    setData((prev) => ({
+  const updateExhibition = (index: number, field: keyof Exhibition, value: string) => {
+    setData(prev => ({
       ...prev,
       exhibitions: prev.exhibitions.map((exhibition, i) =>
         i === index ? { ...exhibition, [field]: value } : exhibition
@@ -164,30 +157,27 @@ export default function AboutPage() {
   }
 
   const removeExhibition = (index: number) => {
-    setData((prev) => ({
+    setData(prev => ({
       ...prev,
       exhibitions: prev.exhibitions.filter((_, i) => i !== index)
     }))
   }
 
   const addPress = () => {
-    setData((prev) => ({
+    setData(prev => ({
       ...prev,
-      press: [
-        ...prev.press,
-        {
-          title: '',
-          publication: '',
-          date: '',
-          url: '',
-          type: 'feature' as const
-        }
-      ]
+      press: [...prev.press, {
+        title: '',
+        publication: '',
+        date: '',
+        url: '',
+        type: 'feature' as const
+      }]
     }))
   }
 
   const updatePress = (index: number, field: keyof Press, value: string) => {
-    setData((prev) => ({
+    setData(prev => ({
       ...prev,
       press: prev.press.map((press, i) =>
         i === index ? { ...press, [field]: value } : press
@@ -196,7 +186,7 @@ export default function AboutPage() {
   }
 
   const removePress = (index: number) => {
-    setData((prev) => ({
+    setData(prev => ({
       ...prev,
       press: prev.press.filter((_, i) => i !== index)
     }))
@@ -266,12 +256,9 @@ export default function AboutPage() {
             <div className="p-6">
               <TiptapEditor
                 content={data.content}
-                onChange={(content) =>
-                  setData((prev) => ({ ...prev, content }))
-                }
+                onChange={(content) => setData(prev => ({ ...prev, content }))}
                 placeholder="Write about the artist, their background, artistic vision..."
                 className="min-h-[500px]"
-                editorSlug="about-page"
               />
             </div>
           )}
@@ -289,63 +276,39 @@ export default function AboutPage() {
                   <span>Add Social</span>
                 </button>
               </div>
-
+              
               <div className="space-y-4">
                 {data.socials.map((social, index) => (
-                  <div
-                    key={index}
-                    className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 border border-gray-200 rounded-lg"
-                  >
+                  <div key={index} className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 border border-gray-200 rounded-lg">
                     <div>
-                      <label
-                        htmlFor={`social-platform-${index}`}
-                        className="block text-sm font-medium text-gray-700 mb-1"
-                      >
-                        Platform
-                      </label>
+                      <label htmlFor={`social-platform-${index}`} className="block text-sm font-medium text-gray-700 mb-1">Platform</label>
                       <input
                         id={`social-platform-${index}`}
                         type="text"
                         value={social.platform}
-                        onChange={(e) =>
-                          updateSocial(index, 'platform', e.target.value)
-                        }
+                        onChange={(e) => updateSocial(index, 'platform', e.target.value)}
                         placeholder="Twitter/X, Instagram, etc."
                         className="w-full px-3 py-2 border border-gray-300 rounded-md"
                       />
                     </div>
                     <div>
-                      <label
-                        htmlFor={`social-handle-${index}`}
-                        className="block text-sm font-medium text-gray-700 mb-1"
-                      >
-                        Handle
-                      </label>
+                      <label htmlFor={`social-handle-${index}`} className="block text-sm font-medium text-gray-700 mb-1">Handle</label>
                       <input
                         id={`social-handle-${index}`}
                         type="text"
                         value={social.handle}
-                        onChange={(e) =>
-                          updateSocial(index, 'handle', e.target.value)
-                        }
+                        onChange={(e) => updateSocial(index, 'handle', e.target.value)}
                         placeholder="@username"
                         className="w-full px-3 py-2 border border-gray-300 rounded-md"
                       />
                     </div>
                     <div>
-                      <label
-                        htmlFor={`social-url-${index}`}
-                        className="block text-sm font-medium text-gray-700 mb-1"
-                      >
-                        URL
-                      </label>
+                      <label htmlFor={`social-url-${index}`} className="block text-sm font-medium text-gray-700 mb-1">URL</label>
                       <input
                         id={`social-url-${index}`}
                         type="url"
                         value={social.url}
-                        onChange={(e) =>
-                          updateSocial(index, 'url', e.target.value)
-                        }
+                        onChange={(e) => updateSocial(index, 'url', e.target.value)}
                         placeholder="https://..."
                         className="w-full px-3 py-2 border border-gray-300 rounded-md"
                       />
@@ -360,7 +323,7 @@ export default function AboutPage() {
                     </div>
                   </div>
                 ))}
-
+                
                 {data.socials.length === 0 && (
                   <div className="text-center py-8 text-gray-500">
                     No social media profiles added yet.
@@ -383,99 +346,61 @@ export default function AboutPage() {
                   <span>Add Exhibition</span>
                 </button>
               </div>
-
+              
               <div className="space-y-6">
                 {data.exhibitions.map((exhibition, index) => (
-                  <div
-                    key={index}
-                    className="p-4 border border-gray-200 rounded-lg"
-                  >
+                  <div key={index} className="p-4 border border-gray-200 rounded-lg">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                       <div>
-                        <label
-                          htmlFor={`exhibition-title-${index}`}
-                          className="block text-sm font-medium text-gray-700 mb-1"
-                        >
-                          Exhibition Title
-                        </label>
+                        <label htmlFor={`exhibition-title-${index}`} className="block text-sm font-medium text-gray-700 mb-1">Exhibition Title</label>
                         <input
                           id={`exhibition-title-${index}`}
                           type="text"
                           value={exhibition.title}
-                          onChange={(e) =>
-                            updateExhibition(index, 'title', e.target.value)
-                          }
+                          onChange={(e) => updateExhibition(index, 'title', e.target.value)}
                           placeholder="Exhibition name"
                           className="w-full px-3 py-2 border border-gray-300 rounded-md"
                         />
                       </div>
                       <div>
-                        <label
-                          htmlFor={`exhibition-venue-${index}`}
-                          className="block text-sm font-medium text-gray-700 mb-1"
-                        >
-                          Venue
-                        </label>
+                        <label htmlFor={`exhibition-venue-${index}`} className="block text-sm font-medium text-gray-700 mb-1">Venue</label>
                         <input
                           id={`exhibition-venue-${index}`}
                           type="text"
                           value={exhibition.venue}
-                          onChange={(e) =>
-                            updateExhibition(index, 'venue', e.target.value)
-                          }
+                          onChange={(e) => updateExhibition(index, 'venue', e.target.value)}
                           placeholder="Gallery or venue name"
                           className="w-full px-3 py-2 border border-gray-300 rounded-md"
                         />
                       </div>
                       <div>
-                        <label
-                          htmlFor={`exhibition-location-${index}`}
-                          className="block text-sm font-medium text-gray-700 mb-1"
-                        >
-                          Location
-                        </label>
+                        <label htmlFor={`exhibition-location-${index}`} className="block text-sm font-medium text-gray-700 mb-1">Location</label>
                         <input
                           id={`exhibition-location-${index}`}
                           type="text"
                           value={exhibition.location}
-                          onChange={(e) =>
-                            updateExhibition(index, 'location', e.target.value)
-                          }
+                          onChange={(e) => updateExhibition(index, 'location', e.target.value)}
                           placeholder="City, Country"
                           className="w-full px-3 py-2 border border-gray-300 rounded-md"
                         />
                       </div>
                       <div>
-                        <label
-                          htmlFor={`exhibition-year-${index}`}
-                          className="block text-sm font-medium text-gray-700 mb-1"
-                        >
-                          Year
-                        </label>
+                        <label htmlFor={`exhibition-year-${index}`} className="block text-sm font-medium text-gray-700 mb-1">Year</label>
                         <input
                           id={`exhibition-year-${index}`}
                           type="text"
                           value={exhibition.year}
-                          onChange={(e) =>
-                            updateExhibition(index, 'year', e.target.value)
-                          }
+                          onChange={(e) => updateExhibition(index, 'year', e.target.value)}
                           placeholder="2024"
                           className="w-full px-3 py-2 border border-gray-300 rounded-md"
                         />
                       </div>
                       <div>
-                        <label
-                          htmlFor={`exhibition-type-${index}`}
-                          className="block text-sm font-medium text-gray-700 mb-1"
-                        >
-                          Type
-                        </label>
+                        <label htmlFor={`exhibition-type-${index}`} className="block text-sm font-medium text-gray-700 mb-1">Type</label>
                         <select
                           id={`exhibition-type-${index}`}
                           value={exhibition.type}
-                          onChange={(e) =>
-                            updateExhibition(index, 'type', e.target.value)
-                          }
+                          onChange={(e) => updateExhibition(index, 'type', e.target.value)}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md"
                         >
                           <option value="solo">Solo Exhibition</option>
@@ -493,18 +418,11 @@ export default function AboutPage() {
                       </div>
                     </div>
                     <div>
-                      <label
-                        htmlFor={`exhibition-description-${index}`}
-                        className="block text-sm font-medium text-gray-700 mb-1"
-                      >
-                        Description
-                      </label>
+                      <label htmlFor={`exhibition-description-${index}`} className="block text-sm font-medium text-gray-700 mb-1">Description</label>
                       <textarea
                         id={`exhibition-description-${index}`}
                         value={exhibition.description || ''}
-                        onChange={(e) =>
-                          updateExhibition(index, 'description', e.target.value)
-                        }
+                        onChange={(e) => updateExhibition(index, 'description', e.target.value)}
                         placeholder="Brief description of the exhibition"
                         rows={2}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md"
@@ -512,7 +430,7 @@ export default function AboutPage() {
                     </div>
                   </div>
                 ))}
-
+                
                 {data.exhibitions.length === 0 && (
                   <div className="text-center py-8 text-gray-500">
                     No exhibitions added yet.
@@ -535,79 +453,48 @@ export default function AboutPage() {
                   <span>Add Press</span>
                 </button>
               </div>
-
+              
               <div className="space-y-4">
                 {data.press.map((press, index) => (
-                  <div
-                    key={index}
-                    className="grid grid-cols-1 md:grid-cols-5 gap-4 p-4 border border-gray-200 rounded-lg"
-                  >
+                  <div key={index} className="grid grid-cols-1 md:grid-cols-5 gap-4 p-4 border border-gray-200 rounded-lg">
                     <div>
-                      <label
-                        htmlFor={`press-title-${index}`}
-                        className="block text-sm font-medium text-gray-700 mb-1"
-                      >
-                        Title
-                      </label>
+                      <label htmlFor={`press-title-${index}`} className="block text-sm font-medium text-gray-700 mb-1">Title</label>
                       <input
                         id={`press-title-${index}`}
                         type="text"
                         value={press.title}
-                        onChange={(e) =>
-                          updatePress(index, 'title', e.target.value)
-                        }
+                        onChange={(e) => updatePress(index, 'title', e.target.value)}
                         placeholder="Article/interview title"
                         className="w-full px-3 py-2 border border-gray-300 rounded-md"
                       />
                     </div>
                     <div>
-                      <label
-                        htmlFor={`press-publication-${index}`}
-                        className="block text-sm font-medium text-gray-700 mb-1"
-                      >
-                        Publication
-                      </label>
+                      <label htmlFor={`press-publication-${index}`} className="block text-sm font-medium text-gray-700 mb-1">Publication</label>
                       <input
                         id={`press-publication-${index}`}
                         type="text"
                         value={press.publication}
-                        onChange={(e) =>
-                          updatePress(index, 'publication', e.target.value)
-                        }
+                        onChange={(e) => updatePress(index, 'publication', e.target.value)}
                         placeholder="Magazine, blog, etc."
                         className="w-full px-3 py-2 border border-gray-300 rounded-md"
                       />
                     </div>
                     <div>
-                      <label
-                        htmlFor={`press-date-${index}`}
-                        className="block text-sm font-medium text-gray-700 mb-1"
-                      >
-                        Date
-                      </label>
+                      <label htmlFor={`press-date-${index}`} className="block text-sm font-medium text-gray-700 mb-1">Date</label>
                       <input
                         id={`press-date-${index}`}
                         type="date"
                         value={press.date}
-                        onChange={(e) =>
-                          updatePress(index, 'date', e.target.value)
-                        }
+                        onChange={(e) => updatePress(index, 'date', e.target.value)}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md"
                       />
                     </div>
                     <div>
-                      <label
-                        htmlFor={`press-type-${index}`}
-                        className="block text-sm font-medium text-gray-700 mb-1"
-                      >
-                        Type
-                      </label>
+                      <label htmlFor={`press-type-${index}`} className="block text-sm font-medium text-gray-700 mb-1">Type</label>
                       <select
                         id={`press-type-${index}`}
                         value={press.type}
-                        onChange={(e) =>
-                          updatePress(index, 'type', e.target.value)
-                        }
+                        onChange={(e) => updatePress(index, 'type', e.target.value)}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md"
                       >
                         <option value="feature">Feature</option>
@@ -620,9 +507,7 @@ export default function AboutPage() {
                       <input
                         type="url"
                         value={press.url || ''}
-                        onChange={(e) =>
-                          updatePress(index, 'url', e.target.value)
-                        }
+                        onChange={(e) => updatePress(index, 'url', e.target.value)}
                         placeholder="https://..."
                         className="flex-1 px-3 py-2 border border-gray-300 rounded-md"
                       />
@@ -635,7 +520,7 @@ export default function AboutPage() {
                     </div>
                   </div>
                 ))}
-
+                
                 {data.press.length === 0 && (
                   <div className="text-center py-8 text-gray-500">
                     No press coverage added yet.

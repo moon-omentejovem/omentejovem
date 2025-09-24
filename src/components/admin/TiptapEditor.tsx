@@ -18,8 +18,6 @@ import {
   UndoIcon
 } from 'lucide-react'
 
-import { getImageUrlFromId } from '@/utils/storage'
-import { uploadImage } from '@/utils/upload-helpers'
 import { JSONContent } from '@tiptap/react'
 
 interface TiptapEditorProps {
@@ -27,15 +25,13 @@ interface TiptapEditorProps {
   onChange: (content: JSONContent) => void
   placeholder?: string
   className?: string
-  editorSlug: string // identificador do post/artigo/entidade para path
 }
 
 export default function TiptapEditor({
   content,
   onChange,
   placeholder = 'Start writing...',
-  className = '',
-  editorSlug
+  className = ''
 }: TiptapEditorProps) {
   const editor = useEditor({
     extensions: [
@@ -79,50 +75,13 @@ export default function TiptapEditor({
     }
   }
 
-  // Novo fluxo: upload local para Supabase
-  const addImage = async () => {
+  const addImage = () => {
     if (!editor) return
 
-    // Cria input file dinamicamente
-    const input = document.createElement('input')
-    input.type = 'file'
-    input.accept = 'image/*'
-    input.onchange = async (e: any) => {
-      const file = e.target.files?.[0]
-      if (!file) return
-
-      // Validação básica
-      if (file.size > 50 * 1024 * 1024) {
-        alert('Arquivo muito grande (máx 50MB)')
-        return
-      }
-
-      // Gera filename limpo
-      const filename = file.name.replace(/\s+/g, '-').toLowerCase()
-
-      // Upload para Supabase usando helper centralizado
-      // Para página About, sempre usar slug fixo e bucket 'editor'
-      const tiptapSlug = editorSlug || 'about-page'
-      const result = await uploadImage(file, {
-        resourceType: 'editor',
-        id: tiptapSlug,
-        filename
-      })
-
-      if (result.success && result.id && result.rawPath) {
-        // Gera URL pública do arquivo raw
-        const publicUrl = getImageUrlFromId(
-          editorSlug,
-          filename,
-          'editor',
-          'raw'
-        )
-        editor.chain().focus().setImage({ src: publicUrl }).run()
-      } else {
-        alert('Erro ao fazer upload da imagem: ' + (result.error || ''))
-      }
+    const url = window.prompt('Enter image URL:')
+    if (url) {
+      editor.chain().focus().setImage({ src: url }).run()
     }
-    input.click()
   }
 
   if (!editor) return null
