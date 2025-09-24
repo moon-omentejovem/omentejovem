@@ -5,7 +5,7 @@
  * no Supabase Storage sem necessidade de salvar paths no banco de dados
  */
 
-import { STORAGE_BUCKETS, STORAGE_FOLDERS } from '@/lib/supabase/config'
+import { STORAGE_BUCKETS } from '@/lib/supabase/config'
 import { optimizeImageFile } from '@/utils/optimize-image'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
@@ -21,6 +21,7 @@ export class ImageUploadService {
    * Gera slug limpo a partir de um título ou nome de arquivo
    */
   private static generateSlug(input: string): string {
+    if (!input || typeof input !== 'string') return ''
     return input
       .toLowerCase()
       .normalize('NFD')
@@ -35,12 +36,18 @@ export class ImageUploadService {
    * Gera paths baseados em slug para diferentes tipos de recurso
    */
   private static generatePaths(
-    slug: string, 
-    resourceType: string = 'artworks'
+    slug: string,
+    filename: string,
+    resourceType: string = 'artworks',
+    type?: string
   ): { optimizedPath: string; rawPath: string } {
+    // Remove espaços e normaliza nome
+    const cleanFilename = filename.replace(/\s+/g, '-').toLowerCase()
+    // Se type for fornecido, inclui na pasta
+    const typeSegment = type ? `/${type}` : ''
     return {
-      optimizedPath: `${resourceType}/${STORAGE_FOLDERS.OPTIMIZED}/${slug}.webp`,
-      rawPath: `${resourceType}/${STORAGE_FOLDERS.RAW}/${slug}-raw.jpg`
+      optimizedPath: `${resourceType}/${slug}${typeSegment}/optimized/${cleanFilename.replace(/\.(webp|jpg|jpeg|png)$/i, '')}.webp`,
+      rawPath: `${resourceType}/${slug}${typeSegment}/raw/${cleanFilename}`
     }
   }
 
@@ -60,13 +67,22 @@ export class ImageUploadService {
   ): Promise<ImageUploadResult> {
     const cleanSlug = this.generateSlug(slug)
     const bucket = STORAGE_BUCKETS.MEDIA
-    const { optimizedPath, rawPath } = this.generatePaths(cleanSlug, resourceType)
+    // Para artworks, series, artifacts, pode passar type
+    const type = ['artworks', 'series', 'artifacts'].includes(resourceType)
+      ? resourceType
+      : undefined
+    const { optimizedPath, rawPath } = this.generatePaths(
+      cleanSlug,
+      file.name,
+      resourceType,
+      type
+    )
 
     try {
       // 1. Upload do arquivo original como raw
       const { error: rawError } = await supabase.storage
         .from(bucket)
-        .upload(rawPath, file, { 
+        .upload(rawPath, file, {
           contentType: file.type,
           upsert: true // Permite sobrescrever arquivo existente
         })
@@ -75,24 +91,28 @@ export class ImageUploadService {
         throw new Error(`Failed to upload raw image: ${rawError.message}`)
       }
 
-      // 2. Otimizar e fazer upload da versão otimizada
-      const optimized = await optimizeImageFile(file)
+      // 2. Se não for editor, otimizar e fazer upload da versão otimizada
+      if (resourceType !== 'editor') {
+        const optimized = await optimizeImageFile(file)
 
-      const { error: optError } = await supabase.storage
-        .from(bucket)
-        .upload(optimizedPath, optimized, {
-          contentType: 'image/webp',
-          upsert: true // Permite sobrescrever arquivo existente
-        })
+        const { error: optError } = await supabase.storage
+          .from(bucket)
+          .upload(optimizedPath, optimized, {
+            contentType: 'image/webp',
+            upsert: true // Permite sobrescrever arquivo existente
+          })
 
-      if (optError) {
-        throw new Error(`Failed to upload optimized image: ${optError.message}`)
+        if (optError) {
+          throw new Error(
+            `Failed to upload optimized image: ${optError.message}`
+          )
+        }
       }
 
       return {
         success: true,
         slug: cleanSlug,
-        optimizedPath,
+        optimizedPath: resourceType !== 'editor' ? optimizedPath : '',
         rawPath
       }
     } catch (error) {
@@ -106,27 +126,7 @@ export class ImageUploadService {
    * Upload com validação automática - compatibilidade com sistema antigo
    * @deprecated Use uploadImageBySlug instead
    */
-  static async uploadImageWithValidation(
-    file: File,
-    supabase: SupabaseClient,
-    resourceType: string = 'artworks'
-  ): Promise<{ optimizedPath: string; rawPath: string }> {
-    // Validar arquivo antes do upload
-    this.validateImageFile(file)
-
-    // Gerar slug temporário baseado no nome do arquivo
-    const tempSlug = this.generateSlug(file.name.replace(/\.[^/.]+$/, ''))
-    const timestamp = Date.now()
-    const slugWithTimestamp = `${tempSlug}-${timestamp}`
-
-    // Fazer upload
-    const result = await this.uploadImageBySlug(file, slugWithTimestamp, supabase, resourceType)
-    
-    return {
-      optimizedPath: result.optimizedPath,
-      rawPath: result.rawPath
-    }
-  }
+  // ...existing code...
 
   /**
    * Limpa uploads que falharam parcialmente
@@ -153,7 +153,7 @@ export class ImageUploadService {
   static validateImageFile(file: File): void {
     const validTypes = [
       'image/jpeg',
-      'image/jpg', 
+      'image/jpg',
       'image/png',
       'image/webp',
       'image/gif'
@@ -176,10 +176,14 @@ export class ImageUploadService {
   /**
    * Gera URL pública a partir de um slug (helper function)
    */
-  static getPublicUrl(slug: string, resourceType: string = 'artworks', imageType: 'optimized' | 'raw' = 'optimized'): string {
+  static getPublicUrl(
+    slug: string,
+    resourceType: string = 'artworks',
+    imageType: 'optimized' | 'raw' = 'optimized'
+  ): string {
     const { optimizedPath, rawPath } = this.generatePaths(slug, resourceType)
     const path = imageType === 'raw' ? rawPath : optimizedPath
-    
+
     return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${STORAGE_BUCKETS.MEDIA}/${path}`
   }
 

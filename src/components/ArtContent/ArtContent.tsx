@@ -9,7 +9,7 @@
 
 import { useCarouselNavigation } from '@/hooks/useCarouselNavigation'
 import { Artwork } from '@/types/artwork'
-import { getImageUrlFromSlugCompat } from '@/utils/storage'
+import { getImageUrlFromId } from '@/utils/storage'
 import { ReactElement, useCallback, useState } from 'react'
 import { HorizontalCarousel } from '../HorizontalCarousel/HorizontalCarousel'
 import { VerticalCarousel } from '../VerticalCarousel/VerticalCarousel'
@@ -60,7 +60,12 @@ export function ArtContent({
   // Transform artworks to carousel format
   const carouselSlides = filteredArtworks.map((artwork) => ({
     name: artwork.title || '',
-    imageUrl: getImageUrlFromSlugCompat(artwork.slug, 'artworks', 'optimized'),
+    imageUrl: getImageUrlFromId(
+      artwork.id,
+      artwork.slug,
+      'artworks',
+      'optimized'
+    ),
     slug: artwork.slug
   }))
 
