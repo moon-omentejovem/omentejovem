@@ -42,17 +42,6 @@ interface AboutContentProperties {
   aboutPageData?: AboutPageData | null
 }
 
-function AboutBio({ text }: { text: string }): ReactElement {
-  return (
-    <>
-      <div id="bio-content" className="bio">
-        {parse(text)}
-      </div>
-      <br />
-    </>
-  )
-}
-
 export function AboutContent({
   aboutPageData
 }: AboutContentProperties): ReactElement {
