@@ -1,11 +1,20 @@
 'use client'
 
 import { CollectionLink } from '@/components/CollectionLink'
-import { CollectionsResponse } from '@/types/legacy'
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 
-export default function CollectionsContent(data: CollectionsResponse) {
+interface SeriesData {
+  collections: Array<{
+    name: string
+    year: string
+    slug: string
+    nftSlugs: string[]
+    coverImage?: string
+  }>
+}
+
+export default function CollectionsContent(data: SeriesData) {
   const moveRef = useRef(null)
   const [currentCollection, setCurrentCollection] = useState(
     null as string | null
@@ -14,17 +23,25 @@ export default function CollectionsContent(data: CollectionsResponse) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [collectionPreviewImages, setCollectionPreviewImages] = useState<
     string[]
-  >(['/S&C Cover.jpg', '/TheCycleCover.jpg', '/Stories on Circles Cover.jpg'])
+  >([])
 
   useEffect(() => {
-    if (currentCollection === 'Shapes & Colors') {
-      setCurrentImageIndex(0)
-    } else if (currentCollection === 'The Cycle') {
-      setCurrentImageIndex(1)
-    } else if (currentCollection === 'Stories on Circles') {
-      setCurrentImageIndex(2)
+    // Extract cover images from collections data
+    const coverImages = data.collections.map(
+      (collection) => collection.coverImage || '/placeholder-series.jpg'
+    )
+    setCollectionPreviewImages(coverImages)
+  }, [data.collections])
+
+  useEffect(() => {
+    // Find the index of the current collection
+    const collectionIndex = data.collections.findIndex(
+      (collection) => collection.name === currentCollection
+    )
+    if (collectionIndex !== -1) {
+      setCurrentImageIndex(collectionIndex)
     }
-  }, [currentCollection])
+  }, [currentCollection, data.collections])
 
   useEffect(() => {
     const moveElement = moveRef.current

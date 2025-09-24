@@ -16,5 +16,5 @@ export default async function AboutPage() {
     )
   }
 
-  return <AboutContent aboutPageData={aboutPage} press={[]} exhibitions={[]} />
+  return <AboutContent aboutPageData={aboutPage} />
 }

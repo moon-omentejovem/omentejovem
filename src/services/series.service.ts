@@ -17,6 +17,7 @@ interface CollectionRes {
   year: string
   slug: string
   nftSlugs: string[]
+  coverImage?: string
 }
 
 interface CollectionsResponse {
@@ -211,6 +212,7 @@ export class SeriesService extends BaseService {
           name,
           slug,
           created_at,
+          slug,
           series_artworks(
             artworks(
               id,
@@ -241,11 +243,17 @@ export class SeriesService extends BaseService {
           .map((sa: any) => sa.artworks?.slug)
           .filter(Boolean)
 
+        // Generate cover image URL from series slug
+        const coverImage = series.slug
+          ? `/api/images/series/${series.slug.id}/${series.slug.filename || series.slug.slug}/optimized`
+          : undefined
+
         return {
           name: series.name,
           year,
           slug: series.slug,
-          nftSlugs
+          nftSlugs,
+          coverImage
         }
       })
 

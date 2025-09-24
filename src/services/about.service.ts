@@ -15,6 +15,26 @@ type DatabaseAboutPage = Database['public']['Tables']['about_page']['Row']
 export interface AboutPageData {
   id: string
   content: any // JSON content from Tiptap
+  socials: Array<{
+    platform: string
+    handle: string
+    url: string
+  }>
+  exhibitions: Array<{
+    title: string
+    venue: string
+    location: string
+    year: string
+    type: 'solo' | 'group' | 'online'
+    description?: string
+  }>
+  press: Array<{
+    title: string
+    publication: string
+    date: string
+    url?: string
+    type: 'feature' | 'interview' | 'review' | 'news'
+  }>
   created_at: string | null
   updated_at: string | null
 }
@@ -49,6 +69,9 @@ export class AboutService extends BaseService {
           }
         ]
       },
+      socials: [],
+      exhibitions: [],
+      press: [],
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     }

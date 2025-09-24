@@ -16,9 +16,8 @@ export default async function ArtifactsPage() {
       return <ArtifactsContent />
     }
 
-    // TODO: Create dynamic artifacts content component
-    // For now, return static content but this can be extended
-    return <ArtifactsContent />
+    // Pass artifacts data to the content component
+    return <ArtifactsContent artifacts={artifacts} />
   }
 
   // Default to static artifacts content
