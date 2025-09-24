@@ -1,6 +1,6 @@
 import { supabaseAdmin } from '@/lib/supabase-admin'
 import { CreateSeriesSchema } from '@/types/schemas'
-import { getImageUrlFromSlug } from '@/utils/storage'
+import { getImageUrlFromId, getImageUrlFromSlugCompat } from "@/utils/storage"
 import { revalidateTag } from 'next/cache'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
     const seriesWithImage = (data || []).map((series) => ({
       ...series,
       image_url: series.slug
-        ? getImageUrlFromSlug(series.slug, 'series', 'optimized')
+        ? getImageUrlFromId(series.slug.id, series.slug.filename || series.slug.slug, "series", "optimized")
         : null
     }))
     return NextResponse.json({ data: seriesWithImage, total: count })
@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
     const seriesWithImage = {
       ...series,
       image_url: series.slug
-        ? getImageUrlFromSlug(series.slug, 'series', 'optimized')
+        ? getImageUrlFromId(series.slug.id, series.slug.filename || series.slug.slug, "series", "optimized")
         : null
     }
     return NextResponse.json(seriesWithImage, { status: 201 })

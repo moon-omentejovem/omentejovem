@@ -1,8 +1,8 @@
 'use client'
 
-import { ImageUploadService } from '@/services/image-upload.service'
+import { ImageUploadService } from "@/services/image-upload.service"
 import type { FormField, ResourceDescriptor } from '@/types/descriptors'
-import { getImageUrlFromSlug } from '@/utils/storage'
+import { getImageUrlFromSlugCompat } from "@/utils/storage"
 import type { SupabaseClient } from '@supabase/supabase-js'
 import {
   FileInput,
@@ -182,12 +182,15 @@ export default function AdminFormField({
           slug = formData.id || ''
         }
       }
+
+      console.log({ formData, slug })
+
       // Usa image_url da API se disponível, senão gera localmente
       const imageUrl =
         formData && formData.image_url
           ? formData.image_url
           : slug
-            ? getImageUrlFromSlug(slug, descriptor.table, 'optimized')
+            ? getImageUrlFromSlugCompat(slug, descriptor.table, 'optimized')
             : undefined
 
       const handleFileChange = async (

@@ -3,7 +3,7 @@
 import { CalloutParallax } from '@/components/CalloutParallax'
 import { useHomeArtworks } from '@/hooks'
 import type { HomeImage } from '@/types/home'
-import { getImageUrlFromSlug } from '@/utils/storage'
+import { getImageUrlFromSlugCompat } from '@/utils/storage'
 import { ReactElement } from 'react'
 
 interface HomeContentProperties {
@@ -22,7 +22,11 @@ export default function HomeContent({
   const images: HomeImage[] = data
     ? data.map((artwork) => ({
         title: artwork.title,
-        imageUrl: getImageUrlFromSlug(artwork.slug, 'artworks', 'optimized'),
+        imageUrl: getImageUrlFromSlugCompat(
+          artwork.slug,
+          'artworks',
+          'optimized'
+        ),
         createdAt: artwork.posted_at || artwork.created_at || ''
       }))
     : initialImages
