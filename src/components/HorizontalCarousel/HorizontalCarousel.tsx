@@ -75,7 +75,7 @@ export function HorizontalCarousel({
         centeredSlides={true}
         slidesPerView={'auto'}
         speed={800}
-        onSlideChangeTransitionEnd={(swiperInstance) => {
+        onSlideChangeTransitionEnd={(swiperInstance: SwiperType) => {
           slideOnChangeAnimationHandler()
           handleGetMoreslides(swiperInstance)
         }}

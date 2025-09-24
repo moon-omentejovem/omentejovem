@@ -48,7 +48,7 @@ export function HorizontalInCarousel({
         slideToClickedSlide={true}
         initialSlide={slideIndex}
         centeredSlides={true}
-        onSlideChange={(e) => {
+        onSlideChange={(e: SwiperType) => {
           onChangeSlideIndex(e.realIndex)
         }}
         onSlideChangeTransitionEnd={(swiperInstance: SwiperType) => {
