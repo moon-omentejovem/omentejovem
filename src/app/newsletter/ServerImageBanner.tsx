@@ -4,7 +4,7 @@
  */
 
 import { ArtworkService } from '@/services'
-import { getImageUrlFromId, getImageUrlFromSlugCompat } from '@/utils/storage'
+import { getImageUrlFromId } from '@/utils/storage'
 import Image from 'next/image'
 
 export async function ServerImageBanner() {
@@ -12,8 +12,8 @@ export async function ServerImageBanner() {
   const { artworks } = await ArtworkService.getArtworks({ limit: 10 })
   const images = artworks
     .map((artwork) =>
-      artwork.slug
-        ? getImageUrlFromId(artwork.slug.id, artwork.slug.filename || artwork.slug.slug, 'artworks', 'optimized')
+      artwork.id && artwork.slug
+        ? getImageUrlFromId(artwork.id, artwork.slug, 'artworks', 'optimized')
         : null
     )
     .filter(Boolean)

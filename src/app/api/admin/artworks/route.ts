@@ -1,7 +1,7 @@
 import { supabaseAdmin } from '@/lib/supabase-admin'
 import { CreateArtworkSchema } from '@/types/schemas'
 import type { Database } from '@/types/supabase'
-import { getImageUrlFromId, getImageUrlFromSlugCompat } from '@/utils/storage'
+import { getImageUrlFromId } from '@/utils/storage'
 import { revalidateTag } from 'next/cache'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -45,9 +45,10 @@ export async function GET(request: NextRequest) {
     // Adiciona campo image_url resolvido para cada artwork
     const artworksWithImage = (data || []).map((artwork) => ({
       ...artwork,
-      image_url: artwork.slug
-        ? getImageUrlFromId(artwork.slug, undefined, 'artworks', 'optimized')
-        : null
+      image_url:
+        artwork.id && artwork.slug
+          ? getImageUrlFromId(artwork.id, artwork.slug, 'artworks', 'optimized')
+          : null
     }))
     return NextResponse.json({ data: artworksWithImage, total: count })
   } catch (error) {
@@ -101,9 +102,10 @@ export async function POST(request: NextRequest) {
     // Adiciona campo image_url resolvido
     const artworkWithImage = {
       ...artwork,
-      image_url: artwork.slug
-        ? getImageUrlFromId(artwork.slug, undefined, 'artworks', 'optimized')
-        : null
+      image_url:
+        artwork.id && artwork.slug
+          ? getImageUrlFromId(artwork.id, artwork.slug, 'artworks', 'optimized')
+          : null
     }
     return NextResponse.json(artworkWithImage, { status: 201 })
   } catch (error) {

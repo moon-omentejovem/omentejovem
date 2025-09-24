@@ -54,16 +54,17 @@ export async function generateMetadata({ params }: ArtworkPageProps) {
     openGraph: {
       title: artwork.title,
       description: artwork.description || '',
-      images: artwork.slug
-        ? [
-            getImageUrlFromId(
-              artwork.slug.id,
-              artwork.slug.filename || artwork.slug.slug,
-              'artworks',
-              'optimized'
-            )
-          ]
-        : []
+      images:
+        artwork.id && artwork.slug
+          ? [
+              getImageUrlFromId(
+                artwork.id,
+                artwork.slug,
+                'artworks',
+                'optimized'
+              )
+            ]
+          : []
     }
   }
 }

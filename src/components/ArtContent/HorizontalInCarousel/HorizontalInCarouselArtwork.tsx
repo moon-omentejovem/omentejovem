@@ -4,7 +4,7 @@ import 'swiper/css'
 import 'swiper/css/pagination'
 
 import { Artwork } from '@/types/artwork'
-import { getImageUrlFromId, getImageUrlFromSlugCompat } from '@/utils/storage'
+import { getImageUrlFromId } from '@/utils/storage'
 import Image from 'next/image'
 import { useEffect } from 'react'
 import { Mousewheel } from 'swiper/modules'
@@ -51,7 +51,7 @@ export function HorizontalInCarouselArtwork({
         onSlideChange={(e) => {
           onChangeSlideIndex(e.realIndex)
         }}
-        onSlideChangeTransitionEnd={(swiperInstance) => {
+        onSlideChangeTransitionEnd={(swiperInstance: SwiperType) => {
           handleGetMoreslides(swiperInstance)
         }}
       >
@@ -65,7 +65,12 @@ export function HorizontalInCarouselArtwork({
               className="flex h-24 w-24 xl:h-[120px] xl:w-[120px]"
             >
               <Image
-                src={getImageUrlFromId(artwork.slug.id, artwork.slug.filename || artwork.slug.slug, 'artworks', 'optimized')}
+                src={getImageUrlFromId(
+                  artwork.id,
+                  artwork.slug,
+                  'artworks',
+                  'optimized'
+                )}
                 alt={artwork.title || ''}
                 width={100}
                 height={100}

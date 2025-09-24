@@ -6,6 +6,7 @@
  */
 
 import type { Database } from '@/types/supabase'
+import { getImageUrlFromSlug } from '@/utils/storage'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { cache } from 'react'
 import { BaseService } from './base.service'
@@ -245,7 +246,7 @@ export class SeriesService extends BaseService {
 
         // Generate cover image URL from series slug
         const coverImage = series.slug
-          ? `/api/images/series/${series.slug.id}/${series.slug.filename || series.slug.slug}/optimized`
+          ? getImageUrlFromSlug(series.slug, 'series', 'optimized')
           : undefined
 
         return {

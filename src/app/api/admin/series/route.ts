@@ -1,6 +1,6 @@
 import { supabaseAdmin } from '@/lib/supabase-admin'
 import { CreateSeriesSchema } from '@/types/schemas'
-import { getImageUrlFromId, getImageUrlFromSlugCompat } from '@/utils/storage'
+import { getImageUrlFromId } from '@/utils/storage'
 import { revalidateTag } from 'next/cache'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -36,11 +36,22 @@ export async function GET(request: NextRequest) {
     if (error) throw error
 
     // Adiciona campo image_url resolvido para cada série
+    const toSlug = (str: string) =>
+      str
+        ?.toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '')
     const seriesWithImage = (data || []).map((series) => ({
       ...series,
-      image_url: series.slug
-        ? getImageUrlFromId(series.slug.id, series.slug.filename || series.slug.slug, 'series', 'optimized')
-        : null
+      image_url:
+        series.id && series.slug
+          ? getImageUrlFromId(
+              series.id,
+              toSlug(series.slug),
+              'series',
+              'optimized'
+            )
+          : null
     }))
     return NextResponse.json({ data: seriesWithImage, total: count })
   } catch (error) {
@@ -87,11 +98,22 @@ export async function POST(request: NextRequest) {
     revalidateTag('series')
 
     // Adiciona campo image_url resolvido
+    const toSlug = (str: string) =>
+      str
+        ?.toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '')
     const seriesWithImage = {
       ...series,
-      image_url: series.slug
-        ? getImageUrlFromId(series.slug.id, series.slug.filename || series.slug.slug, 'series', 'optimized')
-        : null
+      image_url:
+        series.id && series.slug
+          ? getImageUrlFromId(
+              series.id,
+              toSlug(series.slug),
+              'series',
+              'optimized'
+            )
+          : null
     }
     return NextResponse.json(seriesWithImage, { status: 201 })
   } catch (error) {

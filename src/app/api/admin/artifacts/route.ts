@@ -1,6 +1,6 @@
 import { supabaseAdmin } from '@/lib/supabase-admin'
 import { CreateArtifactSchema } from '@/types/schemas'
-import { getImageUrlFromId, getImageUrlFromSlugCompat } from '@/utils/storage'
+import { getImageUrlFromId } from '@/utils/storage'
 import { revalidateTag } from 'next/cache'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -28,11 +28,22 @@ export async function GET(request: NextRequest) {
     if (error) throw error
 
     // Adiciona campo image_url resolvido para cada artifact
+    const toSlug = (str: string) =>
+      str
+        ?.toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '')
     const artifactsWithImage = (data || []).map((artifact) => ({
       ...artifact,
-      image_url: artifact.id
-        ? getImageUrlFromId(artifact.id.id, artifact.id.filename || artifact.id.slug, 'artifacts', 'optimized')
-        : null
+      image_url:
+        artifact.id && artifact.title
+          ? getImageUrlFromId(
+              artifact.id,
+              toSlug(artifact.title),
+              'artifacts',
+              'optimized'
+            )
+          : null
     }))
     return NextResponse.json({ data: artifactsWithImage, total: count })
   } catch (error) {
@@ -65,11 +76,22 @@ export async function POST(request: NextRequest) {
     revalidateTag('artifacts')
 
     // Adiciona campo image_url resolvido
+    const toSlug = (str: string) =>
+      str
+        ?.toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '')
     const artifactWithImage = {
       ...artifact,
-      image_url: artifact.id
-        ? getImageUrlFromId(artifact.id.id, artifact.id.filename || artifact.id.slug, 'artifacts', 'optimized')
-        : null
+      image_url:
+        artifact.id && artifact.title
+          ? getImageUrlFromId(
+              artifact.id,
+              toSlug(artifact.title),
+              'artifacts',
+              'optimized'
+            )
+          : null
     }
     return NextResponse.json(artifactWithImage, { status: 201 })
   } catch (error) {

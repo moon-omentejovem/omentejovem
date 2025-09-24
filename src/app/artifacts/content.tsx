@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import type { ReactElement } from 'react'
 
+// @ts-ignore
 import './style.css'
 
 interface ArtifactData {

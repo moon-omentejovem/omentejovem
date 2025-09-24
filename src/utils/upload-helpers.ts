@@ -32,21 +32,19 @@ export async function uploadImage(
   try {
     const supabase = createClient()
 
-    const result = await ImageUploadService.uploadImageById(
+    const result = await ImageUploadService.uploadImageBySlug(
       file,
       options.id,
-      options.filename,
       supabase,
       options.resourceType
     )
 
     return {
       success: result.success,
-      id: result.id,
+      id: result.slug,
       optimizedPath: result.optimizedPath,
       rawPath: result.rawPath
     }
-
   } catch (error) {
     console.error('Erro no upload:', error)
     return {
@@ -104,23 +102,38 @@ export async function uploadArtifactImage(
 /**
  * Helper para gerar filename baseado no título
  */
-export function generateFilename(title: string, extension: string = 'webp'): string {
-  return title
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '') // Remove acentos
-    .replace(/[^a-z0-9s-]/g, '') // Remove caracteres especiais
-    .replace(/s+/g, '-') // Substitui espaços por hífens
-    .replace(/-+/g, '-') // Remove hífens duplicados
-    .replace(/^-|-$/g, '') // Remove hífens do início e fim
-    + '.' + extension
+export function generateFilename(
+  title: string,
+  extension: string = 'webp'
+): string {
+  return (
+    title
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[̀-ͯ]/g, '') // Remove acentos
+      .replace(/[^a-z0-9s-]/g, '') // Remove caracteres especiais
+      .replace(/s+/g, '-') // Substitui espaços por hífens
+      .replace(/-+/g, '-') // Remove hífens duplicados
+      .replace(/^-|-$/g, '') + // Remove hífens do início e fim
+    '.' +
+    extension
+  )
 }
 
 /**
  * Helper para validar arquivo de imagem
  */
-export function validateImageFile(file: File): { valid: boolean; error?: string } {
-  const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif']
+export function validateImageFile(file: File): {
+  valid: boolean
+  error?: string
+} {
+  const validTypes = [
+    'image/jpeg',
+    'image/jpg',
+    'image/png',
+    'image/webp',
+    'image/gif'
+  ]
   const maxSize = 50 * 1024 * 1024 // 50MB
 
   if (!validTypes.includes(file.type)) {
