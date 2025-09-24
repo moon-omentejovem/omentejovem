@@ -107,38 +107,13 @@ yarn lintfix      # Fix ESLint issues
 - **[Backend Patterns](docs/BACKEND_ORIENTED_FRONTEND.md)**: Service architecture patterns
 - **[AI Context](.agents/AI_CONTEXT_MASTER.md)**: Technical documentation for AI agents
 
-## Seeding e Migração de Dados Legados
+## Legacy Data Migration
 
-O sistema possui seed automático para dados essenciais e opção de migração dos NFTs históricos.
+For legacy NFT seeding and migration instructions, see:
 
-### Seed básico
+[`scripts/legacy/README.md`](scripts/legacy/README.md)
 
-Roda o seed mínimo (series/artworks/artifacts/about):
-
-```bash
-node scripts/utils/vercel-seed.js
-```
-
-### Seed + Migração dos dados legados
-
-Roda o seed básico e depois importa todos NFTs históricos dos arquivos JSON em `public/legacy_data`:
-
-```bash
-node scripts/utils/vercel-seed.js --legacy
-```
-
-- Idempotente: nunca duplica registros já existentes (checa pelo slug)
-- Migração inclui artworks, séries e relacionamentos
-- Não popula campos de imagem (novo padrão: imagens resolvidas por slug via storage)
-- Logs detalhados no console (contagem de inseridos/ignorados)
-
-> **Dica:** Para rodar só a migração manualmente:
->
-> ```bash
-> node scripts/legacy/migrate-legacy-data.js
-> ```
-
-Veja mais detalhes em [docs/SEED-SYSTEM.md](docs/SEED-SYSTEM.md).
+More details in [docs/SEED-SYSTEM.md](docs/SEED-SYSTEM.md).
 
 ## License
 
