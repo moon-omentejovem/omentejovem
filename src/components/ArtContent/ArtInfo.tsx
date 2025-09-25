@@ -146,7 +146,9 @@ export function ArtInfo({
         <div className="md:flex-1 min-w-[200px] xl:min-w-[350px] flex flex-col max-h-full">
           <div className="xl:art-detail-inner-container overflow-hidden flex flex-1 justify-start xl:justify-end">
             <ArtDetails
-              detailedImage={selectedArtwork.imageurl || '/placeholder.png'}
+              detailedImage={
+                selectedArtwork.imageoptimizedurl || '/placeholder.png'
+              }
               image={selectedArtwork.imageurl || '/placeholder.png'}
               name={selectedArtwork.title || ''}
             />
@@ -163,7 +165,7 @@ export function ArtInfo({
           </button>
         )}
 
-        <div className="block w-[100vw] self-center xl:hidden md:order-3">
+        <div className="block w-[100vw] self-center xl:hidden md:order-3 ">
           <HorizontalInCarouselArtwork
             slideIndex={slides.findIndex(
               (slide) => slide.id === selectedArtwork.id
