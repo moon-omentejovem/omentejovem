@@ -52,7 +52,8 @@ export default function ImageUploadField({
       setPreviewUrl(optimizedUrl)
       onExtraChange && onExtraChange('imageoptimizedurl', optimizedUrl)
       onChange(optimizedUrl)
-    } else if (originalUrl) {
+    }
+    if (originalUrl) {
       setPreviewUrl(originalUrl)
       onExtraChange && onExtraChange('imageurl', originalUrl)
       onChange(originalUrl)

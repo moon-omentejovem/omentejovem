@@ -1,4 +1,5 @@
 import { supabaseAdmin } from '@/lib/supabase-admin'
+import { CreateArtworkSchema } from '@/types/schemas'
 import type { Database } from '@/types/supabase'
 import { revalidateTag } from 'next/cache'
 import { NextRequest, NextResponse } from 'next/server'
@@ -46,10 +47,10 @@ export async function GET(request: NextRequest) {
 
     if (error) throw error
 
-    // Adiciona campo image_url resolvido para cada artwork
     const artworksWithImage = (data || []).map((artwork) => ({
       ...artwork,
-      image_url: artwork.imageurl || null
+      imageurl: artwork.imageurl || null,
+      imageoptimizedurl: artwork.imageoptimizedurl || null
     }))
     return NextResponse.json({ data: artworksWithImage, total: count })
   } catch (error) {
@@ -66,51 +67,15 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
 
-    // Apenas utiliza os campos vindos do frontend (filename, imageurl, imageoptimizedurl)
-    const {
-      slug,
-      title,
-      description,
-      token_id,
-      mint_date,
-      mint_link,
-      type,
-      editions_total,
-      video_url,
-      blockchain,
-      contract_address,
-      collection_slug,
-      is_featured,
-      is_one_of_one,
-      status,
-      posted_at,
-      filename,
-      imageurl,
-      imageoptimizedurl
-    } = body
+    // Validate input
+    const validatedData = CreateArtworkSchema.parse(body)
 
+    // Insert artwork
     const { data: artwork, error } = await supabaseAdmin
       .from('artworks')
       .insert({
-        slug,
-        title,
-        description,
-        token_id,
-        mint_date,
-        mint_link,
-        type,
-        editions_total,
-        video_url,
-        blockchain,
-        contract_address,
-        collection_slug,
-        is_featured,
-        is_one_of_one,
-        status,
-        posted_at: posted_at || new Date().toISOString(),
-        filename,
-        imageurl,
-        imageoptimizedurl
+        ...validatedData,
+        posted_at: validatedData.posted_at || new Date().toISOString()
       } as Database['public']['Tables']['artworks']['Insert'])
       .select()
       .single()
@@ -139,7 +104,8 @@ export async function POST(request: NextRequest) {
     // Adiciona campo image_url resolvido
     const artworkWithImage = {
       ...artwork,
-      image_url: artwork.imageurl || null
+      imageurl: artwork.imageurl || null,
+      imageoptimizedurl: artwork.imageoptimizedurl || null
     }
     return NextResponse.json(artworkWithImage, { status: 201 })
   } catch (error) {

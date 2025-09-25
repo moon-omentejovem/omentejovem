@@ -222,7 +222,6 @@ export default function AdminForm<T extends Record<string, any>>({
       />
     )
   }
-  if (!data) return <div>Loading...</div>
   return (
     <div className="max-w-4xl mx-auto px-4">
       <div className="flex flex-col gap-4 mb-6 sm:flex-row sm:items-center sm:justify-between">

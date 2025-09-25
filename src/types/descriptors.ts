@@ -89,7 +89,13 @@ export const artworksDescriptor: ResourceDescriptor = {
   table: 'artworks',
   title: 'Artworks',
   list: [
-    // Nenhum campo de imagem: resolução via slug/id e helpers
+    {
+      key: 'imageurl',
+      label: 'Cover',
+      render: 'image',
+      width: '60px',
+      className: 'rounded'
+    },
     { key: 'title', label: 'Title', render: 'text' },
     { key: 'mint_date', label: 'Mint Date', render: 'date' },
     { key: 'mint_link', label: 'Mint Link', render: 'link' },
@@ -97,7 +103,6 @@ export const artworksDescriptor: ResourceDescriptor = {
     { key: 'status', label: 'Status', render: 'badge' }
   ],
   form: [
-    // Nenhum campo de imagem: resolução via slug/id e helpers
     {
       key: 'title',
       label: 'Title',
@@ -228,10 +233,17 @@ export const seriesDescriptor: ResourceDescriptor = {
   table: 'series',
   title: 'Series',
   list: [
+    {
+      key: 'imageurl',
+      label: 'Cover',
+      render: 'image',
+      width: '60px',
+      className: 'rounded'
+    },
     { key: 'name', label: 'Name', render: 'text' },
     // Nenhum campo de imagem: resolução via slug/id e helpers
     { key: 'artworks', label: 'Artworks', render: 'text' }, // Will show count or names
-    { key: 'status', label: 'Status', render: 'badge' }
+    { key: 'created_at', label: 'Created At', render: 'date' }
   ],
   form: [
     {
@@ -298,7 +310,6 @@ export const artifactsDescriptor: ResourceDescriptor = {
   title: 'Artifacts',
   list: [
     { key: 'title', label: 'Title', render: 'text' },
-    // Nenhum campo de imagem: resolução via slug/id e helpers
     { key: 'status', label: 'Status', render: 'badge' },
     { key: 'link_url', label: 'Link', render: 'link' }
   ],

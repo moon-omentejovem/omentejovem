@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
 
     const artifactsWithImage = (data || []).map((artifact) => ({
       ...artifact,
-      image_url: artifact.imageurl || null
+      imageurl: artifact.imageurl || null
     }))
     return NextResponse.json({ data: artifactsWithImage, total: count })
   } catch (error) {
@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
 
     const artifactWithImage = {
       ...artifact,
-      image_url: artifact.imageurl || null
+      imageurl: artifact.imageurl || null
     }
     return NextResponse.json(artifactWithImage, { status: 201 })
   } catch (error) {

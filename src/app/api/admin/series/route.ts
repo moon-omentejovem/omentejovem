@@ -34,17 +34,7 @@ export async function GET(request: NextRequest) {
 
     if (error) throw error
 
-    // Adiciona campo image_url resolvido para cada série
-    const toSlug = (str: string) =>
-      str
-        ?.toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/(^-|-$)/g, '')
-    const seriesWithImage = (data || []).map((series) => ({
-      ...series,
-      image_url: series.imageurl || null
-    }))
-    return NextResponse.json({ data: seriesWithImage, total: count })
+    return NextResponse.json({ data, total: count })
   } catch (error) {
     console.error('Error fetching series:', error)
     return NextResponse.json(
@@ -88,17 +78,7 @@ export async function POST(request: NextRequest) {
     // Revalidate cache
     revalidateTag('series')
 
-    // Adiciona campo image_url resolvido
-    const toSlug = (str: string) =>
-      str
-        ?.toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/(^-|-$)/g, '')
-    const seriesWithImage = {
-      ...series,
-      image_url: series.imageurl || null
-    }
-    return NextResponse.json(seriesWithImage, { status: 201 })
+    return NextResponse.json(series, { status: 201 })
   } catch (error) {
     console.error('Error creating series:', error)
 
