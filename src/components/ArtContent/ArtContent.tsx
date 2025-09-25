@@ -56,10 +56,10 @@ export function ArtContent({
     [handleNavigation]
   )
 
-  // Transform artworks to carousel format (usa imageurl direto do banco)
+  // Transform artworks to carousel format (usa imageoptimizedurl por padrão)
   const carouselSlides = filteredArtworks.map((artwork) => ({
     name: artwork.title || '',
-    imageUrl: artwork.imageurl || null,
+    imageUrl: artwork.imageoptimizedurl || null,
     slug: artwork.slug
   }))
 
@@ -102,6 +102,14 @@ export function ArtContent({
         </div>
       </main>
     )
+  }
+
+  // Para o modal fullscreen, garantir uso do imageurl (raw) se disponível
+  const selectedSlide = {
+    name: selectedArtwork.title || '',
+    imageUrl:
+      selectedArtwork.imageurl || selectedArtwork.imageoptimizedurl || null,
+    slug: selectedArtwork.slug
   }
 
   return (

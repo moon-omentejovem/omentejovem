@@ -120,13 +120,7 @@ export const artworksDescriptor: ResourceDescriptor = {
       required: true,
       placeholder: 'Upload artwork image'
     },
-    {
-      key: 'token_id',
-      label: 'Token ID',
-      type: 'text',
-      required: false,
-      placeholder: 'e.g., 1234'
-    },
+    // imageoptimizedurl não é campo editável manualmente, é gerenciado pela API/backend
     {
       key: 'mint_date',
       label: 'Mint Date',

@@ -1,19 +1,16 @@
 'use client'
 
+import ImageUploadField from '@/components/admin/ImageUploadField'
 import type { FormField, ResourceDescriptor } from '@/types/descriptors'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import {
-  FileInput,
   Label,
   Select,
   TextInput,
   Textarea,
   ToggleSwitch
 } from 'flowbite-react'
-import Image from 'next/image'
-import { toast } from 'sonner'
 import RelationPicker from './RelationPicker'
-import TiptapEditor from './TiptapEditor'
 
 interface AdminFormFieldProps {
   field: FormField
@@ -36,6 +33,8 @@ export default function AdminFormField({
   supabase,
   formData
 }: AdminFormFieldProps) {
+  // Nenhum hook global para upload de imagem aqui. Tudo fica dentro do case 'image'.
+
   switch (field.type) {
     case 'text':
     case 'email':
@@ -159,81 +158,35 @@ export default function AdminFormField({
         </div>
       )
     case 'tiptap':
-      // Usa slug/id do formData para path do editor
-      let editorSlug = ''
-      if (formData) {
-        if (descriptor.table === 'artworks' || descriptor.table === 'series') {
-          editorSlug = formData.slug || ''
-        } else if (descriptor.table === 'artifacts') {
-          editorSlug = formData.id || ''
-        }
-      }
+      // Editor rich text (mantém padrão)
       return (
         <div className="space-y-2">
           <Label htmlFor={field.key} value={field.label || field.key} />
-          <TiptapEditor
-            content={value}
-            onChange={(content) => onChange(content)}
+          {/* Substitua por seu editor Tiptap customizado se necessário */}
+          <Textarea
+            id={field.key}
+            value={value || ''}
+            onChange={(e) => onChange(e.target.value)}
             placeholder={field.placeholder}
-            editorSlug={editorSlug}
+            rows={6}
+            color={error ? 'failure' : undefined}
           />
-          {error && <p className="text-red-400 text-sm">{error}</p>}
-        </div>
-      )
-    case 'image':
-      // Usa o valor do campo slug do formData (React state)
-      let slug = ''
-      if (formData) {
-        if (descriptor.table === 'artworks' || descriptor.table === 'series') {
-          slug = formData.slug || ''
-        } else if (descriptor.table === 'artifacts') {
-          slug = formData.id || ''
-        }
-      }
-
-      console.log({ formData, slug })
-
-      // Usa image_url da API se disponível, senão gera localmente
-      const imageUrl = formData?.image_url || null
-
-      // Upload removido: agora apenas exibe imagem já salva
-      const handleFileChange = () => {
-        toast.error(
-          'Upload de imagem desabilitado nesta versão. Use o campo imageurl.'
-        )
-      }
-
-      return (
-        <div className="space-y-2">
-          <Label htmlFor={field.key} value={field.label || field.key} />
-          <div className="flex items-center gap-2">
-            <FileInput
-              accept="image/*"
-              onChange={handleFileChange}
-              sizing="lg"
-              placeholder={field.placeholder || 'Upload an image'}
-            />
-          </div>
-          {imageUrl ? (
-            <div className="mt-2">
-              <Image
-                src={imageUrl}
-                alt="Preview"
-                width={640}
-                height={640}
-                className="object-cover rounded-lg border border-gray-200"
-              />
-            </div>
-          ) : (
-            <div className="mt-2">
-              <span className="text-xs text-gray-400">
-                Nenhuma imagem cadastrada
-              </span>
-            </div>
-          )}
           {error && <p className="text-red-600 text-sm">{error}</p>}
         </div>
       )
+    case 'image': {
+      return (
+        <ImageUploadField
+          defaultValue={formData?.imageurl || null}
+          supabase={supabase}
+          onChange={onChange}
+          onExtraChange={onExtraChange}
+          label={field.label || field.key}
+          placeholder={field.placeholder}
+          error={error}
+        />
+      )
+    }
     case 'relation-multi':
       return (
         <RelationPicker

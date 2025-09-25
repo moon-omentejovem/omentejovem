@@ -1,5 +1,6 @@
 'use client'
 
+import { createClient } from '@/utils/supabase/client'
 import CodeBlock from '@tiptap/extension-code-block'
 import Image from '@tiptap/extension-image'
 import Link from '@tiptap/extension-link'
@@ -77,9 +78,37 @@ export default function TiptapEditor({
     }
   }
 
-  // Upload de imagem desabilitado: use campo imageurl manualmente
-  const addImage = () => {
-    alert('Upload de imagem desabilitado nesta versão. Use o campo imageurl.')
+  // Novo fluxo: upload real de imagem para Supabase Storage
+  const supabase = createClient()
+  const addImage = async () => {
+    if (!editor) return
+    const input = document.createElement('input')
+    input.type = 'file'
+    input.accept = 'image/*'
+    input.onchange = async (e: any) => {
+      const file = e.target.files?.[0]
+      if (!file) return
+      // Gera id único para imagem
+      const id =
+        typeof crypto !== 'undefined' && crypto.randomUUID
+          ? crypto.randomUUID()
+          : Math.random().toString(36).substring(2, 15)
+      const ext = file.name.split('.').pop()
+      const filename = `${id}.${ext}`
+      const path = `images/${filename}`
+      try {
+        const { error } = await supabase.storage
+          .from('media')
+          .upload(path, file, { upsert: true })
+        if (error) throw error
+        const baseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+        const imageurl = `${baseUrl}/storage/v1/object/public/media/images/${filename}`
+        editor.chain().focus().setImage({ src: imageurl }).run()
+      } catch (err) {
+        alert('Erro ao enviar imagem.')
+      }
+    }
+    input.click()
   }
 
   if (!editor) return null

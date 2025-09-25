@@ -13,7 +13,7 @@ export default async function Home() {
 
   const images = featuredArtworks.map((artwork: any) => ({
     title: artwork.title || '',
-    imageUrl: artwork.imageurl || null,
+    imageUrl: artwork.imageoptimizedurl || null,
     createdAt: artwork.posted_at || ''
   }))
 

@@ -1,5 +1,4 @@
 import { supabaseAdmin } from '@/lib/supabase-admin'
-import { CreateArtworkSchema } from '@/types/schemas'
 import type { Database } from '@/types/supabase'
 import { revalidateTag } from 'next/cache'
 import { NextRequest, NextResponse } from 'next/server'
@@ -67,15 +66,51 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
 
-    // Validate input
-    const validatedData = CreateArtworkSchema.parse(body)
+    // Apenas utiliza os campos vindos do frontend (filename, imageurl, imageoptimizedurl)
+    const {
+      slug,
+      title,
+      description,
+      token_id,
+      mint_date,
+      mint_link,
+      type,
+      editions_total,
+      video_url,
+      blockchain,
+      contract_address,
+      collection_slug,
+      is_featured,
+      is_one_of_one,
+      status,
+      posted_at,
+      filename,
+      imageurl,
+      imageoptimizedurl
+    } = body
 
-    // Insert artwork
     const { data: artwork, error } = await supabaseAdmin
       .from('artworks')
       .insert({
-        ...validatedData,
-        posted_at: validatedData.posted_at || new Date().toISOString()
+        slug,
+        title,
+        description,
+        token_id,
+        mint_date,
+        mint_link,
+        type,
+        editions_total,
+        video_url,
+        blockchain,
+        contract_address,
+        collection_slug,
+        is_featured,
+        is_one_of_one,
+        status,
+        posted_at: posted_at || new Date().toISOString(),
+        filename,
+        imageurl,
+        imageoptimizedurl
       } as Database['public']['Tables']['artworks']['Insert'])
       .select()
       .single()

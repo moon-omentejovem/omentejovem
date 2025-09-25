@@ -1,5 +1,3 @@
-'use client'
-
 import { ArtContent } from '@/components/ArtContent/ArtContent'
 import { Artwork } from '@/types/artwork'
 import { ReactElement } from 'react'

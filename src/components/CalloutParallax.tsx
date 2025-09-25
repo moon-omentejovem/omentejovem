@@ -97,10 +97,10 @@ export function CalloutParallax({
       id="logo"
       ref={calloutReference}
     >
-      <div className="relative flex flex-col items-center px-12">
+      <div className="relative flex flex-col items-center px-12 select-none">
         <div
           id="callout-element"
-          className="parallax-text absolute -top-[17.5%]"
+          className="parallax-text absolute -top-[17.5%] select-none"
         >
           <p className="font-heading text-[12vw] min-w-max text-secondary-50 invisible tracking-[-0.7vw] md:text-[6.5vw]">
             {title}
@@ -109,7 +109,7 @@ export function CalloutParallax({
 
         <div
           id="callout-element"
-          className="parallax-text absolute -top-[10%] z-[2]"
+          className="parallax-text absolute -top-[10%] z-[2] select-none"
         >
           <p className="font-heading text-[12vw] text-primary-100 invisible tracking-[-0.4vw] md:text-[6.5vw]">
             {subtitle}
@@ -117,7 +117,10 @@ export function CalloutParallax({
         </div>
 
         {calloutImages[currentImageIndex] && (
-          <div id="callout-element" className="flex flex-col items-center">
+          <div
+            id="callout-element"
+            className="flex flex-col items-center select-none"
+          >
             <Image
               src={calloutImages[currentImageIndex].imageUrl}
               width={800}

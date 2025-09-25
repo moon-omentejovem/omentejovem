@@ -48,11 +48,15 @@ export async function PUT(
     // Validate input
     const validatedData = UpdateArtworkSchema.parse(body)
 
+    // imageoptimizedurl deve vir pronto do frontend
+    const imageoptimizedurl = body.imageoptimizedurl || null
+
     // Update artwork
     const { data: artwork, error } = await supabaseAdmin
       .from('artworks')
       .update({
         ...validatedData,
+        imageoptimizedurl,
         updated_at: new Date().toISOString()
       } as Database['public']['Tables']['artworks']['Update'])
       .eq('id', params.id)
@@ -103,12 +107,14 @@ export async function PATCH(
   try {
     const body = await request.json()
 
-    // For partial updates, we don't validate the entire schema
-    // Just update the provided fields
+    // imageoptimizedurl deve vir pronto do frontend
+    const imageoptimizedurl = body.imageoptimizedurl || null
+
     const { data: artwork, error } = await supabaseAdmin
       .from('artworks')
       .update({
         ...body,
+        imageoptimizedurl,
         updated_at: new Date().toISOString()
       } as Database['public']['Tables']['artworks']['Update'])
       .eq('id', params.id)
