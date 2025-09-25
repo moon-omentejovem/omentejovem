@@ -65,7 +65,6 @@ export function VerticalCarousel({
         onSlideChange={(e: SwiperType) => {
           const newIndex = e.realIndex % slides.length
           onChangeSlideIndex(newIndex)
-          onRedirect?.(newIndex, true)
         }}
         onSlideChangeTransitionEnd={(swiperInstance: SwiperType) => {
           handleGetMoreslides(swiperInstance)
