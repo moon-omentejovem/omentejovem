@@ -1,0 +1,785 @@
+{
+  "success": [
+    {
+      "oldPath": "artworks/optimized/6-dots.webp",
+      "newPath": "artwork/cd9891e2-f107-4217-a45f-708d852432c2/optimized/6-dots.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/a-black-dot-with-a-white-dot-on-a-green-background.webp",
+      "newPath": "artwork/bd0585cc-1e3f-443e-8385-0c0da0bb138f/optimized/a-black-dot-with-a-white-dot-on-a-green-background.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/afterparty.webp",
+      "newPath": "artwork/921e980d-fc1b-44c4-9f26-54115cd90fd9/optimized/afterparty.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/all-time-high-discovery.webp",
+      "newPath": "artwork/f1234567-89ab-cdef-0123-456789abcde5/optimized/all-time-high-discovery.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/auri-sacra-fames.webp",
+      "newPath": "artwork/975ae243-9bf7-44d3-bc70-72735f578718/optimized/auri-sacra-fames.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/before-birth.webp",
+      "newPath": "artwork/f1234567-89ab-cdef-0123-456789abcde7/optimized/before-birth.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/before-cycles-could-turn-in-stories.webp",
+      "newPath": "artwork/8f4dd62a-4a8f-43ae-8588-2492f7daec9a/optimized/before-cycles-could-turn-in-stories.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/between-shapes-and-colors.webp",
+      "newPath": "artwork/c80ecde0-a624-4b1f-89ca-a4f296966aca/optimized/between-shapes-and-colors.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/between-sun-and-moon.webp",
+      "newPath": "artwork/b1234567-89ab-cdef-0123-456789abcde0/optimized/between-sun-and-moon.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/between-the-sun-and-moon.webp",
+      "newPath": "artwork/ce1f3a5a-631d-4bf2-adde-f40e2ced217c/optimized/between-the-sun-and-moon.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/cat-looking-at-an-object-on-a-summer-night.webp",
+      "newPath": "artwork/9a8f2686-82e8-48c7-8812-564b5488a6e4/optimized/cat-looking-at-an-object-on-a-summer-night.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/cheap-problems.webp",
+      "newPath": "artwork/e306ed25-2c79-4856-b7b6-c9f38df2cc4f/optimized/cheap-problems.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/childhoods-remark.webp",
+      "newPath": "artwork/ac196434-8ace-47bb-ad44-0368941f87eb/optimized/childhoods-remark.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/creative-workaholic.webp",
+      "newPath": "artwork/e8600b10-56ba-4e21-808a-81d115c42c93/optimized/creative-workaholic.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/dcimo.webp",
+      "newPath": "artwork/123066de-e996-4c9b-bd03-ecf4f18c595b/optimized/dcimo.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/decimo.webp",
+      "newPath": "artwork/c1234567-89ab-cdef-0123-456789abcdef/optimized/decimo.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/destructive-thoughts.webp",
+      "newPath": "artwork/e1234567-89ab-cdef-0123-456789abcde0/optimized/destructive-thoughts.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/ether-man-ii.webp",
+      "newPath": "artwork/d1234567-89ab-cdef-0123-456789abcdef/optimized/ether-man-ii.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/ether-man.webp",
+      "newPath": "artwork/d1234567-89ab-cdef-0123-456789abcde4/optimized/ether-man.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/everything-we-could-have-lived.webp",
+      "newPath": "artwork/b1234567-89ab-cdef-0123-456789abcde2/optimized/everything-we-could-have-lived.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/everything-we-could-have-livedremains-in-my-heart.webp",
+      "newPath": "artwork/ceed11c1-63a0-4d20-b5bb-2617c9caa5cb/optimized/everything-we-could-have-livedremains-in-my-heart.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/fruit-minimalism-overlap.webp",
+      "newPath": "artwork/d1234567-89ab-cdef-0123-456789abcde1/optimized/fruit-minimalism-overlap.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/fruit-of-minimalism-and-overlap.webp",
+      "newPath": "artwork/24422ebb-362d-411b-952f-20fd1a80050c/optimized/fruit-of-minimalism-and-overlap.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/garden-bidder-poap.webp",
+      "newPath": "artwork/83511a3a-5ed7-45f7-8975-4a62f0f859df/optimized/garden-bidder-poap.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/garden.webp",
+      "newPath": "artwork/12aa1ef4-7872-4ca3-a2df-201fc79ef1bd/optimized/garden.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/ground-was-my-teacher.webp",
+      "newPath": "artwork/f1234567-89ab-cdef-0123-456789abcde1/optimized/ground-was-my-teacher.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/happinesss-cycle.webp",
+      "newPath": "artwork/53c086be-7827-4cf3-9663-8a141f0a8987/optimized/happinesss-cycle.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/he-left-as-a-dot.webp",
+      "newPath": "artwork/f1234567-89ab-cdef-0123-456789abcde8/optimized/he-left-as-a-dot.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/i-am-where-you-arent.webp",
+      "newPath": "artwork/f1234567-89ab-cdef-0123-456789abcde6/optimized/i-am-where-you-arent.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/i-had-dreams-about-you.webp",
+      "newPath": "artwork/f1234567-89ab-cdef-0123-456789abcde2/optimized/i-had-dreams-about-you.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/id-ego-superego.webp",
+      "newPath": "artwork/e1234567-89ab-cdef-0123-456789abcdef/optimized/id-ego-superego.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/identity-disorder.webp",
+      "newPath": "artwork/42b04b3c-9b09-45d7-a733-ae474d3ca1fa/optimized/identity-disorder.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/king-kong.webp",
+      "newPath": "artwork/757017f6-f310-4eb7-8229-4b88d9358bda/optimized/king-kong.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/late-night-love.webp",
+      "newPath": "artwork/a3817a75-2483-41b9-878c-2261e840cad1/optimized/late-night-love.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/look-at-the-sun-look-at-the-moon.webp",
+      "newPath": "artwork/020cd173-d758-48af-a5e8-cf9259b87e58/optimized/look-at-the-sun-look-at-the-moon.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/look-at-the-sun-moon.webp",
+      "newPath": "artwork/d1234567-89ab-cdef-0123-456789abcde0/optimized/look-at-the-sun-moon.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/lugares.webp",
+      "newPath": "artwork/02593007-db1d-436a-bfc6-905bc4761d1d/optimized/lugares.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/lysergic-acid-diethylamide.webp",
+      "newPath": "artwork/48276488-c116-48f9-8439-51109b6346d8/optimized/lysergic-acid-diethylamide.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/man-and-creativity.webp",
+      "newPath": "artwork/e1234567-89ab-cdef-0123-456789abcde3/optimized/man-and-creativity.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/mapping-the-unseen.webp",
+      "newPath": "artwork/f1234567-89ab-cdef-0123-456789abcde3/optimized/mapping-the-unseen.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/mc-moon.webp",
+      "newPath": "artwork/d1234567-89ab-cdef-0123-456789abcde2/optimized/mc-moon.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/musician-at-ipanema-beach.webp",
+      "newPath": "artwork/b1234567-89ab-cdef-0123-456789abcde4/optimized/musician-at-ipanema-beach.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/musician-at-ipanemas-beach.webp",
+      "newPath": "artwork/ffa3754f-9031-4897-8f97-f4ccb7cfd4c4/optimized/musician-at-ipanemas-beach.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/my-desires-take-me-places-my-eclipse-cant.webp",
+      "newPath": "artwork/5d1e7141-9068-494c-95e7-23875cee301e/optimized/my-desires-take-me-places-my-eclipse-cant.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/my-desires-take-me-places.webp",
+      "newPath": "artwork/b1234567-89ab-cdef-0123-456789abcdef/optimized/my-desires-take-me-places.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/my-feelings-on-jpeg.webp",
+      "newPath": "artwork/e1234567-89ab-cdef-0123-456789abcde2/optimized/my-feelings-on-jpeg.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/nono.webp",
+      "newPath": "artwork/c1234567-89ab-cdef-0123-456789abcde0/optimized/nono.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/oitavo.webp",
+      "newPath": "artwork/c1234567-89ab-cdef-0123-456789abcde1/optimized/oitavo.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/omentepepe.webp",
+      "newPath": "artwork/1cc621fc-e7ad-4e21-8e4c-65b512fcc0ee/optimized/omentepepe.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/out-of-babylon.webp",
+      "newPath": "artwork/b1234567-89ab-cdef-0123-456789abcde3/optimized/out-of-babylon.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/peixe-dourado-no-azul.webp",
+      "newPath": "artwork/7e4e9047-64ca-4948-8ccf-d408eb480144/optimized/peixe-dourado-no-azul.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/phases.webp",
+      "newPath": "artwork/992db9fe-2818-4ae6-abb8-23ab8d342ed0/optimized/phases.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/playing-chess-with-love.webp",
+      "newPath": "artwork/f1234567-89ab-cdef-0123-456789abcde4/optimized/playing-chess-with-love.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/primeiro.webp",
+      "newPath": "artwork/c1234567-89ab-cdef-0123-456789abcde8/optimized/primeiro.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/publicao-de-teste.webp",
+      "newPath": "artwork/2a3fd82c-c71f-4706-9eca-d34a125bf0b7/optimized/publicao-de-teste.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/purple-moon.webp",
+      "newPath": "artwork/d1234567-89ab-cdef-0123-456789abcde3/optimized/purple-moon.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/quarto.webp",
+      "newPath": "artwork/c1234567-89ab-cdef-0123-456789abcde5/optimized/quarto.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/quinto.webp",
+      "newPath": "artwork/c1234567-89ab-cdef-0123-456789abcde4/optimized/quinto.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/rodeo.webp",
+      "newPath": "artwork/37814a1e-fc9b-40e9-b171-9cbd37bda72c/optimized/rodeo.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/segundo.webp",
+      "newPath": "artwork/c1234567-89ab-cdef-0123-456789abcde7/optimized/segundo.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/setimo.webp",
+      "newPath": "artwork/c1234567-89ab-cdef-0123-456789abcde2/optimized/setimo.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/sexto.webp",
+      "newPath": "artwork/c1234567-89ab-cdef-0123-456789abcde3/optimized/sexto.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/sitting-at-the-edge.webp",
+      "newPath": "artwork/f1234567-89ab-cdef-0123-456789abcdef/optimized/sitting-at-the-edge.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/smoking-my-thoughts.webp",
+      "newPath": "artwork/fb7e3611-de5e-4d6d-9b05-74867f4b73b7/optimized/smoking-my-thoughts.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/something-about-duality.webp",
+      "newPath": "artwork/31110afb-6483-4139-a2c9-0811f7ed5c15/optimized/something-about-duality.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/squdvv.webp",
+      "newPath": "artwork/6707d434-9928-4828-918f-e1fc789c6243/optimized/squdvv.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/starfish-among-shoals.webp",
+      "newPath": "artwork/1b228f50-f2a2-4eeb-b6d3-28bdbf390405/optimized/starfish-among-shoals.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/still-untitled.webp",
+      "newPath": "artwork/2d8c33c7-35dd-4b4e-ae2c-9f55beebb2e5/optimized/still-untitled.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/stimo.webp",
+      "newPath": "artwork/f7c0cc33-843f-4154-a51b-0ed7132b2ddb/optimized/stimo.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/sun-moon.webp",
+      "newPath": "artwork/c4d3bbf5-8e25-4a1c-9799-16244afbd304/optimized/sun-moon.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/terceiro.webp",
+      "newPath": "artwork/c1234567-89ab-cdef-0123-456789abcde6/optimized/terceiro.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/the-day-i-felt-god.webp",
+      "newPath": "artwork/0a922113-566b-41bc-972f-0b6a945e6a85/optimized/the-day-i-felt-god.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/the-day-i-found-out-i-can-do-everything.webp",
+      "newPath": "artwork/53d93de4-7ac9-4701-bba1-5310a8d7dbe8/optimized/the-day-i-found-out-i-can-do-everything.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/the-day-i-met-you.webp",
+      "newPath": "artwork/fa42a88a-2e21-47b8-9625-a8f25adb9e91/optimized/the-day-i-met-you.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/the-dot.webp",
+      "newPath": "artwork/b1234567-89ab-cdef-0123-456789abcde6/optimized/the-dot.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/the-flower.webp",
+      "newPath": "artwork/a1234567-89ab-cdef-0123-456789abcdef/optimized/the-flower.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/the-fruit.webp",
+      "newPath": "artwork/c22fcb2d-efa9-4326-b852-9f7484a53f8e/optimized/the-fruit.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/the-ground-was-my-teacher.webp",
+      "newPath": "artwork/96bc9fb5-e514-46ac-8da8-6e9ee3b1f516/optimized/the-ground-was-my-teacher.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/the-inanimate-world-of-the-exaggerated.webp",
+      "newPath": "artwork/f31ae724-1f98-47be-89de-27c30c294a1d/optimized/the-inanimate-world-of-the-exaggerated.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/the-moon.webp",
+      "newPath": "artwork/b1234567-89ab-cdef-0123-456789abcde5/optimized/the-moon.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/the-search.webp",
+      "newPath": "artwork/cf2eca0e-2823-441a-ab37-0b6e1df1764b/optimized/the-search.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/the-seed.webp",
+      "newPath": "artwork/a1234567-89ab-cdef-0123-456789abcde0/optimized/the-seed.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/the-tree.webp",
+      "newPath": "artwork/a1234567-89ab-cdef-0123-456789abcde1/optimized/the-tree.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/thriving-through-illusion.webp",
+      "newPath": "artwork/59d71728-302c-415a-9cc3-8a555327bae5/optimized/thriving-through-illusion.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/two-pills-and-my-favorite-sins.webp",
+      "newPath": "artwork/518a881a-7b55-436c-bf93-b3cb6f3cf29e/optimized/two-pills-and-my-favorite-sins.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/two-voices-one-circle.webp",
+      "newPath": "artwork/f1234567-89ab-cdef-0123-456789abcde0/optimized/two-voices-one-circle.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/two-voices-one-circles.webp",
+      "newPath": "artwork/77b31a4b-bad0-4fa6-9e22-55f2a435fe24/optimized/two-voices-one-circles.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/untitled-edition.webp",
+      "newPath": "artwork/d1234567-89ab-cdef-0123-456789abcde5/optimized/untitled-edition.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/untitled-genesis.webp",
+      "newPath": "artwork/e1234567-89ab-cdef-0123-456789abcde4/optimized/untitled-genesis.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/untitled-tezos-1.webp",
+      "newPath": "artwork/e1234567-89ab-cdef-0123-456789abcde1/optimized/untitled-tezos-1.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/untitled.webp",
+      "newPath": "artwork/dd32f110-5995-4ecf-b568-92baec62c933/optimized/untitled.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/ups-and-downs.webp",
+      "newPath": "artwork/b1234567-89ab-cdef-0123-456789abcde1/optimized/ups-and-downs.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/we-always-find-a-way.webp",
+      "newPath": "artwork/32bb138b-eafd-40b9-a5b5-3a1f7384f08f/optimized/we-always-find-a-way.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/weird-party.webp",
+      "newPath": "artwork/94967e10-c6b4-48e2-bda5-a12ff8008955/optimized/weird-party.webp"
+    },
+    {
+      "oldPath": "artworks/optimized/within-reach.webp",
+      "newPath": "artwork/ef1ec7dd-214e-4c20-80dd-16864e3367ea/optimized/within-reach.webp"
+    },
+    {
+      "oldPath": "artworks/raw/6-dots-raw.jpg",
+      "newPath": "artwork/cd9891e2-f107-4217-a45f-708d852432c2/raw/6-dots-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/a-black-dot-with-a-white-dot-on-a-green-background-raw.jpg",
+      "newPath": "artwork/bd0585cc-1e3f-443e-8385-0c0da0bb138f/raw/a-black-dot-with-a-white-dot-on-a-green-background-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/afterparty-raw.jpg",
+      "newPath": "artwork/921e980d-fc1b-44c4-9f26-54115cd90fd9/raw/afterparty-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/all-time-high-discovery-raw.jpg",
+      "newPath": "artwork/f1234567-89ab-cdef-0123-456789abcde5/raw/all-time-high-discovery-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/auri-sacra-fames-raw.jpg",
+      "newPath": "artwork/975ae243-9bf7-44d3-bc70-72735f578718/raw/auri-sacra-fames-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/before-birth-raw.jpg",
+      "newPath": "artwork/f1234567-89ab-cdef-0123-456789abcde7/raw/before-birth-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/before-cycles-could-turn-in-stories-raw.jpg",
+      "newPath": "artwork/8f4dd62a-4a8f-43ae-8588-2492f7daec9a/raw/before-cycles-could-turn-in-stories-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/between-shapes-and-colors-raw.jpg",
+      "newPath": "artwork/c80ecde0-a624-4b1f-89ca-a4f296966aca/raw/between-shapes-and-colors-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/between-sun-and-moon-raw.jpg",
+      "newPath": "artwork/b1234567-89ab-cdef-0123-456789abcde0/raw/between-sun-and-moon-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/between-the-sun-and-moon-raw.jpg",
+      "newPath": "artwork/ce1f3a5a-631d-4bf2-adde-f40e2ced217c/raw/between-the-sun-and-moon-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/cat-looking-at-an-object-on-a-summer-night-raw.jpg",
+      "newPath": "artwork/9a8f2686-82e8-48c7-8812-564b5488a6e4/raw/cat-looking-at-an-object-on-a-summer-night-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/cheap-problems-raw.jpg",
+      "newPath": "artwork/e306ed25-2c79-4856-b7b6-c9f38df2cc4f/raw/cheap-problems-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/childhoods-remark-raw.jpg",
+      "newPath": "artwork/ac196434-8ace-47bb-ad44-0368941f87eb/raw/childhoods-remark-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/creative-workaholic-raw.jpg",
+      "newPath": "artwork/e8600b10-56ba-4e21-808a-81d115c42c93/raw/creative-workaholic-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/dcimo-raw.jpg",
+      "newPath": "artwork/123066de-e996-4c9b-bd03-ecf4f18c595b/raw/dcimo-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/decimo-raw.jpg",
+      "newPath": "artwork/c1234567-89ab-cdef-0123-456789abcdef/raw/decimo-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/destructive-thoughts-raw.jpg",
+      "newPath": "artwork/e1234567-89ab-cdef-0123-456789abcde0/raw/destructive-thoughts-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/ether-man-ii-raw.jpg",
+      "newPath": "artwork/d1234567-89ab-cdef-0123-456789abcdef/raw/ether-man-ii-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/ether-man-raw.jpg",
+      "newPath": "artwork/d1234567-89ab-cdef-0123-456789abcde4/raw/ether-man-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/everything-we-could-have-livedremains-in-my-heart-raw.jpg",
+      "newPath": "artwork/ceed11c1-63a0-4d20-b5bb-2617c9caa5cb/raw/everything-we-could-have-livedremains-in-my-heart-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/fruit-minimalism-overlap-raw.jpg",
+      "newPath": "artwork/d1234567-89ab-cdef-0123-456789abcde1/raw/fruit-minimalism-overlap-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/fruit-of-minimalism-and-overlap-raw.jpg",
+      "newPath": "artwork/24422ebb-362d-411b-952f-20fd1a80050c/raw/fruit-of-minimalism-and-overlap-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/garden-raw.jpg",
+      "newPath": "artwork/12aa1ef4-7872-4ca3-a2df-201fc79ef1bd/raw/garden-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/ground-was-my-teacher-raw.jpg",
+      "newPath": "artwork/f1234567-89ab-cdef-0123-456789abcde1/raw/ground-was-my-teacher-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/happinesss-cycle-raw.jpg",
+      "newPath": "artwork/53c086be-7827-4cf3-9663-8a141f0a8987/raw/happinesss-cycle-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/he-left-as-a-dot-raw.jpg",
+      "newPath": "artwork/f1234567-89ab-cdef-0123-456789abcde8/raw/he-left-as-a-dot-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/i-am-where-you-arent-raw.jpg",
+      "newPath": "artwork/f1234567-89ab-cdef-0123-456789abcde6/raw/i-am-where-you-arent-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/i-had-dreams-about-you-raw.jpg",
+      "newPath": "artwork/f1234567-89ab-cdef-0123-456789abcde2/raw/i-had-dreams-about-you-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/id-ego-superego-raw.jpg",
+      "newPath": "artwork/e1234567-89ab-cdef-0123-456789abcdef/raw/id-ego-superego-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/identity-disorder-raw.jpg",
+      "newPath": "artwork/42b04b3c-9b09-45d7-a733-ae474d3ca1fa/raw/identity-disorder-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/king-kong-raw.jpg",
+      "newPath": "artwork/757017f6-f310-4eb7-8229-4b88d9358bda/raw/king-kong-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/late-night-love-raw.jpg",
+      "newPath": "artwork/a3817a75-2483-41b9-878c-2261e840cad1/raw/late-night-love-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/look-at-the-sun-moon-raw.jpg",
+      "newPath": "artwork/d1234567-89ab-cdef-0123-456789abcde0/raw/look-at-the-sun-moon-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/lugares-raw.jpg",
+      "newPath": "artwork/02593007-db1d-436a-bfc6-905bc4761d1d/raw/lugares-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/lysergic-acid-diethylamide-raw.jpg",
+      "newPath": "artwork/48276488-c116-48f9-8439-51109b6346d8/raw/lysergic-acid-diethylamide-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/man-and-creativity-raw.jpg",
+      "newPath": "artwork/e1234567-89ab-cdef-0123-456789abcde3/raw/man-and-creativity-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/mapping-the-unseen-raw.jpg",
+      "newPath": "artwork/f1234567-89ab-cdef-0123-456789abcde3/raw/mapping-the-unseen-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/mc-moon-raw.jpg",
+      "newPath": "artwork/d1234567-89ab-cdef-0123-456789abcde2/raw/mc-moon-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/musician-at-ipanema-beach-raw.jpg",
+      "newPath": "artwork/b1234567-89ab-cdef-0123-456789abcde4/raw/musician-at-ipanema-beach-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/musician-at-ipanemas-beach-raw.jpg",
+      "newPath": "artwork/ffa3754f-9031-4897-8f97-f4ccb7cfd4c4/raw/musician-at-ipanemas-beach-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/my-desires-take-me-places-my-eclipse-cant-raw.jpg",
+      "newPath": "artwork/5d1e7141-9068-494c-95e7-23875cee301e/raw/my-desires-take-me-places-my-eclipse-cant-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/my-desires-take-me-places-raw.jpg",
+      "newPath": "artwork/b1234567-89ab-cdef-0123-456789abcdef/raw/my-desires-take-me-places-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/my-feelings-on-jpeg-raw.jpg",
+      "newPath": "artwork/e1234567-89ab-cdef-0123-456789abcde2/raw/my-feelings-on-jpeg-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/nono-raw.jpg",
+      "newPath": "artwork/c1234567-89ab-cdef-0123-456789abcde0/raw/nono-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/oitavo-raw.jpg",
+      "newPath": "artwork/c1234567-89ab-cdef-0123-456789abcde1/raw/oitavo-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/omentepepe-raw.jpg",
+      "newPath": "artwork/1cc621fc-e7ad-4e21-8e4c-65b512fcc0ee/raw/omentepepe-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/out-of-babylon-raw.jpg",
+      "newPath": "artwork/b1234567-89ab-cdef-0123-456789abcde3/raw/out-of-babylon-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/peixe-dourado-no-azul-raw.jpg",
+      "newPath": "artwork/7e4e9047-64ca-4948-8ccf-d408eb480144/raw/peixe-dourado-no-azul-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/phases-raw.jpg",
+      "newPath": "artwork/992db9fe-2818-4ae6-abb8-23ab8d342ed0/raw/phases-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/playing-chess-with-love-raw.jpg",
+      "newPath": "artwork/f1234567-89ab-cdef-0123-456789abcde4/raw/playing-chess-with-love-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/primeiro-raw.jpg",
+      "newPath": "artwork/c1234567-89ab-cdef-0123-456789abcde8/raw/primeiro-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/publicao-de-teste-raw.jpg",
+      "newPath": "artwork/2a3fd82c-c71f-4706-9eca-d34a125bf0b7/raw/publicao-de-teste-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/purple-moon-raw.jpg",
+      "newPath": "artwork/d1234567-89ab-cdef-0123-456789abcde3/raw/purple-moon-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/quarto-raw.jpg",
+      "newPath": "artwork/c1234567-89ab-cdef-0123-456789abcde5/raw/quarto-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/quinto-raw.jpg",
+      "newPath": "artwork/c1234567-89ab-cdef-0123-456789abcde4/raw/quinto-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/rodeo-raw.jpg",
+      "newPath": "artwork/37814a1e-fc9b-40e9-b171-9cbd37bda72c/raw/rodeo-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/segundo-raw.jpg",
+      "newPath": "artwork/c1234567-89ab-cdef-0123-456789abcde7/raw/segundo-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/setimo-raw.jpg",
+      "newPath": "artwork/c1234567-89ab-cdef-0123-456789abcde2/raw/setimo-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/sexto-raw.jpg",
+      "newPath": "artwork/c1234567-89ab-cdef-0123-456789abcde3/raw/sexto-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/sitting-at-the-edge-raw.jpg",
+      "newPath": "artwork/f1234567-89ab-cdef-0123-456789abcdef/raw/sitting-at-the-edge-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/smoking-my-thoughts-raw.jpg",
+      "newPath": "artwork/fb7e3611-de5e-4d6d-9b05-74867f4b73b7/raw/smoking-my-thoughts-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/something-about-duality-raw.jpg",
+      "newPath": "artwork/31110afb-6483-4139-a2c9-0811f7ed5c15/raw/something-about-duality-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/squdvv-raw.jpg",
+      "newPath": "artwork/6707d434-9928-4828-918f-e1fc789c6243/raw/squdvv-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/starfish-among-shoals-raw.jpg",
+      "newPath": "artwork/1b228f50-f2a2-4eeb-b6d3-28bdbf390405/raw/starfish-among-shoals-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/stimo-raw.jpg",
+      "newPath": "artwork/f7c0cc33-843f-4154-a51b-0ed7132b2ddb/raw/stimo-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/terceiro-raw.jpg",
+      "newPath": "artwork/c1234567-89ab-cdef-0123-456789abcde6/raw/terceiro-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/the-day-i-felt-god-raw.jpg",
+      "newPath": "artwork/0a922113-566b-41bc-972f-0b6a945e6a85/raw/the-day-i-felt-god-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/the-day-i-found-out-i-can-do-everything-raw.jpg",
+      "newPath": "artwork/53d93de4-7ac9-4701-bba1-5310a8d7dbe8/raw/the-day-i-found-out-i-can-do-everything-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/the-day-i-met-you-raw.jpg",
+      "newPath": "artwork/fa42a88a-2e21-47b8-9625-a8f25adb9e91/raw/the-day-i-met-you-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/the-dot-raw.jpg",
+      "newPath": "artwork/b1234567-89ab-cdef-0123-456789abcde6/raw/the-dot-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/the-flower-raw.jpg",
+      "newPath": "artwork/a1234567-89ab-cdef-0123-456789abcdef/raw/the-flower-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/the-fruit-raw.jpg",
+      "newPath": "artwork/c22fcb2d-efa9-4326-b852-9f7484a53f8e/raw/the-fruit-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/the-ground-was-my-teacher-raw.jpg",
+      "newPath": "artwork/96bc9fb5-e514-46ac-8da8-6e9ee3b1f516/raw/the-ground-was-my-teacher-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/the-inanimate-world-of-the-exaggerated-raw.jpg",
+      "newPath": "artwork/f31ae724-1f98-47be-89de-27c30c294a1d/raw/the-inanimate-world-of-the-exaggerated-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/the-moon-raw.jpg",
+      "newPath": "artwork/b1234567-89ab-cdef-0123-456789abcde5/raw/the-moon-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/the-search-raw.jpg",
+      "newPath": "artwork/cf2eca0e-2823-441a-ab37-0b6e1df1764b/raw/the-search-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/the-seed-raw.jpg",
+      "newPath": "artwork/a1234567-89ab-cdef-0123-456789abcde0/raw/the-seed-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/the-tree-raw.jpg",
+      "newPath": "artwork/a1234567-89ab-cdef-0123-456789abcde1/raw/the-tree-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/thriving-through-illusion-raw.jpg",
+      "newPath": "artwork/59d71728-302c-415a-9cc3-8a555327bae5/raw/thriving-through-illusion-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/two-pills-and-my-favorite-sins-raw.jpg",
+      "newPath": "artwork/518a881a-7b55-436c-bf93-b3cb6f3cf29e/raw/two-pills-and-my-favorite-sins-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/two-voices-one-circle-raw.jpg",
+      "newPath": "artwork/f1234567-89ab-cdef-0123-456789abcde0/raw/two-voices-one-circle-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/two-voices-one-circles-raw.jpg",
+      "newPath": "artwork/77b31a4b-bad0-4fa6-9e22-55f2a435fe24/raw/two-voices-one-circles-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/untitled-edition-raw.jpg",
+      "newPath": "artwork/d1234567-89ab-cdef-0123-456789abcde5/raw/untitled-edition-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/untitled-genesis-raw.jpg",
+      "newPath": "artwork/e1234567-89ab-cdef-0123-456789abcde4/raw/untitled-genesis-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/untitled-tezos-1-raw.jpg",
+      "newPath": "artwork/e1234567-89ab-cdef-0123-456789abcde1/raw/untitled-tezos-1-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/ups-and-downs-raw.jpg",
+      "newPath": "artwork/b1234567-89ab-cdef-0123-456789abcde1/raw/ups-and-downs-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/we-always-find-a-way-raw.jpg",
+      "newPath": "artwork/32bb138b-eafd-40b9-a5b5-3a1f7384f08f/raw/we-always-find-a-way-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/weird-party-raw.jpg",
+      "newPath": "artwork/94967e10-c6b4-48e2-bda5-a12ff8008955/raw/weird-party-raw.jpg"
+    },
+    {
+      "oldPath": "artworks/raw/within-reach-raw.jpg",
+      "newPath": "artwork/ef1ec7dd-214e-4c20-80dd-16864e3367ea/raw/within-reach-raw.jpg"
+    },
+    {
+      "oldPath": "series/optimized/new-series.webp",
+      "newPath": "series/01234567-89ab-cdef-0123-456789abcde6/optimized/new-series.webp"
+    },
+    {
+      "oldPath": "series/optimized/shapes-colors.webp",
+      "newPath": "series/01234567-89ab-cdef-0123-456789abcde1/optimized/shapes-colors.webp"
+    },
+    {
+      "oldPath": "series/optimized/the-cycle.webp",
+      "newPath": "series/01234567-89ab-cdef-0123-456789abcdef/optimized/the-cycle.webp"
+    },
+    {
+      "oldPath": "series/raw/new-series-raw.jpg",
+      "newPath": "series/01234567-89ab-cdef-0123-456789abcde6/raw/new-series-raw.jpg"
+    },
+    {
+      "oldPath": "series/raw/shapes-colors-raw.jpg",
+      "newPath": "series/01234567-89ab-cdef-0123-456789abcde1/raw/shapes-colors-raw.jpg"
+    },
+    {
+      "oldPath": "series/raw/the-cycle-raw.jpg",
+      "newPath": "series/01234567-89ab-cdef-0123-456789abcdef/raw/the-cycle-raw.jpg"
+    }
+  ],
+  "errors": [],
+  "skipped": [
+    {
+      "path": "artworks/optimized/1757640470921-untitled-genesis.webp",
+      "reason": "ID não encontrado no banco"
+    },
+    {
+      "path": "artworks/optimized/1757640475370-man-and-creativity.webp",
+      "reason": "ID não encontrado no banco"
+    },
+    {
+      "path": "artworks/optimized/1757640478934-my-feelings-on-jpeg.webp",
+      "reason": "ID não encontrado no banco"
+    },
+    {
+      "path": "artworks/optimized/1757640924680-something-about-duality.webp",
+      "reason": "ID não encontrado no banco"
+    }
+  ],
+  "totalFiles": 194,
+  "migratedFiles": 190
+}
