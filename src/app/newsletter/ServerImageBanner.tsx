@@ -12,10 +12,10 @@ export async function ServerImageBanner() {
   const { artworks } = await ArtworkService.getArtworks({ limit: 10 })
   const images = artworks
     .map((artwork) =>
-      artwork.id && (artwork.image_filename || artwork.slug)
+      artwork.id && artwork.image_filename
         ? getImageUrlFromId(
             artwork.id,
-            artwork.image_filename || artwork.slug,
+            artwork.image_filename,
             'artworks',
             'optimized'
           )

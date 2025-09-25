@@ -55,32 +55,40 @@ export function HorizontalInCarousel({
           handleGetMoreslides(swiperInstance)
         }}
       >
-        {slides.map((art, index) => (
-          <SwiperSlide
-            key={index}
-            className="h-24 w-24 max-w-fit xl:h-[120px] xl:w-[120px]"
-          >
-            <div
-              aria-label={art.title}
-              className="flex h-24 w-24 xl:h-[120px] xl:w-[120px]"
+        {slides.map((art, index) => {
+          if (!art.image_filename) {
+            return null
+          }
+
+          const imageSrc = getImageUrlFromId(
+            art.id,
+            art.image_filename,
+            'artworks',
+            'optimized'
+          )
+
+          return (
+            <SwiperSlide
+              key={index}
+              className="h-24 w-24 max-w-fit xl:h-[120px] xl:w-[120px]"
             >
-              <Image
-                src={getImageUrlFromId(
-                  art.id,
-                  art.image_filename || art.slug,
-                  'artworks',
-                  'optimized'
-                )}
-                alt={art.title || ''}
-                width={100}
-                height={100}
-                className={`h-full w-full object-cover transition-opacity duration-300 ${
-                  slideIndex === index ? 'opacity-100' : 'opacity-40'
-                }`}
-              />
-            </div>
-          </SwiperSlide>
-        ))}
+              <div
+                aria-label={art.title}
+                className="flex h-24 w-24 xl:h-[120px] xl:w-[120px]"
+              >
+                <Image
+                  src={imageSrc}
+                  alt={art.title || ''}
+                  width={100}
+                  height={100}
+                  className={`h-full w-full object-cover transition-opacity duration-300 ${
+                    slideIndex === index ? 'opacity-100' : 'opacity-40'
+                  }`}
+                />
+              </div>
+            </SwiperSlide>
+          )
+        })}
       </Swiper>
     </section>
   )

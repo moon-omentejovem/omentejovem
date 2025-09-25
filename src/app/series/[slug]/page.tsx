@@ -29,24 +29,12 @@ export async function generateMetadata({ params }: SeriesPageProps) {
     }
   }
 
-  // Função para converter slug
-  const toSlug = (str: string) =>
-    str
-      ?.toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)/g, '')
-
-  // Gerar URL da imagem de capa da série
-  const filename =
-    seriesMetadata?.image_filename ||
-    (seriesMetadata?.slug ? toSlug(seriesMetadata.slug) : seriesMetadata?.slug)
-
   const imageUrl =
-    seriesMetadata?.id && filename
+    seriesMetadata?.id && seriesMetadata?.image_filename
       ? [
           getImageUrlFromId(
             seriesMetadata.id,
-            filename,
+            seriesMetadata.image_filename,
             'series',
             'optimized'
           )

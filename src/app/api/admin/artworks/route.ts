@@ -44,12 +44,12 @@ export async function GET(request: NextRequest) {
 
     // Adiciona campo image_url resolvido para cada artwork
     const artworksWithImage = (data || []).map((artwork) => {
-      const filename = artwork.image_filename || artwork.slug
+      const filename = artwork.image_filename
 
       return {
-      ...artwork,
-      image_url:
-        artwork.id && filename
+        ...artwork,
+        image_url:
+          artwork.id && filename
           ? getImageUrlFromId(artwork.id, filename, 'artworks', 'optimized')
           : null
     }
@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
     revalidateTag('portfolio')
 
     // Adiciona campo image_url resolvido
-    const filename = artwork.image_filename || artwork.slug
+    const filename = artwork.image_filename
     const artworkWithImage = {
       ...artwork,
       image_url:

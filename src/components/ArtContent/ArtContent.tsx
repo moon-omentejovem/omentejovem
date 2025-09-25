@@ -60,12 +60,15 @@ export function ArtContent({
   // Transform artworks to carousel format
   const carouselSlides = filteredArtworks.map((artwork) => ({
     name: artwork.title || '',
-    imageUrl: getImageUrlFromId(
-      artwork.id,
-      artwork.image_filename || artwork.slug,
-      'artworks',
-      'optimized'
-    ),
+    imageUrl:
+      artwork.id && artwork.image_filename
+        ? getImageUrlFromId(
+            artwork.id,
+            artwork.image_filename,
+            'artworks',
+            'optimized'
+          )
+        : '',
     slug: artwork.slug
   }))
 

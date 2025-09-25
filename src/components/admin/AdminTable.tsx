@@ -83,9 +83,8 @@ export default function AdminTable<T extends Record<string, any>>({
           const resourceType = descriptor?.table || 'artworks'
           const filename =
             (value as string | undefined) ||
-            (item as Record<string, any>)?.image_filename ||
-            (item as Record<string, any>)?.slug ||
-            (item as Record<string, any>)?.title
+            ((item as Record<string, any>)?.image_filename as string | undefined) ||
+            null
           const imageUrl =
             filename && item.id
               ? getImageUrlFromId(

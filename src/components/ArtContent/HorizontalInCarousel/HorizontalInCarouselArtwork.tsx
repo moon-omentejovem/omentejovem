@@ -55,7 +55,19 @@ export function HorizontalInCarouselArtwork({
           handleGetMoreslides(swiperInstance)
         }}
       >
-        {slides.map((artwork, index) => (
+        {slides.map((artwork, index) => {
+          if (!artwork.image_filename) {
+            return null
+          }
+
+          const imageSrc = getImageUrlFromId(
+            artwork.id,
+            artwork.image_filename,
+            'artworks',
+            'optimized'
+          )
+
+          return (
           <SwiperSlide
             key={artwork.id}
             className="h-24 w-24 max-w-fit xl:h-[120px] xl:w-[120px]"
@@ -65,12 +77,7 @@ export function HorizontalInCarouselArtwork({
               className="flex h-24 w-24 xl:h-[120px] xl:w-[120px]"
             >
               <Image
-                src={getImageUrlFromId(
-                  artwork.id,
-                  artwork.image_filename || artwork.slug,
-                  'artworks',
-                  'optimized'
-                )}
+                src={imageSrc}
                 alt={artwork.title || ''}
                 width={100}
                 height={100}
@@ -80,7 +87,8 @@ export function HorizontalInCarouselArtwork({
               />
             </div>
           </SwiperSlide>
-        ))}
+          )
+        })}
       </Swiper>
     </section>
   )

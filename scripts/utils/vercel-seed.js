@@ -8,23 +8,52 @@ dotenv.config({ path: resolve(process.cwd(), '.env.local') })
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
+function normalizeString(value = '') {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+}
+
+function cleanSegment(value = '') {
+  const normalized = normalizeString(String(value).trim())
+  const cleaned = normalized
+    .replace(/[^a-z0-9._-]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+
+  return cleaned || 'image'
+}
+
+function sanitizeExtension(extension = 'jpg') {
+  const cleaned = normalizeString(extension).replace(/[^a-z0-9]+/g, '')
+  return cleaned || 'jpg'
+}
+
+function buildImageFilename(base, extension = 'jpg') {
+  return `${cleanSegment(base)}.${sanitizeExtension(extension)}`
+}
+
 // Core data for seeding
 const CORE_SERIES = [
   {
     slug: 'the-cycle',
     name: 'The Cycle',
+    image_filename: buildImageFilename('the-cycle'),
     cover_image_url:
       'https://i.seadn.io/s/raw/files/ed5d5b2508bd188b00832ac86adb57ba.jpg?w=500&auto=format'
   },
   {
     slug: 'omentejovem-1-1s',
     name: 'OMENTEJOVEM 1/1s',
+    image_filename: buildImageFilename('omentejovem-1-1s'),
     cover_image_url:
       'https://i.seadn.io/gcs/files/cacbfeb217dd1be2d79a65a765ca550f.jpg?w=500&auto=format'
   },
   {
     slug: 'new-series',
     name: 'Stories on Circles',
+    image_filename: buildImageFilename('stories-on-circles'),
     cover_image_url: '/new_series/1_Sitting_at_the_Edge.jpg'
   }
 ]
@@ -40,6 +69,7 @@ const CORE_ARTWORKS = [
     type: 'single',
     image_url:
       'https://nft-cdn.alchemy.com/eth-mainnet/37a6828e1258729749dec4e599ff3a9a',
+    image_filename: buildImageFilename('the-flower'),
     is_featured: true,
     is_one_of_one: true,
     posted_at: '2023-10-17T02:39:35Z'
@@ -54,6 +84,7 @@ const CORE_ARTWORKS = [
     type: 'single',
     image_url:
       'https://nft-cdn.alchemy.com/eth-mainnet/cd486d85038abe77174c91422f96ac95',
+    image_filename: buildImageFilename('the-seed'),
     is_featured: true,
     is_one_of_one: true,
     posted_at: '2023-10-17T02:43:11Z'
@@ -68,6 +99,7 @@ const CORE_ARTWORKS = [
     type: 'single',
     image_url:
       'https://nft-cdn.alchemy.com/eth-mainnet/f9baf6dc256e300d501ef4a512613922',
+    image_filename: buildImageFilename('the-dot'),
     is_featured: true,
     is_one_of_one: true,
     posted_at: '2022-11-03T18:02:35Z'
@@ -80,6 +112,7 @@ const CORE_ARTWORKS = [
     mint_link: null,
     type: 'single',
     image_url: '/new_series/1_Sitting_at_the_Edge.jpg',
+    image_filename: buildImageFilename('sitting-at-the-edge'),
     is_featured: true,
     is_one_of_one: true,
     posted_at: '2025-05-30T02:43:59Z'
@@ -92,14 +125,16 @@ const CORE_ARTIFACTS = [
     description: 'Physical and digital exploration of circular narratives',
     highlight_video_url: '/crate.mp4',
     link_url: 'https://www.omentejovem.com/',
-    image_url: '/S&C Cover.jpg'
+    image_url: '/S&C Cover.jpg',
+    image_filename: buildImageFilename('stories-on-circles-collection')
   },
   {
     title: 'The Cycle Collection',
     description: 'A meditation on cycles of nature and existence',
     highlight_video_url: null,
     link_url: 'https://opensea.io/collection/the3cycle',
-    image_url: '/TheCycleCover.jpg'
+    image_url: '/TheCycleCover.jpg',
+    image_filename: buildImageFilename('the-cycle-collection')
   }
 ]
 

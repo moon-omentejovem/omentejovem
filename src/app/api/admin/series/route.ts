@@ -36,24 +36,18 @@ export async function GET(request: NextRequest) {
     if (error) throw error
 
     // Adiciona campo image_url resolvido para cada série
-    const toSlug = (str: string) =>
-      str
-        ?.toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/(^-|-$)/g, '')
-    const seriesWithImage = (data || []).map((series) => {
-      const filename =
-        series.image_filename ||
-        (series.slug ? toSlug(series.slug) : series.slug)
-
-      return {
-        ...series,
-        image_url:
-          series.id && filename
-            ? getImageUrlFromId(series.id, filename, 'series', 'optimized')
-            : null
-      }
-    })
+    const seriesWithImage = (data || []).map((series) => ({
+      ...series,
+      image_url:
+        series.id && series.image_filename
+          ? getImageUrlFromId(
+              series.id,
+              series.image_filename,
+              'series',
+              'optimized'
+            )
+          : null
+    }))
     return NextResponse.json({ data: seriesWithImage, total: count })
   } catch (error) {
     console.error('Error fetching series:', error)
@@ -99,13 +93,7 @@ export async function POST(request: NextRequest) {
     revalidateTag('series')
 
     // Adiciona campo image_url resolvido
-    const toSlug = (str: string) =>
-      str
-        ?.toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/(^-|-$)/g, '')
-    const filename =
-      series.image_filename || (series.slug ? toSlug(series.slug) : series.slug)
+    const filename = series.image_filename
     const seriesWithImage = {
       ...series,
       image_url:

@@ -29,21 +29,21 @@ as o diretório `raw`.
 - `getImageUrlFromSlug()` → `getImageUrlFromId()`
 - Nova função requer ID e filename
 
-### 3. Camada de Compatibilidade
-- `getImageUrlFromSlugCompat()` para migração gradual
-- Cache de mapeamento slug → ID
+### 3. Auditoria e limpeza
+- Auditoria com `node scripts/migrate-image-structure.js --verify-only`
+- Limpeza opcional de scaffolds antigos com `--purge-unknown`
 
 ## 📝 Próximos Passos
 
-1. **Testar migração** em ambiente de desenvolvimento
-2. **Atualizar componentes** para usar nova estrutura
+1. **Testar migração** em ambiente de desenvolvimento (`--dry-run`)
+2. **Atualizar componentes** para usar nova estrutura (sem fallbacks por slug)
 3. **Executar migração** de arquivos no bucket
-4. **Remover arquivos antigos** após validação
-5. **Remover camada de compatibilidade** após migração completa
+4. **Auditar estrutura** com `--verify-only` e limpar scaffolds antigos
+5. **Garantir seeds/migrations** preenchendo `image_filename`
 
 ## ⚠️ Importante
 
 - Faça backup antes de executar a migração
 - Teste em ambiente de desenvolvimento primeiro
-- Mantenha a camada de compatibilidade durante a transição
+- Use a auditoria para garantir que apenas `{scaffold}/{id}/...` permaneceu no bucket
 - Monitore logs para identificar problemas

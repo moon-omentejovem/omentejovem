@@ -45,6 +45,8 @@ const CORE_SERIES = [
   { slug: 'tezos', name: 'Tezos Works' }
 ]
 
+const DEFAULT_IMAGE_EXTENSION = 'jpg'
+
 function slugify(str) {
   return str
     .toString()
@@ -53,6 +55,34 @@ function slugify(str) {
     .replace(/[^a-zA-Z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
     .toLowerCase()
+}
+
+function normalizeString(value = '') {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+}
+
+function cleanSegment(value = '') {
+  const normalized = normalizeString(String(value).trim())
+  const cleaned = normalized
+    .replace(/[^a-z0-9._-]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+
+  return cleaned || 'image'
+}
+
+function sanitizeExtension(extension = DEFAULT_IMAGE_EXTENSION) {
+  const cleaned = normalizeString(extension).replace(/[^a-z0-9]+/g, '')
+  return cleaned || DEFAULT_IMAGE_EXTENSION
+}
+
+function buildImageFilename(base, extension = DEFAULT_IMAGE_EXTENSION) {
+  const sanitizedBase = cleanSegment(base)
+  const sanitizedExtension = sanitizeExtension(extension)
+  return `${sanitizedBase}.${sanitizedExtension}`
 }
 
 function safeReadJSON(file) {
@@ -79,11 +109,50 @@ function buildMintLink(chain, contract, tokenId) {
 
 async function ensureSeries() {
   for (const s of CORE_SERIES) {
-    const { error } = await supabase
+    let existing = null
+
+    const { data: existingSeries, error: fetchError } = await supabase
       .from('series')
-      .upsert(s, { onConflict: 'slug' })
-    if (error) console.warn('⚠️ Series upsert error', s.slug, error.message)
+      .select('id, slug, image_filename')
+      .eq('slug', s.slug)
+      .maybeSingle()
+
+    if (fetchError) {
+      console.warn('⚠️ Series fetch error', s.slug, fetchError.message)
+    } else {
+      existing = existingSeries
+    }
+
+    const imageFilename = existing?.image_filename
+      ? existing.image_filename
+      : buildImageFilename(s.slug, DEFAULT_IMAGE_EXTENSION)
+
+    const payload = {
+      slug: s.slug,
+      name: s.name,
+      image_filename: imageFilename
+    }
+
+    if (existing) {
+      const { error: updateError } = await supabase
+        .from('series')
+        .update(payload)
+        .eq('id', existing.id)
+
+      if (updateError) {
+        console.warn('⚠️ Series update error', s.slug, updateError.message)
+      }
+    } else {
+      const { error: insertError } = await supabase
+        .from('series')
+        .insert(payload)
+
+      if (insertError) {
+        console.warn('⚠️ Series insert error', s.slug, insertError.message)
+      }
+    }
   }
+
   const { data } = await supabase.from('series').select('id, slug')
   const map = {}
   data?.forEach((r) => (map[r.slug] = r.id))
@@ -129,6 +198,11 @@ function mapTokenEntry(entry, chain = 'ethereum') {
   const baseSlug = slugify(title)
   const slug = baseSlug || slugify(`${contract}-${tokenId}`)
 
+  const imageFilename = buildImageFilename(
+    slug || title,
+    DEFAULT_IMAGE_EXTENSION
+  )
+
   return {
     slug,
     title: title.trim(),
@@ -143,7 +217,8 @@ function mapTokenEntry(entry, chain = 'ethereum') {
     is_featured: false,
     is_one_of_one: isOneOfOne,
     status: 'published',
-    seriesSlug
+    seriesSlug,
+    image_filename: imageFilename
   }
 }
 
@@ -191,7 +266,7 @@ async function upsertArtworks(artworks, seriesIdMap) {
     // Check existing by slug
     const { data: existing, error: fetchErr } = await supabase
       .from('artworks')
-      .select('id, slug')
+      .select('id, slug, image_filename')
       .eq('slug', art.slug)
       .maybeSingle()
     if (fetchErr) {
@@ -200,6 +275,18 @@ async function upsertArtworks(artworks, seriesIdMap) {
     }
 
     if (existing) {
+      if (!existing.image_filename && art.image_filename) {
+        const { error: updateErr } = await supabase
+          .from('artworks')
+          .update({ image_filename: art.image_filename })
+          .eq('id', existing.id)
+
+        if (updateErr) {
+          console.warn('⚠️ image_filename update error', art.slug, updateErr.message)
+        } else {
+          console.log('📝 image_filename definido para', art.slug)
+        }
+      }
       skipped++
       continue
     }
@@ -219,7 +306,8 @@ async function upsertArtworks(artworks, seriesIdMap) {
         type: art.type,
         is_featured: art.is_featured,
         is_one_of_one: art.is_one_of_one,
-        status: art.status
+        status: art.status,
+        image_filename: art.image_filename
       })
       .select()
       .single()

@@ -32,7 +32,11 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey)
 // Configurações
 const BUCKET_NAME = 'media'
 const DRY_RUN = process.argv.includes('--dry-run')
+const VERIFY_ONLY = process.argv.includes('--verify-only')
+const PURGE_UNKNOWN = process.argv.includes('--purge-unknown')
 const BACKUP_BEFORE_MIGRATION = true
+
+const KNOWN_SCAFFOLDS = new Set(['artworks', 'series', 'artifacts', 'editor'])
 
 // Dados de suporte
 const migrationMap = {
@@ -54,7 +58,13 @@ const migrationLog = {
   removed: [],
   databaseUpdates: [],
   totalFiles: 0,
-  migratedFiles: 0
+  migratedFiles: 0,
+  audit: {
+    totalFiles: 0,
+    issues: [],
+    unknownScaffolds: [],
+    purged: []
+  }
 }
 
 /**
@@ -171,6 +181,178 @@ function registerFilename(type, id, filename, compression) {
   if (!map) return
   if (!map.has(id)) {
     map.set(id, filename)
+  }
+}
+
+function deriveCanonicalFilename(filename, variant) {
+  const extension = path.extname(filename).replace('.', '') || 'jpg'
+  let base = path.basename(filename, path.extname(filename))
+
+  if (variant === 'raw') {
+    base = base.replace(/-raw$/i, '')
+  } else if (variant === 'optimized') {
+    base = base.replace(/-optimized$/i, '')
+  }
+
+  return { base, extension }
+}
+
+async function listAllObjects(prefix = '') {
+  const { data, error } = await supabase.storage
+    .from(BUCKET_NAME)
+    .list(prefix, { limit: 1000 })
+
+  if (error) throw error
+
+  const entries = []
+
+  for (const item of data || []) {
+    const fullPath = prefix ? `${prefix}/${item.name}` : item.name
+    const isFolder = !item.id
+
+    if (isFolder) {
+      const nested = await listAllObjects(fullPath)
+      entries.push(...nested)
+    } else {
+      entries.push({ path: fullPath })
+    }
+  }
+
+  return entries
+}
+
+async function auditNewStructure({ purgeUnknownScaffolds = false } = {}) {
+  console.log('\n🔍 Auditando estrutura de imagens...')
+
+  try {
+    const objects = await listAllObjects('')
+    migrationLog.audit.totalFiles = objects.length
+    migrationLog.audit.purged = []
+
+    const issues = []
+    const unknownScaffolds = new Map()
+
+    for (const obj of objects) {
+      const segments = obj.path.split('/')
+
+      if (segments.length < 4) {
+        issues.push({
+          path: obj.path,
+          error: 'Estrutura inválida: esperado {scaffold}/{id}/[raw|optimized]/{filename}'
+        })
+        continue
+      }
+
+      const [scaffold, identifier, variant, ...rest] = segments
+      const filename = rest.join('/')
+
+      if (rest.length !== 1) {
+        issues.push({
+          path: obj.path,
+          error: 'Arquivos devem estar diretamente dentro de raw/optimized'
+        })
+        continue
+      }
+
+      const sanitizedScaffold = sanitizeStorageSegment(scaffold)
+      if (sanitizedScaffold !== scaffold) {
+        issues.push({
+          path: obj.path,
+          error: `Scaffold inválido. Esperado: ${sanitizedScaffold}`
+        })
+      }
+
+      if (!KNOWN_SCAFFOLDS.has(scaffold)) {
+        if (!unknownScaffolds.has(scaffold)) {
+          unknownScaffolds.set(scaffold, [])
+        }
+        unknownScaffolds.get(scaffold).push(obj.path)
+      }
+
+      const sanitizedIdentifier = sanitizeStorageSegment(identifier)
+      if (sanitizedIdentifier !== identifier) {
+        issues.push({
+          path: obj.path,
+          error: `Identificador inválido. Esperado: ${sanitizedIdentifier}`
+        })
+      }
+
+      if (variant !== 'raw' && variant !== 'optimized') {
+        issues.push({
+          path: obj.path,
+          error: `Diretório inválido: ${variant}. Esperado raw ou optimized.`
+        })
+        continue
+      }
+
+      const canonical = deriveCanonicalFilename(filename, variant)
+      const sanitized = sanitizeFilename(`${canonical.base}.${canonical.extension}`)
+      const expectedFilename =
+        variant === 'optimized' ? sanitized.optimized : sanitized.raw
+
+      if (expectedFilename !== filename) {
+        issues.push({
+          path: obj.path,
+          error: `Nome de arquivo não sanitizado. Esperado: ${expectedFilename}`
+        })
+      }
+    }
+
+    migrationLog.audit.issues = issues
+    migrationLog.audit.unknownScaffolds = Array.from(unknownScaffolds.keys())
+
+    if (issues.length === 0) {
+      console.log('✅ Estrutura consistente com o padrão baseado em ID!')
+    } else {
+      console.log(`⚠️  Foram encontradas ${issues.length} inconsistências:`)
+      issues.forEach((issue) => {
+        console.log(`   - ${issue.path}: ${issue.error}`)
+      })
+    }
+
+    if (unknownScaffolds.size > 0) {
+      console.log('\n⚠️  Scaffolds desconhecidos detectados:')
+      for (const [scaffold, paths] of unknownScaffolds.entries()) {
+        console.log(`   - ${scaffold}: ${paths.length} arquivo(s)`)
+      }
+
+      if (purgeUnknownScaffolds && !DRY_RUN) {
+        const allUnknownPaths = Array.from(unknownScaffolds.values()).flat()
+
+        if (allUnknownPaths.length > 0) {
+          console.log(
+            `\n🗑️  Removendo ${allUnknownPaths.length} arquivo(s) de scaffolds desconhecidos...`
+          )
+          const { error } = await supabase.storage
+            .from(BUCKET_NAME)
+            .remove(allUnknownPaths)
+
+          if (error) {
+            console.warn(
+              '⚠️  Falha ao remover arquivos de scaffolds desconhecidos:',
+              error.message
+            )
+          } else {
+            migrationLog.audit.purged = allUnknownPaths
+            console.log('✅ Scaffolds desconhecidos removidos com sucesso.')
+          }
+        }
+      } else if (purgeUnknownScaffolds && DRY_RUN) {
+        console.log(
+          '\nℹ️  --purge-unknown ignorado em DRY RUN. Execute sem --dry-run para remover.'
+        )
+      }
+    } else {
+      console.log('\n✅ Nenhum scaffold desconhecido encontrado.')
+    }
+
+    return {
+      issues,
+      unknownScaffolds: Array.from(unknownScaffolds.keys())
+    }
+  } catch (error) {
+    console.error('❌ Erro durante auditoria da estrutura:', error)
+    throw error
   }
 }
 
@@ -461,19 +643,37 @@ async function migrateImages() {
   console.log(`Mode: ${DRY_RUN ? 'DRY RUN' : 'EXECUÇÃO REAL'}`)
 
   try {
+    if (VERIFY_ONLY) {
+      await auditNewStructure({
+        purgeUnknownScaffolds: PURGE_UNKNOWN && !DRY_RUN
+      })
+      console.log('\n📋 Auditoria concluída.')
+      return
+    }
+
     await fetchDatabaseData()
 
     const files = await listBucketFiles()
     migrationLog.totalFiles = files.length
 
+    if (files.length === 0) {
+      console.log('ℹ️  Nenhum arquivo legado encontrado. Pulando etapa de migração.')
+    }
+
     await createBackup(files)
 
-    console.log('🔄 Iniciando migração de arquivos...')
-    for (const file of files) {
-      await migrateFile(file)
+    if (files.length > 0) {
+      console.log('🔄 Iniciando migração de arquivos...')
+      for (const file of files) {
+        await migrateFile(file)
+      }
     }
 
     await updateDatabaseFilenames()
+
+    await auditNewStructure({
+      purgeUnknownScaffolds: PURGE_UNKNOWN && !DRY_RUN
+    })
 
     console.log('\n📊 RELATÓRIO DE MIGRAÇÃO:')
     console.log(`   Total de arquivos: ${migrationLog.totalFiles}`)
@@ -482,6 +682,11 @@ async function migrateImages() {
     console.log(`   Ignorados: ${migrationLog.skipped.length}`)
     console.log(`   Arquivos antigos removidos: ${migrationLog.removed.length}`)
     console.log(`   Atualizações de banco: ${migrationLog.databaseUpdates.length}`)
+    console.log(`   Arquivos auditados: ${migrationLog.audit.totalFiles}`)
+    console.log(`   Inconsistências encontradas: ${migrationLog.audit.issues.length}`)
+    console.log(
+      `   Scaffolds desconhecidos: ${migrationLog.audit.unknownScaffolds.length}`
+    )
 
     if (migrationLog.errors.length > 0) {
       console.log('\n❌ ERROS:')

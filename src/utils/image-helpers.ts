@@ -15,8 +15,7 @@ export function getImageUrlWithFallback(
   resourceType: string = 'artworks',
   imageType: 'optimized' | 'raw' = 'optimized'
 ): string {
-  // Apenas nova estrutura
-  const filename = item.filename || item.image_filename
+  const filename = item.image_filename || item.filename || null
   if (item.id && filename) {
     return getImageUrlFromId(item.id, filename, resourceType, imageType)
   }

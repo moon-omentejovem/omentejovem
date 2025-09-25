@@ -252,8 +252,7 @@ export class SeriesService extends BaseService {
           .map((sa: any) => sa.artworks?.slug)
           .filter(Boolean)
 
-        const coverFilename =
-          (series as any).image_filename || series.slug || undefined
+        const coverFilename = (series as any).image_filename || null
         const coverImage =
           series.id && coverFilename
             ? getImageUrlFromId(

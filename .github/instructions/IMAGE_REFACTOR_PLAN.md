@@ -25,12 +25,14 @@
   - Uploads sem otimização (ex.: TipTap, conteúdos auxiliares) utilizam apenas `raw`.
 - **Bucket padrão:** `STORAGE_BUCKETS.MEDIA` para todos os arquivos.
 - **Sanitização consistente:** todo `scaffold`, `id` e `filename` deve passar por helpers centralizados para remover caracteres inválidos e normalizar.
+- **Auditoria automática:** após cada migração, executar o modo `--verify-only` do script `scripts/migrate-image-structure.js` para validar que todos os arquivos seguem o padrão e que não restaram scaffolds antigos ou diretórios órfãos.
 
 ## 3. Pontos que Exigem Mais Implementação
 
 - Refatorar todos os componentes para usar apenas os helpers centralizados (`uploadImage`, `getImageUrlFromId`).
 - Garantir que todos os fluxos (admin, público, TipTap/editor) sigam o padrão `{scaffold}/{id}/[raw|optimized]/{filename}.{ext}` com otimização opcional.
-- Atualizar scripts utilitários para executar migração do bucket, movendo arquivos antigos para a nova estrutura e removendo os paths legados após sucesso.
+- Atualizar scripts utilitários para executar migração do bucket, movendo arquivos antigos para a nova estrutura, removendo os paths legados após sucesso **e auditando a nova árvore** para detectar quaisquer arquivos fora do padrão.
+- Garantir que scripts de seed (automático e legacy) populam `image_filename` com nomes sanitizados e compatíveis com a estrutura `{id}/raw`.
 - Ajustar documentação e guias de migração para refletir o novo padrão e o fluxo de limpeza dos arquivos antigos.
 - Validar que não há mais fallback para estrutura antiga (Compat).
 
@@ -58,7 +60,7 @@
 
 - Executar script de migração para mover arquivos do padrão antigo `{scaffold}/{compression}/{filename}` para `{scaffold}/{id}/[raw|optimized]/{filename}`.
 - Após cada upload bem-sucedido, remover o arquivo/pasta antiga para evitar duplicidade.
-- Registrar logs detalhados e gerar relatórios para conferência.
+- Registrar logs detalhados, gerar relatórios para conferência **e rodar a auditoria com `--verify-only` (opcionalmente com `--purge-unknown`) para confirmar que apenas os scaffolds válidos permanecem**.
 
 ### 5. Limpeza e revisão final (MÉDIA PRIORIDADE)
 
@@ -70,7 +72,7 @@
 
 - Testar upload/exibição em todos os fluxos (artworks, séries, artifacts, editor).
 - Validar admin e público.
-- Confirmar que os arquivos legados foram removidos do bucket após migração.
+- Confirmar que os arquivos legados foram removidos do bucket após migração **e que nenhum arquivo fora do padrão foi deixado pelo auditor**.
 - Atualizar documentação se necessário.
 
 ---

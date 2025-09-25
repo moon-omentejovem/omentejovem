@@ -48,16 +48,19 @@ artworks/01234567-89ab-cdef-0123-456789abcde6/raw/my-artwork.jpg
 
 ## 🛠️ Scripts de Migração
 
-### 1. `scripts/migrate-image-structure.js`
+### `scripts/migrate-image-structure.js`
 
-**Função**: Migra arquivos do bucket para nova estrutura
+**Função**: Migra arquivos do bucket para a nova estrutura e audita o resultado.
 
 ```bash
 # Teste (dry run)
 node scripts/migrate-image-structure.js --dry-run
 
-# Execução real
-node scripts/migrate-image-structure.js
+# Execução real com auditoria automática
+node scripts/migrate-image-structure.js --purge-unknown
+
+# Apenas auditar a estrutura já migrada
+node scripts/migrate-image-structure.js --verify-only --purge-unknown
 ```
 
 **Recursos**:
@@ -67,53 +70,8 @@ node scripts/migrate-image-structure.js
 - ✅ Suporte a dry-run
 - ✅ Log detalhado de operações
 - ✅ Validação de integridade
-
-### 2. `scripts/update-services-for-new-structure.js`
-
-**Função**: Atualiza código para nova estrutura
-
-```bash
-node scripts/update-services-for-new-structure.js
-```
-
-**Mudanças**:
-
-- `uploadImageBySlug()` → `uploadImageById()`
-- `getImageUrlFromSlug()` → `getImageUrlFromId()`
-- Cria camada de compatibilidade
-- Gera guia de migração
-
-### 3. `scripts/test-image-migration.js`
-
-**Função**: Testa nova estrutura em desenvolvimento
-
-```bash
-node scripts/test-image-migration.js
-```
-
-**Testes**:
-
-- ✅ Upload com nova estrutura
-- ✅ Download e URLs públicas
-- ✅ Mapeamento de dados
-- ✅ Compatibilidade com estrutura antiga
-
-### 4. `scripts/execute-image-migration.js`
-
-**Função**: Executa migração completa
-
-```bash
-node scripts/execute-image-migration.js
-```
-
-**Fluxo**:
-
-1. Cria backup de segurança
-2. Testa nova estrutura
-3. Atualiza services
-4. Migra arquivos (com confirmação)
-5. Valida migração
-6. Gera relatório final
+- ✅ Auditoria final da estrutura `{scaffold}/{id}/[raw|optimized]/{filename}`
+- ✅ Remoção opcional de scaffolds legados com `--purge-unknown`
 
 ## 🚀 Processo de Migração
 
@@ -133,13 +91,16 @@ git diff
 ### Fase 2: Migração
 
 ```bash
-# 1. Executar migração completa
-node scripts/execute-image-migration.js
+# 1. Executar migração completa (com remoção de scaffolds antigos)
+node scripts/migrate-image-structure.js --purge-unknown
 
 # 2. Verificar relatórios
 ls reports/migration-*
 
-# 3. Testar aplicação
+# 3. Rodar auditoria isolada para conferir estrutura
+node scripts/migrate-image-structure.js --verify-only
+
+# 4. Testar aplicação
 npm run dev
 ```
 
@@ -155,8 +116,8 @@ npm run dev
 ### Fase 4: Limpeza
 
 ```bash
-# 1. Remover arquivos antigos (após validação)
-# 2. Remover camada de compatibilidade
+# 1. Garantir que não existem scaffolds antigos (usar --verify-only --purge-unknown)
+# 2. Confirmar que seeds e migrações populam image_filename
 # 3. Atualizar documentação
 ```
 

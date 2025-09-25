@@ -28,24 +28,18 @@ export async function GET(request: NextRequest) {
     if (error) throw error
 
     // Adiciona campo image_url resolvido para cada artifact
-    const toSlug = (str: string) =>
-      str
-        ?.toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/(^-|-$)/g, '')
-    const artifactsWithImage = (data || []).map((artifact) => {
-      const filename =
-        artifact.image_filename ||
-        (artifact.title ? `${toSlug(artifact.title)}.jpg` : artifact.title)
-
-      return {
-        ...artifact,
-        image_url:
-          artifact.id && filename
-            ? getImageUrlFromId(artifact.id, filename, 'artifacts', 'optimized')
-            : null
-      }
-    })
+    const artifactsWithImage = (data || []).map((artifact) => ({
+      ...artifact,
+      image_url:
+        artifact.id && artifact.image_filename
+          ? getImageUrlFromId(
+              artifact.id,
+              artifact.image_filename,
+              'artifacts',
+              'optimized'
+            )
+          : null
+    }))
     return NextResponse.json({ data: artifactsWithImage, total: count })
   } catch (error) {
     console.error('Error fetching artifacts:', error)
@@ -77,14 +71,7 @@ export async function POST(request: NextRequest) {
     revalidateTag('artifacts')
 
     // Adiciona campo image_url resolvido
-    const toSlug = (str: string) =>
-      str
-        ?.toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/(^-|-$)/g, '')
-    const filename =
-      artifact.image_filename ||
-      (artifact.title ? `${toSlug(artifact.title)}.jpg` : artifact.title)
+    const filename = artifact.image_filename
     const artifactWithImage = {
       ...artifact,
       image_url:

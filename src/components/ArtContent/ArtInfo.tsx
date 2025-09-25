@@ -146,18 +146,26 @@ export function ArtInfo({
         <div className="md:flex-1 min-w-[200px] xl:min-w-[350px] flex flex-col max-h-full">
           <div className="xl:art-detail-inner-container overflow-hidden flex flex-1 justify-start xl:justify-end">
             <ArtDetails
-              detailedImage={getImageUrlFromId(
-                selectedArtwork.id,
-                selectedArtwork.image_filename || selectedArtwork.slug,
-                'artworks',
-                'raw'
-              )}
-              image={getImageUrlFromId(
-                selectedArtwork.id,
-                selectedArtwork.image_filename || selectedArtwork.slug,
-                'artworks',
-                'optimized'
-              )}
+              detailedImage={
+                selectedArtwork.image_filename
+                  ? getImageUrlFromId(
+                      selectedArtwork.id,
+                      selectedArtwork.image_filename,
+                      'artworks',
+                      'raw'
+                    )
+                  : ''
+              }
+              image={
+                selectedArtwork.image_filename
+                  ? getImageUrlFromId(
+                      selectedArtwork.id,
+                      selectedArtwork.image_filename,
+                      'artworks',
+                      'optimized'
+                    )
+                  : ''
+              }
               name={selectedArtwork.title || ''}
             />
           </div>
@@ -336,9 +344,12 @@ export function ArtInfo({
               src={
                 selectedArtwork.video_url ||
                 (() => {
+                  if (!selectedArtwork.image_filename) {
+                    return ''
+                  }
                   const rawUrl = getImageUrlFromId(
                     selectedArtwork.id,
-                    selectedArtwork.image_filename || selectedArtwork.slug,
+                    selectedArtwork.image_filename,
                     'artworks',
                     'raw'
                   )
