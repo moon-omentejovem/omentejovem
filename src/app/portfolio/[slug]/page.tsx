@@ -12,7 +12,7 @@ export async function generateStaticParams() {
   // Generate static params for build-time optimization
   const { artworks } = await ArtworkService.getArtworks({ limit: 100 })
 
-  return artworks.map((artwork: any) => ({
+  return artworks.map((artwork) => ({
     slug: artwork.slug
   }))
 }

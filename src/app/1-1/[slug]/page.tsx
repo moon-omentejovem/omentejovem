@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: ArtworkPageProps) {
     openGraph: {
       title: artwork.title,
       description: artwork.description || '',
-      images: artwork.imageurl ? [artwork.imageurl] : []
+      images: artwork.imageoptimizedurl ? [artwork.imageoptimizedurl] : []
     }
   }
 }
