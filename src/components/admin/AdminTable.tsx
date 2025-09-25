@@ -106,6 +106,15 @@ export default function AdminTable<T extends Record<string, any>>({
           ) : (
             <span className="text-gray-500">—</span>
           )
+        case 'date':
+        case 'datetime':
+          if (!value) return <span className="text-gray-500">—</span>
+          const date = new Date(value)
+          return (
+            <span className="text-gray-500 text-xs">
+              {date.toLocaleString()}
+            </span>
+          )
         case 'clamp':
           return <span className="line-clamp-2">{value}</span>
         case 'badge':
