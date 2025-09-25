@@ -97,9 +97,7 @@ export const artworksDescriptor: ResourceDescriptor = {
       className: 'rounded'
     },
     { key: 'title', label: 'Title', render: 'text' },
-    { key: 'mint_date', label: 'Mint Date', render: 'date' },
-    { key: 'mint_link', label: 'Mint Link', render: 'link' },
-    { key: 'type', label: 'Type', render: 'badge' },
+    { key: 'updated_at', label: 'Updated At', render: 'date' },
     { key: 'status', label: 'Status', render: 'badge' }
   ],
   form: [
@@ -241,8 +239,7 @@ export const seriesDescriptor: ResourceDescriptor = {
       className: 'rounded'
     },
     { key: 'name', label: 'Name', render: 'text' },
-    // Nenhum campo de imagem: resolução via slug/id e helpers
-    { key: 'artworks', label: 'Artworks', render: 'text' }, // Will show count or names
+    { key: 'artworks', label: 'Artworks', render: 'clamp' }, // Will show count or names
     { key: 'created_at', label: 'Created At', render: 'date' }
   ],
   form: [
