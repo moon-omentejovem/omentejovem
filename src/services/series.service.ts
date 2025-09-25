@@ -214,6 +214,8 @@ export class SeriesService extends BaseService {
           slug,
           created_at,
           slug,
+          imageoptimizedurl,
+          imageurl,
           series_artworks(
             artworks(
               id,
@@ -244,16 +246,14 @@ export class SeriesService extends BaseService {
           .map((sa: any) => sa.artworks?.slug)
           .filter(Boolean)
 
-        // Novo padrão: coverImage deve ser o imageurl do primeiro artwork, se existir
-        const firstArtwork = artworks[0]?.artworks
-        const coverImage = firstArtwork?.imageurl || undefined
+        const coverImage = artworks[0]?.imageurl || undefined
 
         return {
           name: series.name,
           year,
           slug: series.slug,
           nftSlugs,
-          coverImage
+          coverImage: series.imageoptimizedurl || series.imageurl || coverImage
         }
       })
 
