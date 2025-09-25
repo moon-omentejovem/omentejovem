@@ -194,6 +194,7 @@ export type Database = {
           created_at: string | null
           filename: string | null
           id: string
+          imageoptimizedurl: string | null
           imageurl: string | null
           name: string
           slug: string
@@ -203,6 +204,7 @@ export type Database = {
           created_at?: string | null
           filename?: string | null
           id?: string
+          imageoptimizedurl?: string | null
           imageurl?: string | null
           name: string
           slug: string
@@ -212,6 +214,7 @@ export type Database = {
           created_at?: string | null
           filename?: string | null
           id?: string
+          imageoptimizedurl?: string | null
           imageurl?: string | null
           name?: string
           slug?: string
