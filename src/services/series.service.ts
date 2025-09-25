@@ -131,11 +131,13 @@ export class SeriesService extends BaseService {
     ): Promise<{
       name: string
       slug: string
+      id: string
+      image_filename: string | null
     } | null> => {
       return this.safeExecuteQuery(async (supabase) => {
         const { data, error } = await supabase
           .from('series')
-          .select('name, slug')
+          .select('id, name, slug, image_filename')
           .eq('slug', slug)
           .single()
 
@@ -147,7 +149,12 @@ export class SeriesService extends BaseService {
           return null
         }
 
-        return { name: data.name, slug: data.slug }
+        return {
+          id: data.id,
+          name: data.name,
+          slug: data.slug,
+          image_filename: data.image_filename
+        }
       }, 'getMetadataBySlug')
     }
   )
@@ -210,10 +217,11 @@ export class SeriesService extends BaseService {
         .from('series')
         .select(
           `
+          id,
           name,
           slug,
           created_at,
-          slug,
+          image_filename,
           series_artworks(
             artworks(
               id,
@@ -244,13 +252,13 @@ export class SeriesService extends BaseService {
           .map((sa: any) => sa.artworks?.slug)
           .filter(Boolean)
 
-        // Usa o id do primeiro artwork relacionado como identificador para coverImage
-        const firstArtwork = artworks[0]?.artworks
+        const coverFilename =
+          (series as any).image_filename || series.slug || undefined
         const coverImage =
-          firstArtwork && series.slug
+          series.id && coverFilename
             ? getImageUrlFromId(
-                firstArtwork.id,
-                series.slug,
+                series.id,
+                coverFilename,
                 'series',
                 'optimized'
               )

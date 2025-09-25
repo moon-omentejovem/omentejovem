@@ -23,10 +23,10 @@ export default function HomeContent({
     ? data.map((artwork) => ({
         title: artwork.title,
         imageUrl:
-          artwork.id && artwork.slug
+          artwork.id && (artwork.image_filename || artwork.slug)
             ? getImageUrlFromId(
                 artwork.id,
-                artwork.slug,
+                artwork.image_filename || artwork.slug,
                 'artworks',
                 'optimized'
               )

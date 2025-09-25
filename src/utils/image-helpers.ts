@@ -11,13 +11,14 @@ import { getImageUrlFromId } from '@/utils/storage'
  * Helper para gerar URL de imagem com fallback
  */
 export function getImageUrlWithFallback(
-  item: { id?: string; filename?: string },
+  item: { id?: string; filename?: string | null; image_filename?: string | null },
   resourceType: string = 'artworks',
   imageType: 'optimized' | 'raw' = 'optimized'
 ): string {
   // Apenas nova estrutura
-  if (item.id && item.filename) {
-    return getImageUrlFromId(item.id, item.filename, resourceType, imageType)
+  const filename = item.filename || item.image_filename
+  if (item.id && filename) {
+    return getImageUrlFromId(item.id, filename, resourceType, imageType)
   }
   return ''
 }

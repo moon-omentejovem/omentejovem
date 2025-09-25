@@ -2,7 +2,6 @@
 
 import { useConfirm } from '@/hooks/useConfirm'
 import type { FormField, ResourceDescriptor } from '@/types/descriptors'
-import { createClient } from '@/utils/supabase/client'
 import { Button } from 'flowbite-react'
 import { SaveIcon, XIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
@@ -27,7 +26,6 @@ export default function AdminForm<T extends Record<string, any>>({
 }: AdminFormProps<T>) {
   const [formData, setFormData] = useState<Record<string, any>>({})
   const [errors, setErrors] = useState<Record<string, string>>({})
-  const supabase = createClient()
   const router = useRouter()
   const confirm = useConfirm()
 
@@ -212,7 +210,6 @@ export default function AdminForm<T extends Record<string, any>>({
         onChange={(value) => handleInputChange(field.key, value)}
         onExtraChange={(key, value) => handleInputChange(key, value)}
         descriptor={descriptor}
-        supabase={supabase}
         formData={formData}
       />
     )

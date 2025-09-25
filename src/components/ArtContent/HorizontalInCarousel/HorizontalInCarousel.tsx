@@ -67,7 +67,7 @@ export function HorizontalInCarousel({
               <Image
                 src={getImageUrlFromId(
                   art.id,
-                  art.slug,
+                  art.image_filename || art.slug,
                   'artworks',
                   'optimized'
                 )}

@@ -11,10 +11,13 @@ artworks/raw/my-artwork-raw.jpg
 
 ### Nova Estrutura
 ```
-{scaffold}/{id}/{compression}/{filename}.{ext}
+{scaffold}/{id}/[raw|optimized]/{filename}.{ext}
 artworks/01234567-89ab-cdef-0123-456789abcde6/optimized/my-artwork.webp
 artworks/01234567-89ab-cdef-0123-456789abcde6/raw/my-artwork.jpg
 ```
+
+> 🔁 Utilize o diretório `optimized` apenas quando existir uma versão otimizada do arquivo original. Caso contrário, mantenha apen
+as o diretório `raw`.
 
 ## 🔄 Mudanças no Código
 

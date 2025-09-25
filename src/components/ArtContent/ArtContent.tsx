@@ -62,7 +62,7 @@ export function ArtContent({
     name: artwork.title || '',
     imageUrl: getImageUrlFromId(
       artwork.id,
-      artwork.slug,
+      artwork.image_filename || artwork.slug,
       'artworks',
       'optimized'
     ),

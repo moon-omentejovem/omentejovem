@@ -75,6 +75,7 @@ export type Database = {
           description: string | null
           highlight_video_url: string | null
           id: string
+          image_filename: string | null
           link_url: string | null
           status: string
           title: string
@@ -85,6 +86,7 @@ export type Database = {
           description?: string | null
           highlight_video_url?: string | null
           id?: string
+          image_filename?: string | null
           link_url?: string | null
           status?: string
           title: string
@@ -95,6 +97,7 @@ export type Database = {
           description?: string | null
           highlight_video_url?: string | null
           id?: string
+          image_filename?: string | null
           link_url?: string | null
           status?: string
           title?: string
@@ -111,6 +114,7 @@ export type Database = {
           description: Json | null
           editions_total: number | null
           id: string
+          image_filename: string | null
           is_featured: boolean | null
           is_one_of_one: boolean | null
           mint_date: string | null
@@ -132,6 +136,7 @@ export type Database = {
           description?: Json | null
           editions_total?: number | null
           id?: string
+          image_filename?: string | null
           is_featured?: boolean | null
           is_one_of_one?: boolean | null
           mint_date?: string | null
@@ -153,6 +158,7 @@ export type Database = {
           description?: Json | null
           editions_total?: number | null
           id?: string
+          image_filename?: string | null
           is_featured?: boolean | null
           is_one_of_one?: boolean | null
           mint_date?: string | null
@@ -172,6 +178,7 @@ export type Database = {
         Row: {
           created_at: string | null
           id: string
+          image_filename: string | null
           name: string
           slug: string
           updated_at: string | null
@@ -179,6 +186,7 @@ export type Database = {
         Insert: {
           created_at?: string | null
           id?: string
+          image_filename?: string | null
           name: string
           slug: string
           updated_at?: string | null
@@ -186,6 +194,7 @@ export type Database = {
         Update: {
           created_at?: string | null
           id?: string
+          image_filename?: string | null
           name?: string
           slug?: string
           updated_at?: string | null

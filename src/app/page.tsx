@@ -15,8 +15,13 @@ export default async function Home() {
   const images = featuredArtworks.map((artwork: any) => ({
     title: artwork.title || '',
     imageUrl:
-      artwork.id && artwork.slug
-        ? getImageUrlFromId(artwork.id, artwork.slug, 'artworks', 'optimized')
+      artwork.id && (artwork.image_filename || artwork.slug)
+        ? getImageUrlFromId(
+            artwork.id,
+            artwork.image_filename || artwork.slug,
+            'artworks',
+            'optimized'
+          )
         : '',
     createdAt: artwork.posted_at || ''
   }))

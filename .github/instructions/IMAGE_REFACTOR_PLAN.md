@@ -12,20 +12,29 @@
 
 ### Locais afetados (exemplos):
 
-- src/components/ArtContent/\*
-- src/components/admin/\*
+- src/components/ArtContent/*
+- src/components/admin/*
 - src/app/series/[slug]/page.tsx, src/app/newsletter/ServerImageBanner.tsx, src/app/portfolio/[slug]/page.tsx, etc
 - src/services/series.service.ts, storage.service.ts
 - src/utils/image-helpers.ts, image-compatibility.ts
 
-## 2. Pontos que Exigem Mais Implementação
+## 2. Regras da Nova Estrutura de Storage
 
-- Refatorar todos os componentes para usar apenas os helpers centralizados (`uploadImage`, `getImageUrlFromId`)
-- Garantir que todos os fluxos (admin, público, TipTap/editor) estejam usando o padrão `{scaffold}/{id}/[raw|optimized]/{filename}`
-- Ajustar testes e exemplos de uso nos hooks e documentação
-- Validar que não há mais fallback para estrutura antiga (Compat)
+- **Padrão único de path:** `{scaffold}/{id}/[raw|optimized]/{filename}.{ext}`
+  - O segmento `optimized` é **opcional** e só deve existir para recursos que necessitam de uma versão otimizada (artworks, series, artifacts).
+  - Uploads sem otimização (ex.: TipTap, conteúdos auxiliares) utilizam apenas `raw`.
+- **Bucket padrão:** `STORAGE_BUCKETS.MEDIA` para todos os arquivos.
+- **Sanitização consistente:** todo `scaffold`, `id` e `filename` deve passar por helpers centralizados para remover caracteres inválidos e normalizar.
 
-## 3. Plano de Execução Prioritário
+## 3. Pontos que Exigem Mais Implementação
+
+- Refatorar todos os componentes para usar apenas os helpers centralizados (`uploadImage`, `getImageUrlFromId`).
+- Garantir que todos os fluxos (admin, público, TipTap/editor) sigam o padrão `{scaffold}/{id}/[raw|optimized]/{filename}.{ext}` com otimização opcional.
+- Atualizar scripts utilitários para executar migração do bucket, movendo arquivos antigos para a nova estrutura e removendo os paths legados após sucesso.
+- Ajustar documentação e guias de migração para refletir o novo padrão e o fluxo de limpeza dos arquivos antigos.
+- Validar que não há mais fallback para estrutura antiga (Compat).
+
+## 4. Plano de Execução Prioritário
 
 ### 1. Remover helpers e funções legadas (CRÍTICO)
 
@@ -45,16 +54,23 @@
 - Garantir que services usem apenas helpers novos.
 - **Dependência:** Pode ser feito em paralelo com componentes, mas depende dos helpers novos.
 
-### 4. Limpeza e revisão final (MÉDIA PRIORIDADE)
+### 4. Migração do bucket e limpeza (ALTA PRIORIDADE)
+
+- Executar script de migração para mover arquivos do padrão antigo `{scaffold}/{compression}/{filename}` para `{scaffold}/{id}/[raw|optimized]/{filename}`.
+- Após cada upload bem-sucedido, remover o arquivo/pasta antiga para evitar duplicidade.
+- Registrar logs detalhados e gerar relatórios para conferência.
+
+### 5. Limpeza e revisão final (MÉDIA PRIORIDADE)
 
 - Remover código morto.
 - Garantir que não há mais lógica duplicada.
 - Rodar lint/build/testes.
 
-### 5. Checklist de validação (OBRIGATÓRIO)
+### 6. Checklist de validação (OBRIGATÓRIO)
 
 - Testar upload/exibição em todos os fluxos (artworks, séries, artifacts, editor).
 - Validar admin e público.
+- Confirmar que os arquivos legados foram removidos do bucket após migração.
 - Atualizar documentação se necessário.
 
 ---

@@ -148,13 +148,13 @@ export function ArtInfo({
             <ArtDetails
               detailedImage={getImageUrlFromId(
                 selectedArtwork.id,
-                selectedArtwork.slug,
+                selectedArtwork.image_filename || selectedArtwork.slug,
                 'artworks',
                 'raw'
               )}
               image={getImageUrlFromId(
                 selectedArtwork.id,
-                selectedArtwork.slug,
+                selectedArtwork.image_filename || selectedArtwork.slug,
                 'artworks',
                 'optimized'
               )}
@@ -338,7 +338,7 @@ export function ArtInfo({
                 (() => {
                   const rawUrl = getImageUrlFromId(
                     selectedArtwork.id,
-                    selectedArtwork.slug,
+                    selectedArtwork.image_filename || selectedArtwork.slug,
                     'artworks',
                     'raw'
                   )

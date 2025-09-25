@@ -41,18 +41,19 @@ export async function GET(request: NextRequest) {
         ?.toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)/g, '')
-    const seriesWithImage = (data || []).map((series) => ({
-      ...series,
-      image_url:
-        series.id && series.slug
-          ? getImageUrlFromId(
-              series.id,
-              toSlug(series.slug),
-              'series',
-              'optimized'
-            )
-          : null
-    }))
+    const seriesWithImage = (data || []).map((series) => {
+      const filename =
+        series.image_filename ||
+        (series.slug ? toSlug(series.slug) : series.slug)
+
+      return {
+        ...series,
+        image_url:
+          series.id && filename
+            ? getImageUrlFromId(series.id, filename, 'series', 'optimized')
+            : null
+      }
+    })
     return NextResponse.json({ data: seriesWithImage, total: count })
   } catch (error) {
     console.error('Error fetching series:', error)
@@ -103,16 +104,13 @@ export async function POST(request: NextRequest) {
         ?.toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)/g, '')
+    const filename =
+      series.image_filename || (series.slug ? toSlug(series.slug) : series.slug)
     const seriesWithImage = {
       ...series,
       image_url:
-        series.id && series.slug
-          ? getImageUrlFromId(
-              series.id,
-              toSlug(series.slug),
-              'series',
-              'optimized'
-            )
+        series.id && filename
+          ? getImageUrlFromId(series.id, filename, 'series', 'optimized')
           : null
     }
     return NextResponse.json(seriesWithImage, { status: 201 })

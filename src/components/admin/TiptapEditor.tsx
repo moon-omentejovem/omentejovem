@@ -109,11 +109,11 @@ export default function TiptapEditor({
         filename
       })
 
-      if (result.success && result.id && result.rawPath) {
+      if (result.success && result.id && result.rawPath && result.filename) {
         // Gera URL pública do arquivo raw
         const publicUrl = getImageUrlFromId(
-          editorSlug,
-          filename,
+          result.id,
+          result.filename,
           'editor',
           'raw'
         )

@@ -43,13 +43,17 @@ export async function GET(request: NextRequest) {
     if (error) throw error
 
     // Adiciona campo image_url resolvido para cada artwork
-    const artworksWithImage = (data || []).map((artwork) => ({
+    const artworksWithImage = (data || []).map((artwork) => {
+      const filename = artwork.image_filename || artwork.slug
+
+      return {
       ...artwork,
       image_url:
-        artwork.id && artwork.slug
-          ? getImageUrlFromId(artwork.id, artwork.slug, 'artworks', 'optimized')
+        artwork.id && filename
+          ? getImageUrlFromId(artwork.id, filename, 'artworks', 'optimized')
           : null
-    }))
+    }
+    })
     return NextResponse.json({ data: artworksWithImage, total: count })
   } catch (error) {
     console.error('Error fetching artworks:', error)
@@ -100,11 +104,12 @@ export async function POST(request: NextRequest) {
     revalidateTag('portfolio')
 
     // Adiciona campo image_url resolvido
+    const filename = artwork.image_filename || artwork.slug
     const artworkWithImage = {
       ...artwork,
       image_url:
-        artwork.id && artwork.slug
-          ? getImageUrlFromId(artwork.id, artwork.slug, 'artworks', 'optimized')
+        artwork.id && filename
+          ? getImageUrlFromId(artwork.id, filename, 'artworks', 'optimized')
           : null
     }
     return NextResponse.json(artworkWithImage, { status: 201 })

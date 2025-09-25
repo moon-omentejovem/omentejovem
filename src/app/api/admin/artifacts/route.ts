@@ -33,18 +33,19 @@ export async function GET(request: NextRequest) {
         ?.toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)/g, '')
-    const artifactsWithImage = (data || []).map((artifact) => ({
-      ...artifact,
-      image_url:
-        artifact.id && artifact.title
-          ? getImageUrlFromId(
-              artifact.id,
-              toSlug(artifact.title),
-              'artifacts',
-              'optimized'
-            )
-          : null
-    }))
+    const artifactsWithImage = (data || []).map((artifact) => {
+      const filename =
+        artifact.image_filename ||
+        (artifact.title ? `${toSlug(artifact.title)}.jpg` : artifact.title)
+
+      return {
+        ...artifact,
+        image_url:
+          artifact.id && filename
+            ? getImageUrlFromId(artifact.id, filename, 'artifacts', 'optimized')
+            : null
+      }
+    })
     return NextResponse.json({ data: artifactsWithImage, total: count })
   } catch (error) {
     console.error('Error fetching artifacts:', error)
@@ -81,16 +82,14 @@ export async function POST(request: NextRequest) {
         ?.toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)/g, '')
+    const filename =
+      artifact.image_filename ||
+      (artifact.title ? `${toSlug(artifact.title)}.jpg` : artifact.title)
     const artifactWithImage = {
       ...artifact,
       image_url:
-        artifact.id && artifact.title
-          ? getImageUrlFromId(
-              artifact.id,
-              toSlug(artifact.title),
-              'artifacts',
-              'optimized'
-            )
+        artifact.id && filename
+          ? getImageUrlFromId(artifact.id, filename, 'artifacts', 'optimized')
           : null
     }
     return NextResponse.json(artifactWithImage, { status: 201 })

@@ -37,12 +37,16 @@ export async function generateMetadata({ params }: SeriesPageProps) {
       .replace(/(^-|-$)/g, '')
 
   // Gerar URL da imagem de capa da série
+  const filename =
+    seriesMetadata?.image_filename ||
+    (seriesMetadata?.slug ? toSlug(seriesMetadata.slug) : seriesMetadata?.slug)
+
   const imageUrl =
-    seriesMetadata?.slug && typeof seriesMetadata.slug === 'string'
+    seriesMetadata?.id && filename
       ? [
           getImageUrlFromId(
-            seriesMetadata.slug,
-            toSlug(seriesMetadata.slug),
+            seriesMetadata.id,
+            filename,
             'series',
             'optimized'
           )

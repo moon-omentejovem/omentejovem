@@ -2,22 +2,25 @@
  * Helper de Upload para Nova Estrutura de Imagens
  *
  * Facilita o upload de imagens usando a nova estrutura
- * {scaffold}/{id}/{compression}/{filename}.{ext}
+ * {scaffold}/{id}/[raw|optimized]/{filename}.{ext}
  */
 
 import { ImageUploadService } from '@/services/image-upload.service'
 import { createClient } from '@/utils/supabase/client'
+import { sanitizeFilename } from './image-path'
 
 export interface UploadOptions {
-  resourceType: string // agora aceita qualquer scaffold, ex: 'editor', 'artworks', etc
+  resourceType: string
   id: string
   filename: string
+  includeOptimized?: boolean
 }
 
 export interface UploadResult {
   success: boolean
   id?: string
-  optimizedPath?: string
+  filename?: string
+  optimizedPath?: string | null
   rawPath?: string
   error?: string
 }
@@ -30,18 +33,22 @@ export async function uploadImage(
   options: UploadOptions
 ): Promise<UploadResult> {
   try {
+    ImageUploadService.validateImageFile(file)
     const supabase = createClient()
 
-    const result = await ImageUploadService.uploadImageBySlug(
+    const result = await ImageUploadService.uploadImageById(
       file,
       options.id,
+      options.filename,
       supabase,
-      options.resourceType
+      options.resourceType,
+      { includeOptimized: options.includeOptimized }
     )
 
     return {
       success: result.success,
-      id: result.slug,
+      id: result.identifier,
+      filename: result.filename,
       optimizedPath: result.optimizedPath,
       rawPath: result.rawPath
     }
@@ -55,29 +62,14 @@ export async function uploadImage(
 }
 
 /**
- * Helper para upload de artwork
- */
-// ...existing code...
-
-/**
  * Helper para gerar filename baseado no título
  */
 export function generateFilename(
   title: string,
-  extension: string = 'webp'
+  extension: string = 'jpg'
 ): string {
-  return (
-    title
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/[̀-ͯ]/g, '') // Remove acentos
-      .replace(/[^a-z0-9s-]/g, '') // Remove caracteres especiais
-      .replace(/s+/g, '-') // Substitui espaços por hífens
-      .replace(/-+/g, '-') // Remove hífens duplicados
-      .replace(/^-|-$/g, '') + // Remove hífens do início e fim
-    '.' +
-    extension
-  )
+  const { raw } = sanitizeFilename(`${title}.${extension}`)
+  return raw
 }
 
 /**

@@ -1,9 +1,8 @@
 'use client'
 
-import { ImageUploadService } from '@/services/image-upload.service'
 import type { FormField, ResourceDescriptor } from '@/types/descriptors'
 import { getImageUrlFromId } from '@/utils/storage'
-import type { SupabaseClient } from '@supabase/supabase-js'
+import { uploadImage } from '@/utils/upload-helpers'
 import {
   FileInput,
   Label,
@@ -24,7 +23,6 @@ interface AdminFormFieldProps {
   onChange: (value: any) => void
   onExtraChange?: (key: string, value: any) => void
   descriptor: ResourceDescriptor
-  supabase: SupabaseClient
   formData?: Record<string, any>
 }
 
@@ -35,7 +33,6 @@ export default function AdminFormField({
   onChange,
   onExtraChange,
   descriptor,
-  supabase,
   formData
 }: AdminFormFieldProps) {
   switch (field.type) {
@@ -183,27 +180,24 @@ export default function AdminFormField({
         </div>
       )
     case 'image':
-      // Usa o valor do campo slug do formData (React state)
-      let slug = ''
-      if (formData) {
-        if (descriptor.table === 'artworks' || descriptor.table === 'series') {
-          slug = formData.slug || ''
-        } else if (descriptor.table === 'artifacts') {
-          slug = formData.id || ''
-        }
+      const resourceType = descriptor.table
+      let resourceId = formData?.id as string | undefined
+
+      if (!resourceId && typeof crypto !== 'undefined' && crypto.randomUUID) {
+        resourceId = crypto.randomUUID()
+        onExtraChange?.('id', resourceId)
       }
 
-      console.log({ formData, slug })
+      const filename = formData?.image_filename as string | undefined
 
-      // Usa image_url da API se disponível, senão gera localmente
       const imageUrl =
         formData && formData.image_url
           ? formData.image_url
-          : slug && formData?.id
+          : resourceId && filename
             ? getImageUrlFromId(
-                formData.id,
-                slug,
-                descriptor.table,
+                resourceId,
+                filename,
+                resourceType,
                 'optimized'
               )
             : undefined
@@ -212,20 +206,51 @@ export default function AdminFormField({
         e: React.ChangeEvent<HTMLInputElement>
       ) => {
         const file = e.target.files?.[0]
-        if (!file || !slug) {
-          toast.error('Slug obrigatório para upload de imagem.')
+        if (!file) {
+          return
+        }
+
+        let currentId = resourceId
+
+        if (!currentId) {
+          if (typeof crypto === 'undefined' || !crypto.randomUUID) {
+            toast.error('Navegador não suporta geração de UUID para uploads.')
+            return
+          }
+          currentId = crypto.randomUUID()
+          resourceId = currentId
+          onExtraChange?.('id', currentId)
+        }
+
+        const currentFilename =
+          (formData?.image_filename as string | undefined) ||
+          (formData?.slug as string | undefined) ||
+          (formData?.title as string | undefined) ||
+          file.name
+
+        const extension = file.name.split('.').pop() || 'jpg'
+        const preparedFilename = currentFilename.includes('.')
+          ? currentFilename
+          : `${currentFilename}.${extension}`
+
+        if (!currentId) {
+          toast.error('ID obrigatório para upload de imagem.')
           return
         }
 
         await toast.promise(
           (async () => {
-            await ImageUploadService.uploadImageBySlug(
-              file,
-              slug,
-              supabase,
-              descriptor.table
-            )
-            onChange(slug)
+            const result = await uploadImage(file, {
+              resourceType,
+              id: currentId!,
+              filename: preparedFilename
+            })
+
+            if (!result.success || !result.filename) {
+              throw new Error(result.error || 'Falha no upload')
+            }
+
+            onChange(result.filename)
           })(),
           {
             loading: 'Enviando imagem...',

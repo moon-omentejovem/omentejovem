@@ -15,10 +15,12 @@ artworks/raw/my-artwork-raw.jpg
 ### Nova Estrutura (Desejada)
 
 ```
-{scaffold}/{id}/{compression}/{filename}.{ext}
+{scaffold}/{id}/[raw|optimized]/{filename}.{ext}
 artworks/01234567-89ab-cdef-0123-456789abcde6/optimized/my-artwork.webp
 artworks/01234567-89ab-cdef-0123-456789abcde6/raw/my-artwork.jpg
 ```
+
+> ℹ️ O segmento `optimized` é opcional e só deve existir quando houver uma versão otimizada do arquivo original (ex.: artworks, series, artifacts). Recursos que não geram variações otimizadas utilizam apenas o diretório `raw`.
 
 ## 🎯 Benefícios da Nova Estrutura
 

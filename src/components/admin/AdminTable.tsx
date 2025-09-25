@@ -81,12 +81,20 @@ export default function AdminTable<T extends Record<string, any>>({
           // Inferir resourceType do descriptor ou do contexto da tabela
           // Use descriptor.table como resourceType (artworks, series, artifacts)
           const resourceType = descriptor?.table || 'artworks'
-          const imageUrl = getImageUrlFromId(
-            item.id,
-            value,
-            resourceType,
-            'optimized'
-          )
+          const filename =
+            (value as string | undefined) ||
+            (item as Record<string, any>)?.image_filename ||
+            (item as Record<string, any>)?.slug ||
+            (item as Record<string, any>)?.title
+          const imageUrl =
+            filename && item.id
+              ? getImageUrlFromId(
+                  item.id,
+                  filename,
+                  resourceType,
+                  'optimized'
+                )
+              : ''
           return imageUrl ? (
             <Image
               src={imageUrl}

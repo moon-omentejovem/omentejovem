@@ -114,7 +114,7 @@ export const artworksDescriptor: ResourceDescriptor = {
       placeholder: 'auto-generated-from-title'
     },
     {
-      key: 'image',
+      key: 'image_filename',
       label: 'Artwork Image',
       type: 'image',
       required: true,
@@ -257,7 +257,7 @@ export const seriesDescriptor: ResourceDescriptor = {
     },
 
     {
-      key: 'image',
+      key: 'image_filename',
       label: 'Series Cover Image',
       type: 'image',
       required: true,
@@ -317,7 +317,7 @@ export const artifactsDescriptor: ResourceDescriptor = {
       placeholder: 'Enter artifact title'
     },
     {
-      key: 'image',
+      key: 'image_filename',
       label: 'Artifact Image',
       type: 'image',
       required: true,

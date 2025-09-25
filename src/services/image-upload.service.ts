@@ -1,132 +1,94 @@
 /**
- * Simplified Image Upload Service - Omentejovem
+ * Image Upload Service - Omentejovem
  *
- * Novo serviço simplificado que usa slug-based paths para organizar imagens
- * no Supabase Storage sem necessidade de salvar paths no banco de dados
+ * Centraliza o upload de imagens seguindo o novo padrão baseado em ID:
+ * {scaffold}/{id}/[raw|optimized]/{filename}.{ext}
  */
 
 import { STORAGE_BUCKETS } from '@/lib/supabase/config'
+import {
+  GenerateImagePathOptions,
+  generateImagePaths
+} from '@/utils/image-path'
 import { optimizeImageFile } from '@/utils/optimize-image'
 import type { SupabaseClient } from '@supabase/supabase-js'
 
 export interface ImageUploadResult {
   success: boolean
-  slug: string
-  optimizedPath: string
+  identifier: string
+  filename: string
   rawPath: string
+  optimizedPath: string | null
 }
+
+export interface ImageUploadOptions extends GenerateImagePathOptions {}
 
 export class ImageUploadService {
   /**
-   * Gera slug limpo a partir de um título ou nome de arquivo
-   */
-  private static generateSlug(input: string): string {
-    if (!input || typeof input !== 'string') return ''
-    return input
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '') // Remove acentos
-      .replace(/[^a-z0-9\s-]/g, '') // Remove caracteres especiais
-      .replace(/\s+/g, '-') // Substitui espaços por hífens
-      .replace(/-+/g, '-') // Remove hífens duplicados
-      .replace(/^-|-$/g, '') // Remove hífens do início e fim
-  }
-
-  /**
-   * Gera paths baseados em slug para diferentes tipos de recurso
-   */
-  private static generatePaths(
-    slug: string,
-    filename: string,
-    resourceType: string = 'artworks',
-    type?: string
-  ): { optimizedPath: string; rawPath: string } {
-    // Remove espaços e normaliza nome
-    const cleanFilename = filename.replace(/\s+/g, '-').toLowerCase()
-    // Se type for fornecido, inclui na pasta
-    const typeSegment = type ? `/${type}` : ''
-    return {
-      optimizedPath: `${resourceType}/${slug}${typeSegment}/optimized/${cleanFilename.replace(/\.(webp|jpg|jpeg|png)$/i, '')}.webp`,
-      rawPath: `${resourceType}/${slug}${typeSegment}/raw/${cleanFilename}`
-    }
-  }
-
-  /**
-   * Upload simplificado baseado em slug
+   * Upload baseado em ID (nova estrutura)
    * @param file - Arquivo de imagem a ser enviado
-   * @param slug - Slug único que será usado para nomear os arquivos
+   * @param id - Identificador único do recurso (UUID, slug, etc)
+   * @param filename - Nome do arquivo (com ou sem extensão)
    * @param supabase - Cliente Supabase
-   * @param resourceType - Tipo de recurso (artworks, series, artifacts)
-   * @returns Resultado do upload com paths gerados
+   * @param resourceType - Tipo de recurso (artworks, series, artifacts, editor)
    */
-  static async uploadImageBySlug(
+  static async uploadImageById(
     file: File,
-    slug: string,
+    id: string,
+    filename: string,
     supabase: SupabaseClient,
-    resourceType: string = 'artworks'
+    resourceType: string = 'artworks',
+    options: ImageUploadOptions = {}
   ): Promise<ImageUploadResult> {
-    const cleanSlug = this.generateSlug(slug)
     const bucket = STORAGE_BUCKETS.MEDIA
-    // Para artworks, series, artifacts, pode passar type
-    const type = ['artworks', 'series', 'artifacts'].includes(resourceType)
-      ? resourceType
-      : undefined
-    const { optimizedPath, rawPath } = this.generatePaths(
-      cleanSlug,
-      file.name,
+    const includeOptimized =
+      options.includeOptimized ?? resourceType !== 'editor'
+    const { rawPath, optimizedPath, rawFilename } = generateImagePaths(
       resourceType,
-      type
+      id,
+      filename,
+      { includeOptimized }
     )
 
     try {
-      // 1. Upload do arquivo original como raw
       const { error: rawError } = await supabase.storage
         .from(bucket)
         .upload(rawPath, file, {
           contentType: file.type,
-          upsert: true // Permite sobrescrever arquivo existente
+          upsert: true
         })
 
       if (rawError) {
         throw new Error(`Failed to upload raw image: ${rawError.message}`)
       }
 
-      // 2. Se não for editor, otimizar e fazer upload da versão otimizada
-      if (resourceType !== 'editor') {
+      if (includeOptimized && optimizedPath) {
         const optimized = await optimizeImageFile(file)
 
         const { error: optError } = await supabase.storage
           .from(bucket)
           .upload(optimizedPath, optimized, {
             contentType: 'image/webp',
-            upsert: true // Permite sobrescrever arquivo existente
+            upsert: true
           })
 
         if (optError) {
-          throw new Error(
-            `Failed to upload optimized image: ${optError.message}`
-          )
+          throw new Error(`Failed to upload optimized image: ${optError.message}`)
         }
       }
 
       return {
         success: true,
-        slug: cleanSlug,
-        optimizedPath: resourceType !== 'editor' ? optimizedPath : '',
-        rawPath
+        identifier: id,
+        filename: rawFilename,
+        rawPath,
+        optimizedPath: optimizedPath ?? null
       }
     } catch (error) {
-      // Limpar uploads parciais em caso de erro
       await this.cleanupFailedUpload(supabase, bucket, rawPath, optimizedPath)
       throw error
     }
   }
-
-  /**
-   * Upload com validação automática - compatibilidade com sistema antigo
-   * @deprecated Use uploadImageBySlug instead
-   */
-  // ...existing code...
 
   /**
    * Limpa uploads que falharam parcialmente
@@ -135,15 +97,51 @@ export class ImageUploadService {
     supabase: SupabaseClient,
     bucket: string,
     rawPath: string,
-    optimizedPath: string
+    optimizedPath: string | null
   ): Promise<void> {
+    const pathsToRemove = [rawPath]
+    if (optimizedPath) {
+      pathsToRemove.push(optimizedPath)
+    }
+
     try {
       await Promise.allSettled([
-        supabase.storage.from(bucket).remove([rawPath]),
-        supabase.storage.from(bucket).remove([optimizedPath])
+        supabase.storage.from(bucket).remove(pathsToRemove)
       ])
     } catch (cleanupError) {
       console.warn('Failed to cleanup partial upload:', cleanupError)
+    }
+  }
+
+  /**
+   * Remove imagens baseado em ID
+   */
+  static async removeImagesById(
+    id: string,
+    supabase: SupabaseClient,
+    resourceType: string = 'artworks',
+    filename: string,
+    options: ImageUploadOptions = {}
+  ): Promise<void> {
+    const bucket = STORAGE_BUCKETS.MEDIA
+    const includeOptimized =
+      options.includeOptimized ?? resourceType !== 'editor'
+    const { rawPath, optimizedPath } = generateImagePaths(
+      resourceType,
+      id,
+      filename,
+      { includeOptimized }
+    )
+
+    const paths = [rawPath]
+    if (includeOptimized && optimizedPath) {
+      paths.push(optimizedPath)
+    }
+
+    try {
+      await supabase.storage.from(bucket).remove(paths)
+    } catch (error) {
+      console.warn(`Failed to remove images for id ${id}:`, error)
     }
   }
 
@@ -170,41 +168,6 @@ export class ImageUploadService {
       throw new Error(
         `File too large: ${(file.size / 1024 / 1024).toFixed(2)}MB. Max size: 50MB`
       )
-    }
-  }
-
-  /**
-   * Gera URL pública a partir de um slug (helper function)
-   */
-  static getPublicUrl(
-    slug: string,
-    resourceType: string = 'artworks',
-    imageType: 'optimized' | 'raw' = 'optimized'
-  ): string {
-    const { optimizedPath, rawPath } = this.generatePaths(slug, resourceType)
-    const path = imageType === 'raw' ? rawPath : optimizedPath
-
-    return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${STORAGE_BUCKETS.MEDIA}/${path}`
-  }
-
-  /**
-   * Remove imagens baseado no slug
-   */
-  static async removeImagesBySlug(
-    slug: string,
-    supabase: SupabaseClient,
-    resourceType: string = 'artworks'
-  ): Promise<void> {
-    const { optimizedPath, rawPath } = this.generatePaths(slug, resourceType)
-    const bucket = STORAGE_BUCKETS.MEDIA
-
-    try {
-      await Promise.allSettled([
-        supabase.storage.from(bucket).remove([rawPath]),
-        supabase.storage.from(bucket).remove([optimizedPath])
-      ])
-    } catch (error) {
-      console.warn(`Failed to remove images for slug ${slug}:`, error)
     }
   }
 }

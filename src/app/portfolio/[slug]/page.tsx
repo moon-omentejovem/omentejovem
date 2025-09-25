@@ -35,11 +35,11 @@ export async function generateMetadata({ params }: ArtworkPageProps) {
       title: artwork.title,
       description: artwork.description || '',
       images:
-        artwork.id && artwork.slug
+        artwork.id && (artwork.image_filename || artwork.slug)
           ? [
               getImageUrlFromId(
                 artwork.id,
-                artwork.slug,
+                artwork.image_filename || artwork.slug,
                 'artworks',
                 'optimized'
               )

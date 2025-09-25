@@ -15,6 +15,7 @@ export const ArtworkSchema = z.object({
   type: z.string().min(1), // Changed from enum to match DB
   editions_total: z.number().int().positive().nullable().optional(),
   // Nenhum campo de imagem: resolução via slug/id e helpers
+  image_filename: z.string().optional().nullable(),
   video_url: z.string().url().optional().nullable(),
   blockchain: z.string().optional().nullable(),
   contract_address: z.string().optional().nullable(),
@@ -33,6 +34,7 @@ export const SeriesSchema = z.object({
   slug: z.string().min(1),
   name: z.string().min(1),
   // Nenhum campo de imagem: resolução via slug/id e helpers
+  image_filename: z.string().optional().nullable(),
   created_at: z.string().optional(),
   updated_at: z.string().optional()
 })
@@ -52,6 +54,7 @@ export const ArtifactSchema = z.object({
   highlight_video_url: z.string().url().optional().nullable(),
   link_url: z.string().url().optional().nullable(),
   // Nenhum campo de imagem: resolução via slug/id e helpers
+  image_filename: z.string().optional().nullable(),
   status: z.enum(['draft', 'published']).default('published'),
   created_at: z.string().optional(),
   updated_at: z.string().optional()
