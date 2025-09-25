@@ -34,7 +34,12 @@ export async function GET(request: NextRequest) {
 
     if (error) throw error
 
-    return NextResponse.json({ data, total: count })
+    const seriesWithImage = (data || []).map((series) => ({
+      ...series,
+      imageurl: series.imageurl || null,
+      imageoptimizedurl: series.imageoptimizedurl || null
+    }))
+    return NextResponse.json({ data: seriesWithImage, total: count })
   } catch (error) {
     console.error('Error fetching series:', error)
     return NextResponse.json(
