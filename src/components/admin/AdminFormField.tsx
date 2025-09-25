@@ -1,6 +1,7 @@
 'use client'
 
 import ImageUploadField from '@/components/admin/ImageUploadField'
+import TiptapEditor from '@/components/admin/TiptapEditor'
 import type { FormField, ResourceDescriptor } from '@/types/descriptors'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import {
@@ -163,13 +164,11 @@ export default function AdminFormField({
         <div className="space-y-2">
           <Label htmlFor={field.key} value={field.label || field.key} />
           {/* Substitua por seu editor Tiptap customizado se necessário */}
-          <Textarea
-            id={field.key}
-            value={value || ''}
-            onChange={(e) => onChange(e.target.value)}
+          <TiptapEditor
+            content={value || ''}
+            onChange={(content) => onChange(content)}
             placeholder={field.placeholder}
-            rows={6}
-            color={error ? 'failure' : undefined}
+            editorSlug={`${descriptor.table} + '-' + ${field.key}`}
           />
           {error && <p className="text-red-600 text-sm">{error}</p>}
         </div>
