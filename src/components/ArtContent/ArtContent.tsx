@@ -113,7 +113,7 @@ export function ArtContent({
   }
 
   return (
-    <main className="p-8 md:px-12 lg:px-20 flex flex-col sm:px-6 2xl:pb-8 2xl:px-20 xl:h-screenMinusHeader overflow-hidden xl:overflow-auto">
+    <main className="p-8 md:px-12 lg:px-20 flex flex-col sm:px-6 2xl:pb-8 2xl:px-20 xl:h-screenMinusHeader overflow-visible xl:overflow-auto">
       <VerticalCarousel
         slideIndex={selectedIndex}
         onChangeSlideIndex={setSelectedIndex}

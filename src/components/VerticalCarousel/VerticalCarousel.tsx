@@ -45,7 +45,7 @@ export function VerticalCarousel({
   return (
     <div
       className={cn(
-        'hidden fixed h-[calc(100vh-6.5rem)] top-[6.5rem] right-0 z-20',
+        'hidden fixed h-screen top-0 right-0 z-20',
         'xl:flex',
         '2xl:h-[100vh] 2xl:top-0 xl:right-[5vw]'
       )}

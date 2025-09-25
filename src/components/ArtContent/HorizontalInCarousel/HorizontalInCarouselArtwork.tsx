@@ -40,7 +40,7 @@ export function HorizontalInCarouselArtwork({
   return (
     <section className="animated-section">
       <Swiper
-        className="horizontal-in-carousel"
+        className="horizontal-in-carousel !overflow-visible"
         grabCursor={true}
         modules={[Mousewheel]}
         mousewheel={true}
