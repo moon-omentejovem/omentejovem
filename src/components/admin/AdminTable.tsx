@@ -1,7 +1,6 @@
 'use client'
 
 import type { ListColumn, ResourceDescriptor } from '@/types/descriptors'
-import { getImageUrlFromId } from '@/utils/storage'
 import {
   Cell,
   ColumnDef,
@@ -80,13 +79,7 @@ export default function AdminTable<T extends Record<string, any>>({
         case 'image':
           // Inferir resourceType do descriptor ou do contexto da tabela
           // Use descriptor.table como resourceType (artworks, series, artifacts)
-          const resourceType = descriptor?.table || 'artworks'
-          const imageUrl = getImageUrlFromId(
-            item.id,
-            value,
-            resourceType,
-            'optimized'
-          )
+          const imageUrl = item.imageurl || null
           return imageUrl ? (
             <Image
               src={imageUrl}
@@ -96,7 +89,9 @@ export default function AdminTable<T extends Record<string, any>>({
               className="rounded-lg object-cover border border-gray-200"
             />
           ) : (
-            <span className="text-gray-400">No image</span>
+            <span className="text-gray-400 text-xs">
+              Nenhuma imagem cadastrada
+            </span>
           )
         case 'link':
           return value ? (
@@ -123,7 +118,7 @@ export default function AdminTable<T extends Record<string, any>>({
           return value as React.ReactNode
       }
     },
-    [renderCell, descriptor?.table]
+    [renderCell]
   )
 
   const hasActions = Boolean(

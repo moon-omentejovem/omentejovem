@@ -1,8 +1,6 @@
 'use client'
 
-import { ImageUploadService } from '@/services/image-upload.service'
 import type { FormField, ResourceDescriptor } from '@/types/descriptors'
-import { getImageUrlFromId } from '@/utils/storage'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import {
   FileInput,
@@ -196,42 +194,12 @@ export default function AdminFormField({
       console.log({ formData, slug })
 
       // Usa image_url da API se disponível, senão gera localmente
-      const imageUrl =
-        formData && formData.image_url
-          ? formData.image_url
-          : slug && formData?.id
-            ? getImageUrlFromId(
-                formData.id,
-                slug,
-                descriptor.table,
-                'optimized'
-              )
-            : undefined
+      const imageUrl = formData?.image_url || null
 
-      const handleFileChange = async (
-        e: React.ChangeEvent<HTMLInputElement>
-      ) => {
-        const file = e.target.files?.[0]
-        if (!file || !slug) {
-          toast.error('Slug obrigatório para upload de imagem.')
-          return
-        }
-
-        await toast.promise(
-          (async () => {
-            await ImageUploadService.uploadImageBySlug(
-              file,
-              slug,
-              supabase,
-              descriptor.table
-            )
-            onChange(slug)
-          })(),
-          {
-            loading: 'Enviando imagem...',
-            success: 'Imagem enviada com sucesso!',
-            error: (err) => `Falha no upload: ${err.message}`
-          }
+      // Upload removido: agora apenas exibe imagem já salva
+      const handleFileChange = () => {
+        toast.error(
+          'Upload de imagem desabilitado nesta versão. Use o campo imageurl.'
         )
       }
 
@@ -246,7 +214,7 @@ export default function AdminFormField({
               placeholder={field.placeholder || 'Upload an image'}
             />
           </div>
-          {imageUrl && (
+          {imageUrl ? (
             <div className="mt-2">
               <Image
                 src={imageUrl}
@@ -255,6 +223,12 @@ export default function AdminFormField({
                 height={640}
                 className="object-cover rounded-lg border border-gray-200"
               />
+            </div>
+          ) : (
+            <div className="mt-2">
+              <span className="text-xs text-gray-400">
+                Nenhuma imagem cadastrada
+              </span>
             </div>
           )}
           {error && <p className="text-red-600 text-sm">{error}</p>}

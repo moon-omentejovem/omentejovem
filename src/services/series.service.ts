@@ -6,7 +6,6 @@
  */
 
 import type { Database } from '@/types/supabase'
-import { getImageUrlFromId } from '@/utils/storage'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { cache } from 'react'
 import { BaseService } from './base.service'
@@ -131,11 +130,12 @@ export class SeriesService extends BaseService {
     ): Promise<{
       name: string
       slug: string
+      imageurl?: string | null
     } | null> => {
       return this.safeExecuteQuery(async (supabase) => {
         const { data, error } = await supabase
           .from('series')
-          .select('name, slug')
+          .select('name, slug, imageurl')
           .eq('slug', slug)
           .single()
 
@@ -147,7 +147,7 @@ export class SeriesService extends BaseService {
           return null
         }
 
-        return { name: data.name, slug: data.slug }
+        return { name: data.name, slug: data.slug, imageurl: data.imageurl }
       }, 'getMetadataBySlug')
     }
   )
@@ -244,17 +244,9 @@ export class SeriesService extends BaseService {
           .map((sa: any) => sa.artworks?.slug)
           .filter(Boolean)
 
-        // Usa o id do primeiro artwork relacionado como identificador para coverImage
+        // Novo padrão: coverImage deve ser o imageurl do primeiro artwork, se existir
         const firstArtwork = artworks[0]?.artworks
-        const coverImage =
-          firstArtwork && series.slug
-            ? getImageUrlFromId(
-                firstArtwork.id,
-                series.slug,
-                'series',
-                'optimized'
-              )
-            : undefined
+        const coverImage = firstArtwork?.imageurl || undefined
 
         return {
           name: series.name,

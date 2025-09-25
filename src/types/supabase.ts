@@ -44,7 +44,9 @@ export type Database = {
           content: Json
           created_at: string | null
           exhibitions: Json | null
+          filename: string | null
           id: string
+          imageurl: string | null
           press: Json | null
           socials: Json | null
           updated_at: string | null
@@ -53,7 +55,9 @@ export type Database = {
           content: Json
           created_at?: string | null
           exhibitions?: Json | null
+          filename?: string | null
           id?: string
+          imageurl?: string | null
           press?: Json | null
           socials?: Json | null
           updated_at?: string | null
@@ -62,7 +66,9 @@ export type Database = {
           content?: Json
           created_at?: string | null
           exhibitions?: Json | null
+          filename?: string | null
           id?: string
+          imageurl?: string | null
           press?: Json | null
           socials?: Json | null
           updated_at?: string | null
@@ -73,8 +79,10 @@ export type Database = {
         Row: {
           created_at: string | null
           description: string | null
+          filename: string | null
           highlight_video_url: string | null
           id: string
+          imageurl: string | null
           link_url: string | null
           status: string
           title: string
@@ -83,8 +91,10 @@ export type Database = {
         Insert: {
           created_at?: string | null
           description?: string | null
+          filename?: string | null
           highlight_video_url?: string | null
           id?: string
+          imageurl?: string | null
           link_url?: string | null
           status?: string
           title: string
@@ -93,8 +103,10 @@ export type Database = {
         Update: {
           created_at?: string | null
           description?: string | null
+          filename?: string | null
           highlight_video_url?: string | null
           id?: string
+          imageurl?: string | null
           link_url?: string | null
           status?: string
           title?: string
@@ -110,7 +122,9 @@ export type Database = {
           created_at: string | null
           description: Json | null
           editions_total: number | null
+          filename: string | null
           id: string
+          imageurl: string | null
           is_featured: boolean | null
           is_one_of_one: boolean | null
           mint_date: string | null
@@ -131,7 +145,9 @@ export type Database = {
           created_at?: string | null
           description?: Json | null
           editions_total?: number | null
+          filename?: string | null
           id?: string
+          imageurl?: string | null
           is_featured?: boolean | null
           is_one_of_one?: boolean | null
           mint_date?: string | null
@@ -152,7 +168,9 @@ export type Database = {
           created_at?: string | null
           description?: Json | null
           editions_total?: number | null
+          filename?: string | null
           id?: string
+          imageurl?: string | null
           is_featured?: boolean | null
           is_one_of_one?: boolean | null
           mint_date?: string | null
@@ -171,21 +189,27 @@ export type Database = {
       series: {
         Row: {
           created_at: string | null
+          filename: string | null
           id: string
+          imageurl: string | null
           name: string
           slug: string
           updated_at: string | null
         }
         Insert: {
           created_at?: string | null
+          filename?: string | null
           id?: string
+          imageurl?: string | null
           name: string
           slug: string
           updated_at?: string | null
         }
         Update: {
           created_at?: string | null
+          filename?: string | null
           id?: string
+          imageurl?: string | null
           name?: string
           slug?: string
           updated_at?: string | null

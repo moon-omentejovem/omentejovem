@@ -1,0 +1,474 @@
+{
+  "artworks": {
+    "orfas": [],
+    "faltantes": [
+      {
+        "id": "c1234567-89ab-cdef-0123-456789abcde3",
+        "filename": "sexto-c1234567-89ab-cdef-0123-456789abcde3.webp"
+      },
+      {
+        "id": "b1234567-89ab-cdef-0123-456789abcde4",
+        "filename": "musician-at-ipanema-beach-b1234567-89ab-cdef-0123-456789abcde4.webp"
+      },
+      {
+        "id": "c1234567-89ab-cdef-0123-456789abcdef",
+        "filename": "decimo-c1234567-89ab-cdef-0123-456789abcdef.webp"
+      },
+      {
+        "id": "b1234567-89ab-cdef-0123-456789abcdef",
+        "filename": "my-desires-take-me-places-b1234567-89ab-cdef-0123-456789abcdef.webp"
+      },
+      {
+        "id": "c1234567-89ab-cdef-0123-456789abcde0",
+        "filename": "nono-c1234567-89ab-cdef-0123-456789abcde0.webp"
+      },
+      {
+        "id": "c1234567-89ab-cdef-0123-456789abcde1",
+        "filename": "oitavo-c1234567-89ab-cdef-0123-456789abcde1.webp"
+      },
+      {
+        "id": "a1234567-89ab-cdef-0123-456789abcde1",
+        "filename": "the-tree-a1234567-89ab-cdef-0123-456789abcde1.webp"
+      },
+      {
+        "id": "a1234567-89ab-cdef-0123-456789abcde0",
+        "filename": "the-seed-a1234567-89ab-cdef-0123-456789abcde0.webp"
+      },
+      {
+        "id": "c1234567-89ab-cdef-0123-456789abcde5",
+        "filename": "quarto-c1234567-89ab-cdef-0123-456789abcde5.webp"
+      },
+      {
+        "id": "c1234567-89ab-cdef-0123-456789abcde8",
+        "filename": "primeiro-c1234567-89ab-cdef-0123-456789abcde8.webp"
+      },
+      {
+        "id": "c1234567-89ab-cdef-0123-456789abcde6",
+        "filename": "terceiro-c1234567-89ab-cdef-0123-456789abcde6.webp"
+      },
+      {
+        "id": "d1234567-89ab-cdef-0123-456789abcde0",
+        "filename": "look-at-the-sun-moon-d1234567-89ab-cdef-0123-456789abcde0.webp"
+      },
+      {
+        "id": "d1234567-89ab-cdef-0123-456789abcde5",
+        "filename": "untitled-edition-d1234567-89ab-cdef-0123-456789abcde5.webp"
+      },
+      {
+        "id": "e1234567-89ab-cdef-0123-456789abcdef",
+        "filename": "id-ego-superego-e1234567-89ab-cdef-0123-456789abcdef.webp"
+      },
+      {
+        "id": "e1234567-89ab-cdef-0123-456789abcde1",
+        "filename": "untitled-tezos-1-e1234567-89ab-cdef-0123-456789abcde1.webp"
+      },
+      {
+        "id": "e1234567-89ab-cdef-0123-456789abcde3",
+        "filename": "man-and-creativity-e1234567-89ab-cdef-0123-456789abcde3.webp"
+      },
+      {
+        "id": "c1234567-89ab-cdef-0123-456789abcde4",
+        "filename": "quinto-c1234567-89ab-cdef-0123-456789abcde4.webp"
+      },
+      {
+        "id": "f1234567-89ab-cdef-0123-456789abcde6",
+        "filename": "i-am-where-you-arent-f1234567-89ab-cdef-0123-456789abcde6.webp"
+      },
+      {
+        "id": "e1234567-89ab-cdef-0123-456789abcde4",
+        "filename": "untitled-genesis-e1234567-89ab-cdef-0123-456789abcde4.webp"
+      },
+      {
+        "id": "d1234567-89ab-cdef-0123-456789abcde1",
+        "filename": "fruit-minimalism-overlap-d1234567-89ab-cdef-0123-456789abcde1.webp"
+      },
+      {
+        "id": "ceed11c1-63a0-4d20-b5bb-2617c9caa5cb",
+        "filename": "everything-we-could-have-livedremains-in-my-heart-ceed11c1-63a0-4d20-b5bb-2617c9caa5cb.webp"
+      },
+      {
+        "id": "5d1e7141-9068-494c-95e7-23875cee301e",
+        "filename": "my-desires-take-me-places-my-eclipse-cant-5d1e7141-9068-494c-95e7-23875cee301e.webp"
+      },
+      {
+        "id": "f1234567-89ab-cdef-0123-456789abcde5",
+        "filename": "all-time-high-discovery-f1234567-89ab-cdef-0123-456789abcde5.webp"
+      },
+      {
+        "id": "123066de-e996-4c9b-bd03-ecf4f18c595b",
+        "filename": "dcimo-123066de-e996-4c9b-bd03-ecf4f18c595b.webp"
+      },
+      {
+        "id": "f1234567-89ab-cdef-0123-456789abcde2",
+        "filename": "i-had-dreams-about-you-f1234567-89ab-cdef-0123-456789abcde2.webp"
+      },
+      {
+        "id": "ef1ec7dd-214e-4c20-80dd-16864e3367ea",
+        "filename": "within-reach-ef1ec7dd-214e-4c20-80dd-16864e3367ea.webp"
+      },
+      {
+        "id": "37814a1e-fc9b-40e9-b171-9cbd37bda72c",
+        "filename": "rodeo-37814a1e-fc9b-40e9-b171-9cbd37bda72c.webp"
+      },
+      {
+        "id": "1b228f50-f2a2-4eeb-b6d3-28bdbf390405",
+        "filename": "starfish-among-shoals-1b228f50-f2a2-4eeb-b6d3-28bdbf390405.webp"
+      },
+      {
+        "id": "02593007-db1d-436a-bfc6-905bc4761d1d",
+        "filename": "lugares-02593007-db1d-436a-bfc6-905bc4761d1d.webp"
+      },
+      {
+        "id": "921e980d-fc1b-44c4-9f26-54115cd90fd9",
+        "filename": "afterparty-921e980d-fc1b-44c4-9f26-54115cd90fd9.webp"
+      },
+      {
+        "id": "9a8f2686-82e8-48c7-8812-564b5488a6e4",
+        "filename": "cat-looking-at-an-object-on-a-summer-night-9a8f2686-82e8-48c7-8812-564b5488a6e4.webp"
+      },
+      {
+        "id": "e8600b10-56ba-4e21-808a-81d115c42c93",
+        "filename": "creative-workaholic-e8600b10-56ba-4e21-808a-81d115c42c93.webp"
+      },
+      {
+        "id": "c80ecde0-a624-4b1f-89ca-a4f296966aca",
+        "filename": "between-shapes-and-colors-c80ecde0-a624-4b1f-89ca-a4f296966aca.webp"
+      },
+      {
+        "id": "518a881a-7b55-436c-bf93-b3cb6f3cf29e",
+        "filename": "two-pills-and-my-favorite-sins-518a881a-7b55-436c-bf93-b3cb6f3cf29e.webp"
+      },
+      {
+        "id": "32bb138b-eafd-40b9-a5b5-3a1f7384f08f",
+        "filename": "we-always-find-a-way-32bb138b-eafd-40b9-a5b5-3a1f7384f08f.webp"
+      },
+      {
+        "id": "cd9891e2-f107-4217-a45f-708d852432c2",
+        "filename": "6-dots-cd9891e2-f107-4217-a45f-708d852432c2.webp"
+      },
+      {
+        "id": "c22fcb2d-efa9-4326-b852-9f7484a53f8e",
+        "filename": "the-fruit-c22fcb2d-efa9-4326-b852-9f7484a53f8e.webp"
+      },
+      {
+        "id": "f1234567-89ab-cdef-0123-456789abcde1",
+        "filename": "ground-was-my-teacher-f1234567-89ab-cdef-0123-456789abcde1.webp"
+      },
+      {
+        "id": "f1234567-89ab-cdef-0123-456789abcde4",
+        "filename": "playing-chess-with-love-f1234567-89ab-cdef-0123-456789abcde4.webp"
+      },
+      {
+        "id": "12aa1ef4-7872-4ca3-a2df-201fc79ef1bd",
+        "filename": "garden-12aa1ef4-7872-4ca3-a2df-201fc79ef1bd.webp"
+      },
+      {
+        "id": "53c086be-7827-4cf3-9663-8a141f0a8987",
+        "filename": "happinesss-cycle-53c086be-7827-4cf3-9663-8a141f0a8987.webp"
+      },
+      {
+        "id": "757017f6-f310-4eb7-8229-4b88d9358bda",
+        "filename": "king-kong-757017f6-f310-4eb7-8229-4b88d9358bda.webp"
+      },
+      {
+        "id": "53d93de4-7ac9-4701-bba1-5310a8d7dbe8",
+        "filename": "the-day-i-found-out-i-can-do-everything-53d93de4-7ac9-4701-bba1-5310a8d7dbe8.webp"
+      },
+      {
+        "id": "0a922113-566b-41bc-972f-0b6a945e6a85",
+        "filename": "the-day-i-felt-god-0a922113-566b-41bc-972f-0b6a945e6a85.webp"
+      },
+      {
+        "id": "ac196434-8ace-47bb-ad44-0368941f87eb",
+        "filename": "childhoods-remark-ac196434-8ace-47bb-ad44-0368941f87eb.webp"
+      },
+      {
+        "id": "31110afb-6483-4139-a2c9-0811f7ed5c15",
+        "filename": "something-about-duality-31110afb-6483-4139-a2c9-0811f7ed5c15.webp"
+      },
+      {
+        "id": "1cc621fc-e7ad-4e21-8e4c-65b512fcc0ee",
+        "filename": "omentepepe-1cc621fc-e7ad-4e21-8e4c-65b512fcc0ee.webp"
+      },
+      {
+        "id": "6707d434-9928-4828-918f-e1fc789c6243",
+        "filename": "squdvv-6707d434-9928-4828-918f-e1fc789c6243.webp"
+      },
+      {
+        "id": "48276488-c116-48f9-8439-51109b6346d8",
+        "filename": "lysergic-acid-diethylamide-48276488-c116-48f9-8439-51109b6346d8.webp"
+      },
+      {
+        "id": "bd0585cc-1e3f-443e-8385-0c0da0bb138f",
+        "filename": "a-black-dot-with-a-white-dot-on-a-green-background-bd0585cc-1e3f-443e-8385-0c0da0bb138f.webp"
+      },
+      {
+        "id": "a1234567-89ab-cdef-0123-456789abcdef",
+        "filename": "the-flower-a1234567-89ab-cdef-0123-456789abcdef.webp"
+      },
+      {
+        "id": "d1234567-89ab-cdef-0123-456789abcdef",
+        "filename": "ether-man-ii-d1234567-89ab-cdef-0123-456789abcdef.webp"
+      },
+      {
+        "id": "d1234567-89ab-cdef-0123-456789abcde3",
+        "filename": "purple-moon-d1234567-89ab-cdef-0123-456789abcde3.webp"
+      },
+      {
+        "id": "b1234567-89ab-cdef-0123-456789abcde5",
+        "filename": "the-moon-b1234567-89ab-cdef-0123-456789abcde5.webp"
+      },
+      {
+        "id": "b1234567-89ab-cdef-0123-456789abcde6",
+        "filename": "the-dot-b1234567-89ab-cdef-0123-456789abcde6.webp"
+      },
+      {
+        "id": "b1234567-89ab-cdef-0123-456789abcde3",
+        "filename": "out-of-babylon-b1234567-89ab-cdef-0123-456789abcde3.webp"
+      },
+      {
+        "id": "e1234567-89ab-cdef-0123-456789abcde0",
+        "filename": "destructive-thoughts-e1234567-89ab-cdef-0123-456789abcde0.webp"
+      },
+      {
+        "id": "dd32f110-5995-4ecf-b568-92baec62c933",
+        "filename": "untitled-dd32f110-5995-4ecf-b568-92baec62c933.webp"
+      },
+      {
+        "id": "42b04b3c-9b09-45d7-a733-ae474d3ca1fa",
+        "filename": "identity-disorder-42b04b3c-9b09-45d7-a733-ae474d3ca1fa.webp"
+      },
+      {
+        "id": "d1234567-89ab-cdef-0123-456789abcde4",
+        "filename": "ether-man-d1234567-89ab-cdef-0123-456789abcde4.webp"
+      },
+      {
+        "id": "94967e10-c6b4-48e2-bda5-a12ff8008955",
+        "filename": "weird-party-94967e10-c6b4-48e2-bda5-a12ff8008955.webp"
+      },
+      {
+        "id": "c4d3bbf5-8e25-4a1c-9799-16244afbd304",
+        "filename": "sun-moon-c4d3bbf5-8e25-4a1c-9799-16244afbd304.webp"
+      },
+      {
+        "id": "c1234567-89ab-cdef-0123-456789abcde7",
+        "filename": "segundo-c1234567-89ab-cdef-0123-456789abcde7.webp"
+      },
+      {
+        "id": "b1234567-89ab-cdef-0123-456789abcde2",
+        "filename": "everything-we-could-have-lived-b1234567-89ab-cdef-0123-456789abcde2.webp"
+      },
+      {
+        "id": "f1234567-89ab-cdef-0123-456789abcde8",
+        "filename": "he-left-as-a-dot-f1234567-89ab-cdef-0123-456789abcde8.webp"
+      },
+      {
+        "id": "992db9fe-2818-4ae6-abb8-23ab8d342ed0",
+        "filename": "phases-992db9fe-2818-4ae6-abb8-23ab8d342ed0.webp"
+      },
+      {
+        "id": "fa42a88a-2e21-47b8-9625-a8f25adb9e91",
+        "filename": "the-day-i-met-you-fa42a88a-2e21-47b8-9625-a8f25adb9e91.webp"
+      },
+      {
+        "id": "d1234567-89ab-cdef-0123-456789abcde2",
+        "filename": "mc-moon-d1234567-89ab-cdef-0123-456789abcde2.webp"
+      },
+      {
+        "id": "59d71728-302c-415a-9cc3-8a555327bae5",
+        "filename": "thriving-through-illusion-59d71728-302c-415a-9cc3-8a555327bae5.webp"
+      },
+      {
+        "id": "f1234567-89ab-cdef-0123-456789abcdef",
+        "filename": "sitting-at-the-edge-f1234567-89ab-cdef-0123-456789abcdef.webp"
+      },
+      {
+        "id": "2d8c33c7-35dd-4b4e-ae2c-9f55beebb2e5",
+        "filename": "still-untitled-2d8c33c7-35dd-4b4e-ae2c-9f55beebb2e5.webp"
+      },
+      {
+        "id": "77b31a4b-bad0-4fa6-9e22-55f2a435fe24",
+        "filename": "two-voices-one-circles-77b31a4b-bad0-4fa6-9e22-55f2a435fe24.webp"
+      },
+      {
+        "id": "b1234567-89ab-cdef-0123-456789abcde1",
+        "filename": "ups-and-downs-b1234567-89ab-cdef-0123-456789abcde1.webp"
+      },
+      {
+        "id": "f7c0cc33-843f-4154-a51b-0ed7132b2ddb",
+        "filename": "stimo-f7c0cc33-843f-4154-a51b-0ed7132b2ddb.webp"
+      },
+      {
+        "id": "fb7e3611-de5e-4d6d-9b05-74867f4b73b7",
+        "filename": "smoking-my-thoughts-fb7e3611-de5e-4d6d-9b05-74867f4b73b7.webp"
+      },
+      {
+        "id": "96bc9fb5-e514-46ac-8da8-6e9ee3b1f516",
+        "filename": "the-ground-was-my-teacher-96bc9fb5-e514-46ac-8da8-6e9ee3b1f516.webp"
+      },
+      {
+        "id": "f31ae724-1f98-47be-89de-27c30c294a1d",
+        "filename": "the-inanimate-world-of-the-exaggerated-f31ae724-1f98-47be-89de-27c30c294a1d.webp"
+      },
+      {
+        "id": "83511a3a-5ed7-45f7-8975-4a62f0f859df",
+        "filename": "garden-bidder-poap-83511a3a-5ed7-45f7-8975-4a62f0f859df.webp"
+      },
+      {
+        "id": "8f4dd62a-4a8f-43ae-8588-2492f7daec9a",
+        "filename": "before-cycles-could-turn-in-stories-8f4dd62a-4a8f-43ae-8588-2492f7daec9a.webp"
+      },
+      {
+        "id": "24422ebb-362d-411b-952f-20fd1a80050c",
+        "filename": "fruit-of-minimalism-and-overlap-24422ebb-362d-411b-952f-20fd1a80050c.webp"
+      },
+      {
+        "id": "ce1f3a5a-631d-4bf2-adde-f40e2ced217c",
+        "filename": "between-the-sun-and-moon-ce1f3a5a-631d-4bf2-adde-f40e2ced217c.webp"
+      },
+      {
+        "id": "ffa3754f-9031-4897-8f97-f4ccb7cfd4c4",
+        "filename": "musician-at-ipanemas-beach-ffa3754f-9031-4897-8f97-f4ccb7cfd4c4.webp"
+      },
+      {
+        "id": "7e4e9047-64ca-4948-8ccf-d408eb480144",
+        "filename": "peixe-dourado-no-azul-7e4e9047-64ca-4948-8ccf-d408eb480144.webp"
+      },
+      {
+        "id": "c1234567-89ab-cdef-0123-456789abcde2",
+        "filename": "setimo-c1234567-89ab-cdef-0123-456789abcde2.webp"
+      },
+      {
+        "id": "b1234567-89ab-cdef-0123-456789abcde0",
+        "filename": "between-sun-and-moon-b1234567-89ab-cdef-0123-456789abcde0.webp"
+      },
+      {
+        "id": "e1234567-89ab-cdef-0123-456789abcde2",
+        "filename": "my-feelings-on-jpeg-e1234567-89ab-cdef-0123-456789abcde2.webp"
+      },
+      {
+        "id": "a3817a75-2483-41b9-878c-2261e840cad1",
+        "filename": "late-night-love-a3817a75-2483-41b9-878c-2261e840cad1.webp"
+      },
+      {
+        "id": "cf2eca0e-2823-441a-ab37-0b6e1df1764b",
+        "filename": "the-search-cf2eca0e-2823-441a-ab37-0b6e1df1764b.webp"
+      },
+      {
+        "id": "975ae243-9bf7-44d3-bc70-72735f578718",
+        "filename": "auri-sacra-fames-975ae243-9bf7-44d3-bc70-72735f578718.webp"
+      },
+      {
+        "id": "020cd173-d758-48af-a5e8-cf9259b87e58",
+        "filename": "look-at-the-sun-look-at-the-moon-020cd173-d758-48af-a5e8-cf9259b87e58.webp"
+      },
+      {
+        "id": "f1234567-89ab-cdef-0123-456789abcde3",
+        "filename": "mapping-the-unseen-f1234567-89ab-cdef-0123-456789abcde3.webp"
+      },
+      {
+        "id": "6f20c338-bb3e-4a4e-b4a0-194c1d434cd3",
+        "filename": "childhood-s-remark-6f20c338-bb3e-4a4e-b4a0-194c1d434cd3.webp"
+      },
+      {
+        "id": "f1234567-89ab-cdef-0123-456789abcde0",
+        "filename": "two-voices-one-circle-f1234567-89ab-cdef-0123-456789abcde0.webp"
+      },
+      {
+        "id": "f1234567-89ab-cdef-0123-456789abcde7",
+        "filename": "before-birth-f1234567-89ab-cdef-0123-456789abcde7.webp"
+      },
+      {
+        "id": "3f1a0434-b54e-4855-b58f-07afc076be9f",
+        "filename": "my-desires-take-me-places-my-eclipse-can-t-3f1a0434-b54e-4855-b58f-07afc076be9f.webp"
+      },
+      {
+        "id": "e78345c5-df2b-4322-b42a-cf22396b93a7",
+        "filename": "everything-we-could-have-lived-remains-in-my-heart-e78345c5-df2b-4322-b42a-cf22396b93a7.webp"
+      },
+      {
+        "id": "2a3fd82c-c71f-4706-9eca-d34a125bf0b7",
+        "filename": "publicao-de-teste-2a3fd82c-c71f-4706-9eca-d34a125bf0b7.webp"
+      },
+      {
+        "id": "038e6a17-8a79-4c6e-9181-be2ad3191bf9",
+        "filename": "musician-at-ipanema-s-beach-038e6a17-8a79-4c6e-9181-be2ad3191bf9.webp"
+      },
+      {
+        "id": "755af381-5a69-46ad-87be-2a2df938c2f0",
+        "filename": "happiness-s-cycle-755af381-5a69-46ad-87be-2a2df938c2f0.webp"
+      },
+      {
+        "id": "3e348285-d820-44cf-87f2-2db082920252",
+        "filename": "i-am-where-you-aren-t-3e348285-d820-44cf-87f2-2db082920252.webp"
+      },
+      {
+        "id": "b3ecb5d7-0a08-4f78-9bfd-556a86efdd02",
+        "filename": "id-ego-and-superego-b3ecb5d7-0a08-4f78-9bfd-556a86efdd02.webp"
+      },
+      {
+        "id": "222c86c8-14c0-4791-ba3c-15bee8762f67",
+        "filename": "the-man-and-his-creativity-222c86c8-14c0-4791-ba3c-15bee8762f67.webp"
+      },
+      {
+        "id": "a99c7c73-23e7-4dc6-ba4b-a54b52aed665",
+        "filename": "my-feelings-on-a-jpeg-a99c7c73-23e7-4dc6-ba4b-a54b52aed665.webp"
+      },
+      {
+        "id": "e306ed25-2c79-4856-b7b6-c9f38df2cc4f",
+        "filename": "cheap-problems-e306ed25-2c79-4856-b7b6-c9f38df2cc4f.webp"
+      }
+    ],
+    "totalBucket": 0,
+    "totalDb": 104
+  },
+  "series": {
+    "orfas": [],
+    "faltantes": [
+      {
+        "id": "01234567-89ab-cdef-0123-456789abcde6",
+        "filename": "new-series-01234567-89ab-cdef-0123-456789abcde6.webp"
+      },
+      {
+        "id": "01234567-89ab-cdef-0123-456789abcde1",
+        "filename": "shapes-colors-01234567-89ab-cdef-0123-456789abcde1.webp"
+      },
+      {
+        "id": "01234567-89ab-cdef-0123-456789abcdef",
+        "filename": "the-cycle-01234567-89ab-cdef-0123-456789abcdef.webp"
+      }
+    ],
+    "totalBucket": 0,
+    "totalDb": 3
+  },
+  "artifacts": {
+    "orfas": [],
+    "faltantes": [
+      {
+        "id": "91234567-89ab-cdef-0123-456789abcde0",
+        "filename": "The Cycle Collection-91234567-89ab-cdef-0123-456789abcde0.webp"
+      },
+      {
+        "id": "91234567-89ab-cdef-0123-456789abcdef",
+        "filename": "Stories on Circles Print Collection-91234567-89ab-cdef-0123-456789abcdef.webp"
+      },
+      {
+        "id": "91234567-89ab-cdef-0123-456789abcde1",
+        "filename": "Stories on Circles Cover-91234567-89ab-cdef-0123-456789abcde1.webp"
+      }
+    ],
+    "totalBucket": 0,
+    "totalDb": 3
+  },
+  "about_page": {
+    "orfas": [],
+    "faltantes": [
+      {
+        "id": "81234567-89ab-cdef-0123-456789abcdef",
+        "filename": "81234567-89ab-cdef-0123-456789abcdef-81234567-89ab-cdef-0123-456789abcdef.webp"
+      }
+    ],
+    "totalBucket": 0,
+    "totalDb": 1
+  }
+}

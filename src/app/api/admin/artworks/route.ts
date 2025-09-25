@@ -1,7 +1,6 @@
 import { supabaseAdmin } from '@/lib/supabase-admin'
 import { CreateArtworkSchema } from '@/types/schemas'
 import type { Database } from '@/types/supabase'
-import { getImageUrlFromId } from '@/utils/storage'
 import { revalidateTag } from 'next/cache'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -19,7 +18,9 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '20')
     const from = (page - 1) * limit
     const to = from + limit - 1
+
     const status = searchParams.get('status')
+    const featured = searchParams.get('featured')
 
     let query = supabaseAdmin
       .from('artworks')
@@ -38,6 +39,10 @@ export async function GET(request: NextRequest) {
       query = query.eq('status', status)
     }
 
+    if (featured === 'true') {
+      query = query.eq('featured', true)
+    }
+
     const { data, count, error } = await query.range(from, to)
 
     if (error) throw error
@@ -45,10 +50,7 @@ export async function GET(request: NextRequest) {
     // Adiciona campo image_url resolvido para cada artwork
     const artworksWithImage = (data || []).map((artwork) => ({
       ...artwork,
-      image_url:
-        artwork.id && artwork.slug
-          ? getImageUrlFromId(artwork.id, artwork.slug, 'artworks', 'optimized')
-          : null
+      image_url: artwork.imageurl || null
     }))
     return NextResponse.json({ data: artworksWithImage, total: count })
   } catch (error) {
@@ -102,10 +104,7 @@ export async function POST(request: NextRequest) {
     // Adiciona campo image_url resolvido
     const artworkWithImage = {
       ...artwork,
-      image_url:
-        artwork.id && artwork.slug
-          ? getImageUrlFromId(artwork.id, artwork.slug, 'artworks', 'optimized')
-          : null
+      image_url: artwork.imageurl || null
     }
     return NextResponse.json(artworkWithImage, { status: 201 })
   } catch (error) {

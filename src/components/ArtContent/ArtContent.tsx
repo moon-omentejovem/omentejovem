@@ -9,7 +9,6 @@
 
 import { useCarouselNavigation } from '@/hooks/useCarouselNavigation'
 import { Artwork } from '@/types/artwork'
-import { getImageUrlFromId } from '@/utils/storage'
 import { ReactElement, useCallback, useState } from 'react'
 import { HorizontalCarousel } from '../HorizontalCarousel/HorizontalCarousel'
 import { VerticalCarousel } from '../VerticalCarousel/VerticalCarousel'
@@ -57,15 +56,10 @@ export function ArtContent({
     [handleNavigation]
   )
 
-  // Transform artworks to carousel format
+  // Transform artworks to carousel format (usa imageurl direto do banco)
   const carouselSlides = filteredArtworks.map((artwork) => ({
     name: artwork.title || '',
-    imageUrl: getImageUrlFromId(
-      artwork.id,
-      artwork.slug,
-      'artworks',
-      'optimized'
-    ),
+    imageUrl: artwork.imageurl || null,
     slug: artwork.slug
   }))
 

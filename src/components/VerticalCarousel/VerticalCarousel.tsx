@@ -17,7 +17,7 @@ interface VerticalCarouselProperties {
   onChangeSlideIndex: (index: number) => void
   slides: {
     name: string
-    imageUrl: string
+    imageUrl: string | null
     slug?: string
   }[]
   getMoreSlides?: () => void
@@ -64,15 +64,14 @@ export function VerticalCarousel({
         centeredSlides={true}
         onSlideChange={(e: SwiperType) => {
           const newIndex = e.realIndex % slides.length
-          // Atualiza o índice local e navega sem recarregar (usando replace)
           onChangeSlideIndex(newIndex)
-          onRedirect?.(newIndex, true) // true = replace (não adiciona ao histórico)
+          onRedirect?.(newIndex, true)
         }}
         onSlideChangeTransitionEnd={(swiperInstance: SwiperType) => {
           handleGetMoreslides(swiperInstance)
         }}
       >
-        {[...slides].map((art, index) => (
+        {slides.map((art, index) => (
           <SwiperSlide
             key={`${art.name}.${index}`}
             className="h-[150px] max-h-[150px]"
@@ -83,7 +82,7 @@ export function VerticalCarousel({
             >
               <div
                 className="cursor-pointer w-full h-full"
-                onClick={() => onRedirect?.(index, false)} // false = push (adiciona ao histórico)
+                onClick={() => onRedirect?.(index, false)}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault()
@@ -94,24 +93,33 @@ export function VerticalCarousel({
                 tabIndex={0}
                 aria-label={`View ${art.name}`}
               >
-                <Image
-                  src={art.imageUrl}
-                  alt={art.name}
-                  width={150}
-                  height={150}
-                  className="h-full w-full object-cover lazy-load-img"
-                  loading="lazy"
-                  onLoad={addLoadedClass}
-                />
+                {art.imageUrl ? (
+                  <Image
+                    src={art.imageUrl}
+                    alt={art.name}
+                    width={150}
+                    height={150}
+                    className="h-full w-full object-cover lazy-load-img"
+                    loading="lazy"
+                    onLoad={addLoadedClass}
+                  />
+                ) : (
+                  <div className="h-full w-full flex items-center justify-center bg-white">
+                    <span className="text-xs text-gray-400">
+                      Nenhuma imagem cadastrada
+                    </span>
+                  </div>
+                )}
               </div>
-
-              {redirectSource && art.slug && (
+              {redirectSource && art.slug ? (
                 <Link
                   href={`/${redirectSource}/${art.slug}`}
                   aria-label={art.name}
                   className="absolute inset-0 z-10"
-                />
-              )}
+                >
+                  <span className="sr-only">Go to {art.name}</span>
+                </Link>
+              ) : null}
             </div>
           </SwiperSlide>
         ))}

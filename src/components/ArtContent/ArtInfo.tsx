@@ -12,7 +12,7 @@ import { ArtDetails } from '@/components/ArtDetails'
 import { ArtLinks } from '@/components/ArtLinks'
 import { cn } from '@/lib/utils'
 import { Artwork } from '@/types/artwork'
-import { getImageUrlFromId } from '@/utils/storage'
+// Removed legacy getImageUrlFromId
 import { addHours, format } from 'date-fns'
 import { HorizontalInCarouselArtwork } from './HorizontalInCarousel/HorizontalInCarouselArtwork'
 import './styles.css'
@@ -146,18 +146,8 @@ export function ArtInfo({
         <div className="md:flex-1 min-w-[200px] xl:min-w-[350px] flex flex-col max-h-full">
           <div className="xl:art-detail-inner-container overflow-hidden flex flex-1 justify-start xl:justify-end">
             <ArtDetails
-              detailedImage={getImageUrlFromId(
-                selectedArtwork.id,
-                selectedArtwork.slug,
-                'artworks',
-                'raw'
-              )}
-              image={getImageUrlFromId(
-                selectedArtwork.id,
-                selectedArtwork.slug,
-                'artworks',
-                'optimized'
-              )}
+              detailedImage={selectedArtwork.imageurl || '/placeholder.png'}
+              image={selectedArtwork.imageurl || '/placeholder.png'}
               name={selectedArtwork.title || ''}
             />
           </div>
@@ -333,20 +323,7 @@ export function ArtInfo({
               className="w-auto h-auto max-w-full max-h-[90vh] rounded-lg"
               controls
               autoPlay
-              src={
-                selectedArtwork.video_url ||
-                (() => {
-                  const rawUrl = getImageUrlFromId(
-                    selectedArtwork.id,
-                    selectedArtwork.slug,
-                    'artworks',
-                    'raw'
-                  )
-                  return rawUrl
-                    .replace('/raw/', '/videos/')
-                    .replace('.jpg', '.mp4')
-                })()
-              }
+              src={selectedArtwork.video_url || ''}
             >
               <track kind="captions" srcLang="en" label="English" />
               Your browser does not support the video tag.
