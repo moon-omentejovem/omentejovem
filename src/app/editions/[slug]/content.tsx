@@ -18,7 +18,7 @@ export default function ArtworkContent({
       artworks={artworks}
       initialSelectedIndex={initialSelectedIndex}
       source="editions"
-      email="contact@omentejovem.com"
+      contactEmail="contact@omentejovem.com"
     />
   )
 }

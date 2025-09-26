@@ -189,7 +189,8 @@ async function healthCheck() {
   return results
 }
 
-// Executar automaticamente
-healthCheck().catch(console.error)
+if (require.main === module) {
+  healthCheck().catch(console.error)
+}
 
-module.exports = { healthCheck  }
+module.exports = { healthCheck }

@@ -1,19 +1,30 @@
-import { Artwork } from '@/types/artwork'
+import type { Artwork, ExternalLink } from '@/types/artwork'
 
-export function resolveExternalLinks(selectedArt: Artwork) {
-  // Simplified external links logic for Backend-Oriented approach
-  // Most logic removed since contract/chain data not available in current Supabase schema
-
-  let externalLinkName = 'View NFT'
-  let externalLinkUrl = selectedArt.mint_link || ''
-
-  let secondaryExternalLinkName = ''
-  let secondaryExternalLinkUrl = ''
-
-  return {
-    externalLinkName,
-    externalLinkUrl,
-    secondaryExternalLinkName,
-    secondaryExternalLinkUrl
+/**
+ * Normalises external links coming from Supabase so components can rely on a
+ * predictable structure. Whenever the backend exposes a `mint_link`, we expose
+ * the host name as the label (e.g. SuperRare, Objkt) to keep the UI concise.
+ */
+export function resolveExternalLinks(artwork: Artwork): ExternalLink[] {
+  if (!artwork.mint_link) {
+    return []
   }
+
+  let label = 'NFT'
+
+  try {
+    const { hostname } = new URL(artwork.mint_link)
+    label = hostname.replace(/^www\./, '')
+    const [firstSegment] = label.split('.')
+    label = (firstSegment || label).toUpperCase()
+  } catch (error) {
+    label = 'NFT'
+  }
+
+  return [
+    {
+      name: label,
+      url: artwork.mint_link
+    }
+  ]
 }

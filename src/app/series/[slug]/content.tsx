@@ -33,8 +33,8 @@ export default function SeriesContentWrapper({
       artworks={artworks}
       initialSelectedIndex={initialSelectedIndex}
       source={`series/${seriesInfo?.slug || 'unknown'}`}
-      email="contact@omentejovem.com"
-      showGridView={true}
+      contactEmail="contact@omentejovem.com"
+      enableGridView={true}
     />
   )
 }
