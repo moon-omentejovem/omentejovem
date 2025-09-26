@@ -1,5 +1,6 @@
 'use client'
 
+import { cn } from '@/lib/utils'
 import type { ListColumn, ResourceDescriptor } from '@/types/descriptors'
 import {
   Cell,
@@ -119,7 +120,13 @@ export default function AdminTable<T extends Record<string, any>>({
           return <span className="line-clamp-2">{value}</span>
         case 'badge':
           return (
-            <span className="px-2 py-1 text-xs rounded-full bg-gray-100">
+            <span
+              className={cn('px-2 py-1 text-xs rounded-full bg-gray-100', {
+                'bg-green-100 text-green-800': value === 'published',
+                'bg-yellow-100 text-yellow-800': value === 'draft',
+                'bg-red-100 text-red-800': value === 'archived'
+              })}
+            >
               {value}
             </span>
           )

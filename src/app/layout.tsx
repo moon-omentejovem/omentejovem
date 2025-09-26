@@ -13,7 +13,8 @@ export const metadata: Metadata = {
   ),
   title: 'omentejovem',
   description: 'omentejovem website',
-  manifest: '/manifest.json'
+  manifest: '/manifest.json',
+  authors: [{ name: 'Luis Bovo', url: 'https://luisbovo.com' }]
 }
 
 export const viewport = {
