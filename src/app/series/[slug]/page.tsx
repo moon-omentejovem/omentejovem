@@ -1,6 +1,5 @@
 import { getSeriesPageData } from '@/lib/server-data'
 import { SeriesService } from '@/services'
-import { getImageUrlFromId } from '@/utils/storage'
 import { notFound } from 'next/navigation'
 import SeriesContentWrapper from './content'
 
@@ -29,33 +28,13 @@ export async function generateMetadata({ params }: SeriesPageProps) {
     }
   }
 
-  // Função para converter slug
-  const toSlug = (str: string) =>
-    str
-      ?.toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)/g, '')
-
-  // Gerar URL da imagem de capa da série
-  const imageUrl =
-    seriesMetadata?.slug && typeof seriesMetadata.slug === 'string'
-      ? [
-          getImageUrlFromId(
-            seriesMetadata.slug,
-            toSlug(seriesMetadata.slug),
-            'series',
-            'optimized'
-          )
-        ]
-      : []
-
   return {
     title: `${seriesMetadata.name} - Mente Jovem`,
     description: `Explore the ${seriesMetadata.name} series artwork collection`,
     openGraph: {
       title: seriesMetadata.name,
       description: `Collection: ${seriesMetadata.name}`,
-      images: imageUrl
+      images: seriesMetadata.imageurl ? [seriesMetadata.imageurl] : []
     }
   }
 }

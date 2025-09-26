@@ -74,7 +74,7 @@ export class ArtworkService extends BaseService {
 }
 ```
 
-**Atenção:** Não existe mais campo de path de imagem no banco. Use apenas image_url ou cover_image_url para armazenar referências de imagem.
+**Atenção:** Não existe mais campo de path de imagem no banco. Use apenas os campos `imageurl` (principal) e, quando aplicável, `imageoptimizedurl` para armazenar referências de imagem. O campo `image_url` foi descontinuado.
 
 ### Resultados de Build
 

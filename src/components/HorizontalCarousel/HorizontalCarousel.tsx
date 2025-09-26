@@ -21,7 +21,7 @@ interface HorizontalCarouselProperties {
   loading?: boolean
   slides: {
     name: string
-    imageUrl: string
+    imageUrl: string | null
     slug?: string
   }[]
   redirectSource?: string
@@ -125,18 +125,26 @@ export function HorizontalCarousel({
                       tabIndex={0}
                       aria-label={`View ${slide.name}`}
                     >
-                      <Image
-                        src={slide.imageUrl}
-                        alt={slide.name}
-                        width={768}
-                        height={768}
-                        sizes="(max-width: 640px) 192px, (max-width: 1536px) 256px, 352px"
-                        className="h-full w-48 object-cover sm:w-64 2xl:w-[22rem] lazy-load-img"
-                        loading="lazy"
-                        onLoad={addLoadedClass}
-                        placeholder="blur"
-                        blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkbHB0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
-                      />
+                      {slide.imageUrl ? (
+                        <Image
+                          src={slide.imageUrl}
+                          alt={slide.name}
+                          width={768}
+                          height={768}
+                          sizes="(max-width: 640px) 192px, (max-width: 1536px) 256px, 352px"
+                          className="h-full w-48 object-cover sm:w-64 2xl:w-[22rem] lazy-load-img"
+                          loading="lazy"
+                          onLoad={addLoadedClass}
+                          placeholder="blur"
+                          blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkbHB0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                        />
+                      ) : (
+                        <div className="h-full w-full flex items-center justify-center bg-white">
+                          <span className="text-xs text-gray-400">
+                            Nenhuma imagem cadastrada
+                          </span>
+                        </div>
+                      )}
                     </div>
                   </div>
 

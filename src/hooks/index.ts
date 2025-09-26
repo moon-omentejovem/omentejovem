@@ -4,7 +4,6 @@
 
 // Artwork hooks
 export * from './useArtworks'
-export * from './useHomeArtworks'
 
 // Navigation hooks
 export * from './useCarouselNavigation'
@@ -15,5 +14,5 @@ export * from './useSeries'
 // Other hooks
 export * from './useAboutPage'
 export * from './useArtifacts'
-export * from './useUserRoles'
 export * from './useConfirm'
+export * from './useUserRoles'

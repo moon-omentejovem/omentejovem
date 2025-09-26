@@ -33,7 +33,12 @@ export default function AdminForm<T extends Record<string, any>>({
 
   useEffect(() => {
     if (data) {
-      setFormData(data)
+      // Se vier imageurl mas não image, preenche image para evitar erro de required
+      const patchedData = { ...data }
+      if (patchedData.imageurl && !patchedData.image) {
+        ;(patchedData as Record<string, any>)['image'] = patchedData.imageurl
+      }
+      setFormData(patchedData)
     } else {
       // Initialize form with default values
       const initialData: Record<string, any> = {}
@@ -217,7 +222,6 @@ export default function AdminForm<T extends Record<string, any>>({
       />
     )
   }
-
   return (
     <div className="max-w-4xl mx-auto px-4">
       <div className="flex flex-col gap-4 mb-6 sm:flex-row sm:items-center sm:justify-between">

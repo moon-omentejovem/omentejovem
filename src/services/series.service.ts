@@ -6,7 +6,6 @@
  */
 
 import type { Database } from '@/types/supabase'
-import { getImageUrlFromSlug } from '@/utils/storage'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { cache } from 'react'
 import { BaseService } from './base.service'
@@ -131,11 +130,12 @@ export class SeriesService extends BaseService {
     ): Promise<{
       name: string
       slug: string
+      imageurl?: string | null
     } | null> => {
       return this.safeExecuteQuery(async (supabase) => {
         const { data, error } = await supabase
           .from('series')
-          .select('name, slug')
+          .select('name, slug, imageurl')
           .eq('slug', slug)
           .single()
 
@@ -147,7 +147,7 @@ export class SeriesService extends BaseService {
           return null
         }
 
-        return { name: data.name, slug: data.slug }
+        return { name: data.name, slug: data.slug, imageurl: data.imageurl }
       }, 'getMetadataBySlug')
     }
   )
@@ -214,6 +214,8 @@ export class SeriesService extends BaseService {
           slug,
           created_at,
           slug,
+          imageoptimizedurl,
+          imageurl,
           series_artworks(
             artworks(
               id,
@@ -244,17 +246,14 @@ export class SeriesService extends BaseService {
           .map((sa: any) => sa.artworks?.slug)
           .filter(Boolean)
 
-        // Generate cover image URL from series slug
-        const coverImage = series.slug
-          ? getImageUrlFromSlug(series.slug, 'series', 'optimized')
-          : undefined
+        const coverImage = artworks[0]?.imageurl || undefined
 
         return {
           name: series.name,
           year,
           slug: series.slug,
           nftSlugs,
-          coverImage
+          coverImage: series.imageoptimizedurl || series.imageurl || coverImage
         }
       })
 

@@ -44,7 +44,9 @@ export type Database = {
           content: Json
           created_at: string | null
           exhibitions: Json | null
+          filename: string | null
           id: string
+          imageurl: string | null
           press: Json | null
           socials: Json | null
           updated_at: string | null
@@ -53,7 +55,9 @@ export type Database = {
           content: Json
           created_at?: string | null
           exhibitions?: Json | null
+          filename?: string | null
           id?: string
+          imageurl?: string | null
           press?: Json | null
           socials?: Json | null
           updated_at?: string | null
@@ -62,7 +66,9 @@ export type Database = {
           content?: Json
           created_at?: string | null
           exhibitions?: Json | null
+          filename?: string | null
           id?: string
+          imageurl?: string | null
           press?: Json | null
           socials?: Json | null
           updated_at?: string | null
@@ -73,8 +79,10 @@ export type Database = {
         Row: {
           created_at: string | null
           description: string | null
+          filename: string | null
           highlight_video_url: string | null
           id: string
+          imageurl: string | null
           link_url: string | null
           status: string
           title: string
@@ -83,8 +91,10 @@ export type Database = {
         Insert: {
           created_at?: string | null
           description?: string | null
+          filename?: string | null
           highlight_video_url?: string | null
           id?: string
+          imageurl?: string | null
           link_url?: string | null
           status?: string
           title: string
@@ -93,8 +103,10 @@ export type Database = {
         Update: {
           created_at?: string | null
           description?: string | null
+          filename?: string | null
           highlight_video_url?: string | null
           id?: string
+          imageurl?: string | null
           link_url?: string | null
           status?: string
           title?: string
@@ -110,7 +122,10 @@ export type Database = {
           created_at: string | null
           description: Json | null
           editions_total: number | null
+          filename: string | null
           id: string
+          imageoptimizedurl: string | null
+          imageurl: string | null
           is_featured: boolean | null
           is_one_of_one: boolean | null
           mint_date: string | null
@@ -131,7 +146,10 @@ export type Database = {
           created_at?: string | null
           description?: Json | null
           editions_total?: number | null
+          filename?: string | null
           id?: string
+          imageoptimizedurl?: string | null
+          imageurl?: string | null
           is_featured?: boolean | null
           is_one_of_one?: boolean | null
           mint_date?: string | null
@@ -152,7 +170,10 @@ export type Database = {
           created_at?: string | null
           description?: Json | null
           editions_total?: number | null
+          filename?: string | null
           id?: string
+          imageoptimizedurl?: string | null
+          imageurl?: string | null
           is_featured?: boolean | null
           is_one_of_one?: boolean | null
           mint_date?: string | null
@@ -171,21 +192,30 @@ export type Database = {
       series: {
         Row: {
           created_at: string | null
+          filename: string | null
           id: string
+          imageoptimizedurl: string | null
+          imageurl: string | null
           name: string
           slug: string
           updated_at: string | null
         }
         Insert: {
           created_at?: string | null
+          filename?: string | null
           id?: string
+          imageoptimizedurl?: string | null
+          imageurl?: string | null
           name: string
           slug: string
           updated_at?: string | null
         }
         Update: {
           created_at?: string | null
+          filename?: string | null
           id?: string
+          imageoptimizedurl?: string | null
+          imageurl?: string | null
           name?: string
           slug?: string
           updated_at?: string | null
@@ -225,7 +255,7 @@ export type Database = {
             isOneToOne: false
             referencedRelation: 'series'
             referencedColumns: ['id']
-          },
+          }
         ]
       }
       user_roles: {
@@ -288,7 +318,7 @@ export type Tables<
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])
-    : never = never,
+    : never = never
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -316,7 +346,7 @@ export type TablesInsert<
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
-    : never = never,
+    : never = never
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -341,7 +371,7 @@ export type TablesUpdate<
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
-    : never = never,
+    : never = never
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -366,7 +396,7 @@ export type Enums<
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums']
-    : never = never,
+    : never = never
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -383,7 +413,7 @@ export type CompositeTypes<
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes']
-    : never = never,
+    : never = never
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -394,9 +424,9 @@ export type CompositeTypes<
 
 export const Constants = {
   graphql_public: {
-    Enums: {},
+    Enums: {}
   },
   public: {
-    Enums: {},
-  },
+    Enums: {}
+  }
 } as const

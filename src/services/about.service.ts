@@ -107,8 +107,30 @@ export class AboutService extends BaseService {
         }
       }
 
+      // Parse JSON fields to match AboutPageData types
+      const parsedAboutPage: AboutPageData = {
+        id: aboutPageData.id,
+        content: aboutPageData.content,
+        socials: Array.isArray(aboutPageData.socials)
+          ? aboutPageData.socials
+          : aboutPageData.socials
+            ? JSON.parse(aboutPageData.socials as any)
+            : [],
+        exhibitions: Array.isArray(aboutPageData.exhibitions)
+          ? aboutPageData.exhibitions
+          : aboutPageData.exhibitions
+            ? JSON.parse(aboutPageData.exhibitions as any)
+            : [],
+        press: Array.isArray(aboutPageData.press)
+          ? aboutPageData.press
+          : aboutPageData.press
+            ? JSON.parse(aboutPageData.press as any)
+            : [],
+        created_at: aboutPageData.created_at,
+        updated_at: aboutPageData.updated_at
+      }
       return {
-        aboutPage: aboutPageData as AboutPageData,
+        aboutPage: parsedAboutPage,
         error: null
       }
     }, 'getAboutPageData')

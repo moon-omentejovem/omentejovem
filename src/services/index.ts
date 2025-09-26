@@ -21,9 +21,7 @@ export { ArtifactService } from './artifact.service'
 export { ArtworkService } from './artwork.service'
 export { AuthService } from './auth.service'
 export { BaseService } from './base.service'
-export { ImageUploadService } from './image-upload.service'
 export { SeriesService } from './series.service'
-export { StorageService } from './storage.service'
 
 // Type exports
 export type {
@@ -48,5 +46,3 @@ export type {
   LoginOptions,
   OAuthOptions
 } from './auth.service'
-
-export type { ImageUploadResult } from './image-upload.service'

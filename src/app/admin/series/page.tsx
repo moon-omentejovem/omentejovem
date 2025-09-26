@@ -2,13 +2,13 @@
 
 import AdminLayout from '@/components/admin/AdminLayout'
 import AdminTable from '@/components/admin/AdminTable'
+import { useConfirm } from '@/hooks/useConfirm'
+import { useCreateSeries, useDeleteSeries, useSeries } from '@/hooks/useSeries'
 import { seriesDescriptor } from '@/types/descriptors'
 import type { Database } from '@/types/supabase'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
-import { useConfirm } from '@/hooks/useConfirm'
-import { useSeries, useDeleteSeries, useCreateSeries } from '@/hooks/useSeries'
 
 type SeriesRow = Database['public']['Tables']['series']['Row'] & {
   status?: 'draft' | 'published'
@@ -23,11 +23,7 @@ export default function SeriesPage() {
   const confirm = useConfirm()
 
   // Use hooks instead of manual fetch
-  const { 
-    data: series = [], 
-    isLoading: loading, 
-    error 
-  } = useSeries()
+  const { data: series = [], isLoading: loading, error } = useSeries()
 
   const deleteSeriesMutation = useDeleteSeries()
   const createSeriesMutation = useCreateSeries()
@@ -57,7 +53,9 @@ export default function SeriesPage() {
       toast.success('Series duplicated successfully!')
     } catch (error: any) {
       console.error('Error duplicating series:', error)
-      toast.error(`Failed to duplicate series: ${error?.message || 'Unknown error'}`)
+      toast.error(
+        `Failed to duplicate series: ${error?.message || 'Unknown error'}`
+      )
     }
   }
 
@@ -73,7 +71,9 @@ export default function SeriesPage() {
       toast.success('Series deleted successfully!')
     } catch (error: any) {
       console.error('Error deleting series:', error)
-      toast.error(`Failed to delete series: ${error?.message || 'Unknown error'}`)
+      toast.error(
+        `Failed to delete series: ${error?.message || 'Unknown error'}`
+      )
     }
   }
 
@@ -89,12 +89,25 @@ export default function SeriesPage() {
     )
   }
 
+  // Ensure series_artworks.artworks is non-null and matches the expected type
+  const normalizedSeries = series.map((s) => ({
+    ...s,
+    series_artworks: s.series_artworks
+      ? s.series_artworks
+          .filter((sa) => sa.artworks && typeof sa.artworks === 'object')
+          .map((sa) => ({
+            artworks:
+              sa.artworks as Database['public']['Tables']['artworks']['Row']
+          }))
+      : []
+  }))
+
   return (
     <AdminLayout>
       <div className="p-6">
         <AdminTable
           descriptor={seriesDescriptor}
-          data={series}
+          data={normalizedSeries}
           onEdit={handleEdit}
           onDuplicate={handleDuplicate}
           onDelete={handleDelete}

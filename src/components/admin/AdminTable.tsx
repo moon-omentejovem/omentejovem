@@ -1,7 +1,6 @@
 'use client'
 
 import type { ListColumn, ResourceDescriptor } from '@/types/descriptors'
-import { getImageUrlFromSlugCompat } from '@/utils/storage'
 import {
   Cell,
   ColumnDef,
@@ -80,8 +79,7 @@ export default function AdminTable<T extends Record<string, any>>({
         case 'image':
           // Inferir resourceType do descriptor ou do contexto da tabela
           // Use descriptor.table como resourceType (artworks, series, artifacts)
-          const resourceType = descriptor?.table || 'artworks'
-          const imageUrl = getImageUrlFromSlugCompat(value, resourceType, 'optimized')
+          const imageUrl = item.imageurl || null
           return imageUrl ? (
             <Image
               src={imageUrl}
@@ -91,7 +89,9 @@ export default function AdminTable<T extends Record<string, any>>({
               className="rounded-lg object-cover border border-gray-200"
             />
           ) : (
-            <span className="text-gray-400">No image</span>
+            <span className="text-gray-400 text-xs">
+              Nenhuma imagem cadastrada
+            </span>
           )
         case 'link':
           return value ? (
@@ -106,6 +106,15 @@ export default function AdminTable<T extends Record<string, any>>({
           ) : (
             <span className="text-gray-500">—</span>
           )
+        case 'date':
+        case 'datetime':
+          if (!value) return <span className="text-gray-500">—</span>
+          const date = new Date(value)
+          return (
+            <span className="text-gray-500 text-xs">
+              {date.toLocaleString()}
+            </span>
+          )
         case 'clamp':
           return <span className="line-clamp-2">{value}</span>
         case 'badge':
@@ -118,7 +127,7 @@ export default function AdminTable<T extends Record<string, any>>({
           return value as React.ReactNode
       }
     },
-    [renderCell, descriptor?.table]
+    [renderCell]
   )
 
   const hasActions = Boolean(

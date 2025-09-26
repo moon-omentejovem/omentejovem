@@ -1,5 +1,4 @@
 import { ArtworkService } from '@/services'
-import { getImageUrlFromId } from '@/utils/storage'
 import { notFound } from 'next/navigation'
 import ArtworkContent from './content'
 
@@ -13,7 +12,7 @@ export async function generateStaticParams() {
   // Generate static params for build-time optimization
   const { artworks } = await ArtworkService.getArtworks({ limit: 100 })
 
-  return artworks.map((artwork: any) => ({
+  return artworks.map((artwork) => ({
     slug: artwork.slug
   }))
 }
@@ -34,17 +33,7 @@ export async function generateMetadata({ params }: ArtworkPageProps) {
     openGraph: {
       title: artwork.title,
       description: artwork.description || '',
-      images:
-        artwork.id && artwork.slug
-          ? [
-              getImageUrlFromId(
-                artwork.id,
-                artwork.slug,
-                'artworks',
-                'optimized'
-              )
-            ]
-          : []
+      images: artwork.imageurl ? [artwork.imageurl] : []
     }
   }
 }

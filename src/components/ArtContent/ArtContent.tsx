@@ -9,7 +9,6 @@
 
 import { useCarouselNavigation } from '@/hooks/useCarouselNavigation'
 import { Artwork } from '@/types/artwork'
-import { getImageUrlFromSlugCompat } from '@/utils/storage'
 import { ReactElement, useCallback, useState } from 'react'
 import { HorizontalCarousel } from '../HorizontalCarousel/HorizontalCarousel'
 import { VerticalCarousel } from '../VerticalCarousel/VerticalCarousel'
@@ -57,10 +56,10 @@ export function ArtContent({
     [handleNavigation]
   )
 
-  // Transform artworks to carousel format
+  // Transform artworks to carousel format (usa imageoptimizedurl por padrão)
   const carouselSlides = filteredArtworks.map((artwork) => ({
     name: artwork.title || '',
-    imageUrl: getImageUrlFromSlugCompat(artwork.slug, 'artworks', 'optimized'),
+    imageUrl: artwork.imageoptimizedurl || null,
     slug: artwork.slug
   }))
 
@@ -105,8 +104,16 @@ export function ArtContent({
     )
   }
 
+  // Para o modal fullscreen, garantir uso do imageurl (raw) se disponível
+  const selectedSlide = {
+    name: selectedArtwork.title || '',
+    imageUrl:
+      selectedArtwork.imageurl || selectedArtwork.imageoptimizedurl || null,
+    slug: selectedArtwork.slug
+  }
+
   return (
-    <main className="p-8 md:px-12 lg:px-20 flex flex-col sm:px-6 2xl:pb-8 2xl:px-20 xl:h-screenMinusHeader overflow-hidden xl:overflow-auto">
+    <main className="p-8 md:px-12 lg:px-20 flex flex-col sm:px-6 2xl:pb-8 2xl:px-20 xl:h-screenMinusHeader overflow-visible xl:overflow-auto">
       <VerticalCarousel
         slideIndex={selectedIndex}
         onChangeSlideIndex={setSelectedIndex}

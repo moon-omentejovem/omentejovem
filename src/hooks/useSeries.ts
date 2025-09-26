@@ -41,7 +41,11 @@ export function useSeries(options?: {
         .select(
           `
           *,
-          artwork_count:series_artworks(count)
+        series_artworks(
+          artworks(
+            title
+          )
+        )
         `
         )
         .order('created_at', { ascending: false })
@@ -50,9 +54,7 @@ export function useSeries(options?: {
 
       return (data || []).map((series) => ({
         ...series,
-        artwork_count: Array.isArray(series.artwork_count)
-          ? series.artwork_count.length
-          : 0
+        artworks: series.series_artworks?.map((sa) => sa.artworks).length || 0
       }))
     },
     enabled: options?.enabled ?? true,

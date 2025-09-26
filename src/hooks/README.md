@@ -1,5 +1,9 @@
 # Portfolio Hooks Documentation
 
+⚠️ **Atenção:** Os hooks deste diretório (baseados em React Query) devem ser usados **apenas em páginas e componentes do admin** (`/admin/*`).
+
+Para páginas públicas e server components, utilize sempre as Services (camada server-side) conforme a arquitetura backend-oriented do projeto.
+
 Este diretório contém todos os React Query hooks para consumir os CRUDs do Supabase no portfólio. Os hooks estão organizados por entidade e funcionalidade.
 
 ## Estrutura dos Hooks
