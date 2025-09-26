@@ -15,8 +15,8 @@ export default function EditionsContent({
     <ArtContent
       artworks={artworks}
       source="editions"
-      email="contact@omentejovem.com"
-      showGridView={true}
+      contactEmail="contact@omentejovem.com"
+      enableGridView={true}
     />
   )
 }

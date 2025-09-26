@@ -17,8 +17,8 @@ export default function PortfolioContent({
       artworks={artworks}
       initialSelectedIndex={initialSelectedIndex}
       source="portfolio"
-      email="contact@omentejovem.com"
-      showGridView={true}
+      contactEmail="contact@omentejovem.com"
+      enableGridView={true}
     />
   )
 }

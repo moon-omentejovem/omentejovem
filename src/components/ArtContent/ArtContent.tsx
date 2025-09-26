@@ -8,8 +8,14 @@
 'use client'
 
 import { useCarouselNavigation } from '@/hooks/useCarouselNavigation'
-import { Artwork } from '@/types/artwork'
-import { ReactElement, useCallback, useState } from 'react'
+import type { Artwork } from '@/types/artwork'
+import {
+  ReactElement,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState
+} from 'react'
 import { HorizontalCarousel } from '../HorizontalCarousel/HorizontalCarousel'
 import { VerticalCarousel } from '../VerticalCarousel/VerticalCarousel'
 import { ArtInfo } from './ArtInfo'
@@ -18,77 +24,98 @@ interface ArtContentProps {
   artworks: Artwork[]
   initialSelectedIndex?: number
   source: 'portfolio' | '1-1' | 'editions' | string
-  email?: string
-  showGridView?: boolean
+  contactEmail?: string
+  enableGridView?: boolean
 }
 
 export function ArtContent({
   artworks,
   initialSelectedIndex = -1,
   source,
-  email = 'contact@omentejovem.com',
-  showGridView = true
+  contactEmail = 'contact@omentejovem.com',
+  enableGridView = true
 }: ArtContentProps): ReactElement {
-  // Local state for UI interactions only
-  const [selectedIndex, setSelectedIndex] = useState(initialSelectedIndex)
-  const [filteredArtworks, setFilteredArtworks] = useState(artworks)
-  const [currentPage, setCurrentPage] = useState(1)
+  const sanitizedInitialIndex = useMemo(() => {
+    if (initialSelectedIndex < 0) {
+      return -1
+    }
 
-  // Navigation hook for URL management
+    return initialSelectedIndex < artworks.length
+      ? initialSelectedIndex
+      : -1
+  }, [artworks.length, initialSelectedIndex])
+
+  const [selectedIndex, setSelectedIndex] = useState<number>(
+    sanitizedInitialIndex
+  )
+
+  useEffect(() => {
+    setSelectedIndex(sanitizedInitialIndex)
+  }, [sanitizedInitialIndex, artworks])
+
+  const slides = useMemo(
+    () =>
+      artworks.map((artwork) => ({
+        name: artwork.title || '',
+        imageUrl: artwork.imageoptimizedurl || null,
+        slug: artwork.slug
+      })),
+    [artworks]
+  )
+
   const { handleNavigation } = useCarouselNavigation({
     source,
-    artworks: filteredArtworks,
+    artworks,
     onChangeIndex: setSelectedIndex
   })
 
-  // Handle filter changes (client-side only for immediate feedback)
-  const handleFilterChange = useCallback((filtered: Artwork[]) => {
-    setFilteredArtworks(filtered)
-    setSelectedIndex(-1) // Reset to grid view when filtering
-  }, [])
-
-  // Handle artwork selection
   const handleSelectArtwork = useCallback(
     (index: number, replace = false) => {
+      if (index < 0 || index >= artworks.length) {
+        setSelectedIndex(-1)
+        return
+      }
+
       setSelectedIndex(index)
       handleNavigation(index, replace)
     },
-    [handleNavigation]
+    [artworks.length, handleNavigation]
   )
 
-  // Transform artworks to carousel format (usa imageoptimizedurl por padrão)
-  const carouselSlides = filteredArtworks.map((artwork) => ({
-    name: artwork.title || '',
-    imageUrl: artwork.imageoptimizedurl || null,
-    slug: artwork.slug
-  }))
+  if (artworks.length === 0) {
+    return (
+      <main className="flex items-center justify-center h-screenMinusHeader">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold mb-2">No artworks available</h2>
+          <p className="text-sm text-neutral-400">
+            Publish artworks in the admin dashboard to populate this view.
+          </p>
+        </div>
+      </main>
+    )
+  }
 
-  // Grid view (selectedIndex === -1)
-  if (selectedIndex === -1 && showGridView) {
+  if (selectedIndex === -1 && enableGridView) {
     return (
       <main className="flex flex-col pt-6 h-screenMinusHeader justify-center">
         <HorizontalCarousel
-          currentPage={currentPage}
-          loading={false}
-          slides={carouselSlides}
+          slides={slides}
           redirectSource={source}
-          onRedirect={handleSelectArtwork}
+          onSelect={handleSelectArtwork}
         />
 
-        {/* Simples display da contagem de artworks - sem filtros complexos */}
         <div className="flex justify-center py-4">
           <div className="text-sm text-gray-400">
-            Showing {filteredArtworks.length} artworks
+            Showing {artworks.length} artworks
           </div>
         </div>
       </main>
     )
   }
 
-  // Detail view (selectedIndex >= 0)
-  const selectedArtwork = filteredArtworks[selectedIndex]
+  const artwork = artworks[selectedIndex]
 
-  if (!selectedArtwork) {
+  if (!artwork) {
     return (
       <main className="flex items-center justify-center h-screenMinusHeader">
         <div className="text-center">
@@ -104,30 +131,20 @@ export function ArtContent({
     )
   }
 
-  // Para o modal fullscreen, garantir uso do imageurl (raw) se disponível
-  const selectedSlide = {
-    name: selectedArtwork.title || '',
-    imageUrl:
-      selectedArtwork.imageurl || selectedArtwork.imageoptimizedurl || null,
-    slug: selectedArtwork.slug
-  }
-
   return (
-    <main className="p-8 md:px-12 lg:px-20 flex flex-col sm:px-6 2xl:pb-8 2xl:px-20 xl:h-screenMinusHeader overflow-visible xl:overflow-auto">
+    <main className="p-8 md:px-12 lg:px-20 flex flex-col sm:px-6 2xl:pb-8 2xl:px-20 xl:h-screenMinusHeader overflow-visible xl.overflow-auto">
       <VerticalCarousel
         slideIndex={selectedIndex}
-        onChangeSlideIndex={setSelectedIndex}
-        slides={carouselSlides}
+        slides={slides}
         redirectSource={source}
-        onRedirect={handleSelectArtwork}
+        onSelect={handleSelectArtwork}
       />
 
       <ArtInfo
-        email={email}
-        selectedArtwork={selectedArtwork}
-        slides={filteredArtworks}
-        onChangeSlideIndex={setSelectedIndex}
-        source={source}
+        contactEmail={contactEmail}
+        artwork={artwork}
+        artworks={artworks}
+        onSelectArtwork={handleSelectArtwork}
       />
     </main>
   )

@@ -14,33 +14,21 @@ import { Swiper as SwiperType } from 'swiper/types'
 
 interface VerticalCarouselProperties {
   slideIndex?: number
-  onChangeSlideIndex: (index: number) => void
   slides: {
     name: string
     imageUrl: string | null
     slug?: string
   }[]
-  getMoreSlides?: () => void
   redirectSource?: string
-  onRedirect?: (index: number, replace?: boolean) => void
+  onSelect?: (index: number, replace?: boolean) => void
 }
 
 export function VerticalCarousel({
   slideIndex,
-  onChangeSlideIndex,
   slides,
-  getMoreSlides,
   redirectSource,
-  onRedirect
+  onSelect
 }: VerticalCarouselProperties) {
-  function handleGetMoreslides(swiperInstance: SwiperType) {
-    const currentIndex = swiperInstance.activeIndex
-    const totalSlides = swiperInstance.slides.length
-
-    if (currentIndex >= totalSlides / 2) {
-      getMoreSlides?.()
-    }
-  }
 
   return (
     <div
@@ -64,10 +52,7 @@ export function VerticalCarousel({
         centeredSlides={true}
         onSlideChange={(e: SwiperType) => {
           const newIndex = e.realIndex % slides.length
-          onChangeSlideIndex(newIndex)
-        }}
-        onSlideChangeTransitionEnd={(swiperInstance: SwiperType) => {
-          handleGetMoreslides(swiperInstance)
+          onSelect?.(newIndex, true)
         }}
       >
         {slides.map((art, index) => (
@@ -81,11 +66,11 @@ export function VerticalCarousel({
             >
               <div
                 className="cursor-pointer w-full h-full"
-                onClick={() => onRedirect?.(index, false)}
+                onClick={() => onSelect?.(index, false)}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault()
-                    onRedirect?.(index, false)
+                    onSelect?.(index, false)
                   }
                 }}
                 role="button"

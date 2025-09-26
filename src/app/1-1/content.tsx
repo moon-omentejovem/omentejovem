@@ -17,8 +17,8 @@ export default function OneOfOneContent({
     <ArtContent
       artworks={artworks}
       source="1-1"
-      email="contact@omentejovem.com"
-      showGridView={true}
+      contactEmail="contact@omentejovem.com"
+      enableGridView={true}
     />
   )
 }

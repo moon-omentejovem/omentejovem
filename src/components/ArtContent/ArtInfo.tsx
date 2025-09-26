@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactElement, useEffect, useState } from 'react'
+import { ReactElement, useCallback, useEffect, useMemo, useState } from 'react'
 
 import {
   artInfoButtonAnimation,
@@ -11,130 +11,83 @@ import { CustomIcons } from '@/assets/icons'
 import { ArtDetails } from '@/components/ArtDetails'
 import { ArtLinks } from '@/components/ArtLinks'
 import { cn } from '@/lib/utils'
-import { Artwork } from '@/types/artwork'
-// Removed legacy getImageUrlFromId
-import { addHours, format } from 'date-fns'
-import { HorizontalInCarouselArtwork } from './HorizontalInCarousel/HorizontalInCarouselArtwork'
+import type { Artwork } from '@/types/artwork'
+import {
+  extractDescriptionText,
+  getExplorerLink,
+  getMintedOn,
+  isArtworkMinted,
+  resolveExternalLinks
+} from './utils'
+import { ArtworkThumbnailCarousel } from './HorizontalInCarousel/ArtworkThumbnailCarousel'
 import './styles.css'
 
 interface ArtInfoProps {
-  email: string
-  selectedArtwork: Artwork
-  slides: Artwork[]
-  source: 'portfolio' | '1-1' | 'editions' | string
-  onChangeSlideIndex: (index: number) => void
+  contactEmail: string
+  artwork: Artwork
+  artworks: Artwork[]
+  onSelectArtwork: (index: number) => void
 }
 
 export function ArtInfo({
-  email,
-  selectedArtwork,
-  slides,
-  source,
-  onChangeSlideIndex
+  contactEmail,
+  artwork,
+  artworks,
+  onSelectArtwork
 }: ArtInfoProps): ReactElement {
-  const [isOpenVideo, setIsOpenVideo] = useState(false)
+  const [isVideoOpen, setIsVideoOpen] = useState(false)
   const [isAnimating, setIsAnimating] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
 
-  const hasVideo = !!selectedArtwork.video_url
+  const hasVideo = Boolean(artwork.video_url)
+  const isMinted = useMemo(() => isArtworkMinted(artwork), [artwork])
+  const mintedOn = useMemo(() => getMintedOn(artwork), [artwork])
+  const externalLinks = useMemo(() => resolveExternalLinks(artwork), [artwork])
+  const explorerLink = useMemo(() => getExplorerLink(artwork), [artwork])
+  const descriptionText = useMemo(
+    () => extractDescriptionText(artwork.description),
+    [artwork.description]
+  )
+  const currentIndex = useMemo(
+    () => artworks.findIndex((item) => item.id === artwork.id),
+    [artworks, artwork.id]
+  )
 
-  const onChangeToOtherSlide = async (index: number) => {
-    onChangeSlideIndex(index)
-    setShowDetails(false)
-    await resetButtonInfo()
-  }
+  const truncateDescription = useCallback((input: string) => {
+    if (input.length <= 600) {
+      return input
+    }
 
-  function handleMoreSlides() {
-    // Busca mais slides
-  }
+    return `${input.substring(0, 250)}...`
+  }, [])
 
-  function wasMinted(artwork: Artwork) {
-    return (
-      artwork.token_id &&
-      artwork.token_id !== '' &&
-      artwork.token_id !== '0x0000000000000000000000000000000000000000'
-    )
-  }
-
-  const truncate = (input: string) =>
-    input?.length > 600 ? `${input.substring(0, 250)}...` : input
+  const handleSelectFromCarousel = useCallback(
+    async (index: number) => {
+      onSelectArtwork(index)
+      setShowDetails(false)
+      setIsDescriptionExpanded(false)
+      await resetButtonInfo()
+    },
+    [onSelectArtwork]
+  )
 
   useEffect(() => {
-    if (selectedArtwork && window.screen.width >= 1280) {
-      setIsOpenVideo(false)
-      setIsAnimating(false)
-      resetArtInfo()
+    if (typeof window === 'undefined') {
+      return
+    }
+
+    if (window.screen.width >= 1280) {
+      setIsVideoOpen(false)
       setShowDetails(false)
-      resetButtonInfo()
+      setIsDescriptionExpanded(false)
+      void resetArtInfo()
+      void resetButtonInfo()
     }
-  }, [onChangeSlideIndex, selectedArtwork])
+  }, [artwork.id])
 
-  if (!selectedArtwork) {
-    throw new Error('Artwork does not exist')
-  }
-
-  // Setup external links - use mint_link from backend as single source of truth
-  const externalLink = selectedArtwork.mint_link
-    ? {
-        url: selectedArtwork.mint_link,
-        name: 'View NFT'
-      }
-    : null
-
-  // Format mint date
-  let mintedOn = ''
-  if (selectedArtwork.mint_date) {
-    try {
-      mintedOn = format(
-        addHours(new Date(selectedArtwork.mint_date), 3),
-        'd LLLL, yyyy'
-      )
-    } catch (error) {
-      console.error('Error formatting date:', error)
-    }
-  }
-
-  // Get description as string - handle both string and Tiptap JSON formats
-  const getDescriptionText = (description: any): string => {
-    if (!description) return ''
-
-    if (typeof description === 'string') {
-      return description
-    }
-
-    // Handle Tiptap JSON format
-    if (typeof description === 'object' && description.content) {
-      const extractTextFromTiptap = (content: any[]): string => {
-        return content
-          .map((node: any) => {
-            if (node.type === 'paragraph' || node.type === 'heading') {
-              return (
-                node.content
-                  ?.map((textNode: any) => textNode.text || '')
-                  .join('') || ''
-              )
-            }
-            if (node.type === 'text') {
-              return node.text || ''
-            }
-            if (node.content) {
-              return extractTextFromTiptap(node.content)
-            }
-            return ''
-          })
-          .join('\n')
-          .trim()
-      }
-
-      return extractTextFromTiptap(description.content)
-    }
-
-    // Fallback to JSON string
-    return JSON.stringify(description)
-  }
-
-  const descriptionText = getDescriptionText(selectedArtwork.description)
+  const detailedImage = artwork.imageoptimizedurl || artwork.imageurl
+  const displayImage = artwork.imageurl || artwork.imageoptimizedurl || '/placeholder.png'
 
   return (
     <>
@@ -146,154 +99,66 @@ export function ArtInfo({
         <div className="md:flex-1 min-w-[200px] xl:min-w-[350px] flex flex-col max-h-full">
           <div className="xl:art-detail-inner-container overflow-hidden flex flex-1 justify-start xl:justify-end">
             <ArtDetails
-              detailedImage={
-                selectedArtwork.imageoptimizedurl || '/placeholder.png'
-              }
-              image={selectedArtwork.imageurl || '/placeholder.png'}
-              name={selectedArtwork.title || ''}
+              detailedImage={detailedImage || '/placeholder.png'}
+              image={displayImage}
+              name={artwork.title || ''}
             />
           </div>
         </div>
 
-        {hasVideo && (
+        {hasVideo ? (
           <button
             aria-label="Open video process modal"
-            onClick={() => setIsOpenVideo(true)}
+            onClick={() => setIsVideoOpen(true)}
             className="grid place-content-center h-6 xl:hidden"
           >
             <CustomIcons.Camera />
           </button>
-        )}
+        ) : null}
 
-        <div className="block w-[100vw] self-center xl:hidden md:order-3 ">
-          <HorizontalInCarouselArtwork
-            slideIndex={slides.findIndex(
-              (slide) => slide.id === selectedArtwork.id
-            )}
-            onChangeSlideIndex={onChangeToOtherSlide}
-            slides={slides}
-            getMoreSlides={() => handleMoreSlides()}
+        <div className="block w-[100vw] self-center xl:hidden md:order-3">
+          <ArtworkThumbnailCarousel
+            artworks={artworks}
+            selectedIndex={currentIndex}
+            onSelect={handleSelectFromCarousel}
           />
         </div>
 
-        {wasMinted(selectedArtwork) ? (
-          <div
-            id="art-container"
-            className={cn(
-              'gap-2 transition-all max-h-[calc(100vh-8rem)] xl:h-full w-full sm:w-auto md:w-[400px] flex-shrink-0 flex flex-col justify-end xl:justify-end ml-auto md:order-2'
-            )}
-          >
-            <div
-              className={cn(
-                'overflow-hidden',
-                showDetails ? 'overflow-y-auto' : ''
-              )}
-            >
-              <div
-                id="art-description"
-                className={cn(
-                  'h-fit flex flex-col-reverse gap-4 w-full text-sm text-secondary-100',
-                  'xl:flex-col xl:max-w-sm xl:mt-auto'
-                )}
-              >
-                <p id="art-description-text" className="break-words">
-                  {isDescriptionExpanded
-                    ? descriptionText
-                    : truncate(descriptionText)}
-                  {(descriptionText?.length || 0) > 600 && (
-                    <span>
-                      <button
-                        onClick={() =>
-                          setIsDescriptionExpanded(!isDescriptionExpanded)
-                        }
-                        className="text-primary-50 font-extrabold ml-1"
-                      >
-                        {isDescriptionExpanded ? ' -' : ' +'}
-                      </button>
-                    </span>
-                  )}
-                </p>
-                <div>
-                  <p className="text-primary-50 underline mt-4">
-                    {selectedArtwork.title}
-                  </p>
-                  {mintedOn && <p>minted on {mintedOn}</p>}
-                </div>
-              </div>
+        {isMinted ? (
+          <MintedArtworkDetails
+            artworkTitle={artwork.title}
+            contactEmail={contactEmail}
+            description={descriptionText}
+            explorerLink={explorerLink}
+            externalLinks={externalLinks}
+            isDescriptionExpanded={isDescriptionExpanded}
+            mintedOn={mintedOn}
+            onToggleDescription={() =>
+              setIsDescriptionExpanded((previous) => !previous)
+            }
+            onToggleDetails={async () => {
+              if (isAnimating) return
 
-              {/* Conditional rendering with fade animation */}
-              <div
-                className={cn(
-                  'fade-up',
-                  showDetails
-                    ? 'opacity-100 max-h-screen visible'
-                    : 'opacity-0 max-h-0 overflow-y-hidden invisible'
-                )}
-                style={{ transitionProperty: 'opacity, max-height' }}
-              >
-                <div id="art-info-wrapper" className={cn('flex flex-col')}>
-                  <div
-                    id="art-ownership-collections"
-                    className="opacity-0"
-                    style={{ display: 'none' }}
-                  >
-                    {/* Placeholder for ownership/collections info */}
-                  </div>
-                  <div id="art-links" className="mt-12">
-                    <ArtLinks
-                      email={email}
-                      externalLinks={externalLink ? [externalLink] : []}
-                      makeOffer={{
-                        active: false,
-                        buttonText: 'Make Offer'
-                      }}
-                      views={
-                        wasMinted(selectedArtwork)
-                          ? {
-                              explorer: `https://etherscan.io/token/${selectedArtwork.token_id}`
-                            }
-                          : {}
-                      }
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {externalLink && (
-              <button
-                aria-label="Open art infos"
-                className="group relative flex items-center justify-center w-10 h-10"
-                onClick={async () => {
-                  setShowDetails(!showDetails)
-                  await artInfoButtonAnimation()
-                }}
-                disabled={isAnimating}
-              >
-                <CustomIcons.Plus
-                  className={cn(
-                    'art-info-button w-6 h-6 transition-all text-secondary-100 group-hover:text-primary-50'
-                  )}
-                />
-              </button>
-            )}
-          </div>
+              setIsAnimating(true)
+              setShowDetails((previous) => !previous)
+              await artInfoButtonAnimation()
+              setIsAnimating(false)
+            }}
+            showDetails={showDetails}
+            truncateDescription={truncateDescription}
+          />
         ) : (
-          <div className="flex flex-col w-full max-w-sm justify-end text-sm text-secondary-100 h-full">
-            <div className="flex flex-col-reverse mt-4 mb-10 gap-4 xl:flex-col">
-              <p className="break-words">{descriptionText}</p>
-              <p className="text-primary-50 underline">
-                {selectedArtwork.title}
-              </p>
-            </div>
-          </div>
+          <PlainArtworkDetails
+            description={descriptionText}
+            title={artwork.title}
+          />
         )}
 
         <div className="hidden place-content-center xl:grid">
           {hasVideo ? (
             <button
               aria-label="Open video process modal"
-              onClick={() => setIsOpenVideo(true)}
+              onClick={() => setIsVideoOpen(true)}
               className="grid place-content-center h-6"
             >
               <CustomIcons.Camera />
@@ -304,35 +169,157 @@ export function ArtInfo({
         </div>
       </section>
 
-      {isOpenVideo && (
+      {isVideoOpen ? (
         <button
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 border-none p-0"
           aria-label="Close video modal"
-          onClick={() => setIsOpenVideo(false)}
-          onKeyDown={(e) => {
-            if (e.key === 'Escape') {
-              setIsOpenVideo(false)
+          onClick={() => setIsVideoOpen(false)}
+          onKeyDown={(event) => {
+            if (event.key === 'Escape') {
+              setIsVideoOpen(false)
             }
           }}
         >
           <div
             className="relative w-full max-w-4xl mx-4 max-h-[90vh]"
             role="presentation"
-            onClick={(e) => e.stopPropagation()}
-            onKeyDown={(e) => e.stopPropagation()}
+            onClick={(event) => event.stopPropagation()}
+            onKeyDown={(event) => event.stopPropagation()}
           >
             <video
               className="w-auto h-auto max-w-full max-h-[90vh] rounded-lg"
               controls
               autoPlay
-              src={selectedArtwork.video_url || ''}
+              src={artwork.video_url || ''}
             >
               <track kind="captions" srcLang="en" label="English" />
               Your browser does not support the video tag.
             </video>
           </div>
         </button>
-      )}
+      ) : null}
     </>
+  )
+}
+
+interface MintedArtworkDetailsProps {
+  artworkTitle?: string | null
+  contactEmail: string
+  description: string
+  explorerLink: string
+  externalLinks: Array<{ name: string; url: string }>
+  isDescriptionExpanded: boolean
+  mintedOn: string
+  onToggleDescription: () => void
+  onToggleDetails: () => Promise<void>
+  showDetails: boolean
+  truncateDescription: (value: string) => string
+}
+
+function MintedArtworkDetails({
+  artworkTitle,
+  contactEmail,
+  description,
+  explorerLink,
+  externalLinks,
+  isDescriptionExpanded,
+  mintedOn,
+  onToggleDescription,
+  onToggleDetails,
+  showDetails,
+  truncateDescription
+}: MintedArtworkDetailsProps) {
+  const hasLongDescription = description.length > 600
+
+  return (
+    <div
+      id="art-container"
+      className={cn(
+        'gap-2 transition-all max-h-[calc(100vh-8rem)] xl:h-full w-full sm:w-auto md:w-[400px] flex-shrink-0 flex flex-col justify-end xl:justify-end ml-auto md:order-2'
+      )}
+    >
+      <div className={cn('overflow-hidden', showDetails ? 'overflow-y-auto' : '')}>
+        <div
+          id="art-description"
+          className={cn(
+            'h-fit flex flex-col-reverse gap-4 w-full text-sm text-secondary-100',
+            'xl:flex-col xl:max-w-sm xl:mt-auto'
+          )}
+        >
+          <p id="art-description-text" className="break-words">
+            {isDescriptionExpanded ? description : truncateDescription(description)}
+            {hasLongDescription ? (
+              <button
+                onClick={onToggleDescription}
+                className="text-primary-50 font-extrabold ml-1"
+              >
+                {isDescriptionExpanded ? '-' : '+'}
+              </button>
+            ) : null}
+          </p>
+          <div>
+            <p className="text-primary-50 underline mt-4">{artworkTitle}</p>
+            {mintedOn ? <p>minted on {mintedOn}</p> : null}
+          </div>
+        </div>
+
+        <div
+          className={cn(
+            'fade-up',
+            showDetails
+              ? 'opacity-100 max-h-screen visible'
+              : 'opacity-0 max-h-0 overflow-y-hidden invisible'
+          )}
+          style={{ transitionProperty: 'opacity, max-height' }}
+        >
+          <div id="art-info-wrapper" className={cn('flex flex-col')}>
+            <div id="art-ownership-collections" className="opacity-0" style={{ display: 'none' }} />
+            <div id="art-links" className="mt-12">
+              <ArtLinks
+                email={contactEmail}
+                externalLinks={externalLinks}
+                makeOffer={{
+                  active: false,
+                  buttonText: 'Make Offer'
+                }}
+                views={explorerLink ? { explorer: explorerLink } : {}}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {externalLinks.length > 0 ? (
+        <button
+          aria-label="Open art infos"
+          className="group relative flex items-center justify-center w-10 h-10"
+          onClick={() => {
+            void onToggleDetails()
+          }}
+        >
+          <CustomIcons.Plus
+            className={cn(
+              'art-info-button w-6 h-6 transition-all text-secondary-100 group-hover:text-primary-50'
+            )}
+          />
+        </button>
+      ) : null}
+    </div>
+  )
+}
+
+interface PlainArtworkDetailsProps {
+  description: string
+  title?: string | null
+}
+
+function PlainArtworkDetails({ description, title }: PlainArtworkDetailsProps) {
+  return (
+    <div className="flex flex-col w-full max-w-sm justify-end text-sm text-secondary-100 h-full">
+      <div className="flex flex-col-reverse mt-4 mb-10 gap-4 xl:flex-col">
+        <p className="break-words">{description}</p>
+        <p className="text-primary-50 underline">{title}</p>
+      </div>
+    </div>
   )
 }
