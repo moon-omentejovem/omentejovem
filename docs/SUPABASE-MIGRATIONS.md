@@ -107,3 +107,13 @@ supabase gen types typescript --project-id YOUR_PROJECT_ID > src/types/supabase.
 # 6. Testar aplicação
 yarn dev
 ```
+
+## 🔁 **Clonar dados entre projetos**
+
+Consulte [`supabase/README.md`](../supabase/README.md) para o passo a passo
+completo. Resumo dos scripts disponíveis:
+
+- `node scripts/migration/export-supabase-data.js` – gera backup JSON + manifesto
+  dos buckets `media` e `cached-images`.
+- `node scripts/migration/import-supabase-data.js --input=... --truncate` –
+  restaura o backup no novo projeto preservando UUIDs.

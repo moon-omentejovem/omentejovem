@@ -27,8 +27,9 @@
 **Documentação geral** na pasta `docs/`:
 
 - **[SUPABASE-INTEGRATION.md](docs/SUPABASE-INTEGRATION.md)** - Como usar Supabase corretamente
-- **[BACKEND_ORIENTED_FRONTEND.md](docs/BACKEND_ORIENTED_FRONTEND.md)** - Arquitetura backend-oriented
+- **[SUPABASE-MIGRATIONS.md](docs/SUPABASE-MIGRATIONS.md)** - Fluxo de migrations via CLI
 - **[SEED-SYSTEM.md](docs/SEED-SYSTEM.md)** - Sistema de seed automático
+- **[supabase/README.md](supabase/README.md)** - Migração completa entre projetos
 
 ### 📖 Arquivo Principal
 
@@ -74,7 +75,7 @@ export class ArtworkService extends BaseService {
 }
 ```
 
-**Atenção:** Não existe mais campo de path de imagem no banco. Use apenas os campos `imageurl` (principal) e, quando aplicável, `imageoptimizedurl` para armazenar referências de imagem. O campo `image_url` foi descontinuado.
+**Atenção:** Não existe mais campo de path de imagem no banco. Use apenas os campos `imageurl` (principal) e, quando aplicável, `imageoptimizedurl` para armazenar referências de imagem. Campos com underscore (`image_url`) foram descontinuados.
 
 ### Resultados de Build
 
@@ -93,7 +94,7 @@ export class ArtworkService extends BaseService {
 - **BaseService pattern** - Sempre herdar de BaseService
 - **React cache()** - Automático nos Services
 - **Static generation** - generateStaticParams implementado
-- **Campos de imagem:** Use apenas image_url ou cover_image_url. Não crie nem utilize campos de path de imagem.
+- **Campos de imagem:** Use apenas `imageurl` e `imageoptimizedurl`. Não crie nem utilize campos de path de imagem.
 
 ### ❌ O que Evitar
 

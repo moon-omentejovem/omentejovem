@@ -3,6 +3,7 @@ const dotenv = require('dotenv')
 const { resolve } = require('path')
 
 // Load environment variables
+dotenv.config()
 dotenv.config({ path: resolve(process.cwd(), '.env.local') })
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -219,52 +220,15 @@ function runSeed(supabase) {
   })
 }
 
-// Enhanced seeding function with legacy data option
-async function seedWithLegacyData() {
-  console.log('🌱 Starting enhanced seeding with legacy data...')
-
-  // First run basic seeding
-  await seedOnDeploy()
-
-  // Then migrate legacy data
-  if (migrateLegacyData) {
-    console.log('📦 Migrating legacy NFT data...')
-    await migrateLegacyData()
-  } else {
-    console.log('ℹ️ Legacy migration não executada (no-op).')
-  }
-
-  console.log('🎉 Enhanced seeding completed!')
-}
-
-// Importa migrateLegacyData do script legado
-let migrateLegacyData
-try {
-  ;({ migrateLegacyData } = require('../legacy/migrate-legacy-data'))
-} catch (e) {
-  migrateLegacyData = undefined
-  console.warn('⚠️ Não foi possível importar migrateLegacyData:', e.message)
-}
-
-// Export functions
 module.exports = {
-  seedOnDeploy,
-  seedWithLegacyData,
-  migrateLegacyData
+  seedOnDeploy
 }
 
 // Execute if run directly
 if (require.main === module) {
-  const args = process.argv.slice(2)
-  const useLegacyData = args.includes('--legacy') || args.includes('-l')
+  console.log('🚀 Running seed...')
 
-  const seedFunction = useLegacyData ? seedWithLegacyData : seedOnDeploy
-
-  console.log(
-    `🚀 Running ${useLegacyData ? 'enhanced seed with legacy data' : 'basic seed'}...`
-  )
-
-  seedFunction()
+  seedOnDeploy()
     .then(() => {
       console.log('✅ Script completed successfully')
       process.exit(0)

@@ -103,17 +103,10 @@ yarn lintfix      # Fix ESLint issues
 ## Documentation
 
 - **[Supabase Integration](docs/SUPABASE-INTEGRATION.md)**: Database setup and configuration
-- **[Seed System](docs/SEED-SYSTEM.md)**: Data seeding and migration
-- **[Backend Patterns](docs/BACKEND_ORIENTED_FRONTEND.md)**: Service architecture patterns
+- **[Seed System](docs/SEED-SYSTEM.md)**: Automatic seeding after deploy
+- **[Supabase Migration Guide](supabase/README.md)**: How to clone data to a new Supabase project
+- **[Supabase CLI Workflow](docs/SUPABASE-MIGRATIONS.md)**: CLI commands for schema changes
 - **[AI Context](.agents/AI_CONTEXT_MASTER.md)**: Technical documentation for AI agents
-
-## Legacy Data Migration
-
-For legacy NFT seeding and migration instructions, see:
-
-[`scripts/legacy/README.md`](scripts/legacy/README.md)
-
-More details in [docs/SEED-SYSTEM.md](docs/SEED-SYSTEM.md).
 
 ## License
 

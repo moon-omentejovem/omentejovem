@@ -21,8 +21,7 @@
 
 ### 📁 Sistema de Dados
 
-- [`DATA_MIGRATION_CONTEXT.md`](./DATA_MIGRATION_CONTEXT.md) - Contexto sobre migrações
-- [`LEGACY_DATA_INSTRUCTIONS.md`](./LEGACY_DATA_INSTRUCTIONS.md) - Instruções dados legados
+- [`DATA_MIGRATION_CONTEXT.md`](./DATA_MIGRATION_CONTEXT.md) - Migração entre projetos Supabase
 - [`BACKEND_ORIENTED_APPROACH.md`](./BACKEND_ORIENTED_APPROACH.md) - Abordagem backend-oriented
 
 ### 🔧 Deploy e Configuração
@@ -83,6 +82,5 @@
 
 ---
 
-**Última atualização**: Setembro 2025
-**Branch atual**: `refactor/pages-data-fetching`
-**Status**: Produção-ready após refatoração Services
+**Última atualização**: Setembro 2025 (atualizado após limpeza de legados)
+**Status**: Produção-ready com fluxo de migração documentado
