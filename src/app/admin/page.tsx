@@ -1,9 +1,9 @@
 'use client'
 
-import { signInWithGoogle, signInWithMagicLink } from '@/utils/auth'
+import { AuthService } from '@/services/auth.service'
 import { Alert, Button, Card, Label, TextInput } from 'flowbite-react'
 import { Inbox, Mail } from 'lucide-react'
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Suspense, useEffect, useState } from 'react'
 
 function AdminPageContent() {
@@ -13,6 +13,7 @@ function AdminPageContent() {
   const [error, setError] = useState('')
   const [sent, setSent] = useState(false)
   const searchParams = useSearchParams()
+  const router = useRouter()
 
   useEffect(() => {
     // Check for access denied error from middleware
@@ -30,6 +31,19 @@ function AdminPageContent() {
     }
   }, [searchParams])
 
+  useEffect(() => {
+    const checkSession = async () => {
+      setLoading(true)
+      const { session } = await AuthService.getSession()
+      if (session && session.user) {
+        router.replace('/admin/artworks')
+      }
+      setLoading(false)
+    }
+    checkSession()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
@@ -38,7 +52,10 @@ function AdminPageContent() {
     setSent(false)
 
     try {
-      const { error } = await signInWithMagicLink(email, '/admin/artworks')
+      const { error } = await AuthService.signInWithMagicLink({
+        email,
+        redirectPath: '/admin/artworks'
+      })
 
       if (error) {
         setError(error.message)
@@ -61,7 +78,10 @@ function AdminPageContent() {
     setSent(false)
 
     try {
-      const { error } = await signInWithGoogle('/admin/artworks')
+      const { error } = await AuthService.signInWithOAuth({
+        provider: 'google',
+        redirectPath: '/admin/artworks'
+      })
 
       if (error) {
         setError(error.message)
@@ -74,32 +94,21 @@ function AdminPageContent() {
   }
 
   return (
-    <div className="min-h-screen  text-gray-900 flex items-center justify-center">
+    <div className="py-4 text-gray-900 flex flex-col gap-4 items-center justify-center">
       <Card className="w-96">
-        <h1 className="text-2xl font-bold mb-6 text-center">Admin Access</h1>
-        <p className="text-gray-500 text-sm text-center mb-6">
-          Sign in with Google
-        </p>
-
-        <Button
-          onClick={handleGoogleSignIn}
-          disabled={loading}
-          isProcessing={loading}
-          className="w-full mb-4"
-        >
-          Continue with Google
-        </Button>
-
-        <div className="flex items-center">
-          <div className="flex-1 h-px bg-gray-200" />
-          <div className="px-3 text-sm text-gray-500">OU</div>
-          <div className="flex-1 h-px bg-gray-200" />
+        <div className="flex items-center justify-center py-8 space-x-3 mb-4 border-b">
+          <div className="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center">
+            <span className="text-white font-semibold text-sm">O</span>
+          </div>
+          <span className="font-medium tracking-widest text-gray-900">
+            Omentejovem CMS
+          </span>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <p className="text-gray-500 text-sm text-center mb-6">
-              Receive a magic link for secure access to the admin panel.
+            <p className="text-gray-500 text-sm text-center mb-2">
+              Receive a magic link
             </p>
             <Label htmlFor="email" value="Email Address" />
             <TextInput
@@ -126,6 +135,21 @@ function AdminPageContent() {
             Send Magic Link
           </Button>
         </form>
+
+        <div className="flex items-center">
+          <div className="flex-1 h-px bg-gray-100" />
+          <div className="px-3 text-sm text-neutral-500">or</div>
+          <div className="flex-1 h-px bg-gray-100" />
+        </div>
+
+        <Button
+          onClick={handleGoogleSignIn}
+          disabled={loading}
+          isProcessing={loading}
+          color="gray"
+        >
+          Continue with Google
+        </Button>
 
         <div className="mt-4 border-t border-gray-100 pt-3">
           <div className="flex items-center justify-center gap-4">
@@ -155,6 +179,20 @@ function AdminPageContent() {
           </p>
         </div>
       </Card>
+      <div>
+        <p className="text-neutral-400 text-xs">
+          {' '}
+          Powered by{' '}
+          <a
+            href="https://luisbovo.com.br/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-orange-300 underline"
+          >
+            Luis Bovo
+          </a>
+        </p>
+      </div>
     </div>
   )
 }
