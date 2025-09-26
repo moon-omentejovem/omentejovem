@@ -1,7 +1,7 @@
 'use client'
 
 import { footerAnimations } from '@/animations/client'
-import { OrbitIcon } from 'lucide-react'
+import { Shield } from 'lucide-react'
 import Link from 'next/link'
 import type { ReactElement } from 'react'
 import { useEffect } from 'react'
@@ -90,10 +90,10 @@ export function Footer({
       <div className=" border-secondary-100  py-1 px-2  text-right fixed bottom-0 right-10">
         <Link
           href="/admin"
-          className="inline-flex items-baseline gap-1 text-xs underline text-secondary-100"
+          className="inline-flex items-baseline gap-1 text-sm underline text-secondary-100"
         >
-          Orbit Admin
-          <OrbitIcon className="size-3" />
+          Access CMS
+          <Shield className="size-3" />
         </Link>
       </div>
     </footer>

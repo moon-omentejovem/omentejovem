@@ -107,9 +107,6 @@ function AdminPageContent() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <p className="text-gray-500 text-sm text-center mb-2">
-              Receive a magic link
-            </p>
             <Label htmlFor="email" value="Email Address" />
             <TextInput
               type="email"
