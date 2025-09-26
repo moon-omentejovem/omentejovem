@@ -219,11 +219,7 @@ export function AboutContent({
 
       <hr className="bg-secondary-100" />
 
-      <Footer
-        interviews={parsedPress}
-        exhibitions={parsedExhibitions}
-        email={undefined}
-      />
+      <Footer interviews={parsedPress} exhibitions={parsedExhibitions} />
     </main>
   )
 }

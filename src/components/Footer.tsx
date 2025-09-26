@@ -1,7 +1,7 @@
 'use client'
 
 import { footerAnimations } from '@/animations/client'
-import { ExternalLinkIcon } from 'lucide-react'
+import { OrbitIcon } from 'lucide-react'
 import Link from 'next/link'
 import type { ReactElement } from 'react'
 import { useEffect } from 'react'
@@ -20,8 +20,7 @@ export interface FooterProperties {
 
 export function Footer({
   interviews,
-  exhibitions,
-  email
+  exhibitions
 }: FooterProperties): ReactElement {
   useEffect(() => {
     footerAnimations()
@@ -82,20 +81,19 @@ export function Footer({
           </p>
           <a
             className="footer-email text-xs w-[13ch] break-words text-secondary-100 hover:text-primary-50 sm:text-base xl:text-lg xl:w-[13ch]"
-            href="mailto:contact@omentejovem.com?subject=Contact"
+            href="mailto:moon@omentejovem.com?subject=Contact"
           >
-            {email}
+            moon@omentejovem.com
           </a>
         </div>
       </div>
-      <div className=" border-secondary-100 py-4 text-right">
+      <div className=" border-secondary-100  py-1 px-2  text-right fixed bottom-0 right-10">
         <Link
           href="/admin"
-          target="_blank"
-          className="inline-flex items-baseline gap-1 text-sm text-secondary-100"
+          className="inline-flex items-baseline gap-1 text-xs underline text-secondary-100"
         >
-          Access CMS
-          <ExternalLinkIcon className="size-3.5" />
+          Orbit Admin
+          <OrbitIcon className="size-3" />
         </Link>
       </div>
     </footer>
