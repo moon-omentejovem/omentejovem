@@ -111,3 +111,19 @@ yarn lintfix      # Fix ESLint issues
 ## License
 
 This project is private and proprietary.
+
+---
+
+Quick SEO notes
+
+- Environment: set NEXT_PUBLIC_SITE_URL to your site base URL (default: https://www.omentejovem.com).
+- Submit your sitemap to Google Search Console: https://www.omentejovem.com/sitemap.xml
+- Test locally:
+
+```powershell
+# Start dev server
+yarn dev
+# Visit http://localhost:3000/robots.txt and http://localhost:3000/sitemap.xml
+```
+
+- Test in production (Vercel): visit https://www.omentejovem.com/robots.txt and https://www.omentejovem.com/sitemap.xml
