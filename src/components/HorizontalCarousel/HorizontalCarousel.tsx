@@ -14,7 +14,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { FreeMode, Mousewheel, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import { Swiper as SwiperType } from 'swiper/types'
 
 interface HorizontalCarouselProperties {
   slides: {
@@ -62,7 +61,10 @@ export function HorizontalCarousel({
         }}
       >
         {slides.map((slide, index) => (
-          <SwiperSlide key={`${slide.slug ?? slide.name}.${index}`} className="w-fit max-w-fit">
+          <SwiperSlide
+            key={`${slide.slug ?? slide.name}.${index}`}
+            className="w-fit max-w-fit"
+          >
             <div className="flex flex-col items-center">
               <div
                 id="image-wrapper"

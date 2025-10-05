@@ -114,9 +114,9 @@ export default function TiptapEditor({
   if (!editor) return null
 
   return (
-    <div className="border border-gray-300 rounded-lg bg-white overflow-hidden">
+    <div className="border border-gray-300 rounded-lg bg-white overflow-hidden overflow-y-auto max-h-[500px]">
       {/* Toolbar */}
-      <div className="border-b border-gray-200 p-2 flex items-center space-x-1 flex-wrap gap-1">
+      <div className="border-b border-gray-200 p-2 flex items-center space-x-1 flex-wrap gap-1 sticky top-0 bg-white z-10">
         <button
           onClick={() => editor.chain().focus().toggleBold().run()}
           className={`p-2 rounded hover:bg-gray-100 ${
