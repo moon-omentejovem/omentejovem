@@ -53,7 +53,9 @@ export default function RootLayout({
             {/* Header com altura fixa */}
             <Header />
             {/* Main content */}
-            <main className="flex-grow">{children}</main>
+            <main className="flex-grow max-w-full overflow-x-hidden">
+              {children}
+            </main>
           </div>
           <Toaster
             theme="dark"

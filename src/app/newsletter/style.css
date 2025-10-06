@@ -67,5 +67,5 @@ div#bio-content {
 
 /* Optional: Pause animation on hover */
 .animate-scroll:hover {
-  animation-play-state: paused;
+  /* animation-play-state: paused; */ /* Uncomment to enable pause on hover */
 }

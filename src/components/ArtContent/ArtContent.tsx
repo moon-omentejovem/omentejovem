@@ -7,15 +7,8 @@
 
 'use client'
 
-import { useCarouselNavigation } from '@/hooks/useCarouselNavigation'
 import type { Artwork } from '@/types/artwork'
-import {
-  ReactElement,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState
-} from 'react'
+import { ReactElement, useCallback, useEffect, useMemo, useState } from 'react'
 import { HorizontalCarousel } from '../HorizontalCarousel/HorizontalCarousel'
 import { VerticalCarousel } from '../VerticalCarousel/VerticalCarousel'
 import { ArtInfo } from './ArtInfo'
@@ -40,9 +33,7 @@ export function ArtContent({
       return -1
     }
 
-    return initialSelectedIndex < artworks.length
-      ? initialSelectedIndex
-      : -1
+    return initialSelectedIndex < artworks.length ? initialSelectedIndex : -1
   }, [artworks.length, initialSelectedIndex])
 
   const [selectedIndex, setSelectedIndex] = useState<number>(
@@ -63,23 +54,16 @@ export function ArtContent({
     [artworks]
   )
 
-  const { handleNavigation } = useCarouselNavigation({
-    source,
-    artworks,
-    onChangeIndex: setSelectedIndex
-  })
-
   const handleSelectArtwork = useCallback(
-    (index: number, replace = false) => {
+    (index: number) => {
       if (index < 0 || index >= artworks.length) {
         setSelectedIndex(-1)
         return
       }
 
       setSelectedIndex(index)
-      handleNavigation(index, replace)
     },
-    [artworks.length, handleNavigation]
+    [artworks.length]
   )
 
   if (artworks.length === 0) {
@@ -101,7 +85,7 @@ export function ArtContent({
         <HorizontalCarousel
           slides={slides}
           redirectSource={source}
-          onSelect={handleSelectArtwork}
+          // onSelect={handleSelectArtwork}
         />
 
         <div className="flex justify-center py-4">

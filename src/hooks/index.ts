@@ -5,9 +5,6 @@
 // Artwork hooks
 export * from './useArtworks'
 
-// Navigation hooks
-export * from './useCarouselNavigation'
-
 // Series hooks
 export * from './useSeries'
 
