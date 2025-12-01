@@ -8,7 +8,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
 [![Supabase](https://img.shields.io/badge/Supabase-Backend-green?style=flat-square&logo=supabase)](https://supabase.com/)
 
-[![Vercel Deploy](https://deploy-badge.vercel.app/vercel/omentejovem-staging?style=flat-square)](https://omentejovem-staging.vercel.app/)
+[![Vercel Deploy](https://deploy-badge.vercel.app/vercel/omentejovem-staging?style=flat-square)](https://www.omentejovem.com/)
 
 <!-- [![CI](https://img.shields.io/github/actions/workflow/status/luismtns/omentejovem/ci.yml?branch=main&style=flat-square&logo=github&label=CI)](https://github.com/luismtns/omentejovem/actions/workflows/ci.yml) -->
 
