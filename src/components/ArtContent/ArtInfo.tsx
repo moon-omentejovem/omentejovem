@@ -12,6 +12,7 @@ import { ArtDetails } from '@/components/ArtDetails'
 import { ArtLinks } from '@/components/ArtLinks'
 import { cn } from '@/lib/utils'
 import type { Artwork } from '@/types/artwork'
+import './styles.css'
 import {
   extractDescriptionText,
   getExplorerLink,
@@ -19,21 +20,21 @@ import {
   isArtworkMinted,
   resolveExternalLinks
 } from './utils'
-import { ArtworkThumbnailCarousel } from './HorizontalInCarousel/ArtworkThumbnailCarousel'
-import './styles.css'
 
 interface ArtInfoProps {
   contactEmail: string
   artwork: Artwork
   artworks: Artwork[]
   onSelectArtwork: (index: number) => void
+  children?: ReactElement
 }
 
 export function ArtInfo({
   contactEmail,
   artwork,
   artworks,
-  onSelectArtwork
+  onSelectArtwork,
+  children
 }: ArtInfoProps): ReactElement {
   const [isVideoOpen, setIsVideoOpen] = useState(false)
   const [isAnimating, setIsAnimating] = useState(false)
@@ -62,16 +63,6 @@ export function ArtInfo({
     return `${input.substring(0, 250)}...`
   }, [])
 
-  const handleSelectFromCarousel = useCallback(
-    async (index: number) => {
-      onSelectArtwork(index)
-      setShowDetails(false)
-      setIsDescriptionExpanded(false)
-      await resetButtonInfo()
-    },
-    [onSelectArtwork]
-  )
-
   useEffect(() => {
     if (typeof window === 'undefined') {
       return
@@ -87,7 +78,8 @@ export function ArtInfo({
   }, [artwork.id])
 
   const detailedImage = artwork.imageoptimizedurl || artwork.imageurl
-  const displayImage = artwork.imageurl || artwork.imageoptimizedurl || '/placeholder.png'
+  const displayImage =
+    artwork.imageurl || artwork.imageoptimizedurl || '/placeholder.png'
 
   return (
     <>
@@ -117,11 +109,7 @@ export function ArtInfo({
         ) : null}
 
         <div className="block w-[100vw] self-center xl:hidden md:order-3">
-          <ArtworkThumbnailCarousel
-            artworks={artworks}
-            selectedIndex={currentIndex}
-            onSelect={handleSelectFromCarousel}
-          />
+          {children}
         </div>
 
         {isMinted ? (
@@ -238,7 +226,9 @@ function MintedArtworkDetails({
         'gap-2 transition-all max-h-[calc(100vh-8rem)] xl:h-full w-full sm:w-auto md:w-[400px] flex-shrink-0 flex flex-col justify-end xl:justify-end ml-auto md:order-2'
       )}
     >
-      <div className={cn('overflow-hidden', showDetails ? 'overflow-y-auto' : '')}>
+      <div
+        className={cn('overflow-hidden', showDetails ? 'overflow-y-auto' : '')}
+      >
         <div
           id="art-description"
           className={cn(
@@ -247,7 +237,9 @@ function MintedArtworkDetails({
           )}
         >
           <p id="art-description-text" className="break-words">
-            {isDescriptionExpanded ? description : truncateDescription(description)}
+            {isDescriptionExpanded
+              ? description
+              : truncateDescription(description)}
             {hasLongDescription ? (
               <button
                 onClick={onToggleDescription}
@@ -273,7 +265,11 @@ function MintedArtworkDetails({
           style={{ transitionProperty: 'opacity, max-height' }}
         >
           <div id="art-info-wrapper" className={cn('flex flex-col')}>
-            <div id="art-ownership-collections" className="opacity-0" style={{ display: 'none' }} />
+            <div
+              id="art-ownership-collections"
+              className="opacity-0"
+              style={{ display: 'none' }}
+            />
             <div id="art-links" className="mt-12">
               <ArtLinks
                 email={contactEmail}

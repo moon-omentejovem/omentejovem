@@ -7,6 +7,7 @@
 
 'use client'
 
+import { ArtworkThumbnailCarousel } from '@/components/ArtContent/HorizontalInCarousel/ArtworkThumbnailCarousel'
 import type { Artwork } from '@/types/artwork'
 import { ReactElement, useCallback, useEffect, useMemo, useState } from 'react'
 import { HorizontalCarousel } from '../HorizontalCarousel/HorizontalCarousel'
@@ -97,7 +98,7 @@ export function ArtContent({
     )
   }
 
-  const artwork = artworks[selectedIndex]
+  const artwork = artworks[initialSelectedIndex]
 
   if (!artwork) {
     return (
@@ -120,7 +121,7 @@ export function ArtContent({
       <VerticalCarousel
         slideIndex={selectedIndex}
         slides={slides}
-        redirectSource={source}
+        redirectSource={undefined}
         onSelect={handleSelectArtwork}
       />
 
@@ -129,7 +130,13 @@ export function ArtContent({
         artwork={artwork}
         artworks={artworks}
         onSelectArtwork={handleSelectArtwork}
-      />
+      >
+        <ArtworkThumbnailCarousel
+          artworks={artworks}
+          selectedIndex={selectedIndex}
+          onSelect={handleSelectArtwork}
+        />
+      </ArtInfo>
     </main>
   )
 }

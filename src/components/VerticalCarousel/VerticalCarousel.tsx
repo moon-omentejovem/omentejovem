@@ -29,7 +29,6 @@ export function VerticalCarousel({
   redirectSource,
   onSelect
 }: VerticalCarouselProperties) {
-
   return (
     <div
       className={cn(
