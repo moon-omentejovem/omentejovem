@@ -26,6 +26,8 @@ export const ArtworkSchema = z.object({
   is_featured: z.boolean().nullable().optional(),
   is_one_of_one: z.boolean().nullable().optional(),
 
+  display_order: z.number().int().nullable().optional(),
+
   status: z.enum(['draft', 'published']).default('published'),
   posted_at: z.string().nullable().optional(),
   created_at: z.string().nullable().optional(),

@@ -125,6 +125,12 @@ export const artworksDescriptor: ResourceDescriptor = {
     },
     // imageoptimizedurl não é campo editável manualmente, é gerenciado pela API/backend
     {
+      key: 'display_order',
+      label: 'Display Order',
+      type: 'number',
+      placeholder: 'Lower numbers appear first (leave empty for default order)'
+    },
+    {
       key: 'mint_date',
       label: 'Mint Date',
       type: 'date'

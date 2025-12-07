@@ -111,8 +111,14 @@ export class ArtworkService extends BaseService {
         }
 
         // Apply ordering
+        // Priority: display_order (ASC, nulls last) > fallback order
         const orderBy = filters.orderBy || 'posted_at'
         const ascending = filters.ascending ?? false
+
+        // First order by display_order if exists (WordPress-like behavior)
+        query = query.order('display_order', { ascending: true, nullsFirst: false })
+
+        // Then apply secondary ordering
         query = query.order(orderBy, { ascending })
 
         // Apply limit
