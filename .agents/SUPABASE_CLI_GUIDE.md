@@ -33,27 +33,29 @@ yarn supabase:link
 ### **Migrations**
 
 ```bash
-# Criar nova migration
-yarn supabase:migration:new <nome_da_migration>
-
-# Aplicar migrations pendentes
-yarn supabase:migration:up
+# Criar nova migration (usa Supabase CLI diretamente)
+supabase migration new <nome_da_migration>
 
 # Push para o banco remoto
 yarn supabase:db:push
 
-# Pull do banco remoto
+# Pull do banco remoto (sincroniza schema remoto - USE COM CUIDADO)
 yarn supabase:db:pull
 ```
+
+**⚠️ IMPORTANTE**:
+
+- As migrations já estão aplicadas no banco de produção
+- Use `supabase migration new` para criar novas migrations
+- Apenas faça `db:push` de migrations novas
+- NÃO faça `db:pull` a menos que queira sobrescrever migrations locais
 
 ### **Tipos TypeScript**
 
 ```bash
-# Regenerar tipos do Supabase (requer SUPABASE_PROJECT_ID no .env)
+# Regenerar tipos do Supabase (usa --linked para projeto conectado)
 yarn supabase:types
 ```
-
-**Importante**: O script usa a variável `$SUPABASE_PROJECT_ID` do environment para segurança.
 
 ### **Status**
 
