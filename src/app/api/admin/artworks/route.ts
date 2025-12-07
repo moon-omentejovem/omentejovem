@@ -33,6 +33,7 @@ export async function GET(request: NextRequest) {
       `,
         { count: 'exact' }
       )
+      .order('display_order', { ascending: true, nullsFirst: false })
       .order('posted_at', { ascending: false })
 
     if (status && status !== 'all') {

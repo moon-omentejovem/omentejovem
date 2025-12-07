@@ -96,6 +96,7 @@ export const artworksDescriptor: ResourceDescriptor = {
       width: '60px',
       className: 'rounded'
     },
+    { key: 'display_order', label: 'Order', render: 'number', width: '80px' },
     { key: 'title', label: 'Title', render: 'text' },
     { key: 'updated_at', label: 'Updated At', render: 'date' },
     { key: 'status', label: 'Status', render: 'badge' }
