@@ -177,18 +177,6 @@ function AdminPageContent() {
         </div>
       </Card>
       <div>
-        <p className="text-neutral-400 text-xs">
-          {' '}
-          Powered by{' '}
-          <a
-            href="https://luisbovo.com.br/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-orange-300 underline"
-          >
-            Luis Bovo
-          </a>
-        </p>
       </div>
     </div>
   )

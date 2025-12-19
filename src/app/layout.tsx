@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   title: 'omentejovem',
   description: 'omentejovem website',
   manifest: '/manifest.json',
-  authors: [{ name: 'Luis Bovo', url: 'https://luisbovo.com' }]
+  authors: [{ name: 'Omente Jovem', url: 'https://omentejovem.com' }]
 }
 
 export const viewport = {
