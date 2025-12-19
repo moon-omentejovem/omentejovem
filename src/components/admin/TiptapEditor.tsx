@@ -27,7 +27,7 @@ interface TiptapEditorProps {
   onChange: (content: JSONContent) => void
   placeholder?: string
   className?: string
-  editorSlug: string // identificador do post/artigo/entidade para path
+  editorSlug: string
 }
 
 export default function TiptapEditor({
@@ -83,7 +83,7 @@ export default function TiptapEditor({
     },
     editorProps: {
       attributes: {
-        class: `prose prose-invert max-w-none focus:outline-none min-h-[200px] p-4 ${className}`
+        className: `prose prose-invert max-w-none focus:outline-none min-h-[200px] p-4 ${className}`
       }
     }
   })
@@ -280,7 +280,6 @@ export default function TiptapEditor({
         </button>
       </div>
 
-      {/* Editor */}
       <div className="relative">
         <EditorContent
           editor={editor}

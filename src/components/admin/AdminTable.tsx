@@ -36,6 +36,8 @@ interface AdminTableProps<T = any> {
   onPageChange?: (page: number) => void
   statusFilter?: string
   onStatusFilterChange?: (status: string) => void
+  searchValue?: string
+  onSearchChange?: (value: string) => void
 }
 
 export default function AdminTable<T extends Record<string, any>>({
@@ -51,7 +53,9 @@ export default function AdminTable<T extends Record<string, any>>({
   totalPages = 1,
   onPageChange,
   statusFilter = 'all',
-  onStatusFilterChange
+  onStatusFilterChange,
+  searchValue,
+  onSearchChange
 }: AdminTableProps<T>) {
   const [globalFilter, setGlobalFilter] = useState('')
   const [sorting, setSorting] = useState<SortingState>(
@@ -65,7 +69,11 @@ export default function AdminTable<T extends Record<string, any>>({
       : []
   )
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setGlobalFilter(e.target.value)
+    const value = e.target.value
+    setGlobalFilter(value)
+    if (onSearchChange) {
+      onSearchChange(value)
+    }
   }
 
   const defaultRenderCell = useCallback(
@@ -238,7 +246,7 @@ export default function AdminTable<T extends Record<string, any>>({
             <TextInput
               type="text"
               placeholder={`Search by ${descriptor.searchFields.join(', ')}...`}
-              value={globalFilter}
+              value={searchValue !== undefined ? searchValue : globalFilter}
               onChange={handleSearchChange}
             />
           </div>
