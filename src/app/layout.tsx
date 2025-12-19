@@ -48,7 +48,7 @@ export default function RootLayout({
       >
         <Providers>
           {/* Layout otimizado para evitar CLS */}
-          <div className="w-full mx-auto min-h-screen flex flex-col">
+          <div className="min-h-screen flex flex-col">
             <Cursor />
             {/* Header com altura fixa */}
             <Header />

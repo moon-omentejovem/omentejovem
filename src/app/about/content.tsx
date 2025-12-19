@@ -6,6 +6,7 @@ import type { ReactElement } from 'react'
 import { aboutAnimations } from '@/animations/client'
 import { AboutArt } from '@/assets/images'
 import { Footer, FooterProperties } from '@/components/Footer'
+import { createClient } from '@/utils/supabase/client'
 import { useEffect, useMemo } from 'react'
 
 import { BioRenderer } from './bio-renderer'
@@ -68,66 +69,129 @@ export function AboutContent({
   )
 
   // Removido: renderAboutInfo e uso de data
-
+  //
   useEffect(() => {
-    const anchorElements = document.getElementsByTagName(
-      'a'
-    ) as HTMLCollectionOf<HTMLAnchorElement>
-    const parsedElements = [...anchorElements]
+    const setupHoverPreviews = async () => {
+      const anchorElements = document.getElementsByTagName(
+        'a'
+      ) as HTMLCollectionOf<HTMLAnchorElement>
+      const parsedElements = [...anchorElements]
 
-    const filtered = parsedElements.filter(
-      (element) => element.className === '' || element.id === 'image-reference' || element.classList.contains('bio-link')
-    )
+      const filtered = parsedElements.filter(
+        (element) =>
+          element.className === '' ||
+          element.id === 'image-reference' ||
+          element.classList.contains('bio-link')
+      )
 
-    for (const element of filtered) {
-      element.id = `image-reference-${element.innerText}`
-      if (!element.classList.contains('bio-link')) {
-        element.classList.add('bio-link')
-      }
-      element.setAttribute('target', '_blank')
+      const supabase = createClient()
 
-      // Use data-preview-image attribute if available, otherwise skip preview
-      const previewImageUrl = element.getAttribute('data-preview-image')
-      if (!previewImageUrl) {
-        continue // Skip links without preview image
-      }
+      const artworkLinks: {
+        element: HTMLAnchorElement
+        slug: string
+      }[] = []
+      const slugSet = new Set<string>()
 
-      const overlayImage = document.createElement('img')
-      overlayImage.classList.add('overlay-image')
-      overlayImage.src = previewImageUrl
-      overlayImage.alt = ''
-      overlayImage.style.minWidth = '500px'
-      overlayImage.style.maxWidth = '500px'
-      overlayImage.style.position = 'absolute'
-
-      document.getElementById('about-page')?.appendChild(overlayImage)
-
-      element.addEventListener('mouseover', () => {
-        overlayImage.style.display = 'block'
-      })
-
-      element.addEventListener('mouseout', () => {
-        overlayImage.style.display = 'none'
-      })
-
-      element.addEventListener('mousemove', (event) => {
-        const parentRect = document
-          .getElementById('about-page')
-          ?.getBoundingClientRect()
-
-        if (parentRect) {
-          const headerHeight = 104
-
-          const x = event.clientX - parentRect.left - overlayImage.width / 2
-          const y =
-            event.clientY -
-            parentRect.top +
-            headerHeight -
-            overlayImage.height / 2
-          overlayImage.style.transform = `translate(${x}px, ${y}px)`
+      for (const element of filtered) {
+        element.id = `image-reference-${element.innerText}`
+        if (!element.classList.contains('bio-link')) {
+          element.classList.add('bio-link')
         }
-      })
+        element.setAttribute('target', '_blank')
+
+        if (!element.getAttribute('data-preview-image')) {
+          try {
+            const url = new URL(element.href)
+            const pathname = url.pathname
+            const match = pathname.match(
+              /^\/(portfolio|1-1|editions)\/([^/]+)$/
+            )
+
+            if (match && match[2]) {
+              const slug = decodeURIComponent(match[2])
+              artworkLinks.push({ element, slug })
+              slugSet.add(slug)
+            }
+          } catch {
+          }
+        }
+      }
+
+      if (slugSet.size > 0) {
+        try {
+          const { data } = await supabase
+            .from('artworks')
+            .select('slug,imageoptimizedurl,imageurl')
+            .in('slug', Array.from(slugSet))
+
+          const imageBySlug =
+            data?.reduce<Record<string, string | null>>((acc, artwork) => {
+              const url =
+                (artwork as any).imageoptimizedurl ||
+                (artwork as any).imageurl ||
+                null
+              if (url) {
+                acc[(artwork as any).slug] = url
+              }
+              return acc
+            }, {}) || {}
+
+          for (const { element, slug } of artworkLinks) {
+            if (
+              !element.getAttribute('data-preview-image') &&
+              imageBySlug[slug]
+            ) {
+              element.setAttribute('data-preview-image', imageBySlug[slug]!)
+            }
+          }
+        } catch {
+        }
+      }
+
+      for (const element of filtered) {
+        const previewImageUrl = element.getAttribute('data-preview-image')
+        if (!previewImageUrl) {
+          continue
+        }
+
+        const overlayImage = document.createElement('img')
+        overlayImage.classList.add('overlay-image')
+        overlayImage.src = previewImageUrl
+        overlayImage.alt = ''
+        overlayImage.style.width = '320px'
+        overlayImage.style.position = 'absolute'
+
+        document.getElementById('about-page')?.appendChild(overlayImage)
+
+        element.addEventListener('mouseover', () => {
+          overlayImage.style.display = 'block'
+        })
+
+        element.addEventListener('mouseout', () => {
+          overlayImage.style.display = 'none'
+        })
+
+        element.addEventListener('mousemove', (event) => {
+          const parentRect = document
+            .getElementById('about-page')
+            ?.getBoundingClientRect()
+
+          if (parentRect) {
+            const headerHeight = 104
+
+            const x = event.clientX - parentRect.left - overlayImage.width / 2
+            const y =
+              event.clientY -
+              parentRect.top +
+              headerHeight -
+              overlayImage.height / 2
+            overlayImage.style.transform = `translate(${x}px, ${y}px)`
+          }
+        })
+      }
     }
+
+    void setupHoverPreviews()
   }, [])
 
   return (
