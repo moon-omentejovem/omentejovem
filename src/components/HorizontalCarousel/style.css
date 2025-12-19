@@ -6,8 +6,12 @@
     height: 40vh;
   }
 
-  .swiper-slide-active a {
-    display: flex;
+  .horizontal-slide-link {
+    pointer-events: none;
+  }
+
+  .swiper-slide-active .horizontal-slide-link {
+    pointer-events: auto;
   }
 
   .swiper-slide {

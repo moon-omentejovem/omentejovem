@@ -99,7 +99,7 @@ export function VerticalCarousel({
                 <Link
                   href={`/${redirectSource}/${art.slug}`}
                   aria-label={art.name}
-                  className="absolute inset-0 z-10"
+                  className="absolute inset-0 z-10 pointer-events-none vertical-slide-link"
                 >
                   <span className="sr-only">Go to {art.name}</span>
                 </Link>
