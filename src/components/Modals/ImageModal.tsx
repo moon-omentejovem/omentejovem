@@ -1,5 +1,6 @@
 import { CustomIcons } from '@/assets/icons'
 import { cn } from '@/lib/utils'
+import { LoadingSpinner } from '@/components/ui/Skeleton'
 import * as Dialog from '@radix-ui/react-dialog'
 import Image from 'next/image'
 import { ReactNode, useCallback, useEffect, useState } from 'react'
@@ -19,6 +20,7 @@ export function ImageModal({
   const [scaleX, setScaleX] = useState(1)
   const [scaleY, setScaleY] = useState(1)
   const [rotation, setRotation] = useState(0)
+  const [isLoading, setIsLoading] = useState(true)
 
   const flipImage = useCallback(() => {
     const imageElement = document.querySelector<HTMLImageElement>(
@@ -79,10 +81,13 @@ export function ImageModal({
 
   return (
     <Dialog.Root
-      onOpenChange={() => {
+      onOpenChange={(open) => {
         setScaleX(1)
         setScaleY(1)
         setRotation(0)
+        if (open) {
+          setIsLoading(true)
+        }
       }}
     >
       <Dialog.Trigger
@@ -95,34 +100,49 @@ export function ImageModal({
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/[30%] backdrop-blur-sm z-20" />
         <Dialog.Content>
-          <div
-            id="modal-wrapper"
-            className="fixed w-auto h-auto flex items-center justify-center top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 md:w-auto overflow-visible"
-          >
-            <TransformWrapper onInit={() => removeOverflowHidden()}>
-              <TransformComponent>
-                <div
-                  className={cn(
-                    'grid place-content-center',
-                    collectionsMode ? '*:!max-h-[60vh]' : '*:max-h-[65vh]'
-                  )}
-                >
-                  {!!detailedImage ? (
-                    <Image
-                      src={detailedImage}
-                      width={1920}
-                      height={1920}
-                      sizes="90vw"
-                      alt={'High resolution'}
-                      className="w-auto h-auto object-contain"
-                      id="active-image"
-                    />
-                  ) : (
-                    children
-                  )}
+          <div className="fixed inset-0 z-30 flex items-center justify-center pointer-events-none">
+            <div
+              id="modal-wrapper"
+              className="relative w-auto h-auto flex items-center justify-center max-h-[80vh] md:w-auto overflow-visible pointer-events-auto"
+            >
+              <TransformWrapper onInit={() => removeOverflowHidden()}>
+                <TransformComponent>
+                  <div
+                    className={cn(
+                      'grid place-content-center',
+                      collectionsMode ? '*:!max-h-[60vh]' : '*:max-h-[65vh]'
+                    )}
+                  >
+                    {!!detailedImage ? (
+                      <Image
+                        src={detailedImage}
+                        width={1920}
+                        height={1920}
+                        sizes="90vw"
+                        alt={'High resolution'}
+                        className="w-auto h-auto object-contain"
+                        id="active-image"
+                        unoptimized
+                        onLoadingComplete={() => {
+                          setIsLoading(false)
+                        }}
+                      />
+                    ) : (
+                      children
+                    )}
+                  </div>
+                </TransformComponent>
+              </TransformWrapper>
+
+              {isLoading ? (
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40">
+                  <LoadingSpinner size="md" className="text-primary-50 mb-3" />
+                  <p className="text-xs uppercase tracking-[0.2em] text-secondary-200">
+                    Loading high-resolution
+                  </p>
                 </div>
-              </TransformComponent>
-            </TransformWrapper>
+              ) : null}
+            </div>
           </div>
 
           <div className="flex fixed bottom-8 left-1/2 -translate-x-1/2 justify-center gap-2 z-30">
