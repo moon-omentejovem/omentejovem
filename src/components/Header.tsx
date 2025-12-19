@@ -42,7 +42,7 @@ export function Header() {
   }, [])
 
   return (
-    <header className="sticky top-0 flex w-full justify-between bg-background z-30 max-w-[1920px] mx-auto md:bg-transparent p-8 md:px-12 lg:px-20 md:py-10 md:gap-16">
+    <header className="sticky top-0 flex w-full justify-between bg-background z-30 mx-auto md:bg-transparent p-8 md:px-12 lg:px-20 md:py-10 md:gap-16">
       <Link
         href="/"
         className="header-tab min-w-fit overflow-hidden"

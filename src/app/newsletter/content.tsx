@@ -93,7 +93,7 @@ export function Newsletter(): ReactElement {
   return (
     <main
       id="about-page"
-      className="fixed max-w-[1920px] z-40 mx-auto top-0 h-full w-full sm:p-0 p-8 flex flex-col bg-background justify-center"
+      className="fixed z-40 mx-auto top-0 h-full w-full sm:p-0 p-8 flex flex-col bg-background justify-center"
     >
       <button
         onClick={() => handleDismiss()}
