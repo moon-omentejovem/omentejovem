@@ -40,7 +40,7 @@ export function Newsletter(): ReactElement {
   }, [router])
 
   const handleDismiss = () => {
-    Cookies.set('newsletter_dismissed', 'true', { expires: 7 })
+    Cookies.set('newsletter_dismissed', 'true', { expires: 7, path: '/' })
     router.replace('/')
   }
 
@@ -72,13 +72,6 @@ export function Newsletter(): ReactElement {
         setIsSubmitted(true)
         setEmail('')
         handleDismiss()
-
-        // refresh page
-        window.location.reload()
-
-        setTimeout(() => {
-          setIsSubmitted(false)
-        }, 3000)
       } catch (error) {
         console.error('Error subscribing:', error)
         // You might want to add error state handling here
