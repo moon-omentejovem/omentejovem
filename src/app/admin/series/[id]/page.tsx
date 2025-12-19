@@ -2,6 +2,7 @@
 
 import AdminForm from '@/components/admin/AdminForm'
 import AdminLayout from '@/components/admin/AdminLayout'
+import { LoadingSpinner } from '@/components/ui/Skeleton'
 import { seriesDescriptor } from '@/types/descriptors'
 import type { UpdateSeries } from '@/types/schemas'
 import type { Database } from '@/types/supabase'
@@ -84,7 +85,7 @@ export default function EditSeriesPage({ params }: { params: { id: string } }) {
     return (
       <AdminLayout>
         <div className="flex items-center justify-center h-64">
-          <div className="text-gray-500">Loading series...</div>
+          <LoadingSpinner />
         </div>
       </AdminLayout>
     )
