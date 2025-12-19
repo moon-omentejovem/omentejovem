@@ -1,6 +1,7 @@
 'use client'
 
 import AdminLayout from '@/components/admin/AdminLayout'
+import { LoadingSpinner } from '@/components/ui/Skeleton'
 import TiptapEditor from '@/components/admin/TiptapEditor'
 import type { Database } from '@/types/supabase'
 import { PlusIcon, SaveIcon, TrashIcon } from 'lucide-react'
@@ -206,7 +207,7 @@ export default function AboutPage() {
     return (
       <AdminLayout>
         <div className="flex items-center justify-center h-64">
-          <div className="text-gray-500">Loading about page...</div>
+          <LoadingSpinner />
         </div>
       </AdminLayout>
     )
