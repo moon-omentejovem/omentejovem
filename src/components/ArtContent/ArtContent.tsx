@@ -8,6 +8,7 @@
 'use client'
 
 import type { Artwork } from '@/types/artwork'
+import { useRouter } from 'next/navigation'
 import { ReactElement, useCallback, useEffect, useMemo, useState } from 'react'
 import { HorizontalCarousel } from '../HorizontalCarousel/HorizontalCarousel'
 import { VerticalCarousel } from '../VerticalCarousel/VerticalCarousel'
@@ -28,6 +29,7 @@ export function ArtContent({
   contactEmail = 'contact@omentejovem.com',
   enableGridView = true
 }: ArtContentProps): ReactElement {
+  const router = useRouter()
   const sanitizedInitialIndex = useMemo(() => {
     if (initialSelectedIndex < 0) {
       return -1
@@ -36,9 +38,7 @@ export function ArtContent({
     return initialSelectedIndex < artworks.length ? initialSelectedIndex : -1
   }, [artworks.length, initialSelectedIndex])
 
-  const [selectedIndex, setSelectedIndex] = useState<number>(
-    sanitizedInitialIndex
-  )
+  const [selectedIndex, setSelectedIndex] = useState<number>(sanitizedInitialIndex)
 
   useEffect(() => {
     setSelectedIndex(sanitizedInitialIndex)
@@ -55,15 +55,30 @@ export function ArtContent({
   )
 
   const handleSelectArtwork = useCallback(
-    (index: number) => {
+    (index: number, replace?: boolean) => {
       if (index < 0 || index >= artworks.length) {
         setSelectedIndex(-1)
         return
       }
 
       setSelectedIndex(index)
+
+      const artwork = artworks[index]
+      const slug = artwork.slug
+
+      if (!slug) {
+        return
+      }
+
+      const href = `/${source}/${slug}`
+
+      if (replace) {
+        router.replace(href)
+      } else {
+        router.push(href)
+      }
     },
-    [artworks.length]
+    [artworks, router, source]
   )
 
   if (artworks.length === 0) {

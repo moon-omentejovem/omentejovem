@@ -26,7 +26,7 @@ interface ArtInfoProps {
   contactEmail: string
   artwork: Artwork
   artworks: Artwork[]
-  onSelectArtwork: (index: number) => void
+  onSelectArtwork: (index: number, replace?: boolean) => void
 }
 
 export function ArtInfo({
