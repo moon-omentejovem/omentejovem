@@ -33,7 +33,8 @@ function tiptapToHTML(content: any): string {
         } else if (mark.type === 'italic') {
           text = `<em>${text}</em>`
         } else if (mark.type === 'link') {
-          text = `<a href="${mark.attrs.href}" class="text-orange-400 underline hover:text-orange-300">${text}</a>`
+          const previewImage = mark.attrs['data-preview-image'] ? ` data-preview-image="${mark.attrs['data-preview-image']}"` : ''
+          text = `<a href="${mark.attrs.href}" class="bio-link text-orange-400 underline hover:text-orange-300"${previewImage}>${text}</a>`
         }
       })
     }

@@ -39,7 +39,25 @@ export default function TiptapEditor({
   const editor = useEditor({
     extensions: [
       StarterKit,
-      Link.configure({
+      Link.extend({
+        addAttributes() {
+          return {
+            ...this.parent?.(),
+            'data-preview-image': {
+              default: null,
+              parseHTML: element => element.getAttribute('data-preview-image'),
+              renderHTML: attributes => {
+                if (!attributes['data-preview-image']) {
+                  return {}
+                }
+                return {
+                  'data-preview-image': attributes['data-preview-image']
+                }
+              }
+            }
+          }
+        }
+      }).configure({
         openOnClick: false,
         HTMLAttributes: {
           class: 'text-orange-400 underline hover:text-orange-300'
@@ -69,11 +87,15 @@ export default function TiptapEditor({
 
     const url = window.prompt('Enter URL:')
     if (url) {
+      const previewImage = window.prompt('Enter preview image URL (optional, for hover preview):')
       editor
         .chain()
         .focus()
         .extendMarkRange('link')
-        .setLink({ href: url })
+        .setLink({ 
+          href: url,
+          ...(previewImage && { 'data-preview-image': previewImage })
+        })
         .run()
     }
   }
