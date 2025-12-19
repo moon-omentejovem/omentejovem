@@ -24,7 +24,7 @@ export default async function Home() {
   }
 
   return (
-    <div className="fixed sm:z-20 bg-background w-full h-full max-w-[1920px]">
+    <div className="fixed sm:z-20 bg-background w-full h-full">
       <HomeContent
         initialImages={images}
         title="Thales Machado"

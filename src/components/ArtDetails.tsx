@@ -20,7 +20,7 @@ export function ArtDetails({ image, detailedImage, name }: ArtDetails) {
             height={1200}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 60vw"
             alt={name}
-            className="flex flex-1 h-full w-auto xl:mb-[48px]"
+            className="flex flex-1 h-auto w-auto max-w-full object-contain xl:mb-[48px]"
             id="active-image"
             priority
             placeholder="blur"
