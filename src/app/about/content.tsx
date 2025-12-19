@@ -6,39 +6,10 @@ import type { ReactElement } from 'react'
 import { aboutAnimations } from '@/animations/client'
 import { AboutArt } from '@/assets/images'
 import { Footer, FooterProperties } from '@/components/Footer'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 
 import { BioRenderer } from './bio-renderer'
 import './style.css'
-
-function extractSlugFromHref(href: string): string | null {
-  const artworkPatterns = [
-    /\/1-1\/([^/?#]+)/,
-    /\/editions\/([^/?#]+)/,
-    /\/portfolio\/([^/?#]+)/,
-    /\/series\/[^/]+\/([^/?#]+)/
-  ]
-
-  for (const pattern of artworkPatterns) {
-    const match = href.match(pattern)
-    if (match) {
-      return match[1]
-    }
-  }
-
-  return null
-}
-
-async function fetchArtworkImage(slug: string): Promise<string | null> {
-  try {
-    const response = await fetch(`/api/artworks/${slug}/image`)
-    if (!response.ok) return null
-    const data = await response.json()
-    return data.imageUrl || null
-  } catch {
-    return null
-  }
-}
 
 interface AboutPageData {
   id: string
@@ -74,128 +45,9 @@ interface AboutContentProperties {
 export function AboutContent({
   aboutPageData
 }: AboutContentProperties): ReactElement {
-  const pageRef = useRef<HTMLElement>(null)
-  const overlayRef = useRef<HTMLImageElement | null>(null)
-  const imageCacheRef = useRef<Record<string, string | null>>({})
-
   useEffect(() => {
     aboutAnimations()
   }, [])
-
-  // Setup artwork preview overlay
-  useEffect(() => {
-    const overlay = document.createElement('img')
-    overlay.style.cssText = `
-      position: fixed;
-      pointer-events: none;
-      z-index: 9999;
-      max-width: 400px;
-      max-height: 400px;
-      object-fit: contain;
-      opacity: 0;
-      visibility: hidden;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-      border-radius: 4px;
-      transition: opacity 0.2s ease-out;
-    `
-    document.body.appendChild(overlay)
-    overlayRef.current = overlay
-
-    return () => {
-      overlay.remove()
-    }
-  }, [])
-
-  // Setup link hover handlers
-  useEffect(() => {
-    if (!pageRef.current) return
-
-    const links = pageRef.current.querySelectorAll('a')
-    const cleanupFunctions: (() => void)[] = []
-    let currentHoveredSlug: string | null = null
-    let isLoading = false
-
-    links.forEach((link) => {
-      const href = link.getAttribute('href')
-      if (!href) return
-
-      const slug = extractSlugFromHref(href)
-      if (!slug) return
-
-      const showOverlay = (imageUrl: string) => {
-        if (!overlayRef.current || currentHoveredSlug !== slug) return
-        overlayRef.current.src = imageUrl
-        overlayRef.current.style.visibility = 'visible'
-        overlayRef.current.style.opacity = '1'
-      }
-
-      const hideOverlay = () => {
-        if (!overlayRef.current) return
-        overlayRef.current.style.opacity = '0'
-        overlayRef.current.style.visibility = 'hidden'
-      }
-
-      const handleMouseEnter = async () => {
-        currentHoveredSlug = slug
-
-        const cachedUrl = imageCacheRef.current[slug]
-        if (cachedUrl) {
-          showOverlay(cachedUrl)
-          return
-        }
-
-        if (cachedUrl === null) return
-
-        isLoading = true
-        const imageUrl = await fetchArtworkImage(slug)
-        imageCacheRef.current[slug] = imageUrl
-        isLoading = false
-
-        if (imageUrl && currentHoveredSlug === slug) {
-          showOverlay(imageUrl)
-        }
-      }
-
-      const handleMouseLeave = () => {
-        currentHoveredSlug = null
-        hideOverlay()
-      }
-
-      const handleMouseMove = (e: MouseEvent) => {
-        if (!overlayRef.current) return
-
-        const offsetX = 20
-        const offsetY = 20
-
-        let x = e.clientX + offsetX
-        let y = e.clientY + offsetY
-
-        if (x + 400 > window.innerWidth) {
-          x = e.clientX - 400 - offsetX
-        }
-        if (y + 400 > window.innerHeight) {
-          y = e.clientY - 400 - offsetY
-        }
-
-        overlayRef.current.style.left = `${x}px`
-        overlayRef.current.style.top = `${y}px`
-      }
-
-      link.addEventListener('mouseenter', handleMouseEnter)
-      link.addEventListener('mouseleave', handleMouseLeave)
-      link.addEventListener('mousemove', handleMouseMove)
-
-      cleanupFunctions.push(() => {
-        link.removeEventListener('mouseenter', handleMouseEnter)
-        link.removeEventListener('mouseleave', handleMouseLeave)
-        link.removeEventListener('mousemove', handleMouseMove)
-      })
-    })
-
-    return () => {
-      cleanupFunctions.forEach((cleanup) => cleanup())
-    }
-  }, [aboutPageData])
 
   const parsedPress = useMemo<FooterProperties['interviews']>(
     () =>
@@ -224,25 +76,17 @@ export function AboutContent({
     const parsedElements = [...anchorElements]
 
     const filtered = parsedElements.filter(
-      (element) => element.className === '' || element.id === 'image-reference' || element.classList.contains('bio-link')
+      (element) => element.className === '' || element.id === 'image-reference'
     )
 
     for (const element of filtered) {
       element.id = `image-reference-${element.innerText}`
-      if (!element.classList.contains('bio-link')) {
-        element.classList.add('bio-link')
-      }
+      element.className = 'bio-link'
       element.setAttribute('target', '_blank')
-
-      // Use data-preview-image attribute if available, otherwise skip preview
-      const previewImageUrl = element.getAttribute('data-preview-image')
-      if (!previewImageUrl) {
-        continue // Skip links without preview image
-      }
 
       const overlayImage = document.createElement('img')
       overlayImage.classList.add('overlay-image')
-      overlayImage.src = previewImageUrl
+      overlayImage.src = element.href
       overlayImage.alt = ''
       overlayImage.style.minWidth = '500px'
       overlayImage.style.maxWidth = '500px'
@@ -280,7 +124,6 @@ export function AboutContent({
 
   return (
     <main
-      ref={pageRef}
       id="about-page"
       className="flex flex-col px-6 pt-12 font-heading xl:px-20 xl:pt-16"
     >
