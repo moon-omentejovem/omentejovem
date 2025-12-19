@@ -50,8 +50,9 @@ export default function TiptapEditor({
             ...this.parent?.(),
             'data-preview-image': {
               default: null,
-              parseHTML: element => element.getAttribute('data-preview-image'),
-              renderHTML: attributes => {
+              parseHTML: (element) =>
+                element.getAttribute('data-preview-image'),
+              renderHTML: (attributes) => {
                 if (!attributes['data-preview-image']) {
                   return {}
                 }
@@ -86,6 +87,9 @@ export default function TiptapEditor({
       }
     }
   })
+
+  const urlInputId = `${editorSlug}-link-url`
+  const previewInputId = `${editorSlug}-preview-url`
 
   const openLinkModal = () => {
     if (!editor) return
@@ -297,10 +301,14 @@ export default function TiptapEditor({
             </h2>
 
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor={urlInputId}
+                className="block text-sm font-medium text-gray-700"
+              >
                 URL
               </label>
               <input
+                id={urlInputId}
                 type="text"
                 value={linkUrl}
                 onChange={(event) => setLinkUrl(event.target.value)}
@@ -310,10 +318,14 @@ export default function TiptapEditor({
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor={previewInputId}
+                className="block text-sm font-medium text-gray-700"
+              >
                 Preview image URL (optional)
               </label>
               <input
+                id={previewInputId}
                 type="text"
                 value={previewUrl}
                 onChange={(event) => setPreviewUrl(event.target.value)}
