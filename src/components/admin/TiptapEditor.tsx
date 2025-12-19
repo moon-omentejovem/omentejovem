@@ -18,6 +18,7 @@ import {
   RedoIcon,
   UndoIcon
 } from 'lucide-react'
+import { useState } from 'react'
 
 import { JSONContent } from '@tiptap/react'
 
@@ -36,6 +37,10 @@ export default function TiptapEditor({
   className = '',
   editorSlug
 }: TiptapEditorProps) {
+  const [showLinkModal, setShowLinkModal] = useState(false)
+  const [linkUrl, setLinkUrl] = useState('')
+  const [previewUrl, setPreviewUrl] = useState('')
+
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -45,8 +50,9 @@ export default function TiptapEditor({
             ...this.parent?.(),
             'data-preview-image': {
               default: null,
-              parseHTML: element => element.getAttribute('data-preview-image'),
-              renderHTML: attributes => {
+              parseHTML: (element) =>
+                element.getAttribute('data-preview-image'),
+              renderHTML: (attributes) => {
                 if (!attributes['data-preview-image']) {
                   return {}
                 }
@@ -82,22 +88,38 @@ export default function TiptapEditor({
     }
   })
 
-  const addLink = () => {
-    if (!editor) return
+  const urlInputId = `${editorSlug}-link-url`
+  const previewInputId = `${editorSlug}-preview-url`
 
-    const url = window.prompt('Enter URL:')
-    if (url) {
-      const previewImage = window.prompt('Enter preview image URL (optional, for hover preview):')
-      editor
-        .chain()
-        .focus()
-        .extendMarkRange('link')
-        .setLink({ 
-          href: url,
-          ...(previewImage && { 'data-preview-image': previewImage })
-        })
-        .run()
+  const openLinkModal = () => {
+    if (!editor) return
+    setLinkUrl('')
+    setPreviewUrl('')
+    setShowLinkModal(true)
+  }
+
+  const confirmLink = () => {
+    if (!editor || !linkUrl.trim()) {
+      setShowLinkModal(false)
+      return
     }
+
+    const hasPreview = previewUrl.trim().length > 0
+
+    ;(editor.chain().focus().extendMarkRange('link') as any)
+      .setLink(
+        hasPreview
+          ? {
+              href: linkUrl.trim(),
+              'data-preview-image': previewUrl.trim()
+            }
+          : {
+              href: linkUrl.trim()
+            }
+      )
+      .run()
+
+    setShowLinkModal(false)
   }
 
   // Novo fluxo: upload real de imagem para Supabase Storage
@@ -166,7 +188,7 @@ export default function TiptapEditor({
         <div className="w-px h-6 bg-gray-200 mx-1" />
 
         <button
-          onClick={addLink}
+          onClick={openLinkModal}
           className={`p-2 rounded hover:bg-gray-100 ${
             editor.isActive('link')
               ? 'bg-gray-200 text-orange-600'
@@ -271,6 +293,67 @@ export default function TiptapEditor({
           </div>
         )}
       </div>
+
+      {showLinkModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6 space-y-4">
+            <h2 className="text-lg font-semibold text-gray-900">
+              Add link with preview
+            </h2>
+
+            <div className="space-y-2">
+              <label
+                htmlFor={urlInputId}
+                className="block text-sm font-medium text-gray-700"
+              >
+                URL
+              </label>
+              <input
+                id={urlInputId}
+                type="text"
+                value={linkUrl}
+                onChange={(event) => setLinkUrl(event.target.value)}
+                placeholder="https://..."
+                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label
+                htmlFor={previewInputId}
+                className="block text-sm font-medium text-gray-700"
+              >
+                Preview image URL (optional)
+              </label>
+              <input
+                id={previewInputId}
+                type="text"
+                value={previewUrl}
+                onChange={(event) => setPreviewUrl(event.target.value)}
+                placeholder="https://.../image.jpg"
+                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+              />
+            </div>
+
+            <div className="flex justify-end gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowLinkModal(false)}
+                className="px-4 py-2 text-sm rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={confirmLink}
+                className="px-4 py-2 text-sm rounded-md bg-orange-600 text-white hover:bg-orange-700 disabled:opacity-50"
+              >
+                Add link
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
