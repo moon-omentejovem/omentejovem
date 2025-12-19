@@ -18,10 +18,15 @@ export default function ArtworksPage() {
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [statusFilter, setStatusFilter] = useState('all')
+  const [search, setSearch] = useState('')
   const router = useRouter()
   const confirm = useConfirm()
 
-  const fetchArtworks = async (targetPage = 1, status = statusFilter) => {
+  const fetchArtworks = async (
+    targetPage = 1,
+    status = statusFilter,
+    searchQuery = search
+  ) => {
     try {
       setLoading(true)
       const params = new URLSearchParams({
@@ -29,6 +34,7 @@ export default function ArtworksPage() {
         limit: String(PAGE_SIZE)
       })
       if (status !== 'all') params.set('status', status)
+      if (searchQuery.trim()) params.set('search', searchQuery.trim())
       const response = await fetch(`/api/admin/artworks?${params.toString()}`)
       if (response.ok) {
         const { data, total } = await response.json()
@@ -47,7 +53,7 @@ export default function ArtworksPage() {
   }
 
   useEffect(() => {
-    fetchArtworks(1, statusFilter)
+    fetchArtworks(1, statusFilter, search)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [statusFilter])
 
@@ -79,7 +85,7 @@ export default function ArtworksPage() {
       })
 
       if (response.ok) {
-        fetchArtworks(page)
+        fetchArtworks(page, statusFilter, search)
         toast.success('Artwork duplicated successfully!')
       } else {
         const error = await response.json()
@@ -105,7 +111,7 @@ export default function ArtworksPage() {
         body: JSON.stringify({ status: newStatus })
       })
       if (response.ok) {
-        fetchArtworks(page)
+        fetchArtworks(page, statusFilter, search)
         toast.success(`Artwork marked as ${newStatus}`)
       } else {
         const error = await response.json()
@@ -131,7 +137,7 @@ export default function ArtworksPage() {
       })
 
       if (response.ok) {
-        fetchArtworks(page)
+        fetchArtworks(page, statusFilter, search)
         toast.success('Artwork deleted')
       } else {
         const error = await response.json()
@@ -154,11 +160,16 @@ export default function ArtworksPage() {
         onDuplicate={handleDuplicate}
         page={page}
         totalPages={totalPages}
-        onPageChange={(p) => fetchArtworks(p)}
+        onPageChange={(p) => fetchArtworks(p, statusFilter, search)}
         statusFilter={statusFilter}
         onStatusFilterChange={(s) => {
           setStatusFilter(s)
-          fetchArtworks(1, s)
+          fetchArtworks(1, s, search)
+        }}
+        searchValue={search}
+        onSearchChange={(value) => {
+          setSearch(value)
+          fetchArtworks(1, statusFilter, value)
         }}
         onToggleDraft={handleToggleDraft}
         onDelete={handleDelete}

@@ -34,7 +34,19 @@ export default function ClientAdminProtection({
         return
       }
 
-      // Check admin role
+      const { data: isAdminData, error: isAdminError } =
+        await supabase.rpc('is_admin')
+
+      if (!isAdminError && typeof isAdminData === 'boolean') {
+        if (!isAdminData) {
+          router.push('/admin?error=access_denied')
+          return
+        }
+
+        setIsAdmin(true)
+        return
+      }
+
       const { data: roleData, error: roleError } = await supabase
         .from('user_roles')
         .select('role')

@@ -21,6 +21,7 @@ export async function GET(request: NextRequest) {
 
     const status = searchParams.get('status')
     const featured = searchParams.get('featured')
+     const search = searchParams.get('search')?.trim()
 
     let query = supabaseAdmin
       .from('artworks')
@@ -41,6 +42,13 @@ export async function GET(request: NextRequest) {
 
     if (featured === 'true') {
       query = query.eq('featured', true)
+    }
+
+    if (search) {
+      const pattern = `%${search}%`
+      query = query.or(
+        `title.ilike.${pattern},token_id.ilike.${pattern}`
+      )
     }
 
     const { data, count, error } = await query.range(from, to)
