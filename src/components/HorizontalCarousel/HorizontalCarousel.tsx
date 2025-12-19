@@ -131,7 +131,7 @@ export function HorizontalCarousel({
                   <Link
                     href={`/${redirectSource}/${slide.slug}`}
                     aria-label={slide.name}
-                    className="absolute inset-0 z-10"
+                    className="absolute inset-0 z-10 pointer-events-none horizontal-slide-link"
                   />
                 )}
               </div>
