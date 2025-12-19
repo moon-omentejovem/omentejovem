@@ -41,7 +41,7 @@ export function Newsletter(): ReactElement {
 
   const handleDismiss = () => {
     Cookies.set('newsletter_dismissed', 'true', { expires: 7, path: '/' })
-    router.replace('/')
+    window.location.href = '/'
   }
 
   const handleSubmit = async () => {
