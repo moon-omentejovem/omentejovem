@@ -110,6 +110,8 @@ export class ArtworkService extends BaseService {
           }
         }
 
+        query = query.order('display_order', { ascending: true })
+
         // Apply ordering
         const orderBy = filters.orderBy || 'posted_at'
         const ascending = filters.ascending ?? false

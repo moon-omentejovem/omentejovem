@@ -211,6 +211,12 @@ export const artworksDescriptor: ResourceDescriptor = {
       placeholder: '0x123...abc (blockchain contract address)'
     },
     {
+      key: 'display_order',
+      label: 'Display Order',
+      type: 'number',
+      placeholder: '1 shows first; higher numbers later'
+    },
+    {
       key: 'series',
       label: 'Series',
       type: 'relation-multi',
