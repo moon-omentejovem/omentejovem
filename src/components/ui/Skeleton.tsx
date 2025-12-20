@@ -114,11 +114,12 @@ export function LoadingSpinner({
 // Componente de loading para páginas inteiras
 export function PageLoadingSkeleton() {
   return (
-    <div className="min-h-screen">
-      <HeaderSkeleton />
-      <div className="px-6 py-8 space-y-8">
-        <Skeleton height="3rem" width="300px" />
-        <PortfolioGridSkeleton />
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="flex flex-col items-center gap-3">
+        <LoadingSpinner size="lg" className="text-primary-50 mb-1" />
+        <p className="text-xs uppercase tracking-[0.2em] text-secondary-200">
+          Loading
+        </p>
       </div>
     </div>
   )
