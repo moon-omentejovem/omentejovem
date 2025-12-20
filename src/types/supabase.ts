@@ -130,6 +130,7 @@ export type Database = {
           is_one_of_one: boolean | null
           mint_date: string | null
           mint_link: string | null
+          external_platforms: Json | null
           posted_at: string | null
           slug: string
           status: string
@@ -154,6 +155,7 @@ export type Database = {
           is_one_of_one?: boolean | null
           mint_date?: string | null
           mint_link?: string | null
+          external_platforms?: Json | null
           posted_at?: string | null
           slug: string
           status?: string
@@ -178,6 +180,7 @@ export type Database = {
           is_one_of_one?: boolean | null
           mint_date?: string | null
           mint_link?: string | null
+          external_platforms?: Json | null
           posted_at?: string | null
           slug?: string
           status?: string

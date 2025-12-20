@@ -136,6 +136,24 @@ export const artworksDescriptor: ResourceDescriptor = {
       placeholder: 'https://opensea.io/assets/...'
     },
     {
+      key: 'external_platforms',
+      label: 'External Platforms',
+      type: 'json',
+      schema: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            title: { title: 'Platform Name', type: 'string' },
+            url: { title: 'Platform Link', type: 'string' }
+          }
+        }
+      },
+      validation: {
+        max: 5
+      }
+    },
+    {
       key: 'type',
       label: 'Type',
       type: 'select',

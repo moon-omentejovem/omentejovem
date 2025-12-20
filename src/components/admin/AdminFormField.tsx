@@ -12,6 +12,7 @@ import {
   ToggleSwitch
 } from 'flowbite-react'
 import RelationPicker from './RelationPicker'
+import JsonArrayField from './JsonArrayField'
 
 interface AdminFormFieldProps {
   field: FormField
@@ -191,6 +192,15 @@ export default function AdminFormField({
         <RelationPicker
           field={field}
           value={Array.isArray(value) ? value : []}
+          onChange={onChange}
+          error={error}
+        />
+      )
+    case 'json':
+      return (
+        <JsonArrayField
+          field={field}
+          value={value}
           onChange={onChange}
           error={error}
         />
