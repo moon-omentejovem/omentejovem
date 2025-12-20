@@ -214,7 +214,7 @@ export const artworksDescriptor: ResourceDescriptor = {
       key: 'display_order',
       label: 'Display Order',
       type: 'number',
-      placeholder: '1 shows first; higher numbers later'
+      placeholder: '1 appears first, 2 second, etc.'
     },
     {
       key: 'series',

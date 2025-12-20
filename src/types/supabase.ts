@@ -128,6 +128,7 @@ export type Database = {
           imageurl: string | null
           is_featured: boolean | null
           is_one_of_one: boolean | null
+          display_order: number | null
           mint_date: string | null
           mint_link: string | null
           external_platforms: Json | null
@@ -154,6 +155,7 @@ export type Database = {
           imageurl?: string | null
           is_featured?: boolean | null
           is_one_of_one?: boolean | null
+          display_order?: number | null
           mint_date?: string | null
           mint_link?: string | null
           external_platforms?: Json | null
@@ -180,6 +182,7 @@ export type Database = {
           imageurl?: string | null
           is_featured?: boolean | null
           is_one_of_one?: boolean | null
+          display_order?: number | null
           mint_date?: string | null
           mint_link?: string | null
           external_platforms?: Json | null
