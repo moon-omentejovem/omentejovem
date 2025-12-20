@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS public.artworks (
   is_featured BOOLEAN DEFAULT FALSE,
   is_one_of_one BOOLEAN DEFAULT FALSE,
   posted_at TIMESTAMPTZ DEFAULT NOW(),
+  display_order INTEGER,
   blockchain TEXT,
   collection_slug TEXT,
   contract_address TEXT,
@@ -106,6 +107,7 @@ CREATE TABLE IF NOT EXISTS public.user_roles (
 CREATE INDEX IF NOT EXISTS idx_series_slug ON public.series(slug);
 CREATE INDEX IF NOT EXISTS idx_artworks_slug ON public.artworks(slug);
 CREATE INDEX IF NOT EXISTS idx_artworks_posted_at ON public.artworks(posted_at);
+CREATE INDEX IF NOT EXISTS idx_artworks_display_order ON public.artworks(display_order);
 CREATE INDEX IF NOT EXISTS idx_artworks_featured ON public.artworks(is_featured);
 CREATE INDEX IF NOT EXISTS idx_artworks_status ON public.artworks(status);
 CREATE INDEX IF NOT EXISTS idx_series_artworks_series ON public.series_artworks(series_id);
