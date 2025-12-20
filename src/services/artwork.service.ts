@@ -110,7 +110,12 @@ export class ArtworkService extends BaseService {
           }
         }
 
-        // Apply ordering
+        // Apply ordering (manual display_order first, then fallback)
+        query = query.order('display_order', {
+          ascending: true,
+          nullsFirst: false
+        })
+
         const orderBy = filters.orderBy || 'posted_at'
         const ascending = filters.ascending ?? false
         query = query.order(orderBy, { ascending })
@@ -131,11 +136,75 @@ export class ArtworkService extends BaseService {
           }
         }
 
-        const artworks = (data || []).map(
+        const rawArtworks = (data || []).map(
           (artwork: any) => artwork
         ) as ArtworkWithSeries[]
 
-        // Apply random shuffle if requested
+        const withOrder = rawArtworks
+          .filter((artwork) => artwork.display_order !== null && artwork.display_order !== undefined)
+          .sort((a, b) => {
+            const ao = a.display_order as number
+            const bo = b.display_order as number
+            if (ao === bo) {
+              const ad = a.posted_at || a.created_at || ''
+              const bd = b.posted_at || b.created_at || ''
+              if (ad < bd) return 1
+              if (ad > bd) return -1
+              return 0
+            }
+            return ao - bo
+          })
+
+        const withoutOrder = rawArtworks
+          .filter((artwork) => artwork.display_order === null || artwork.display_order === undefined)
+          .sort((a, b) => {
+            const ad = a.posted_at || a.created_at || ''
+            const bd = b.posted_at || b.created_at || ''
+            if (ad < bd) return 1
+            if (ad > bd) return -1
+            return 0
+          })
+
+        const totalArtworks = rawArtworks.length
+        const positioned: ArtworkWithSeries[] = new Array(totalArtworks)
+
+        for (const artwork of withOrder) {
+          const orderValue = typeof artwork.display_order === 'number' ? artwork.display_order : 0
+          let targetIndex = orderValue > 0 ? orderValue - 1 : 0
+          if (targetIndex >= totalArtworks) {
+            targetIndex = totalArtworks - 1
+          }
+
+          while (positioned[targetIndex] && targetIndex < totalArtworks - 1) {
+            targetIndex += 1
+          }
+
+          if (!positioned[targetIndex]) {
+            positioned[targetIndex] = artwork
+          } else {
+            const firstEmpty = positioned.findIndex((item) => !item)
+            if (firstEmpty !== -1) {
+              positioned[firstEmpty] = artwork
+            } else {
+              positioned.push(artwork)
+            }
+          }
+        }
+
+        let fillIndex = 0
+        for (const artwork of withoutOrder) {
+          while (fillIndex < positioned.length && positioned[fillIndex]) {
+            fillIndex += 1
+          }
+          if (fillIndex >= positioned.length) {
+            positioned.push(artwork)
+          } else {
+            positioned[fillIndex] = artwork
+          }
+        }
+
+        const artworks = positioned.filter(Boolean)
+
         if (filters.random) {
           artworks.sort(() => Math.random() - 0.5)
         }

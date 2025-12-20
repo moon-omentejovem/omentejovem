@@ -84,7 +84,10 @@ export default function AdminFormField({
             id={field.key}
             type="number"
             value={value || ''}
-            onChange={(e) => onChange(Number(e.target.value))}
+            onChange={(e) => {
+              const next = e.target.value
+              onChange(next === '' ? null : Number(next))
+            }}
             placeholder={field.placeholder}
             min={field.validation?.min}
             max={field.validation?.max}

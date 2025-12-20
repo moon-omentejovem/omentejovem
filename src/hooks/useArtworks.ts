@@ -43,6 +43,7 @@ export function useArtworks(options?: {
       let query = client
         .from('artworks')
         .select('*')
+        .order('display_order', { ascending: true, nullsFirst: false })
         .order('posted_at', { ascending: false })
 
       if (options?.featured) {
@@ -107,6 +108,7 @@ export function useFeaturedArtworks(limit?: number) {
         .from('artworks')
         .select('*')
         .eq('is_featured', true)
+        .order('display_order', { ascending: true, nullsFirst: false })
         .order('posted_at', { ascending: false })
 
       if (limit) {
@@ -137,6 +139,7 @@ export function useOneOfOneArtworks(limit?: number) {
         .from('artworks')
         .select('*')
         .eq('one_of_one', true)
+        .order('display_order', { ascending: true, nullsFirst: false })
         .order('posted_at', { ascending: false })
 
       if (limit) {
@@ -283,6 +286,7 @@ export function useArtworksPaginated(
       let query = client
         .from('artworks')
         .select('*', { count: 'exact' })
+        .order('display_order', { ascending: true, nullsFirst: false })
         .order('posted_at', { ascending: false })
 
       if (filters?.featured) {
