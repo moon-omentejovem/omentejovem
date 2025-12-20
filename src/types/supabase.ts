@@ -133,6 +133,7 @@ export type Database = {
           mint_link: string | null
           external_platforms: Json | null
           posted_at: string | null
+          display_order: number | null
           slug: string
           status: string
           title: string
@@ -159,6 +160,7 @@ export type Database = {
           mint_link?: string | null
           external_platforms?: Json | null
           posted_at?: string | null
+          display_order?: number | null
           slug: string
           status?: string
           title: string
@@ -185,6 +187,7 @@ export type Database = {
           mint_link?: string | null
           external_platforms?: Json | null
           posted_at?: string | null
+          display_order?: number | null
           slug?: string
           status?: string
           title?: string
