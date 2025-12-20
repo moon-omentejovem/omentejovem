@@ -5,8 +5,11 @@ const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 export function isArtworkMinted(artwork: Artwork): boolean {
   const tokenId = artwork.token_id?.trim()
   const mintLink = artwork.mint_link?.trim()
+  const hasExternalPlatforms =
+    Array.isArray(artwork.external_platforms) &&
+    artwork.external_platforms.length > 0
 
-  if (!tokenId && !mintLink) {
+  if (!tokenId && !mintLink && !hasExternalPlatforms) {
     return false
   }
 
