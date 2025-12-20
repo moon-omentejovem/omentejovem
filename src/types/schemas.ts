@@ -13,6 +13,7 @@ export const ArtworkSchema = z.object({
   token_id: z.string().min(1).optional().nullable(),
   mint_date: z.string().optional().nullable(),
   mint_link: z.url().optional().nullable(),
+  external_platforms: z.any().optional().nullable(),
   type: z.string().min(1), // Changed from enum to match DB
   editions_total: z.number().int().positive().nullable().optional(),
   filename: z.string().optional().nullable(),
