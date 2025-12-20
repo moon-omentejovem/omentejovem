@@ -7,6 +7,7 @@
 
 'use client'
 
+import { PageLoadingSkeleton } from '@/components/ui/Skeleton'
 import type { Artwork } from '@/types/artwork'
 import { useRouter } from 'next/navigation'
 import { ReactElement, useCallback, useEffect, useMemo, useState } from 'react'
@@ -39,10 +40,25 @@ export function ArtContent({
   }, [artworks.length, initialSelectedIndex])
 
   const [selectedIndex, setSelectedIndex] = useState<number>(sanitizedInitialIndex)
+  const [isClientReady, setIsClientReady] = useState(false)
 
   useEffect(() => {
     setSelectedIndex(sanitizedInitialIndex)
   }, [sanitizedInitialIndex, artworks])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setIsClientReady(true)
+    }, 350)
+
+    return () => {
+      window.clearTimeout(timeoutId)
+    }
+  }, [])
 
   const slides = useMemo(
     () =>
@@ -92,6 +108,10 @@ export function ArtContent({
         </div>
       </main>
     )
+  }
+
+  if (!isClientReady) {
+    return <PageLoadingSkeleton />
   }
 
   if (selectedIndex === -1 && enableGridView) {
