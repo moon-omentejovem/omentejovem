@@ -26,8 +26,18 @@ export function resolveExternalLinks(artwork: Artwork): ExternalLink[] {
     })
   }
 
-  if (Array.isArray(artwork.external_platforms)) {
-    const platforms = artwork.external_platforms as unknown as Array<{ title: string; url: string }>
+  let external = artwork.external_platforms as unknown
+
+  if (typeof external === 'string') {
+    try {
+      external = JSON.parse(external)
+    } catch {
+      external = null
+    }
+  }
+
+  if (Array.isArray(external)) {
+    const platforms = external as Array<{ title: string; url: string }>
     platforms.forEach((platform) => {
       if (platform.title && platform.url) {
         links.push({

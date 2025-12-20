@@ -232,7 +232,7 @@ export const artworksDescriptor: ResourceDescriptor = {
     }
   ],
   defaultSort: {
-    key: 'posted_at',
+    key: 'updated_at',
     direction: 'desc'
   },
   searchFields: ['title', 'token_id'],

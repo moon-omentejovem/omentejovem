@@ -2,12 +2,11 @@
 
 import { Button, Label, TextInput } from 'flowbite-react'
 import { PlusIcon, TrashIcon } from 'lucide-react'
-import { useEffect, useState } from 'react'
 import type { FormField } from '@/types/descriptors'
 
 interface JsonArrayFieldProps {
   field: FormField
-  value: any[]
+  value: any
   onChange: (value: any[]) => void
   error?: string
 }
@@ -18,8 +17,17 @@ export default function JsonArrayField({
   onChange,
   error
 }: JsonArrayFieldProps) {
-  // Ensure value is always an array
-  const items = Array.isArray(value) ? value : []
+  let normalized: any = value
+
+  if (typeof normalized === 'string') {
+    try {
+      normalized = JSON.parse(normalized)
+    } catch {
+      normalized = []
+    }
+  }
+
+  const items = Array.isArray(normalized) ? normalized : []
   const schema = field.schema
   
   // Only support object items for now, as required by the use case

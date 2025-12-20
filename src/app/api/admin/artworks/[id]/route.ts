@@ -44,26 +44,36 @@ export async function PUT(
 ) {
   try {
     const body = await request.json()
-
-    // Validate input
     const validatedData = UpdateArtworkSchema.parse(body)
-
-    // imageoptimizedurl deve vir pronto do frontend
     const imageoptimizedurl = body.imageoptimizedurl || null
 
-    // Update artwork
+    const updatePayload: Database['public']['Tables']['artworks']['Update'] = {
+      ...validatedData,
+      imageoptimizedurl,
+      updated_at: new Date().toISOString()
+    }
+
     const { data: artwork, error } = await supabaseAdmin
       .from('artworks')
-      .update({
-        ...validatedData,
-        imageoptimizedurl,
-        updated_at: new Date().toISOString()
-      } as Database['public']['Tables']['artworks']['Update'])
+      .update(updatePayload)
       .eq('id', params.id)
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {
+      const anyError = error as any
+      return NextResponse.json(
+        {
+          error:
+            anyError.message ||
+            'Supabase error while updating artwork (PUT /api/admin/artworks/[id])',
+          code: anyError.code,
+          details: anyError.details ?? anyError,
+          hint: anyError.hint
+        },
+        { status: 500 }
+      )
+    }
 
     // Handle series relationships if provided
     if (body.series !== undefined) {
@@ -106,22 +116,34 @@ export async function PATCH(
 ) {
   try {
     const body = await request.json()
-
-    // imageoptimizedurl deve vir pronto do frontend
     const imageoptimizedurl = body.imageoptimizedurl || null
+    const patchPayload: Database['public']['Tables']['artworks']['Update'] = {
+      ...body,
+      imageoptimizedurl,
+      updated_at: new Date().toISOString()
+    }
 
     const { data: artwork, error } = await supabaseAdmin
       .from('artworks')
-      .update({
-        ...body,
-        imageoptimizedurl,
-        updated_at: new Date().toISOString()
-      } as Database['public']['Tables']['artworks']['Update'])
+      .update(patchPayload)
       .eq('id', params.id)
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {
+      const anyError = error as any
+      return NextResponse.json(
+        {
+          error:
+            anyError.message ||
+            'Supabase error while updating artwork (PATCH /api/admin/artworks/[id])',
+          code: anyError.code,
+          details: anyError.details ?? anyError,
+          hint: anyError.hint
+        },
+        { status: 500 }
+      )
+    }
 
     // Revalidate cache
     revalidateTag('artworks')
