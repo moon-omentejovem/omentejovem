@@ -19,8 +19,23 @@ export function handleApiError(error: unknown) {
   }
 
   if (error instanceof Error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    const anyError = error as any
+    return NextResponse.json(
+      {
+        error: error.message,
+        code: anyError.code,
+        details: anyError.details,
+        hint: anyError.hint
+      },
+      { status: 500 }
+    )
   }
 
-  return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  return NextResponse.json(
+    {
+      error: 'Internal server error',
+      details: error
+    },
+    { status: 500 }
+  )
 }

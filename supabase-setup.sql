@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS public.artworks (
   token_id TEXT,
   mint_date DATE,
   mint_link TEXT,
+  external_platforms JSONB,
   type TEXT NOT NULL CHECK (type IN ('single', 'edition')),
   editions_total INTEGER,
   imageurl TEXT,
