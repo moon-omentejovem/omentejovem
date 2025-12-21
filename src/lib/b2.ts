@@ -7,6 +7,7 @@ export const B2_REGION = 'us-east-005' // Extract from endpoint or env
 export const b2Client = new S3Client({
   endpoint: B2_ENDPOINT,
   region: B2_REGION,
+  forcePathStyle: true, // Force path style for B2 compatibility
   credentials: {
     accessKeyId: process.env.B2_KEY_ID || '',
     secretAccessKey: process.env.B2_APP_KEY || ''
