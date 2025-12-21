@@ -40,10 +40,15 @@ export default function ImageUploadField({
   )
 
   const handleUpload = async (file: File) => {
+    // 300MB limit
+    if (file.size > 300 * 1024 * 1024) {
+      alert('A imagem excede o limite máximo de 300MB.')
+      return
+    }
+
     const { originalUrl, optimizedUrl } = await uploadImage(
       file,
-      uploadId,
-      supabase
+      uploadId
     )
     const ext = file.name.split('.').pop()
     const filename = `${uploadId}.${ext}`
