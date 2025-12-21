@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
+import axios from 'axios'
 
 export interface UseImageUploadResult {
   uploading: boolean
@@ -7,14 +8,13 @@ export interface UseImageUploadResult {
   optimizedUrl: string | null
   uploadImage: (
     file: File,
-    id: string,
-    supabase: any
+    id: string
   ) => Promise<{ originalUrl: string | null; optimizedUrl: string | null }>
   resetUploadState: () => void
 }
 
 /**
- * Hook para otimizar (resize, webp) e subir imagem original e otimizada para Supabase Storage.
+ * Hook para otimizar (resize, webp) e subir imagem original e otimizada para Backblaze B2.
  * - Redimensiona para no máximo 1920x1080 (mantendo proporção)
  * - Converte otimizada para webp
  * - Sobe original em images/{id}.{ext} e otimizada em images/optimized/{id}.webp
@@ -25,7 +25,20 @@ export function useImageUpload(): UseImageUploadResult {
   const [originalUrl, setOriginalUrl] = useState<string | null>(null)
   const [optimizedUrl, setOptimizedUrl] = useState<string | null>(null)
 
-  async function uploadImage(file: File, id: string, supabase: any) {
+  async function getSignedUrl(filename: string, contentType: string) {
+    const res = await axios.post('/api/upload', { filename, contentType })
+    return res.data
+  }
+
+  async function uploadToB2(file: File | Blob, filename: string, contentType: string) {
+    const { signedUrl, publicUrl } = await getSignedUrl(filename, contentType)
+    await axios.put(signedUrl, file, {
+      headers: { 'Content-Type': contentType }
+    })
+    return publicUrl
+  }
+
+  async function uploadImage(file: File, id: string) {
     setUploading(true)
     setOriginalUrl(null)
     setOptimizedUrl(null)
@@ -34,35 +47,19 @@ export function useImageUpload(): UseImageUploadResult {
     try {
       // 1. Upload original
       const ext = file.name.split('.').pop() || 'jpg'
-      const originalFilename = `${id}.${ext}`
-      const originalPath = `images/${originalFilename}`
-      const { error: uploadError } = await supabase.storage
-        .from('media')
-        .upload(originalPath, file, { upsert: true })
-      if (uploadError) throw uploadError
-      const { data: originalData } = supabase.storage
-        .from('media')
-        .getPublicUrl(originalPath)
-      setOriginalUrl(originalData.publicUrl)
-      finalOriginalUrl = originalData.publicUrl
+      const originalFilename = `images/${id}.${ext}`
+      
+      finalOriginalUrl = await uploadToB2(file, originalFilename, file.type)
+      setOriginalUrl(finalOriginalUrl)
 
       // 2. Otimizar imagem (resize + webp)
       const optimizedBlob = await optimizeImageWithCanvas(file)
-      const optimizedFilename = `${id}.webp`
-      const optimizedPath = `images/optimized/${optimizedFilename}`
-      const { error: optError } = await supabase.storage
-        .from('media')
-        .upload(optimizedPath, optimizedBlob, {
-          upsert: true,
-          contentType: 'image/webp'
-        })
-      if (optError) throw optError
-      const { data: optimizedData } = supabase.storage
-        .from('media')
-        .getPublicUrl(optimizedPath)
-      setOptimizedUrl(optimizedData.publicUrl)
-      finalOptimizedUrl = optimizedData.publicUrl
-      toast.success('Imagem original e otimizada enviadas!')
+      const optimizedFilename = `images/optimized/${id}.webp`
+      
+      finalOptimizedUrl = await uploadToB2(optimizedBlob, optimizedFilename, 'image/webp')
+      setOptimizedUrl(finalOptimizedUrl)
+
+      toast.success('Imagem original e otimizada enviadas para B2!')
       return { originalUrl: finalOriginalUrl, optimizedUrl: finalOptimizedUrl }
     } catch (err) {
       const msg =
