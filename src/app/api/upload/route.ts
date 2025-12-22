@@ -1,6 +1,6 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
-import { b2Client, B2_BUCKET_NAME, B2_ENDPOINT } from '@/lib/b2'
+import { B2_BUCKET_NAME, B2_ENDPOINT, b2Client } from '@/lib/b2'
 import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
@@ -17,13 +17,13 @@ export async function POST(request: Request) {
     const command = new PutObjectCommand({
       Bucket: B2_BUCKET_NAME,
       Key: filename,
-      // ContentType: contentType, // Temporarily removed to debug SignatureDoesNotMatch
+      ContentType: contentType
     })
 
-    const signedUrl = await getSignedUrl(b2Client, command, { expiresIn: 3600 })
-    
-    // Construct public URL
-    // Using path style: https://s3.us-east-005.backblazeb2.com/omentejovem/filename
+    const signedUrl = await getSignedUrl(b2Client, command, {
+      expiresIn: 3600
+    })
+
     const publicUrl = `${B2_ENDPOINT}/${B2_BUCKET_NAME}/${filename}`
 
     return NextResponse.json({ signedUrl, publicUrl })
