@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     const command = new PutObjectCommand({
       Bucket: B2_BUCKET_NAME,
       Key: filename,
-      ContentType: contentType,
+      // ContentType: contentType, // Temporarily removed to debug SignatureDoesNotMatch
     })
 
     const signedUrl = await getSignedUrl(b2Client, command, { expiresIn: 3600 })

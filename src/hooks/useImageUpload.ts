@@ -33,7 +33,9 @@ export function useImageUpload(): UseImageUploadResult {
   async function uploadToB2(file: File | Blob, filename: string, contentType: string) {
     const { signedUrl, publicUrl } = await getSignedUrl(filename, contentType)
     await axios.put(signedUrl, file, {
-      headers: { 'Content-Type': contentType }
+      headers: {
+        // 'Content-Type': contentType 
+      }
     })
     return publicUrl
   }
