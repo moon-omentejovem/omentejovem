@@ -169,7 +169,9 @@ export default function ImageUploadField({
                 src={previewUrl}
                 className="w-80 max-w-full rounded-lg border border-gray-200"
                 controls
-              />
+              >
+                <track kind="captions" />
+              </video>
             ) : (
               <Image
                 src={previewUrl}
