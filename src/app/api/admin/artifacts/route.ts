@@ -12,6 +12,7 @@ export async function GET(request: NextRequest) {
     const from = (page - 1) * limit
     const to = from + limit - 1
     const status = searchParams.get('status')
+    const search = searchParams.get('search')?.trim()
 
     let query = supabaseAdmin
       .from('artifacts')
@@ -20,6 +21,11 @@ export async function GET(request: NextRequest) {
 
     if (status && status !== 'all') {
       query = query.eq('status', status)
+    }
+
+    if (search) {
+      const pattern = `%${search}%`
+      query = query.ilike('title', pattern)
     }
 
     const { data, count, error } = await query.range(from, to)
@@ -43,9 +49,34 @@ export async function GET(request: NextRequest) {
 // POST /api/admin/artifacts - Create new artifact
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json()
+    const raw = await request.json()
 
-    // Validate input
+    const body = {
+      ...raw,
+      link_url:
+        typeof raw.link_url === 'string' && raw.link_url.trim() === ''
+          ? null
+          : raw.link_url,
+      highlight_video_url:
+        typeof raw.highlight_video_url === 'string' &&
+        raw.highlight_video_url.trim() === ''
+          ? null
+          : raw.highlight_video_url,
+      imageurl:
+        typeof raw.imageurl === 'string' && raw.imageurl.trim() === ''
+          ? null
+          : raw.imageurl,
+      description:
+        typeof raw.description === 'string' && raw.description.trim() === ''
+          ? null
+          : raw.description,
+      collection_label:
+        typeof raw.collection_label === 'string' &&
+        raw.collection_label.trim() === ''
+          ? null
+          : raw.collection_label
+    }
+
     const validatedData = CreateArtifactSchema.parse(body)
 
     // Insert artifact

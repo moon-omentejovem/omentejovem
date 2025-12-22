@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from '@/lib/utils'
+import { cn, getProxiedImageUrl } from '@/lib/utils'
 import type { ListColumn, ResourceDescriptor } from '@/types/descriptors'
 import {
   Cell,
@@ -91,7 +91,7 @@ export default function AdminTable<T extends Record<string, any>>({
           const imageUrl = item.imageurl || null
           return imageUrl ? (
             <Image
-              src={imageUrl}
+              src={getProxiedImageUrl(imageUrl)}
               alt={item.title || item.name || 'Image'}
               width={96}
               height={96}

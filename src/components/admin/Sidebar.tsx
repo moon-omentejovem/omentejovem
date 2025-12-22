@@ -10,11 +10,19 @@ const navItems = [
   { href: '/admin/series', label: 'Series', icon: '📚' },
   { href: '/admin/artifacts', label: 'Artifacts', icon: '🏺' },
   { href: '/admin/about', label: 'About Page', icon: '📄' },
-  { href: '/admin/users', label: 'Users', icon: '👥' }
+  { href: '/admin/users', label: 'Users', icon: '👥' },
+  { href: '/admin/users/cache', label: 'Cache', icon: '🗄️' }
 ]
 
 export default function Sidebar() {
   const pathname = usePathname()
+
+  const isActive = (href: string) => {
+    if (href === '/admin/users') {
+      return pathname === '/admin/users'
+    }
+    return pathname === href || pathname.startsWith(`${href}/`)
+  }
 
   return (
     <aside className="w-full md:w-64 bg-white text-sm flex flex-col border-b md:border-r border-gray-200 md:sticky md:top-32">
@@ -37,7 +45,7 @@ export default function Sidebar() {
               href={item.href}
               className={clsx(
                 'flex items-center space-x-3 px-3 py-2.5 rounded-md transition-colors',
-                pathname.startsWith(item.href)
+                isActive(item.href)
                   ? 'bg-orange-100 text-orange-700 border-l-4 border-orange-500'
                   : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
               )}

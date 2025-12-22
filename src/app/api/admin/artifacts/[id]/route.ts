@@ -31,9 +31,34 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    const body = await request.json()
+    const raw = await request.json()
 
-    // Validate input
+    const body = {
+      ...raw,
+      link_url:
+        typeof raw.link_url === 'string' && raw.link_url.trim() === ''
+          ? null
+          : raw.link_url,
+      highlight_video_url:
+        typeof raw.highlight_video_url === 'string' &&
+        raw.highlight_video_url.trim() === ''
+          ? null
+          : raw.highlight_video_url,
+      imageurl:
+        typeof raw.imageurl === 'string' && raw.imageurl.trim() === ''
+          ? null
+          : raw.imageurl,
+      description:
+        typeof raw.description === 'string' && raw.description.trim() === ''
+          ? null
+          : raw.description,
+      collection_label:
+        typeof raw.collection_label === 'string' &&
+        raw.collection_label.trim() === ''
+          ? null
+          : raw.collection_label
+    }
+
     const validatedData = UpdateArtifactSchema.parse(body)
 
     // Update artifact

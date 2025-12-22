@@ -1,10 +1,10 @@
 'use client'
 
+import { calloutAnimation } from '@/animations/client'
+import { getProxiedImageUrl } from '@/lib/utils'
+import { HomeImage } from '@/types/home'
 import Image from 'next/image'
 import { useCallback, useEffect, useRef, useState } from 'react'
-
-import { calloutAnimation } from '@/animations/client'
-import { HomeImage } from '@/types/home'
 
 interface CalloutParallaxProperties {
   title: string
@@ -76,7 +76,7 @@ export function CalloutParallax({
   useEffect(() => {
     calloutImages.forEach((image, index) => {
       const img = document.createElement('img')
-      img.src = image.imageUrl
+      img.src = getProxiedImageUrl(image.imageUrl)
       img.onload = () => {
         imageObjects.current[index] = img
       }
@@ -122,7 +122,7 @@ export function CalloutParallax({
             className="flex flex-col items-center select-none"
           >
             <Image
-              src={calloutImages[currentImageIndex].imageUrl}
+              src={getProxiedImageUrl(calloutImages[currentImageIndex].imageUrl)}
               width={800}
               height={900}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 600px"

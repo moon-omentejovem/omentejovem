@@ -8,7 +8,7 @@ import {
   carouselActiveSlideAnimation,
   carouselFigcaptionAnimation
 } from '@/animations/client'
-import { cn } from '@/lib/utils'
+import { cn, getProxiedImageUrl } from '@/lib/utils'
 import { addLoadedClass } from '@/utils/lazyLoading'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -47,6 +47,8 @@ export function HorizontalCarousel({
       <Swiper
         className="horizontal-carousel"
         grabCursor={true}
+        allowTouchMove={true}
+        simulateTouch={true}
         modules={[Mousewheel, FreeMode, Pagination]}
         mousewheel={true}
         slideToClickedSlide={true}
@@ -106,7 +108,7 @@ export function HorizontalCarousel({
                   >
                     {slide.imageUrl ? (
                       <Image
-                        src={slide.imageUrl}
+                        src={getProxiedImageUrl(slide.imageUrl)}
                         alt={slide.name}
                         width={768}
                         height={768}

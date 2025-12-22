@@ -162,12 +162,14 @@ function getCoreArtifacts() {
     {
       title: 'Stories on Circles Collection',
       description: 'Physical and digital exploration of circular narratives',
+      collection_label: 'Collection',
       highlight_video_url: '/crate.mp4',
       link_url: 'https://www.omentejovem.com/'
     },
     {
       title: 'The Cycle Collection',
       description: 'A meditation on cycles of nature and existence',
+      collection_label: 'Collection',
       highlight_video_url: null,
       link_url: 'https://opensea.io/collection/the3cycle'
     }

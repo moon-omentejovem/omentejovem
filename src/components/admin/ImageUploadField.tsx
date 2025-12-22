@@ -15,6 +15,7 @@ interface ImageUploadFieldProps {
   mode?: 'image' | 'video'
   accept?: string
   maxSizeMB?: number
+  fieldKey?: string
 }
 
 export default function ImageUploadField({
@@ -27,7 +28,8 @@ export default function ImageUploadField({
   error,
   mode = 'image',
   accept,
-  maxSizeMB
+  maxSizeMB,
+  fieldKey
 }: ImageUploadFieldProps) {
   const inputRef = React.useRef<HTMLInputElement>(null)
 
@@ -91,8 +93,8 @@ export default function ImageUploadField({
         const filename = `video/${uploadId}.${ext}`
         const publicUrl = await uploadVideoToB2(file, filename)
         setPreviewUrl(publicUrl)
-        if (onExtraChange) {
-          onExtraChange('video_url', publicUrl)
+        if (onExtraChange && fieldKey) {
+          onExtraChange(fieldKey, publicUrl)
         }
         onChange(publicUrl)
       } catch (err) {
@@ -127,7 +129,9 @@ export default function ImageUploadField({
   const handleRemove = () => {
     setPreviewUrl(null)
     if (isVideoMode) {
-      onExtraChange && onExtraChange('video_url', null)
+      if (onExtraChange && fieldKey) {
+        onExtraChange(fieldKey, null)
+      }
     } else {
       onExtraChange && onExtraChange('imageoptimizedurl', null)
       onExtraChange && onExtraChange('imageurl', null)
@@ -182,17 +186,15 @@ export default function ImageUploadField({
                 unoptimized
               />
             )}
-            {(isVideoMode || previewUrl !== defaultValue) && (
-              <button
-                type="button"
-                onClick={handleRemove}
-                className="absolute top-2 right-2 flex h-7 w-7 items-center justify-center rounded-full bg-gray-900 text-white shadow-lg hover:bg-red-600 transition z-10"
-                title={isVideoMode ? 'Remover vídeo' : 'Remover imagem'}
-                style={{ zIndex: 10 }}
-              >
-                <span className="text-xs font-bold leading-none">×</span>
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={handleRemove}
+              className="absolute top-2 right-2 flex h-7 w-7 items-center justify-center rounded-full bg-gray-900 text-white shadow-lg hover:bg-red-600 transition z-10"
+              title={isVideoMode ? 'Remover vídeo' : 'Remover imagem'}
+              style={{ zIndex: 10 }}
+            >
+              <span className="text-xs font-bold leading-none">×</span>
+            </button>
           </>
         ) : (
           <span className="text-xs text-gray-400">

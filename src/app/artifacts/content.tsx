@@ -1,105 +1,563 @@
 'use client'
 
+import { Icons } from '@/components/Icons'
+import { LoadingSpinner } from '@/components/ui/Skeleton'
+import { getProxiedImageUrl } from '@/lib/utils'
+import type { Database } from '@/types/supabase'
 import Image from 'next/image'
 import type { ReactElement } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
-// @ts-ignore
 import './style.css'
 
-interface ArtifactData {
-  id: string
-  title: string
-  description?: string
-  image_url?: string
-  status: 'draft' | 'published'
-  created_at: string
-  updated_at: string
-}
+const OVERLAY_GRAY = 'rgba(177, 177, 177, 0.25)'
+
+type ArtifactRow = Database['public']['Tables']['artifacts']['Row']
 
 interface ArtifactsContentProps {
-  artifacts?: ArtifactData[]
+  artifacts?: ArtifactRow[]
+}
+
+function getYouTubeEmbedUrl(url: string) {
+  try {
+    const u = new URL(url)
+    if (u.hostname.includes('youtu.be')) {
+      const id = u.pathname.replace('/', '')
+      return `https://www.youtube.com/embed/${id}`
+    }
+    if (u.searchParams.get('v')) {
+      const id = u.searchParams.get('v')
+      return `https://www.youtube.com/embed/${id}`
+    }
+    if (u.pathname.startsWith('/embed/')) {
+      return url
+    }
+    return url
+  } catch {
+    return url
+  }
+}
+
+function getVimeoEmbedUrl(url: string) {
+  try {
+    const u = new URL(url)
+    const segments = u.pathname.split('/').filter(Boolean)
+    const id = segments[segments.length - 1]
+    if (!id) return url
+    return `https://player.vimeo.com/video/${id}`
+  } catch {
+    return url
+  }
 }
 
 export function ArtifactsContent({
   artifacts = []
 }: ArtifactsContentProps): ReactElement {
-  return (
-    <main className="flex flex-col justify-center px-6 font-heading xl:px-20 relative h-full overflow-hidden">
-      <div className="fixed inset-0 z-0">
-        <video
-          src="/crate.mp4"
-          className="object-cover w-full h-full"
-          autoPlay
-          loop
-          muted
-          playsInline
+  const hasArtifacts = artifacts.length > 0
+
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [touchStartX, setTouchStartX] = useState<number | null>(null)
+  const [touchStartY, setTouchStartY] = useState<number | null>(null)
+  const [mouseStartX, setMouseStartX] = useState<number | null>(null)
+  const [isForegroundLoading, setIsForegroundLoading] = useState(false)
+  const [isBackgroundLoading, setIsBackgroundLoading] = useState(false)
+  const [isDescriptionModalOpen, setIsDescriptionModalOpen] = useState(false)
+
+  useEffect(() => {
+    if (artifacts.length === 0) {
+      setCurrentIndex(0)
+      return
+    }
+    if (currentIndex >= artifacts.length) {
+      setCurrentIndex(artifacts.length - 1)
+    }
+  }, [artifacts.length, currentIndex])
+
+  const currentArtifact = useMemo(
+    () => (hasArtifacts ? artifacts[currentIndex] : null),
+    [artifacts, currentIndex, hasArtifacts]
+  )
+
+  const hasVideo = !!currentArtifact?.highlight_video_url
+
+  useEffect(() => {
+    if (!currentArtifact) {
+      setIsForegroundLoading(false)
+      setIsBackgroundLoading(false)
+      return
+    }
+
+    if (currentArtifact.imageurl) {
+      setIsForegroundLoading(true)
+    } else {
+      setIsForegroundLoading(false)
+    }
+
+    if (currentArtifact.highlight_video_url) {
+      setIsBackgroundLoading(true)
+    } else {
+      setIsBackgroundLoading(false)
+    }
+  }, [currentArtifact])
+
+  const leftArtifacts = useMemo(
+    () =>
+      artifacts
+        .map((artifact, index) => ({ artifact, index }))
+        .filter(({ index }) => index < currentIndex),
+    [artifacts, currentIndex]
+  )
+
+  const rightArtifacts = useMemo(
+    () =>
+      artifacts
+        .map((artifact, index) => ({ artifact, index }))
+        .filter(({ index }) => index > currentIndex),
+    [artifacts, currentIndex]
+  )
+
+  const foregroundMedia = useMemo(() => {
+    if (!currentArtifact || !currentArtifact.imageurl) return null
+
+    return (
+      <Image
+        src={getProxiedImageUrl(currentArtifact.imageurl)}
+        alt={currentArtifact.title}
+        width={800}
+        height={800}
+        className="w-full h-full object-contain"
+        draggable={false}
+        onLoadingComplete={() => {
+          setIsForegroundLoading(false)
+        }}
+        onError={() => {
+          setIsForegroundLoading(false)
+        }}
+      />
+    )
+  }, [currentArtifact])
+
+  const backgroundMedia = useMemo(() => {
+    if (!currentArtifact || !currentArtifact.highlight_video_url) {
+      return <div className="w-full h-full bg-black" />
+    }
+
+    const videoUrl = currentArtifact.highlight_video_url
+    const lower = videoUrl.toLowerCase()
+    const isYouTube =
+      lower.includes('youtube.com') || lower.includes('youtu.be')
+    const isVimeo = lower.includes('vimeo.com')
+
+    if (isYouTube) {
+      const embedUrl = getYouTubeEmbedUrl(videoUrl)
+      return (
+        <iframe
+          title="YouTube video player"
+          src={embedUrl}
+          className="w-full h-full"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          onLoad={() => {
+            setIsBackgroundLoading(false)
+          }}
         />
+      )
+    }
+
+    if (isVimeo) {
+      const embedUrl = getVimeoEmbedUrl(videoUrl)
+      return (
+        <iframe
+          title="Vimeo video player"
+          src={embedUrl}
+          className="w-full h-full"
+          allow="autoplay; fullscreen; picture-in-picture"
+          allowFullScreen
+          onLoad={() => {
+            setIsBackgroundLoading(false)
+          }}
+        />
+      )
+    }
+
+    return (
+      <video
+        src={videoUrl}
+        className="w-full h-full object-cover"
+        autoPlay
+        loop
+        muted
+        playsInline
+        onLoadedData={() => {
+          setIsBackgroundLoading(false)
+        }}
+        onError={() => {
+          setIsBackgroundLoading(false)
+        }}
+      />
+    )
+  }, [currentArtifact])
+
+  const handlePrevious = () => {
+    if (!hasArtifacts) return
+    setCurrentIndex((prev) =>
+      prev === 0 ? artifacts.length - 1 : prev - 1
+    )
+  }
+
+  const handleNext = () => {
+    if (!hasArtifacts) return
+    setCurrentIndex((prev) =>
+      prev === artifacts.length - 1 ? 0 : prev + 1
+    )
+  }
+
+  const handleTouchStart = (event: React.TouchEvent) => {
+    const touch = event.touches[0]
+    setTouchStartX(touch.clientX)
+    setTouchStartY(touch.clientY)
+  }
+
+  const handleTouchEnd = (event: React.TouchEvent) => {
+    if (touchStartX === null || touchStartY === null) return
+    const touch = event.changedTouches[0]
+    const deltaX = touch.clientX - touchStartX
+    const deltaY = touch.clientY - touchStartY
+
+    if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY)) {
+      if (deltaX < 0) {
+        handleNext()
+      } else {
+        handlePrevious()
+      }
+    }
+
+    setTouchStartX(null)
+    setTouchStartY(null)
+  }
+
+  const handleMouseDown = (event: React.MouseEvent) => {
+    if (event.button !== 0) return
+    setMouseStartX(event.clientX)
+  }
+
+  const handleMouseUp = (event: React.MouseEvent) => {
+    if (mouseStartX === null) return
+    const deltaX = event.clientX - mouseStartX
+
+    if (Math.abs(deltaX) > 20) {
+      if (deltaX < 0) {
+        handleNext()
+      } else {
+        handlePrevious()
+      }
+    }
+
+    setMouseStartX(null)
+  }
+
+  const handleMouseLeave = () => {
+    setMouseStartX(null)
+  }
+
+  return (
+    <main
+      className="flex flex-col justify-center px-6 font-heading xl:px-20 relative h-screenMinusHeader overflow-hidden"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
+      <div className="fixed inset-0 z-0 pointer-events-none bg-black">
+        {backgroundMedia}
       </div>
 
-      <div className="relative z-10 w-full max-w-[500px] mt-[40vh] sm:mt-[40vh] flex flex-col">
-        <span className="text-orange-500 text-base font-bold font-body uppercase">
-          claimable for collectors
-        </span>
-        <h3 className="text-secondary-100 text-2xl mt-3 font-body">
-          Shapes&Colors:
-          <br />
-          Collectible Crates
-        </h3>
-        <p className="mt-8 text-secondary-100 opacity-70 font-body">
-          Collectors can now claim the {'S&C Package'}. Each set includes a
-          unique wooden collectible, accompanied by a 48x48cm individually
-          signed fine art print. Claim is made once by the collector that owns
-          it by the release of the artifact.
-        </p>
+      {hasVideo && isBackgroundLoading && (
+        <div className="fixed inset-0 z-30 flex flex-col items-center justify-center bg-black">
+          <LoadingSpinner size="md" className="text-primary-50 mb-3" />
+          <p className="text-xs uppercase tracking-[0.2em] text-secondary-200">
+            Loading
+          </p>
+        </div>
+      )}
 
-        {/* Dynamic artifacts section */}
-        {artifacts.length > 0 && (
-          <div className="mt-8 space-y-4">
-            <h4 className="text-secondary-100 text-lg font-body">
-              Available Artifacts:
-            </h4>
-            <div className="grid grid-cols-1 gap-4">
-              {artifacts.map((artifact) => (
-                <div
-                  key={artifact.id}
-                  className="bg-black/20 backdrop-blur-sm rounded-lg p-4 border border-white/10"
-                >
-                  <div className="flex items-center space-x-4">
-                    {artifact.image_url && (
-                      <Image
-                        src={artifact.image_url}
-                        alt={artifact.title}
-                        width={60}
-                        height={60}
-                        className="rounded-lg object-cover"
+      {(!hasVideo || !isBackgroundLoading) && (
+        <>
+          {hasArtifacts && (
+            <div className="absolute inset-0 z-10 hidden md:flex flex-col items-center justify-center pointer-events-none">
+              <button
+                type="button"
+                className="pointer-events-auto w-[min(70vw,640px)] max-w-[520px] aspect-square flex items-center justify-center relative"
+                onMouseDown={handleMouseDown}
+                onMouseUp={handleMouseUp}
+                onMouseLeave={handleMouseLeave}
+              >
+                {foregroundMedia}
+                {isForegroundLoading && (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40">
+                    <LoadingSpinner
+                      size="md"
+                      className="text-primary-50 mb-3"
+                    />
+                    <p className="text-xs uppercase tracking-[0.2em] text-secondary-200">
+                      Loading
+                    </p>
+                  </div>
+                )}
+              </button>
+              <div className="mt-6 flex flex-col items-center gap-3 pointer-events-auto">
+                <div className="inline-flex items-center gap-3">
+                  <div className="flex items-center gap-1">
+                    {leftArtifacts.map(({ artifact, index }) => (
+                      <button
+                        key={`${artifact.id}-left`}
+                        type="button"
+                        onClick={() => setCurrentIndex(index)}
+                        className="transition-colors w-[10px] h-[10px]"
+                        style={{ backgroundColor: OVERLAY_GRAY }}
+                        aria-label={`Go to artifact ${artifact.title}`}
                       />
-                    )}
-                    <div className="flex-1">
-                      <h5 className="text-secondary-100 font-body text-sm font-semibold">
-                        {artifact.title}
-                      </h5>
-                      {artifact.description && (
-                        <p className="text-secondary-100/70 font-body text-xs mt-1">
-                          {artifact.description}
-                        </p>
-                      )}
-                    </div>
+                    ))}
+                  </div>
+                  <div
+                    className="px-4 py-1.5 tracking-[0.18em] uppercase text-orange-500 font-body"
+                    style={{ backgroundColor: OVERLAY_GRAY }}
+                  >
+                    <span className="text-[16px] leading-none">
+                      {currentArtifact?.title}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    {rightArtifacts.map(({ artifact, index }) => (
+                      <button
+                        key={`${artifact.id}-right`}
+                        type="button"
+                        onClick={() => setCurrentIndex(index)}
+                        className="transition-colors w-[10px] h-[10px]"
+                        style={{ backgroundColor: OVERLAY_GRAY }}
+                        aria-label={`Go to artifact ${artifact.title}`}
+                      />
+                    ))}
                   </div>
                 </div>
-              ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        <a
-          href="https://www.youtube.com/playlist?list=PLk9K75kTXfFMkh0yLeJTlHWAjfS3zeSDw"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-8 px-4 py-2 rounded-lg text-white bg-primary-100/80 hover:bg-primary-100 transition-colors flex items-center justify-center w-64"
-        >
-          Watch More
-        </a>
-      </div>
+          {hasArtifacts && (
+            <div className="relative z-20 w-full flex justify-center md:hidden mt-10">
+              <button
+                type="button"
+                className="pointer-events-auto w-[min(70vw,640px)] max-w-[520px] aspect-square flex items-center justify-center relative"
+                onMouseDown={handleMouseDown}
+                onMouseUp={handleMouseUp}
+                onMouseLeave={handleMouseLeave}
+              >
+                {foregroundMedia}
+                {isForegroundLoading && (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40">
+                    <LoadingSpinner
+                      size="md"
+                      className="text-primary-50 mb-3"
+                    />
+                    <p className="text-xs uppercase tracking-[0.2em] text-secondary-200">
+                      Loading
+                    </p>
+                  </div>
+                )}
+              </button>
+            </div>
+          )}
+
+          <div className="relative z-20 w-full max-w-[500px] mt-8 md:mt-[40vh] flex flex-col">
+            <span className="text-orange-500 text-[16px] font-bold font-body uppercase">
+              {hasArtifacts && currentArtifact?.collection_label
+                ? currentArtifact.collection_label
+                : 'Collection'}
+            </span>
+            <h3 className="text-secondary-100 text-[24px] mt-3 font-body flex items-center gap-2">
+              {hasArtifacts && currentArtifact?.title ? (
+                <>
+                  <span>{currentArtifact.title}</span>
+                  <span className="text-secondary-100/70 text-xl">
+                    &#8594;
+                  </span>
+                </>
+              ) : (
+                <>
+                  Shapes&Colors:
+                  <br />
+                  Collectible Crates
+                </>
+              )}
+            </h3>
+
+            {(() => {
+              const descriptionText =
+                hasArtifacts && currentArtifact?.description
+                  ? currentArtifact.description
+                  : 'Collectors can now claim the S&C Package. Each set includes a unique wooden collectible, accompanied by a 48x48cm individually signed fine art print. Claim is made once by the collector that owns it by the release of the artifact.'
+
+              return (
+                <>
+                  <p className="mt-8 text-secondary-100 opacity-70 font-body hidden md:block">
+                    {descriptionText}
+                  </p>
+
+                  <div className="mt-8 text-secondary-100 opacity-70 font-body text-[14px] leading-[1.5] md:hidden">
+                    <p
+                      style={{
+                        display: '-webkit-box',
+                        WebkitLineClamp: 3,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden'
+                      }}
+                    >
+                      {descriptionText}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setIsDescriptionModalOpen(true)}
+                      className="mt-2 text-xs uppercase tracking-[0.2em] text-secondary-100 underline"
+                    >
+                      Read more..
+                    </button>
+                  </div>
+                </>
+              )
+            })()}
+
+            {hasArtifacts && currentArtifact?.link_url && (
+              <a
+                href={currentArtifact.link_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hidden md:flex mt-8 px-4 py-2 rounded-lg text-white bg-primary-100/80 hover:bg-primary-100 transition-colors items-center justify-center w-64"
+              >
+                Watch More
+              </a>
+            )}
+
+            {!hasArtifacts && (
+              <a
+                href="https://www.youtube.com/playlist?list=PLk9K75kTXfFMkh0yLeJTlHWAjfS3zeSDw"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-8 px-4 py-2 rounded-lg text-white bg-primary-100/80 hover:bg-primary-100 transition-colors flex items-center justify-center w-64"
+              >
+                Watch More
+              </a>
+            )}
+
+            {hasArtifacts && currentArtifact && (
+              <div className="mt-10 flex flex-col items-center gap-3 md:hidden">
+                <div className="inline-flex items-center gap-3">
+                  <div className="flex items-center gap-1">
+                    {leftArtifacts.map(({ artifact, index }) => (
+                      <button
+                        key={`${artifact.id}-bottom-left`}
+                        type="button"
+                        onClick={() => setCurrentIndex(index)}
+                        className="transition-colors w-[10px] h-[10px]"
+                        style={{ backgroundColor: OVERLAY_GRAY }}
+                        aria-label={`Go to artifact ${artifact.title}`}
+                      />
+                    ))}
+                  </div>
+                  {currentArtifact.link_url ? (
+                    <a
+                      href={currentArtifact.link_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-4 py-1.5 tracking-[0.18em] uppercase text-orange-500 font-body"
+                      style={{ backgroundColor: OVERLAY_GRAY }}
+                    >
+                      <span className="text-[16px] leading-none">
+                        {currentArtifact.title}
+                      </span>
+                    </a>
+                  ) : (
+                    <div
+                      className="px-4 py-1.5 tracking-[0.18em] uppercase text-orange-500 font-body"
+                      style={{ backgroundColor: OVERLAY_GRAY }}
+                    >
+                      <span className="text-[16px] leading-none">
+                        {currentArtifact.title}
+                      </span>
+                    </div>
+                  )}
+                  <div className="flex items-center gap-1">
+                    {rightArtifacts.map(({ artifact, index }) => (
+                      <button
+                        key={`${artifact.id}-bottom-right`}
+                        type="button"
+                        onClick={() => setCurrentIndex(index)}
+                        className="transition-colors w-[10px] h-[10px]"
+                        style={{ backgroundColor: OVERLAY_GRAY }}
+                        aria-label={`Go to artifact ${artifact.title}`}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {hasArtifacts && (
+            <>
+              {currentIndex > 0 && (
+                <button
+                  type="button"
+                  onClick={handlePrevious}
+                  className="hidden md:flex absolute left-8 top-[45%] -translate-y-1/2 z-30 h-12 w-12 items-center justify-center text-secondary-100/80 hover:text-secondary-100 transition-colors"
+                  aria-label="Previous artifact"
+                >
+                  <span className="text-3xl leading-none">&#8592;</span>
+                </button>
+              )}
+
+              <button
+                type="button"
+                onClick={handleNext}
+                className="hidden md:flex absolute right-8 top-[45%] -translate-y-1/2 z-30 h-12 w-12 items-center justify-center text-secondary-100/80 hover:text-secondary-100 transition-colors"
+                aria-label="Next artifact"
+              >
+                <span className="text-3xl leading-none">&#8594;</span>
+              </button>
+            </>
+          )}
+
+          {(() => {
+            const descriptionText =
+              hasArtifacts && currentArtifact?.description
+                ? currentArtifact.description
+                : 'Collectors can now claim the S&C Package. Each set includes a unique wooden collectible, accompanied by a 48x48cm individually signed fine art print. Claim is made once by the collector that owns it by the release of the artifact.'
+
+            return (
+              isDescriptionModalOpen && (
+                <div className="fixed inset-0 z-40 bg-black/80 px-6 py-10 overflow-y-auto md:hidden">
+                  <button
+                    type="button"
+                    onClick={() => setIsDescriptionModalOpen(false)}
+                    className="mb-4 text-secondary-100 flex justify-end"
+                    aria-label="Close description"
+                  >
+                    <Icons.X />
+                  </button>
+                  {hasArtifacts && currentArtifact && (
+                    <>
+                      <h3 className="text-secondary-100 text-[20px] font-heading">
+                        {currentArtifact.title}
+                      </h3>
+                      <p className="mt-4 text-secondary-100 font-body text-[14px] leading-[1.5]">
+                        {descriptionText}
+                      </p>
+                    </>
+                  )}
+                </div>
+              )
+            )
+          })()}
+        </>
+      )}
     </main>
   )
 }

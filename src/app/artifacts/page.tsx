@@ -17,17 +17,7 @@ export default async function ArtifactsPage() {
     }
 
     // Pass artifacts data to the content component
-    const normalizedArtifacts = artifacts.map((a) => ({
-      ...a,
-      description: a.description === null ? undefined : a.description,
-      status:
-        a.status === 'published'
-          ? ('published' as 'published')
-          : ('draft' as 'draft'),
-      created_at: a.created_at ?? '',
-      updated_at: a.updated_at ?? ''
-    }))
-    return <ArtifactsContent artifacts={normalizedArtifacts} />
+    return <ArtifactsContent artifacts={artifacts} />
   }
 
   // Default to static artifacts content

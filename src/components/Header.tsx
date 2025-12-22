@@ -34,6 +34,7 @@ const tabs = [
 
 export function Header() {
   const segment = useSelectedLayoutSegment()
+  const isArtifactsPage = segment === 'artifacts'
 
   const [showMobileMenu, setShowMobileMenu] = useState<boolean>(false)
 
@@ -42,23 +43,31 @@ export function Header() {
   }, [])
 
   return (
-    <header className="sticky top-0 flex w-full justify-between bg-background z-30 md:bg-transparent p-8 md:px-12 lg:px-20 md:py-10 md:gap-16">
+    <header className="sticky top-0 flex w-full justify-between bg-transparent z-30 md:bg-transparent p-8 md:px-12 lg:px-20 md:py-10 md:gap-16">
       <Link
         href="/"
         className="header-tab min-w-fit overflow-hidden"
         onClick={() => {
-          document.cookie = 'newsletter_dismissed=true; path=/; max-age=3600' // 1 hour expiry
+          document.cookie = 'newsletter_dismissed=true; path=/; max-age=3600'
         }}
       >
-        <Image
-          src={logo}
-          className={cn(
-            'opacity-20 hover:opacity-100',
-            !segment && 'opacity-100'
-          )}
-          alt="Omentejovem Artwork"
-          height={23}
-        />
+        {isArtifactsPage ? (
+          <p
+            className="font-heading text-[16px] leading-none text-[#B1B1B1] underline"
+          >
+            omentejovem
+          </p>
+        ) : (
+          <Image
+            src={logo}
+            className={cn(
+              'opacity-20 hover:opacity-100',
+              !segment && 'opacity-100'
+            )}
+            alt="Omentejovem Artwork"
+            height={23}
+          />
+        )}
       </Link>
 
       <div
@@ -124,7 +133,7 @@ export function Header() {
           onClick={() => setShowMobileMenu(false)}
         >
           <div
-            className="h-fit z-20 flex w-full flex-col px-6 py-6 gap-2 bg-background absolute"
+            className="h-fit z-20 flex w-full flex-col px-6 py-6 gap-2 bg-transparent absolute"
             style={{ top: 0 }}
           >
             {tabs.map((tab, index) => (

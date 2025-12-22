@@ -1,5 +1,6 @@
 'use client'
 
+import { getProxiedImageUrl } from '@/lib/utils'
 import Image from 'next/image'
 import { ImageModal } from './Modals/ImageModal'
 
@@ -15,7 +16,7 @@ export function ArtDetails({ image, detailedImage, name }: ArtDetails) {
       <div className="flex flex-1 sm:w-auto justify-center max-h-full d-block">
         <ImageModal detailedImage={detailedImage}>
           <Image
-            src={image}
+            src={getProxiedImageUrl(image)}
             width={1200}
             height={1200}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 60vw"
