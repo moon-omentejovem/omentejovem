@@ -10,8 +10,4 @@
   .vertical-slide-link {
     pointer-events: none;
   }
-
-  .swiper-slide-active .vertical-slide-link {
-    pointer-events: auto;
-  }
 }
