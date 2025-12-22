@@ -347,7 +347,6 @@ export const artifactsDescriptor: ResourceDescriptor = {
       key: 'image',
       label: 'Artifact Image',
       type: 'image',
-      required: true,
       placeholder: 'Upload artifact image'
     },
     {
@@ -357,14 +356,20 @@ export const artifactsDescriptor: ResourceDescriptor = {
       placeholder: 'Brief description of the artifact'
     },
     {
+      key: 'collection_label',
+      label: 'Collection Label',
+      type: 'text',
+      placeholder: 'Collection'
+    },
+    {
       key: 'highlight_video_url',
       label: 'Highlight Video URL',
-      type: 'url',
-      placeholder: 'https://youtube.com/watch?v=...'
+      type: 'video',
+      placeholder: 'Upload highlight video (Backblaze/B2, max 100MB)'
     },
     {
       key: 'link_url',
-      label: 'Link URL',
+      label: 'Watch More Link',
       type: 'url',
       placeholder: 'https://...'
     },

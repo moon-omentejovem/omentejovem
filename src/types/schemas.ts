@@ -60,6 +60,7 @@ export const ArtifactSchema = z.object({
   id: z.uuid().optional(),
   title: z.string().min(1),
   description: z.string().optional().nullable(),
+  collection_label: z.string().optional().nullable(),
   highlight_video_url: z.url().optional().nullable(),
   link_url: z.url().optional().nullable(),
 

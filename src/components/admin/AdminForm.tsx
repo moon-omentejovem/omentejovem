@@ -91,11 +91,29 @@ export default function AdminForm<T extends Record<string, any>>({
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {}
 
+    if (descriptor.table === 'artifacts') {
+      const imageValue = formData['image']
+      const videoValue = formData['highlight_video_url']
+      const hasImage =
+        imageValue !== undefined &&
+        imageValue !== null &&
+        imageValue !== ''
+      const hasVideo =
+        videoValue !== undefined &&
+        videoValue !== null &&
+        videoValue !== ''
+
+      if (!hasImage && !hasVideo) {
+        newErrors['image'] = 'Artifact Image or Highlight Video is required'
+        newErrors['highlight_video_url'] =
+          'Artifact Image or Highlight Video is required'
+      }
+    }
+
     descriptor.form.forEach((field) => {
       const fieldValue = formData[field.key]
 
       if (field.required) {
-        // Check if required field is empty
         if (
           fieldValue === undefined ||
           fieldValue === null ||
@@ -105,7 +123,6 @@ export default function AdminForm<T extends Record<string, any>>({
         }
       }
 
-      // Additional validation based on field type (only if value exists)
       if (
         fieldValue !== undefined &&
         fieldValue !== null &&

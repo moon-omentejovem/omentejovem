@@ -64,6 +64,7 @@ CREATE TABLE IF NOT EXISTS public.artifacts (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   title TEXT NOT NULL,
   description TEXT,
+  collection_label TEXT,
   highlight_video_url TEXT,
   link_url TEXT,
   imageurl TEXT,

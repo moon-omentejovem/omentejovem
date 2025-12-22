@@ -4,6 +4,7 @@ import 'swiper/css'
 import 'swiper/css/pagination'
 
 import type { Artwork } from '@/types/artwork'
+import { getProxiedImageUrl } from '@/lib/utils'
 import Image from 'next/image'
 import { Mousewheel } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -25,6 +26,8 @@ export function ArtworkThumbnailCarousel({
       <Swiper
         className="horizontal-in-carousel !overflow-visible"
         grabCursor={true}
+        allowTouchMove={true}
+        simulateTouch={true}
         modules={[Mousewheel]}
         mousewheel={true}
         slidesPerView={'auto'}
@@ -47,7 +50,9 @@ export function ArtworkThumbnailCarousel({
               onClick={() => onSelect(index)}
             >
               <Image
-                src={artwork.imageurl || '/placeholder.png'}
+                src={getProxiedImageUrl(
+                  artwork.imageurl || '/placeholder.png'
+                )}
                 alt={artwork.title || ''}
                 width={100}
                 height={100}

@@ -193,7 +193,11 @@ export default function AdminFormField({
     case 'video': {
       return (
         <ImageUploadField
-          defaultValue={formData?.video_url || null}
+          defaultValue={
+            formData && field.key in formData
+              ? (formData[field.key] as string | null)
+              : null
+          }
           supabase={supabase}
           onChange={onChange}
           onExtraChange={onExtraChange}
@@ -202,6 +206,7 @@ export default function AdminFormField({
           error={error}
           mode="video"
           maxSizeMB={100}
+          fieldKey={field.key}
         />
       )
     }

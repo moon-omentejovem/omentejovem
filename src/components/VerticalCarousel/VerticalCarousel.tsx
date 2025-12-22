@@ -4,7 +4,7 @@ import 'swiper/css'
 import 'swiper/css/pagination'
 import './style.css'
 
-import { cn } from '@/lib/utils'
+import { cn, getProxiedImageUrl } from '@/lib/utils'
 import { addLoadedClass } from '@/utils/lazyLoading'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -42,6 +42,8 @@ export function VerticalCarousel({
         direction="vertical"
         slidesPerView={'auto'}
         grabCursor={true}
+        allowTouchMove={true}
+        simulateTouch={true}
         modules={[Mousewheel, Pagination]}
         watchSlidesProgress={true}
         loop={false}
@@ -79,7 +81,7 @@ export function VerticalCarousel({
               >
                 {art.imageUrl ? (
                   <Image
-                    src={art.imageUrl}
+                    src={getProxiedImageUrl(art.imageUrl)}
                     alt={art.name}
                     width={150}
                     height={150}
