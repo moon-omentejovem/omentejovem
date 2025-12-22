@@ -50,10 +50,6 @@ export function VerticalCarousel({
         initialSlide={slideIndex}
         className="vertical-slider"
         centeredSlides={true}
-        onSlideChange={(e: SwiperType) => {
-          const newIndex = e.realIndex % slides.length
-          onSelect?.(newIndex, true)
-        }}
       >
         {slides.map((art, index) => (
           <SwiperSlide
