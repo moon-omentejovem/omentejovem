@@ -6,4 +6,8 @@
   .swiper-slide-active {
     opacity: 1;
   }
+
+  .vertical-slide-link {
+    pointer-events: none;
+  }
 }

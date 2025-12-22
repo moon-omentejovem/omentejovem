@@ -50,7 +50,7 @@ export function VerticalCarousel({
         initialSlide={slideIndex}
         className="vertical-slider"
         centeredSlides={true}
-        onSlideChange={(e: SwiperType) => {
+        onSlideChangeTransitionEnd={(e: SwiperType) => {
           const newIndex = e.realIndex % slides.length
           onSelect?.(newIndex, true)
         }}
@@ -75,7 +75,7 @@ export function VerticalCarousel({
                 }}
                 role="button"
                 tabIndex={0}
-                aria-label={`View ${art.name}`}
+                aria-label={art.name}
               >
                 {art.imageUrl ? (
                   <Image
