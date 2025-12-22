@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils'
 import { addLoadedClass } from '@/utils/lazyLoading'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRef } from 'react'
 import { Mousewheel, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Swiper as SwiperType } from 'swiper/types'
@@ -29,6 +30,7 @@ export function VerticalCarousel({
   redirectSource,
   onSelect
 }: VerticalCarouselProperties) {
+  const isDraggingRef = useRef(false)
 
   return (
     <div
@@ -50,6 +52,20 @@ export function VerticalCarousel({
         initialSlide={slideIndex}
         className="vertical-slider"
         centeredSlides={true}
+        onTouchMove={() => {
+          isDraggingRef.current = true
+        }}
+        onTouchStart={() => {
+          isDraggingRef.current = false
+        }}
+        onSliderMove={() => {
+          isDraggingRef.current = true
+        }}
+        onTouchEnd={() => {
+          setTimeout(() => {
+            isDraggingRef.current = false
+          }, 100)
+        }}
       >
         {slides.map((art, index) => (
           <SwiperSlide
@@ -62,7 +78,11 @@ export function VerticalCarousel({
             >
               <div
                 className="cursor-pointer w-full h-full"
-                onClick={() => onSelect?.(index, false)}
+                onClick={() => {
+                  if (!isDraggingRef.current) {
+                    onSelect?.(index, false)
+                  }
+                }}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault()
