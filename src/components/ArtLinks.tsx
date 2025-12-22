@@ -17,6 +17,8 @@ interface ArtLinkProperties {
     buttonText: string
   }
   views: Record<string, string>
+  hasVideo?: boolean
+  onOpenVideo?: () => void
 }
 
 export function ArtLinks({
@@ -24,7 +26,9 @@ export function ArtLinks({
   externalLinks,
   availableForPurchase,
   makeOffer,
-  views
+  views,
+  hasVideo,
+  onOpenVideo
 }: ArtLinkProperties) {
   const [isOpenOffer, setIsOpenOffer] = useState(false)
 
@@ -117,6 +121,18 @@ export function ArtLinks({
             </a>
           </div>
         ))}
+      {hasVideo && onOpenVideo ? (
+        <button
+          type="button"
+          onClick={onOpenVideo}
+          className={cn(
+            'flex justify-between items-center border-t-[1px] border-secondary-100 text-sm h-16 px-4 font-bold text-secondary-100 hover:text-primary-50',
+            'sm:px-8 last:border-b-[1px]'
+          )}
+        >
+          <span>VIEW TIMELAPSE</span>
+        </button>
+      ) : null}
     </div>
   )
 }
