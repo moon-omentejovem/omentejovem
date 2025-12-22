@@ -190,6 +190,21 @@ export default function AdminFormField({
         />
       )
     }
+    case 'video': {
+      return (
+        <ImageUploadField
+          defaultValue={formData?.video_url || null}
+          supabase={supabase}
+          onChange={onChange}
+          onExtraChange={onExtraChange}
+          label={field.label || field.key}
+          placeholder={field.placeholder}
+          error={error}
+          mode="video"
+          maxSizeMB={100}
+        />
+      )
+    }
     case 'relation-multi':
       return (
         <RelationPicker

@@ -10,6 +10,7 @@ import {
 import { CustomIcons } from '@/assets/icons'
 import { ArtDetails } from '@/components/ArtDetails'
 import { ArtLinks } from '@/components/ArtLinks'
+import { Icons } from '@/components/Icons'
 import { cn } from '@/lib/utils'
 import type { Artwork } from '@/types/artwork'
 import {
@@ -106,16 +107,6 @@ export function ArtInfo({
           </div>
         </div>
 
-        {hasVideo ? (
-          <button
-            aria-label="Open video process modal"
-            onClick={() => setIsVideoOpen(true)}
-            className="grid place-content-center h-6 xl:hidden"
-          >
-            <CustomIcons.Camera />
-          </button>
-        ) : null}
-
         <div className="block w-[100vw] self-center xl:hidden md:order-3">
           <ArtworkThumbnailCarousel
             artworks={artworks}
@@ -133,6 +124,7 @@ export function ArtInfo({
             externalLinks={externalLinks}
             isDescriptionExpanded={isDescriptionExpanded}
             mintedOn={mintedOn}
+            hasVideo={hasVideo}
             onToggleDescription={() =>
               setIsDescriptionExpanded((previous) => !previous)
             }
@@ -146,6 +138,7 @@ export function ArtInfo({
             }}
             showDetails={showDetails}
             truncateDescription={truncateDescription}
+            onOpenVideo={() => setIsVideoOpen(true)}
           />
         ) : (
           <PlainArtworkDetails
@@ -154,19 +147,6 @@ export function ArtInfo({
           />
         )}
 
-        <div className="hidden place-content-center xl:grid">
-          {hasVideo ? (
-            <button
-              aria-label="Open video process modal"
-              onClick={() => setIsVideoOpen(true)}
-              className="grid place-content-center h-6"
-            >
-              <CustomIcons.Camera />
-            </button>
-          ) : (
-            <span className="h-6" />
-          )}
-        </div>
       </section>
 
       {isVideoOpen ? (
@@ -186,6 +166,14 @@ export function ArtInfo({
             onClick={(event) => event.stopPropagation()}
             onKeyDown={(event) => event.stopPropagation()}
           >
+            <button
+              type="button"
+              aria-label="Close video"
+              className="absolute top-4 right-4 text-white"
+              onClick={() => setIsVideoOpen(false)}
+            >
+              <Icons.X />
+            </button>
             <video
               className="w-auto h-auto max-w-full max-h-[90vh] rounded-lg"
               controls
@@ -214,6 +202,8 @@ interface MintedArtworkDetailsProps {
   onToggleDetails: () => Promise<void>
   showDetails: boolean
   truncateDescription: (value: string) => string
+   hasVideo: boolean
+   onOpenVideo?: () => void
 }
 
 function MintedArtworkDetails({
@@ -227,7 +217,9 @@ function MintedArtworkDetails({
   onToggleDescription,
   onToggleDetails,
   showDetails,
-  truncateDescription
+  truncateDescription,
+  hasVideo,
+  onOpenVideo
 }: MintedArtworkDetailsProps) {
   const hasLongDescription = description.length > 600
 
@@ -283,6 +275,8 @@ function MintedArtworkDetails({
                   buttonText: 'Make Offer'
                 }}
                 views={explorerLink ? { explorer: explorerLink } : {}}
+                hasVideo={hasVideo}
+                onOpenVideo={onOpenVideo}
               />
             </div>
           </div>

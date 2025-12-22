@@ -1,4 +1,5 @@
 import { useImageUpload } from '@/hooks/useImageUpload'
+import axios from 'axios'
 import { FileInput, Label } from 'flowbite-react'
 import Image from 'next/image'
 import React from 'react'
@@ -11,6 +12,9 @@ interface ImageUploadFieldProps {
   label?: string
   placeholder?: string
   error?: string
+  mode?: 'image' | 'video'
+  accept?: string
+  maxSizeMB?: number
 }
 
 export default function ImageUploadField({
@@ -20,7 +24,10 @@ export default function ImageUploadField({
   onExtraChange,
   label,
   placeholder,
-  error
+  error,
+  mode = 'image',
+  accept,
+  maxSizeMB
 }: ImageUploadFieldProps) {
   const inputRef = React.useRef<HTMLInputElement>(null)
 
@@ -31,6 +38,8 @@ export default function ImageUploadField({
     setPreviewUrl(defaultValue || null)
   }, [defaultValue])
 
+  const [videoUploading, setVideoUploading] = React.useState(false)
+
   const { uploading, uploadImage, resetUploadState } = useImageUpload()
   // Gera um id estável para o upload
   const [uploadId] = React.useState(() =>
@@ -39,35 +48,90 @@ export default function ImageUploadField({
       : Math.random().toString(36).substring(2, 15)
   )
 
+  const isVideoMode = mode === 'video'
+  const effectiveAccept =
+    accept ||
+    (isVideoMode
+      ? 'video/mp4,video/webm,video/quicktime'
+      : 'image/*')
+  const effectiveMaxSizeMB = maxSizeMB || (isVideoMode ? 100 : 300)
+  const isUploading = isVideoMode ? videoUploading : uploading
+
+  const uploadVideoToB2 = async (file: File, filename: string) => {
+    const contentType = file.type || 'video/mp4'
+    const res = await axios.post('/api/upload', {
+      filename,
+      contentType
+    })
+    const { signedUrl, publicUrl } = res.data
+    await axios.put(signedUrl, file, {
+      headers: {
+        'Content-Type': contentType
+      }
+    })
+    return publicUrl as string
+  }
+
   const handleUpload = async (file: File) => {
-    // 300MB limit
-    if (file.size > 300 * 1024 * 1024) {
-      alert('A imagem excede o limite máximo de 300MB.')
+    const limitBytes = effectiveMaxSizeMB * 1024 * 1024
+
+    if (file.size > limitBytes) {
+      alert(
+        isVideoMode
+          ? `O vídeo excede o limite máximo de ${effectiveMaxSizeMB}MB.`
+          : `A imagem excede o limite máximo de ${effectiveMaxSizeMB}MB.`
+      )
       return
     }
 
-    const { originalUrl, optimizedUrl } = await uploadImage(
-      file,
-      uploadId
-    )
-    const ext = file.name.split('.').pop()
-    const filename = `${uploadId}.${ext}`
-    onExtraChange && onExtraChange('filename', filename)
-    if (optimizedUrl) {
-      setPreviewUrl(optimizedUrl)
-      onExtraChange && onExtraChange('imageoptimizedurl', optimizedUrl)
-      onChange(optimizedUrl)
-    }
-    if (originalUrl) {
-      setPreviewUrl(originalUrl)
-      onExtraChange && onExtraChange('imageurl', originalUrl)
-      onChange(originalUrl)
+    if (isVideoMode) {
+      try {
+        setVideoUploading(true)
+        const ext = file.name.split('.').pop() || 'mp4'
+        const filename = `video/${uploadId}.${ext}`
+        const publicUrl = await uploadVideoToB2(file, filename)
+        setPreviewUrl(publicUrl)
+        if (onExtraChange) {
+          onExtraChange('video_url', publicUrl)
+        }
+        onChange(publicUrl)
+      } catch (err) {
+        const msg =
+          err && typeof err === 'object' && 'message' in err
+            ? (err as Error).message
+            : String(err)
+        alert('Erro ao enviar vídeo: ' + msg)
+      } finally {
+        setVideoUploading(false)
+      }
+    } else {
+      const { originalUrl, optimizedUrl } = await uploadImage(
+        file,
+        uploadId
+      )
+      const ext = file.name.split('.').pop()
+      const filename = `${uploadId}.${ext}`
+      onExtraChange && onExtraChange('filename', filename)
+      if (optimizedUrl) {
+        setPreviewUrl(optimizedUrl)
+        onExtraChange && onExtraChange('imageoptimizedurl', optimizedUrl)
+        onChange(optimizedUrl)
+      }
+      if (originalUrl) {
+        setPreviewUrl(originalUrl)
+        onExtraChange && onExtraChange('imageurl', originalUrl)
+        onChange(originalUrl)
+      }
     }
   }
   const handleRemove = () => {
     setPreviewUrl(null)
-    onExtraChange && onExtraChange('imageoptimizedurl', null)
-    onExtraChange && onExtraChange('imageurl', null)
+    if (isVideoMode) {
+      onExtraChange && onExtraChange('video_url', null)
+    } else {
+      onExtraChange && onExtraChange('imageoptimizedurl', null)
+      onExtraChange && onExtraChange('imageurl', null)
+    }
     onChange(null)
     if (inputRef.current) inputRef.current.value = ''
     resetUploadState()
@@ -82,44 +146,55 @@ export default function ImageUploadField({
       {label && <Label htmlFor="image-upload" value={label} />}
       <div className="flex items-center gap-2">
         <FileInput
-          accept="image/*"
+          accept={effectiveAccept}
           onChange={handleFileChange}
           sizing="lg"
-          placeholder={placeholder || 'Upload an image'}
-          disabled={uploading}
+          placeholder={
+            placeholder ||
+            (isVideoMode ? 'Upload a video' : 'Upload an image')
+          }
+          disabled={isUploading}
           value={undefined}
           ref={inputRef}
         />
-        {uploading && (
+        {isUploading && (
           <span className="text-xs text-gray-400">Enviando...</span>
         )}
       </div>
       <div className="mt-2 relative w-fit">
         {previewUrl ? (
           <>
-            <Image
-              src={previewUrl}
-              alt="Preview"
-              width={320}
-              height={320}
-              className="object-cover rounded-lg border border-gray-200"
-              unoptimized
-            />
-            {previewUrl !== defaultValue && (
+            {isVideoMode ? (
+              <video
+                src={previewUrl}
+                className="w-80 max-w-full rounded-lg border border-gray-200"
+                controls
+              />
+            ) : (
+              <Image
+                src={previewUrl}
+                alt="Preview"
+                width={320}
+                height={320}
+                className="object-cover rounded-lg border border-gray-200"
+                unoptimized
+              />
+            )}
+            {(isVideoMode || previewUrl !== defaultValue) && (
               <button
                 type="button"
                 onClick={handleRemove}
-                className="absolute top-1 right-1 bg-white/80 rounded-full p-1 shadow hover:bg-red-100 transition z-10"
-                title="Remover imagem"
+                className="absolute top-2 right-2 flex h-7 w-7 items-center justify-center rounded-full bg-gray-900 text-white shadow-lg hover:bg-red-600 transition z-10"
+                title={isVideoMode ? 'Remover vídeo' : 'Remover imagem'}
                 style={{ zIndex: 10 }}
               >
-                <span className="text-red-600 font-bold text-lg">×</span>
+                <span className="text-xs font-bold leading-none">×</span>
               </button>
             )}
           </>
         ) : (
           <span className="text-xs text-gray-400">
-            Nenhuma imagem cadastrada
+            {isVideoMode ? 'Nenhum vídeo cadastrado' : 'Nenhuma imagem cadastrada'}
           </span>
         )}
       </div>

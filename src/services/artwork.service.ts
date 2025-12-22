@@ -254,20 +254,22 @@ export class ArtworkService extends BaseService {
 
   /**
    * Get all portfolio artworks with optional filters
+   *
+   * This method is intentionally not cached to ensure that updates
+   * from the admin (like new videos) are reflected immediately
+   * on public artwork pages.
    */
-  static getPortfolio = cache(
-    async (
-      filters: {
-        type?: 'single' | 'edition'
-        seriesSlug?: string
-        featured?: boolean
-        oneOfOne?: boolean
-        limit?: number
-      } = {}
-    ) => {
-      return this.getArtworks(filters)
-    }
-  )
+  static async getPortfolio(
+    filters: {
+      type?: 'single' | 'edition'
+      seriesSlug?: string
+      featured?: boolean
+      oneOfOne?: boolean
+      limit?: number
+    } = {}
+  ): Promise<ArtworkData> {
+    return this.getArtworks(filters)
+  }
 
   /**
    * Get artworks by series slug

@@ -16,6 +16,7 @@ type FieldType =
   | 'relation-single'
   | 'relation-multi'
   | 'image'
+  | 'video'
   | 'json'
 
 type RenderType =
@@ -172,9 +173,9 @@ export const artworksDescriptor: ResourceDescriptor = {
     },
     {
       key: 'video_url',
-      label: 'Video/Animation URL',
-      type: 'url',
-      placeholder: 'https://opensea.io/animation.mp4'
+      label: 'Video/Animation',
+      type: 'video',
+      placeholder: 'Upload timelapse or animation (max 100MB)'
     },
     {
       key: 'is_featured',
