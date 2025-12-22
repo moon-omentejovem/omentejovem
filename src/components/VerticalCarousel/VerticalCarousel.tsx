@@ -71,7 +71,7 @@ export function VerticalCarousel({
                 }}
                 role="button"
                 tabIndex={0}
-                aria-label={`View ${art.name}`}
+                aria-label={art.name}
               >
                 {art.imageUrl ? (
                   <Image
