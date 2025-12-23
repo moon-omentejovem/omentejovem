@@ -98,7 +98,7 @@ export function ArtInfo({
         )}
       >
         <div className="md:flex-1 min-w-[200px] xl:min-w-[350px] flex flex-col max-h-full">
-          <div className="xl:art-detail-inner-container overflow-hidden flex flex-1 justify-start xl:justify-end">
+          <div className="xl:art-detail-inner-container overflow-hidden flex flex-1 justify-start xl:justify-start">
             <ArtDetails
               detailedImage={detailedImage || '/placeholder.png'}
               image={displayImage}

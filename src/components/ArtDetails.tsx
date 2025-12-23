@@ -12,8 +12,8 @@ interface ArtDetails {
 
 export function ArtDetails({ image, detailedImage, name }: ArtDetails) {
   return (
-    <section className="flex items-end sm:px-0 max-h-full">
-      <div className="flex flex-1 sm:w-auto justify-center max-h-full d-block">
+    <section className="flex items-start sm:px-0 max-h-full">
+      <div className="flex sm:w-auto justify-start max-h-full">
         <ImageModal detailedImage={detailedImage}>
           <Image
             src={getProxiedImageUrl(image)}
@@ -21,7 +21,7 @@ export function ArtDetails({ image, detailedImage, name }: ArtDetails) {
             height={1200}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 60vw"
             alt={name}
-            className="flex flex-1 h-auto w-auto max-w-full object-contain xl:mb-[48px]"
+            className="h-auto w-auto max-h-[calc(100vh-6rem)] max-w-full object-contain xl:mb-[48px]"
             id="active-image"
             priority
             placeholder="blur"

@@ -51,7 +51,7 @@ export function VerticalCarousel({
         slideToClickedSlide={true}
         initialSlide={slideIndex}
         className="vertical-slider"
-        centeredSlides={true}
+        centeredSlides={false}
         onSlideChangeTransitionEnd={(e: SwiperType) => {
           const newIndex = e.realIndex % slides.length
           onSelect?.(newIndex, true)
