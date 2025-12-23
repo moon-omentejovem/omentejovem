@@ -4,7 +4,7 @@ import { ImageModal } from '@/components/Modals/ImageModal'
 import { LoadingSpinner } from '@/components/ui/Skeleton'
 import { cn, getProxiedImageUrl } from '@/lib/utils'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 interface ArtifactInternalGalleryProps {
   title: string
@@ -18,10 +18,6 @@ export function ArtifactInternalGallery({
   const [activeIndex, setActiveIndex] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
 
-  useEffect(() => {
-    setIsLoading(true)
-  }, [activeIndex, images])
-
   if (!images.length) {
     return null
   }
@@ -30,6 +26,7 @@ export function ArtifactInternalGallery({
 
   const handlePrevious = () => {
     if (images.length <= 1) return
+    setIsLoading(true)
     setActiveIndex((previous) =>
       previous === 0 ? images.length - 1 : previous - 1
     )
@@ -37,6 +34,7 @@ export function ArtifactInternalGallery({
 
   const handleNext = () => {
     if (images.length <= 1) return
+    setIsLoading(true)
     setActiveIndex((previous) =>
       previous === images.length - 1 ? 0 : previous + 1
     )
@@ -76,7 +74,10 @@ export function ArtifactInternalGallery({
             <button
               key={`${src}-${index}`}
               type="button"
-              onClick={() => setActiveIndex(index)}
+              onClick={() => {
+                setIsLoading(true)
+                setActiveIndex(index)
+              }}
               className={cn(
                 'relative bg-black aspect-[4/3] w-full border border-transparent',
                 index === activeIndex && 'border-secondary-100'

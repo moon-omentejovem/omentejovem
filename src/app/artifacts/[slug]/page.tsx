@@ -60,7 +60,60 @@ export default async function ArtifactSlugPage({
     page.image4_url
   ].filter((url): url is string => !!url)
 
-  const slides = pages.map((item) => ({
+  const pagesWithInside = pages.map((item) => ({
+    ...item,
+    inside: Array.isArray(item.inside_internal)
+      ? item.inside_internal
+      : []
+  }))
+
+  const currentPage = pagesWithInside[currentIndex]
+
+  const anchorIds = new Set<string>([
+    currentPage.id,
+    ...currentPage.inside
+  ])
+
+  const relatedPages = pagesWithInside.filter((item) => {
+    if (item.id === currentPage.id) return false
+
+    const itemInside = item.inside
+
+    const sharesAnchor = itemInside.some((id) => anchorIds.has(id))
+    const isAnchor = anchorIds.has(item.id)
+
+    return sharesAnchor || isAnchor
+  })
+
+  const unorderedSlidesSource =
+    relatedPages.length > 0 ? [currentPage, ...relatedPages] : pagesWithInside
+
+  const slidesSource = unorderedSlidesSource.slice().sort((a, b) => {
+    const aOrder = a.display_order
+    const bOrder = b.display_order
+
+    const aHasOrder = aOrder !== null && aOrder !== undefined
+    const bHasOrder = bOrder !== null && bOrder !== undefined
+
+    if (aHasOrder && bHasOrder) {
+      if (aOrder !== bOrder) {
+        return aOrder - bOrder
+      }
+    } else if (aHasOrder && !bHasOrder) {
+      return -1
+    } else if (!aHasOrder && bHasOrder) {
+      return 1
+    }
+
+    const aCreated = a.created_at || ''
+    const bCreated = b.created_at || ''
+
+    if (aCreated < bCreated) return 1
+    if (aCreated > bCreated) return -1
+    return 0
+  })
+
+  const slides = slidesSource.map((item) => ({
     name: item.title,
     imageUrl:
       item.image1_url ||
@@ -70,6 +123,11 @@ export default async function ArtifactSlugPage({
       null,
     slug: item.slug
   }))
+
+  const slideIndex = Math.max(
+    slidesSource.findIndex((item) => item.slug === page.slug),
+    0
+  )
 
   return (
     <main className="min-h-screenMinusHeader bg-background text-neutral-900">
@@ -91,7 +149,7 @@ export default async function ArtifactSlugPage({
         </div>
       </div>
       <VerticalCarousel
-        slideIndex={currentIndex}
+        slideIndex={slideIndex}
         slides={slides}
         redirectSource="artifacts"
       />

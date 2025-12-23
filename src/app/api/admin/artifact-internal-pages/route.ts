@@ -24,9 +24,7 @@ export async function GET(request: NextRequest) {
 
     if (search) {
       const pattern = `%${search}%`
-      query = query.or(
-        `title.ilike.${pattern},slug.ilike.${pattern}`
-      )
+      query = query.or(`title.ilike.${pattern},slug.ilike.${pattern}`)
     }
 
     const { data, count, error } = await query.range(from, to)
@@ -48,6 +46,20 @@ export async function POST(request: NextRequest) {
   try {
     const raw = await request.json()
 
+    let displayOrder: number | null = null
+
+    if (typeof raw.display_order === 'number') {
+      displayOrder = raw.display_order
+    } else if (typeof raw.display_order === 'string') {
+      const trimmed = raw.display_order.trim()
+      if (trimmed !== '') {
+        const parsed = Number(trimmed)
+        if (!Number.isNaN(parsed)) {
+          displayOrder = parsed
+        }
+      }
+    }
+
     const body = {
       slug: raw.slug,
       title: raw.title,
@@ -61,6 +73,10 @@ export async function POST(request: NextRequest) {
         raw.description.trim() === ''
           ? null
           : raw.description,
+      inside_internal:
+        Array.isArray(raw.inside_internal) && raw.inside_internal.length > 0
+          ? raw.inside_internal
+          : null,
       image1_url:
         typeof raw.image1_url === 'string' &&
         raw.image1_url.trim() === ''
@@ -81,16 +97,46 @@ export async function POST(request: NextRequest) {
         raw.image4_url.trim() === ''
           ? null
           : raw.image4_url,
+      display_order: displayOrder,
       status: raw.status || 'draft'
     }
 
     const validatedData = CreateArtifactInternalPageSchema.parse(body)
 
-    const { data, error } = await supabaseAdmin
-      .from('artifact_internal_pages')
-      .insert(validatedData)
-      .select()
-      .single()
+    const insertOnce = async (payload: unknown) => {
+      return supabaseAdmin
+        .from('artifact_internal_pages')
+        .insert(payload)
+        .select()
+        .single()
+    }
+
+    let { data, error } = await insertOnce(validatedData)
+
+    if (error) {
+      const rawMessage =
+        (error as unknown as { message?: string })?.message || String(error)
+      const message = rawMessage.toLowerCase()
+
+      const isMissingColumn =
+        message.includes('display_order') &&
+        (message.includes('does not exist') ||
+          message.includes('column') ||
+          message.includes('unknown'))
+
+      if (isMissingColumn) {
+        const { display_order, ...withoutDisplayOrder } = validatedData as {
+          display_order?: number | null
+          [key: string]: unknown
+        }
+        console.warn(
+          'display_order column not found on artifact_internal_pages during insert, retrying without this field'
+        )
+        const fallback = await insertOnce(withoutDisplayOrder)
+        data = fallback.data
+        error = fallback.error
+      }
+    }
 
     if (error) {
       const anyError = error as any

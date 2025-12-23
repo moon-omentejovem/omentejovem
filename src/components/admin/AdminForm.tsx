@@ -158,6 +158,20 @@ export default function AdminForm<T extends Record<string, any>>({
   }
 
   const shouldShowField = (field: FormField): boolean => {
+    if (field.key === 'artifact_id') {
+      const insideInternal = formData['inside_internal']
+      if (Array.isArray(insideInternal) && insideInternal.length > 0) {
+        return false
+      }
+    }
+
+    if (field.key === 'inside_internal') {
+      const artifactId = formData['artifact_id']
+      if (typeof artifactId === 'string' && artifactId.trim() !== '') {
+        return false
+      }
+    }
+
     if (!field.when) return true
 
     return Object.entries(field.when).every(([key, value]) => {

@@ -3,11 +3,16 @@
     opacity: 0.4;
   }
 
-  .swiper-slide-active {
+  .swiper-slide.vertical-slide-current {
     opacity: 1;
   }
 
   .vertical-slide-link {
     pointer-events: none;
+  }
+
+  .swiper-slide-active .vertical-slide-link {
+    pointer-events: auto;
+    cursor: pointer;
   }
 }

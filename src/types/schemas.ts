@@ -83,6 +83,8 @@ export const ArtifactInternalPageSchema = z.object({
   image2_url: z.string().url().optional().nullable(),
   image3_url: z.string().url().optional().nullable(),
   image4_url: z.string().url().optional().nullable(),
+  inside_internal: z.array(z.string().uuid()).optional().nullable(),
+  display_order: z.number().int().nullable().optional(),
   status: z.enum(['draft', 'published']).default('draft'),
   created_at: z.string().optional(),
   updated_at: z.string().optional()

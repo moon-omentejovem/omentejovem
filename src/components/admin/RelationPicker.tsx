@@ -1,7 +1,12 @@
 'use client'
 
 import type { FormField } from '@/types/descriptors'
-import type { Artifact, Artwork, Series } from '@/types/schemas'
+import type {
+  Artifact,
+  ArtifactInternalPage,
+  Artwork,
+  Series
+} from '@/types/schemas'
 import { ChevronDownIcon, XIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
@@ -10,6 +15,7 @@ interface RelationPickerProps {
   value: string[]
   onChange: (value: string[]) => void
   error?: string
+  formData?: Record<string, any>
 }
 
 interface RelationOption {
@@ -17,8 +23,7 @@ interface RelationOption {
   label: string
 }
 
-// Type for API response items that can be used in relations
-type RelationItem = Artwork | Series | Artifact
+type RelationItem = Artwork | Series | Artifact | ArtifactInternalPage
 
 // Extended types for API responses with relations
 interface ArtworkWithRelations extends Artwork {
@@ -54,7 +59,8 @@ export default function RelationPicker({
   field,
   value = [],
   onChange,
-  error
+  error,
+  formData
 }: RelationPickerProps) {
   const [options, setOptions] = useState<RelationOption[]>([])
   const [loading, setLoading] = useState(false)
@@ -78,6 +84,9 @@ export default function RelationPicker({
           case 'artifacts':
             endpoint = '/api/admin/artifacts'
             break
+          case 'artifact_internal_pages':
+            endpoint = '/api/admin/artifact-internal-pages'
+            break
           default:
             throw new Error(
               `Unsupported relation table: ${field.relation.table}`
@@ -88,10 +97,25 @@ export default function RelationPicker({
         if (response.ok) {
           const json = await response.json()
           const data: RelationItem[] = Array.isArray(json) ? json : json.data
-          const formattedOptions = data.map((item: RelationItem) => ({
-            id: item.id!,
-            label: getItemLabel(item, field.relation!.labelKey)
-          }))
+
+          const currentId =
+            formData && typeof formData.id === 'string' ? formData.id : null
+
+          const formattedOptions = data
+            .filter((item: RelationItem) => {
+              if (
+                field.relation?.table === 'artifact_internal_pages' &&
+                currentId
+              ) {
+                return item.id !== currentId
+              }
+              return true
+            })
+            .map((item: RelationItem) => ({
+              id: item.id!,
+              label: getItemLabel(item, field.relation!.labelKey)
+            }))
+
           setOptions(formattedOptions)
         }
       } catch (error) {
@@ -102,7 +126,7 @@ export default function RelationPicker({
     }
 
     fetchOptions()
-  }, [field.relation])
+  }, [field.relation, formData])
 
   const handleToggleItem = (option: RelationOption) => {
     if (field.type === 'relation-single') {
