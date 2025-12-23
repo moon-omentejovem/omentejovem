@@ -7,9 +7,7 @@
 
 'use client'
 
-import { PageLoadingSkeleton } from '@/components/ui/Skeleton'
 import type { Artwork } from '@/types/artwork'
-import { useRouter } from 'next/navigation'
 import { ReactElement, useCallback, useEffect, useMemo, useState } from 'react'
 import { HorizontalCarousel } from '../HorizontalCarousel/HorizontalCarousel'
 import { VerticalCarousel } from '../VerticalCarousel/VerticalCarousel'
@@ -30,7 +28,6 @@ export function ArtContent({
   contactEmail = 'contact@omentejovem.com',
   enableGridView = true
 }: ArtContentProps): ReactElement {
-  const router = useRouter()
   const sanitizedInitialIndex = useMemo(() => {
     if (initialSelectedIndex < 0) {
       return -1
@@ -40,25 +37,10 @@ export function ArtContent({
   }, [artworks.length, initialSelectedIndex])
 
   const [selectedIndex, setSelectedIndex] = useState<number>(sanitizedInitialIndex)
-  const [isClientReady, setIsClientReady] = useState(false)
 
   useEffect(() => {
     setSelectedIndex(sanitizedInitialIndex)
   }, [sanitizedInitialIndex, artworks])
-
-  useEffect(() => {
-    if (typeof window === 'undefined') {
-      return
-    }
-
-    const timeoutId = window.setTimeout(() => {
-      setIsClientReady(true)
-    }, 350)
-
-    return () => {
-      window.clearTimeout(timeoutId)
-    }
-  }, [])
 
   const slides = useMemo(
     () =>
@@ -71,30 +53,15 @@ export function ArtContent({
   )
 
   const handleSelectArtwork = useCallback(
-    (index: number, replace?: boolean) => {
+    (index: number) => {
       if (index < 0 || index >= artworks.length) {
         setSelectedIndex(-1)
         return
       }
 
       setSelectedIndex(index)
-
-      const artwork = artworks[index]
-      const slug = artwork.slug
-
-      if (!slug) {
-        return
-      }
-
-      const href = `/${source}/${slug}`
-
-      if (replace) {
-        router.replace(href)
-      } else {
-        router.push(href)
-      }
     },
-    [artworks, router, source]
+    [artworks.length]
   )
 
   if (artworks.length === 0) {
@@ -108,10 +75,6 @@ export function ArtContent({
         </div>
       </main>
     )
-  }
-
-  if (!isClientReady) {
-    return <PageLoadingSkeleton />
   }
 
   if (selectedIndex === -1 && enableGridView) {
@@ -151,7 +114,7 @@ export function ArtContent({
   }
 
   return (
-    <main className="p-8 md:px-12 lg:px-20 flex flex-col 2xl:pb-8 2xl:px-20 xl:h-screenMinusHeader overflow-visible xl.overflow-auto">
+    <main className="p-8 md:px-12 lg:px-20 pb-8 md:pb-10 flex flex-col 2xl:pb-10 2xl:px-20 xl:h-screenMinusHeader overflow-visible xl.overflow-auto">
       <VerticalCarousel
         slideIndex={selectedIndex}
         slides={slides}
