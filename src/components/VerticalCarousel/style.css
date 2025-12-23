@@ -1,9 +1,11 @@
 .vertical-slider {
   .swiper-slide {
-    opacity: 0.4;
+    opacity: 1;
+    transition: opacity 0.2s ease-out;
   }
 
-  .swiper-slide.vertical-slide-current {
+  .swiper-slide.vertical-slide-current,
+  .swiper-slide:hover {
     opacity: 1;
   }
 
