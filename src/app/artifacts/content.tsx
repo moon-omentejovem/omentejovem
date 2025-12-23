@@ -369,58 +369,54 @@ export function ArtifactsContent({
 
           <div className="relative z-20 w-full max-w-[500px] mt-8 md:mt-[40vh] flex flex-col">
             <span className="text-orange-500 text-[16px] font-bold font-body uppercase">
-              {hasArtifacts && currentArtifact?.collection_label
-                ? currentArtifact.collection_label
-                : 'Collection'}
+              {currentArtifact?.collection_label}
             </span>
             <h3 className="text-secondary-100 text-[24px] mt-3 font-body flex items-center gap-2">
-              {hasArtifacts && currentArtifact?.title ? (
+              {currentArtifact?.title ? (
                 <>
                   <span>{currentArtifact.title}</span>
                   <span className="text-secondary-100/70 text-xl">
                     &#8594;
                   </span>
                 </>
-              ) : (
-                <>
-                  Shapes&Colors:
-                  <br />
-                  Collectible Crates
-                </>
-              )}
+              ) : null}
             </h3>
 
             {(() => {
               const descriptionText =
                 hasArtifacts && currentArtifact?.description
                   ? currentArtifact.description
-                  : 'Collectors can now claim the S&C Package. Each set includes a unique wooden collectible, accompanied by a 48x48cm individually signed fine art print. Claim is made once by the collector that owns it by the release of the artifact.'
+                  : ''
 
               return (
                 <>
-                  <p className="mt-8 text-secondary-100 opacity-70 font-body hidden md:block">
-                    {descriptionText}
-                  </p>
-
-                  <div className="mt-8 text-secondary-100 opacity-70 font-body text-[14px] leading-[1.5] md:hidden">
-                    <p
-                      style={{
-                        display: '-webkit-box',
-                        WebkitLineClamp: 3,
-                        WebkitBoxOrient: 'vertical',
-                        overflow: 'hidden'
-                      }}
-                    >
+                  {descriptionText ? (
+                    <p className="mt-8 text-secondary-100 opacity-70 font-body hidden md:block">
                       {descriptionText}
                     </p>
-                    <button
-                      type="button"
-                      onClick={() => setIsDescriptionModalOpen(true)}
-                      className="mt-2 text-xs uppercase tracking-[0.2em] text-secondary-100 underline"
-                    >
-                      Read more..
-                    </button>
-                  </div>
+                  ) : null}
+
+                  {descriptionText ? (
+                    <div className="mt-8 text-secondary-100 opacity-70 font-body text-[14px] leading-[1.5] md:hidden">
+                      <p
+                        style={{
+                          display: '-webkit-box',
+                          WebkitLineClamp: 3,
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden'
+                        }}
+                      >
+                        {descriptionText}
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => setIsDescriptionModalOpen(true)}
+                        className="mt-2 text-xs uppercase tracking-[0.2em] text-secondary-100 underline"
+                      >
+                        Read more..
+                      </button>
+                    </div>
+                  ) : null}
                 </>
               )
             })()}
@@ -431,17 +427,6 @@ export function ArtifactsContent({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hidden md:flex mt-8 px-4 py-2 rounded-lg text-white bg-primary-100/80 hover:bg-primary-100 transition-colors items-center justify-center w-64"
-              >
-                Watch More
-              </a>
-            )}
-
-            {!hasArtifacts && (
-              <a
-                href="https://www.youtube.com/playlist?list=PLk9K75kTXfFMkh0yLeJTlHWAjfS3zeSDw"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-8 px-4 py-2 rounded-lg text-white bg-primary-100/80 hover:bg-primary-100 transition-colors flex items-center justify-center w-64"
               >
                 Watch More
               </a>
@@ -501,7 +486,7 @@ export function ArtifactsContent({
             )}
           </div>
 
-          {hasArtifacts && (
+          {hasArtifacts && artifacts.length > 1 && (
             <>
               {currentIndex > 0 && (
                 <button
@@ -514,14 +499,16 @@ export function ArtifactsContent({
                 </button>
               )}
 
-              <button
-                type="button"
-                onClick={handleNext}
-                className="hidden md:flex absolute right-8 top-[45%] -translate-y-1/2 z-30 h-12 w-12 items-center justify-center text-secondary-100/80 hover:text-secondary-100 transition-colors"
-                aria-label="Next artifact"
-              >
-                <span className="text-3xl leading-none">&#8594;</span>
-              </button>
+              {currentIndex < artifacts.length - 1 && (
+                <button
+                  type="button"
+                  onClick={handleNext}
+                  className="hidden md:flex absolute right-8 top-[45%] -translate-y-1/2 z-30 h-12 w-12 items-center justify-center text-secondary-100/80 hover:text-secondary-100 transition-colors"
+                  aria-label="Next artifact"
+                >
+                  <span className="text-3xl leading-none">&#8594;</span>
+                </button>
+              )}
             </>
           )}
 

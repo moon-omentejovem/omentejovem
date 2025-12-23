@@ -10,16 +10,17 @@ export default async function ArtifactsPage() {
     const { artifacts, error } =
       await ArtifactService.getPublishedForArtifactsPage()
 
-    if (error) {
-      console.error('Error loading artifacts:', error)
-      // Fall back to static content if there's an error
-      return <ArtifactsContent />
+    if (!error && artifacts && artifacts.length > 0) {
+      return <ArtifactsContent artifacts={artifacts} />
     }
-
-    // Pass artifacts data to the content component
-    return <ArtifactsContent artifacts={artifacts} />
   }
 
-  // Default to static artifacts content
-  return <ArtifactsContent />
+  // Simple empty state when there are no artifacts or an error occurred
+  return (
+    <main className="flex items-center justify-center h-screenMinusHeader px-6 xl:px-20 font-heading">
+      <div className="text-center text-secondary-100 opacity-70">
+        <p>No artifacts available.</p>
+      </div>
+    </main>
+  )
 }
