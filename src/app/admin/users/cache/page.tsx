@@ -128,11 +128,15 @@ export default function CachePage() {
 
         <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="cache-ttl-days"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Duração do cache (em dias)
             </label>
             <div className="flex items-center gap-4">
               <input
+                id="cache-ttl-days"
                 type="number"
                 min={0}
                 step={1}
