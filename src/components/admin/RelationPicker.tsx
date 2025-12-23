@@ -105,6 +105,12 @@ export default function RelationPicker({
   }, [field.relation])
 
   const handleToggleItem = (option: RelationOption) => {
+    if (field.type === 'relation-single') {
+      onChange([option.id])
+      setIsOpen(false)
+      return
+    }
+
     const newValue = value.includes(option.id)
       ? value.filter((id) => id !== option.id)
       : [...value, option.id]

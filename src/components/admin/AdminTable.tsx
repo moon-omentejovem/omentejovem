@@ -222,12 +222,26 @@ export default function AdminTable<T extends Record<string, any>>({
       <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-2">
           {descriptor.actions?.create && (
-            <Link href={`/admin/${descriptor.table}/new`}>
-              <Button color="warning" size="sm" className="flex items-center">
-                <PlusIcon className="w-4 h-4 mr-1" />
-                Create New
-              </Button>
-            </Link>
+            <>
+              <Link href={`/admin/${descriptor.table}/new`}>
+                <Button color="warning" size="sm" className="flex items-center">
+                  <PlusIcon className="w-4 h-4 mr-1" />
+                  Create New
+                </Button>
+              </Link>
+              {descriptor.table === 'artifacts' && (
+                <Link href="/admin/artifacts/internal/new">
+                  <Button
+                    color="warning"
+                    size="sm"
+                    className="flex items-center ml-2"
+                  >
+                    <PlusIcon className="w-4 h-4 mr-1" />
+                    Create Internal
+                  </Button>
+                </Link>
+              )}
+            </>
           )}
           {onStatusFilterChange && (
             <Select

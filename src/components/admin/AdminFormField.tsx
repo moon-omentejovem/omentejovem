@@ -2,15 +2,18 @@
 
 import ImageUploadField from '@/components/admin/ImageUploadField'
 import TiptapEditor from '@/components/admin/TiptapEditor'
+import { useImageUpload } from '@/hooks/useImageUpload'
 import type { FormField, ResourceDescriptor } from '@/types/descriptors'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import {
+  FileInput,
   Label,
   Select,
   TextInput,
   Textarea,
   ToggleSwitch
 } from 'flowbite-react'
+import Image from 'next/image'
 import RelationPicker from './RelationPicker'
 import JsonArrayField from './JsonArrayField'
 
@@ -35,7 +38,7 @@ export default function AdminFormField({
   supabase,
   formData
 }: AdminFormFieldProps) {
-  // Nenhum hook global para upload de imagem aqui. Tudo fica dentro do case 'image'.
+  const { uploading, uploadImage, resetUploadState } = useImageUpload()
 
   switch (field.type) {
     case 'text':
@@ -178,9 +181,14 @@ export default function AdminFormField({
         </div>
       )
     case 'image': {
+      const defaultValue =
+        formData && field.key in formData
+          ? ((formData[field.key] as string | null) ?? null)
+          : formData?.imageurl || null
+
       return (
         <ImageUploadField
-          defaultValue={formData?.imageurl || null}
+          defaultValue={defaultValue}
           supabase={supabase}
           onChange={onChange}
           onExtraChange={onExtraChange}
@@ -188,6 +196,125 @@ export default function AdminFormField({
           placeholder={field.placeholder}
           error={error}
         />
+      )
+    }
+    case 'image-multi': {
+      const slotKeys = ['image1_url', 'image2_url', 'image3_url', 'image4_url']
+
+      const slots = slotKeys.map((key) => ({
+        key,
+        url:
+          formData && key in formData
+            ? ((formData[key] as string | null) ?? null)
+            : null
+      }))
+
+      const handleUploadMany = async (files: FileList | null) => {
+        if (!files || files.length === 0) return
+
+        const currentValues = slotKeys.map((key) =>
+          formData && key in formData
+            ? ((formData[key] as string | null) ?? null)
+            : null
+        )
+
+        let slotIndex = currentValues.findIndex((value) => !value)
+        if (slotIndex === -1) {
+          return
+        }
+
+        const filesArray = Array.from(files).slice(
+          0,
+          slotKeys.length - slotIndex
+        )
+
+        for (const file of filesArray) {
+          if (slotIndex >= slotKeys.length) break
+
+          const slotKey = slotKeys[slotIndex]
+          const uploadId =
+            typeof crypto !== 'undefined' && crypto.randomUUID
+              ? crypto.randomUUID()
+              : Math.random().toString(36).substring(2, 15)
+
+          const { originalUrl, optimizedUrl } = await uploadImage(
+            file,
+            uploadId
+          )
+
+          const url = optimizedUrl || originalUrl
+
+          if (url) {
+            if (onExtraChange) {
+              onExtraChange(slotKey, url)
+            }
+            if (slotKey === field.key) {
+              onChange(url)
+            }
+          }
+
+          slotIndex += 1
+        }
+      }
+
+      const handleRemove = (slotKey: string) => {
+        if (onExtraChange) {
+          onExtraChange(slotKey, null)
+        }
+        if (slotKey === field.key) {
+          onChange(null)
+        }
+        resetUploadState()
+      }
+
+      const hasImages = slots.some((slot) => !!slot.url)
+
+      return (
+        <div className="space-y-2">
+          <Label htmlFor={field.key} value={field.label || field.key} />
+          <FileInput
+            id={field.key}
+            multiple
+            accept="image/*"
+            onChange={(e) => handleUploadMany(e.target.files)}
+            disabled={uploading}
+          />
+          {uploading && (
+            <p className="text-xs text-gray-400">Enviando imagens...</p>
+          )}
+          <div className="mt-3 flex flex-wrap gap-3">
+            {hasImages ? (
+              slots.map((slot) =>
+                slot.url ? (
+                  <div
+                    key={slot.key}
+                    className="relative w-20 h-20 rounded-md overflow-hidden border border-gray-200"
+                  >
+                    <Image
+                      src={slot.url}
+                      alt={slot.key}
+                      fill
+                      className="object-cover"
+                      unoptimized
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleRemove(slot.key)}
+                      className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-gray-900/80 text-white text-xs leading-none"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ) : null
+              )
+            ) : (
+              <span className="text-xs text-gray-400">
+                Nenhuma imagem cadastrada
+              </span>
+            )}
+          </div>
+          {error && <p className="text-red-600 text-sm">{error}</p>}
+        </div>
       )
     }
     case 'video': {
@@ -219,6 +346,22 @@ export default function AdminFormField({
           error={error}
         />
       )
+    case 'relation-single': {
+      const arrayValue = value ? [value] : []
+
+      const handleChangeSingle = (ids: string[]) => {
+        onChange(ids[0] || null)
+      }
+
+      return (
+        <RelationPicker
+          field={field}
+          value={arrayValue}
+          onChange={handleChangeSingle}
+          error={error}
+        />
+      )
+    }
     case 'json':
       return (
         <JsonArrayField

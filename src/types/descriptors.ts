@@ -1,6 +1,5 @@
 import type { Database } from '@/types/supabase'
 
-// Types for descriptors
 type FieldType =
   | 'text'
   | 'url'
@@ -16,6 +15,7 @@ type FieldType =
   | 'relation-single'
   | 'relation-multi'
   | 'image'
+   | 'image-multi'
   | 'video'
   | 'json'
 
@@ -332,6 +332,7 @@ export const artifactsDescriptor: ResourceDescriptor = {
   title: 'Artifacts',
   list: [
     { key: 'title', label: 'Title', render: 'text' },
+    { key: 'type', label: 'Type', render: 'badge' },
     { key: 'status', label: 'Status', render: 'badge' },
     { key: 'link_url', label: 'Link', render: 'link' }
   ],
@@ -394,6 +395,78 @@ export const artifactsDescriptor: ResourceDescriptor = {
     create: true,
     edit: true,
     duplicate: true,
+    delete: true
+  }
+}
+
+// Artifact Internal Pages Descriptor
+export const artifactInternalPagesDescriptor: ResourceDescriptor = {
+  table: 'artifact_internal_pages',
+  title: 'Artifact Internal Pages',
+  list: [
+    { key: 'title', label: 'Title', render: 'text' },
+    { key: 'slug', label: 'Slug', render: 'text' },
+    { key: 'status', label: 'Status', render: 'badge' }
+  ],
+  form: [
+    {
+      key: 'title',
+      label: 'Title',
+      type: 'text',
+      required: true,
+      placeholder: 'Enter internal page title'
+    },
+    {
+      key: 'artifact_id',
+      label: 'Artifact Title',
+      type: 'relation-single',
+      relation: {
+        table: 'artifacts',
+        labelKey: 'title',
+        valueKey: 'id'
+      }
+    },
+    {
+      key: 'slug',
+      label: 'Slug',
+      type: 'slug',
+      from: 'title',
+      required: true,
+      placeholder: 'auto-generated-from-title'
+    },
+    {
+      key: 'image1_url',
+      label: 'Images',
+      type: 'image-multi',
+      required: true,
+      placeholder: 'Upload up to 4 images'
+    },
+    {
+      key: 'description',
+      label: 'Description',
+      type: 'textarea',
+      placeholder: 'Describe this internal artifact page'
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      type: 'select',
+      options: [
+        { value: 'draft', label: 'Draft' },
+        { value: 'published', label: 'Published' }
+      ],
+      required: true
+    }
+  ],
+  defaultSort: {
+    key: 'created_at',
+    direction: 'desc'
+  },
+  searchFields: ['title', 'slug'],
+  actions: {
+    create: true,
+    edit: true,
+    duplicate: false,
     delete: true
   }
 }
