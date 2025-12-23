@@ -369,10 +369,22 @@ export const artifactsDescriptor: ResourceDescriptor = {
       placeholder: 'Upload highlight video (Backblaze/B2, max 100MB)'
     },
     {
+      key: 'page_link_url',
+      label: 'Link to Page',
+      type: 'url',
+      placeholder: 'https://...',
+      validation: {
+        pattern: /^https?:\/\//
+      }
+    },
+    {
       key: 'link_url',
       label: 'Watch More Link',
       type: 'url',
-      placeholder: 'https://...'
+      placeholder: 'https://...',
+      validation: {
+        pattern: /^https?:\/\//
+      }
     },
     // Nenhum campo de imagem: resolução via slug/id e helpers
     {
