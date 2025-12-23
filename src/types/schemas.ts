@@ -72,6 +72,22 @@ export const ArtifactSchema = z.object({
   updated_at: z.string().optional()
 })
 
+// Artifact Internal Page Schema
+export const ArtifactInternalPageSchema = z.object({
+  id: z.uuid().optional(),
+  artifact_id: z.string().uuid().optional().nullable(),
+  slug: z.string().min(1),
+  title: z.string().min(1),
+  description: z.string().optional().nullable(),
+  image1_url: z.string().url().optional().nullable(),
+  image2_url: z.string().url().optional().nullable(),
+  image3_url: z.string().url().optional().nullable(),
+  image4_url: z.string().url().optional().nullable(),
+  status: z.enum(['draft', 'published']).default('draft'),
+  created_at: z.string().optional(),
+  updated_at: z.string().optional()
+})
+
 // Social media schema
 export const SocialSchema = z.object({
   platform: z.string().min(1),
@@ -133,6 +149,15 @@ export const CreateArtifactSchema = ArtifactSchema.omit({
 
 export const UpdateArtifactSchema = CreateArtifactSchema.partial()
 
+export const CreateArtifactInternalPageSchema = ArtifactInternalPageSchema.omit({
+  id: true,
+  created_at: true,
+  updated_at: true
+})
+
+export const UpdateArtifactInternalPageSchema =
+  CreateArtifactInternalPageSchema.partial()
+
 export const UpdateAboutPageSchema = AboutPageSchema.omit({
   id: true,
   updated_at: true
@@ -146,6 +171,7 @@ export type Artwork = z.infer<typeof ArtworkSchema>
 export type Series = z.infer<typeof SeriesSchema>
 export type SeriesArtwork = z.infer<typeof SeriesArtworkSchema>
 export type Artifact = z.infer<typeof ArtifactSchema>
+export type ArtifactInternalPage = z.infer<typeof ArtifactInternalPageSchema>
 export type AboutPage = z.infer<typeof AboutPageSchema>
 
 export type CreateArtwork = z.infer<typeof CreateArtworkSchema>
@@ -154,4 +180,10 @@ export type CreateSeries = z.infer<typeof CreateSeriesSchema>
 export type UpdateSeries = z.infer<typeof UpdateSeriesSchema>
 export type CreateArtifact = z.infer<typeof CreateArtifactSchema>
 export type UpdateArtifact = z.infer<typeof UpdateArtifactSchema>
+export type CreateArtifactInternalPage = z.infer<
+  typeof CreateArtifactInternalPageSchema
+>
+export type UpdateArtifactInternalPage = z.infer<
+  typeof UpdateArtifactInternalPageSchema
+>
 export type UpdateAboutPage = z.infer<typeof UpdateAboutPageSchema>

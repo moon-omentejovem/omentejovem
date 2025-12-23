@@ -117,6 +117,51 @@ export type Database = {
         }
         Relationships: []
       }
+      artifact_internal_pages: {
+        Row: {
+          id: string
+          artifact_id: string | null
+          slug: string
+          title: string
+          description: string | null
+          image1_url: string | null
+          image2_url: string | null
+          image3_url: string | null
+          image4_url: string | null
+          status: string
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          artifact_id?: string | null
+          slug: string
+          title: string
+          description?: string | null
+          image1_url?: string | null
+          image2_url?: string | null
+          image3_url?: string | null
+          image4_url?: string | null
+          status?: string
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          artifact_id?: string | null
+          slug?: string
+          title?: string
+          description?: string | null
+          image1_url?: string | null
+          image2_url?: string | null
+          image3_url?: string | null
+          image4_url?: string | null
+          status?: string
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       artworks: {
         Row: {
           blockchain: string | null

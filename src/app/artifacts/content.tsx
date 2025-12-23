@@ -426,7 +426,7 @@ export function ArtifactsContent({
                 href={currentArtifact.link_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hidden md:flex mt-8 px-4 py-2 rounded-lg text-white bg-primary-100/80 hover:bg-primary-100 transition-colors items-center justify-center w-64"
+                className="hidden md:flex mt-8 px-4 py-2 rounded-lg text-white bg-primary-100/80 hover:bg-primary-100 transition-colors items-center justify-center w-64 cursor-pointer"
               >
                 Watch More
               </a>
@@ -452,7 +452,7 @@ export function ArtifactsContent({
                       href={currentArtifact.link_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-4 py-1.5 tracking-[0.18em] uppercase text-orange-500 font-body"
+                      className="px-4 py-1.5 tracking-[0.18em] uppercase text-orange-500 font-body cursor-pointer"
                       style={{ backgroundColor: OVERLAY_GRAY }}
                     >
                       <span className="text-[16px] leading-none">
