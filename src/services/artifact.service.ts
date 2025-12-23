@@ -235,48 +235,48 @@ export class ArtifactService extends BaseService {
   /**
    * Get published artifact internal page by slug
    */
-  static getInternalPageBySlug = cache(
-    async (slug: string): Promise<ArtifactInternalPageData | null> => {
-      return this.safeExecuteQuery(async (supabase) => {
-        const { data, error } = await supabase
-          .from('artifact_internal_pages')
-          .select('*')
-          .eq('slug', slug)
-          .eq('status', 'published')
-          .single()
+  static async getInternalPageBySlug(
+    slug: string
+  ): Promise<ArtifactInternalPageData | null> {
+    return this.safeExecuteQuery(async (supabase) => {
+      const { data, error } = await supabase
+        .from('artifact_internal_pages')
+        .select('*')
+        .eq('slug', slug)
+        .eq('status', 'published')
+        .single()
 
-        if (error) {
-          console.error(
-            `Error fetching artifact internal page by slug "${slug}":`,
-            error
-          )
-          return null
-        }
+      if (error) {
+        console.error(
+          `Error fetching artifact internal page by slug "${slug}":`,
+          error
+        )
+        return null
+      }
 
-        return data as ArtifactInternalPageData
-      }, 'getInternalPageBySlug')
-    }
-  )
+      return data as ArtifactInternalPageData
+    }, 'getInternalPageBySlug')
+  }
 
   /**
    * Get all published artifact internal pages for navigation
    */
-  static getPublishedInternalPages = cache(
-    async (): Promise<ArtifactInternalPageData[]> => {
-      return this.executeQuery(async (supabase) => {
-        const { data, error } = await supabase
-          .from('artifact_internal_pages')
-          .select('*')
-          .eq('status', 'published')
-          .order('created_at', { ascending: false })
+  static async getPublishedInternalPages(): Promise<
+    ArtifactInternalPageData[]
+  > {
+    return this.executeQuery(async (supabase) => {
+      const { data, error } = await supabase
+        .from('artifact_internal_pages')
+        .select('*')
+        .eq('status', 'published')
+        .order('created_at', { ascending: false })
 
-        if (error) {
-          console.error('Error fetching artifact internal pages:', error)
-          return []
-        }
+      if (error) {
+        console.error('Error fetching artifact internal pages:', error)
+        return []
+      }
 
-        return (data || []) as ArtifactInternalPageData[]
-      }, 'getPublishedInternalPages')
-    }
-  )
+      return (data || []) as ArtifactInternalPageData[]
+    }, 'getPublishedInternalPages')
+  }
 }

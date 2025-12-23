@@ -427,6 +427,16 @@ export const artifactInternalPagesDescriptor: ResourceDescriptor = {
       }
     },
     {
+      key: 'inside_internal',
+      label: 'Inside Internal',
+      type: 'relation-multi',
+      relation: {
+        table: 'artifact_internal_pages',
+        labelKey: 'title',
+        valueKey: 'id'
+      }
+    },
+    {
       key: 'slug',
       label: 'Slug',
       type: 'slug',
@@ -440,6 +450,12 @@ export const artifactInternalPagesDescriptor: ResourceDescriptor = {
       type: 'image-multi',
       required: true,
       placeholder: 'Upload up to 4 images'
+    },
+    {
+      key: 'display_order',
+      label: 'Display Order',
+      type: 'number',
+      placeholder: '1 appears first, 2 second, etc.'
     },
     {
       key: 'description',

@@ -344,6 +344,7 @@ export default function AdminFormField({
           value={Array.isArray(value) ? value : []}
           onChange={onChange}
           error={error}
+          formData={formData}
         />
       )
     case 'relation-single': {
@@ -359,6 +360,7 @@ export default function AdminFormField({
           value={arrayValue}
           onChange={handleChangeSingle}
           error={error}
+          formData={formData}
         />
       )
     }

@@ -121,6 +121,7 @@ export type Database = {
         Row: {
           id: string
           artifact_id: string | null
+          display_order: number | null
           slug: string
           title: string
           description: string | null
@@ -128,6 +129,7 @@ export type Database = {
           image2_url: string | null
           image3_url: string | null
           image4_url: string | null
+          inside_internal: string[] | null
           status: string
           created_at: string | null
           updated_at: string | null
@@ -135,6 +137,7 @@ export type Database = {
         Insert: {
           id?: string
           artifact_id?: string | null
+          display_order?: number | null
           slug: string
           title: string
           description?: string | null
@@ -142,6 +145,7 @@ export type Database = {
           image2_url?: string | null
           image3_url?: string | null
           image4_url?: string | null
+          inside_internal?: string[] | null
           status?: string
           created_at?: string | null
           updated_at?: string | null
@@ -149,6 +153,7 @@ export type Database = {
         Update: {
           id?: string
           artifact_id?: string | null
+          display_order?: number | null
           slug?: string
           title?: string
           description?: string | null
@@ -156,6 +161,7 @@ export type Database = {
           image2_url?: string | null
           image3_url?: string | null
           image4_url?: string | null
+          inside_internal?: string[] | null
           status?: string
           created_at?: string | null
           updated_at?: string | null
