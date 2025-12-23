@@ -1,7 +1,16 @@
 import { z } from 'zod'
 
-// Rich text content for Tiptap
-export const RichTextSchema = z.any() // Tiptap JSON content
+export const RichTextSchema = z.any()
+
+const WebsiteUrlSchema = z
+  .string()
+  .url()
+  .refine(
+    (value) =>
+      value.toLowerCase().startsWith('http://') ||
+      value.toLowerCase().startsWith('https://'),
+    { message: 'Only http(s) URLs are allowed' }
+  )
 
 // Artwork Schema
 export const ArtworkSchema = z.object({
@@ -62,7 +71,8 @@ export const ArtifactSchema = z.object({
   description: z.string().optional().nullable(),
   collection_label: z.string().optional().nullable(),
   highlight_video_url: z.url().optional().nullable(),
-  link_url: z.url().optional().nullable(),
+  link_url: WebsiteUrlSchema.optional().nullable(),
+  page_link_url: WebsiteUrlSchema.optional().nullable(),
 
   filename: z.string().optional().nullable(),
   imageurl: z.url().optional().nullable(),

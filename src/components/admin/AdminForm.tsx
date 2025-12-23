@@ -135,6 +135,17 @@ export default function AdminForm<T extends Record<string, any>>({
           newErrors[field.key] = 'Please enter a valid number'
         }
         if (
+          field.validation?.pattern &&
+          typeof fieldValue === 'string' &&
+          !field.validation.pattern.test(fieldValue)
+        ) {
+          newErrors[field.key] =
+            field.key.toLowerCase().includes('link') ||
+            field.key.toLowerCase().includes('url')
+              ? 'Please enter a valid website URL (http/https)'
+              : 'Invalid value format'
+        }
+        if (
           field.validation?.min &&
           Number(fieldValue) < field.validation.min
         ) {

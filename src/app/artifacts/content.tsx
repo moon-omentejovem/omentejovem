@@ -107,6 +107,8 @@ export function ArtifactsContent({
     [artifacts, currentIndex, hasArtifacts]
   )
 
+  const pageLinkUrl = currentArtifact?.page_link_url || null
+
   const hasVideo = !!currentArtifact?.highlight_video_url
 
   useEffect(() => {
@@ -361,7 +363,7 @@ export function ArtifactsContent({
               </button>
               <div className="mt-6 flex flex-col items-center gap-3 pointer-events-auto">
                 <div className="inline-flex items-center gap-3">
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center justify-end gap-1 min-w-[72px]">
                     {leftArtifacts.map(({ artifact, index }) => (
                       <button
                         key={`${artifact.id}-left`}
@@ -373,15 +375,29 @@ export function ArtifactsContent({
                       />
                     ))}
                   </div>
-                  <div
-                    className="px-4 py-1.5 tracking-[0.18em] uppercase text-orange-500 font-body"
-                    style={{ backgroundColor: OVERLAY_GRAY }}
-                  >
-                    <span className="text-[16px] leading-none">
-                      {currentArtifact?.title}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1">
+                  {currentArtifact?.title ? (
+                    pageLinkUrl ? (
+                      <a
+                        href={pageLinkUrl}
+                        className="px-4 py-1.5 tracking-[0.18em] uppercase text-orange-500 hover:text-black font-body cursor-pointer transition-colors"
+                        style={{ backgroundColor: OVERLAY_GRAY }}
+                      >
+                        <span className="text-[16px] leading-none">
+                          {currentArtifact.title}
+                        </span>
+                      </a>
+                    ) : (
+                      <div
+                        className="px-4 py-1.5 tracking-[0.18em] uppercase text-orange-500 font-body"
+                        style={{ backgroundColor: OVERLAY_GRAY }}
+                      >
+                        <span className="text-[16px] leading-none">
+                          {currentArtifact.title}
+                        </span>
+                      </div>
+                    )
+                  ) : null}
+                  <div className="flex items-center justify-start gap-1 min-w-[72px]">
                     {rightArtifacts.map(({ artifact, index }) => (
                       <button
                         key={`${artifact.id}-right`}
@@ -433,12 +449,24 @@ export function ArtifactsContent({
             </span>
             <h3 className="text-secondary-100 text-[24px] mt-3 font-body flex items-center gap-2">
               {currentArtifact?.title ? (
-                <>
-                  <span>{currentArtifact.title}</span>
-                  <span className="text-secondary-100/70 text-xl">
-                    &#8594;
-                  </span>
-                </>
+                pageLinkUrl ? (
+                  <a
+                    href={pageLinkUrl}
+                    className="group flex items-center gap-2 hover:text-black transition-colors"
+                  >
+                    <span>{currentArtifact.title}</span>
+                    <span className="text-secondary-100/70 text-xl group-hover:text-black">
+                      &#8594;
+                    </span>
+                  </a>
+                ) : (
+                  <>
+                    <span>{currentArtifact.title}</span>
+                    <span className="text-secondary-100/70 text-xl">
+                      &#8594;
+                    </span>
+                  </>
+                )
               ) : null}
             </h3>
 
@@ -507,12 +535,10 @@ export function ArtifactsContent({
                       />
                     ))}
                   </div>
-                  {currentArtifact.link_url ? (
+                  {pageLinkUrl ? (
                     <a
-                      href={currentArtifact.link_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-4 py-1.5 tracking-[0.18em] uppercase text-orange-500 font-body cursor-pointer"
+                      href={pageLinkUrl}
+                      className="px-4 py-1.5 tracking-[0.18em] uppercase text-orange-500 hover:text-black font-body cursor-pointer transition-colors"
                       style={{ backgroundColor: OVERLAY_GRAY }}
                     >
                       <span className="text-[16px] leading-none">

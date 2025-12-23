@@ -53,6 +53,11 @@ export async function POST(request: NextRequest) {
 
     const body = {
       ...raw,
+      page_link_url:
+        typeof raw.page_link_url === 'string' &&
+        raw.page_link_url.trim() === ''
+          ? null
+          : raw.page_link_url,
       link_url:
         typeof raw.link_url === 'string' && raw.link_url.trim() === ''
           ? null
