@@ -1,5 +1,6 @@
 import { supabaseAdmin } from '@/lib/supabase-admin'
 import { CreateArtifactInternalPageSchema } from '@/types/schemas'
+import type { Database } from '@/types/supabase'
 import { NextRequest, NextResponse } from 'next/server'
 
 // GET /api/admin/artifact-internal-pages - List internal pages with pagination
@@ -101,9 +102,14 @@ export async function POST(request: NextRequest) {
       status: raw.status || 'draft'
     }
 
-    const validatedData = CreateArtifactInternalPageSchema.parse(body)
+    type ArtifactInternalPageInsert =
+      Database['public']['Tables']['artifact_internal_pages']['Insert']
 
-    const insertOnce = async (payload: unknown) => {
+    const validatedData = CreateArtifactInternalPageSchema.parse(
+      body
+    ) as ArtifactInternalPageInsert
+
+    const insertOnce = async (payload: ArtifactInternalPageInsert) => {
       return supabaseAdmin
         .from('artifact_internal_pages')
         .insert(payload)
@@ -125,14 +131,13 @@ export async function POST(request: NextRequest) {
           message.includes('unknown'))
 
       if (isMissingColumn) {
-        const { display_order, ...withoutDisplayOrder } = validatedData as {
-          display_order?: number | null
-          [key: string]: unknown
-        }
+        const { display_order, ...withoutDisplayOrder } = validatedData
         console.warn(
           'display_order column not found on artifact_internal_pages during insert, retrying without this field'
         )
-        const fallback = await insertOnce(withoutDisplayOrder)
+        const fallback = await insertOnce(
+          withoutDisplayOrder as ArtifactInternalPageInsert
+        )
         data = fallback.data
         error = fallback.error
       }
