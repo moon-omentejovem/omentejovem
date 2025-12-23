@@ -94,11 +94,11 @@ export function ArtInfo({
     <>
       <section
         className={cn(
-          'flex flex-wrap gap-8 xl:h-[calc(100vh-4rem)] xl:overflow-scroll xl:max-w-[85%] gap-x-auto w-full scrollbar-hide'
+          'flex flex-wrap items-end gap-8 xl:max-w-[85%] gap-x-auto w-full'
         )}
       >
-        <div className="md:flex-1 min-w-[200px] xl:min-w-[350px] flex flex-col max-h-full">
-          <div className="xl:art-detail-inner-container overflow-hidden flex flex-1 justify-start xl:justify-start">
+        <div className="md:flex-1 min-w-[200px] xl:min-w-[350px] flex flex-col">
+          <div className="xl:art-detail-inner-container flex items-end justify-start">
             <ArtDetails
               detailedImage={detailedImage || '/placeholder.png'}
               image={displayImage}
