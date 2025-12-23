@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { LoadingSpinner } from '@/components/ui/Skeleton'
 import { getProxiedImageUrl } from '@/lib/utils'
