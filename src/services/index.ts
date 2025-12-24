@@ -17,6 +17,7 @@
  */
 
 export { AboutService } from './about.service'
+export { HomeService } from './home.service'
 export { ArtifactService } from './artifact.service'
 export { ArtworkService } from './artwork.service'
 export { AuthService } from './auth.service'

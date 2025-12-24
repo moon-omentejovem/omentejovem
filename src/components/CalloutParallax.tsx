@@ -9,6 +9,11 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 interface CalloutParallaxProperties {
   title: string
   subtitle: string
+  showTitle: boolean
+  showSubtitle: boolean
+  featuredLabel?: string
+  featuredTitle?: string
+  featuredHref?: string | null
   calloutImages: HomeImage[]
 }
 
@@ -38,6 +43,11 @@ function shiftElement(
 export function CalloutParallax({
   title,
   subtitle,
+  showTitle,
+  showSubtitle,
+  featuredLabel,
+  featuredTitle,
+  featuredHref,
   calloutImages
 }: CalloutParallaxProperties) {
   const calloutReference = useRef<HTMLDivElement>(null)
@@ -93,33 +103,26 @@ export function CalloutParallax({
 
   return (
     <div
-      className="grid w-full select-none place-items-center overflow-visible fixed top-[4rem] right-0 left-0 bottom-0 z-10 h-screen"
+      className="grid w-full select-none place-items-center overflow-visible fixed top-[4rem] right-0 left-0 bottom-0 z-10 h-screen -translate-y-4 md:-translate-y-8"
       id="logo"
       ref={calloutReference}
     >
       <div className="relative flex flex-col items-center px-12 select-none">
-        <div
-          id="callout-element"
-          className="parallax-text absolute -top-[17.5%] select-none"
-        >
-          <p className="font-heading text-[12vw] min-w-max text-secondary-50 invisible tracking-[-0.7vw] md:text-[6.5vw]">
-            {title}
-          </p>
-        </div>
-
-        <div
-          id="callout-element"
-          className="parallax-text absolute -top-[10%] z-[2] select-none"
-        >
-          <p className="font-heading text-[12vw] text-primary-100 invisible tracking-[-0.4vw] md:text-[6.5vw]">
-            {subtitle}
-          </p>
-        </div>
+        {showTitle && (
+          <div
+            id="callout-element"
+            className="parallax-text absolute -top-[17.5%] select-none"
+          >
+            <p className="font-heading text-[12vw] min-w-max text-secondary-50 invisible tracking-[-0.7vw] md:text-[6.5vw]">
+              {title}
+            </p>
+          </div>
+        )}
 
         {calloutImages[currentImageIndex] && (
           <div
             id="callout-element"
-            className="flex flex-col items-center select-none"
+            className="relative flex flex-col items-center select-none"
           >
             <Image
               src={getProxiedImageUrl(calloutImages[currentImageIndex].imageUrl)}
@@ -136,11 +139,15 @@ export function CalloutParallax({
                 )
               }
             />
-            <p className="text-sm text-secondary-100 self-start invisible">
-              {new Date(
-                calloutImages[currentImageIndex].createdAt
-              ).getFullYear()}
-              , {calloutImages[currentImageIndex].title}
+          </div>
+        )}
+        {showSubtitle && (
+          <div
+            id="callout-element"
+            className="parallax-text absolute inset-0 z-[2] flex items-center justify-center select-none pointer-events-none"
+          >
+            <p className="font-heading text-[12vw] text-primary-100 invisible tracking-[-0.4vw] md:text-[6.5vw] text-center">
+              {subtitle}
             </p>
           </div>
         )}

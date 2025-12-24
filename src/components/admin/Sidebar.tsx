@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import UserRoleDisplay from './UserRoleDisplay'
 
 const navItems = [
+  { href: '/admin/homepage', label: 'Homepage', icon: '🏠' },
   { href: '/admin/artworks', label: 'Artworks', icon: '🎨' },
   { href: '/admin/series', label: 'Series', icon: '📚' },
   { href: '/admin/artifacts', label: 'Artifacts', icon: '🏺' },
