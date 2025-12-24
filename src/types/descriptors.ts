@@ -131,6 +131,18 @@ export const artworksDescriptor: ResourceDescriptor = {
       type: 'date'
     },
     {
+      key: 'contract',
+      label: 'Contract',
+      type: 'select',
+      options: [
+        { value: 'Manifold', label: 'Manifold' },
+        { value: 'Transient Labs', label: 'Transient Labs' },
+        { value: 'SuperRare', label: 'SuperRare' },
+        { value: 'OpenSea', label: 'OpenSea' },
+        { value: 'Rarible', label: 'Rarible' }
+      ]
+    },
+    {
       key: 'mint_link',
       label: 'Mint Link',
       type: 'url',

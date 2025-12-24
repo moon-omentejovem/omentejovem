@@ -67,24 +67,24 @@ export default function HomeContent({
       />
 
       {featuredTitle && (
-        <div className="fixed bottom-20 md:bottom-24 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-2">
-          <span className="text-orange-500 text-[16px] font-bold uppercase">
+        <div className="fixed bottom-24 md:bottom-24 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-1 md:gap-2 w-full px-4">
+          <span className="text-orange-500 font-body font-bold text-[16px] leading-[120%] tracking-[0] uppercase text-center">
             {featuredLabel || 'Featured collection'}
           </span>
           {featuredHref ? (
             <a
               href={featuredHref}
-              className="group flex items-end gap-4 text-secondary-100 text-[24px] hover:text-primary-50 transition-colors"
+              className="group flex items-end justify-center gap-2 md:gap-4 text-secondary-100 hover:text-primary-50 transition-colors whitespace-nowrap"
             >
-              <span className="font-normal leading-[1.2] tracking-normal">
+              <span className="font-body font-normal text-[24px] leading-[120%] tracking-[0] align-bottom">
                 {featuredTitle}
               </span>
-              <span className="text-secondary-100/80 text-[24px] group-hover:text-primary-50">
+              <span className="text-secondary-100/80 text-[24px] group-hover:text-primary-50 transition-transform group-hover:translate-x-1 align-bottom">
                 &#8594;
               </span>
             </a>
           ) : (
-            <span className="text-secondary-100 text-[24px]">
+            <span className="text-secondary-100 font-body font-normal text-[24px] leading-[120%] tracking-[0] text-center whitespace-nowrap">
               {featuredTitle}
             </span>
           )}

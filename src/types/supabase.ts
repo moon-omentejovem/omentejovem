@@ -175,20 +175,23 @@ export type Database = {
         Row: {
           blockchain: string | null
           collection_slug: string | null
+          contract: string | null
           contract_address: string | null
+          creation_date: string | null
           created_at: string | null
-          description: Json | null
+          description: string | null
+          display_order: number | null
           editions_total: number | null
+          external_platforms: Json | null
           filename: string | null
           id: string
           imageoptimizedurl: string | null
           imageurl: string | null
           is_featured: boolean | null
           is_one_of_one: boolean | null
-          display_order: number | null
           mint_date: string | null
           mint_link: string | null
-          external_platforms: Json | null
+          network: string | null
           posted_at: string | null
           slug: string
           status: string
@@ -197,24 +200,28 @@ export type Database = {
           type: string
           updated_at: string | null
           video_url: string | null
+          year: number | null
         }
         Insert: {
           blockchain?: string | null
           collection_slug?: string | null
+          contract?: string | null
           contract_address?: string | null
+          creation_date?: string | null
           created_at?: string | null
-          description?: Json | null
+          description?: string | null
+          display_order?: number | null
           editions_total?: number | null
+          external_platforms?: Json | null
           filename?: string | null
           id?: string
           imageoptimizedurl?: string | null
           imageurl?: string | null
           is_featured?: boolean | null
           is_one_of_one?: boolean | null
-          display_order?: number | null
           mint_date?: string | null
           mint_link?: string | null
-          external_platforms?: Json | null
+          network?: string | null
           posted_at?: string | null
           slug: string
           status?: string
@@ -223,24 +230,28 @@ export type Database = {
           type: string
           updated_at?: string | null
           video_url?: string | null
+          year?: number | null
         }
         Update: {
           blockchain?: string | null
           collection_slug?: string | null
+          contract?: string | null
           contract_address?: string | null
+          creation_date?: string | null
           created_at?: string | null
-          description?: Json | null
+          description?: string | null
+          display_order?: number | null
           editions_total?: number | null
+          external_platforms?: Json | null
           filename?: string | null
           id?: string
           imageoptimizedurl?: string | null
           imageurl?: string | null
           is_featured?: boolean | null
           is_one_of_one?: boolean | null
-          display_order?: number | null
           mint_date?: string | null
           mint_link?: string | null
-          external_platforms?: Json | null
+          network?: string | null
           posted_at?: string | null
           slug?: string
           status?: string
@@ -249,6 +260,7 @@ export type Database = {
           type?: string
           updated_at?: string | null
           video_url?: string | null
+          year?: number | null
         }
         Relationships: []
       }
