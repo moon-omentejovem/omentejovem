@@ -1,9 +1,18 @@
 import { getOneOfOneData } from '@/lib/server-data'
 import OneOfOneContent from './content'
 
-export default async function OneOfOnePage() {
-  // Fetch data on server - no hooks needed
-  const data = await getOneOfOneData()
+export default async function OneOfOnePage({
+  searchParams
+}: {
+  searchParams: {
+    contract?: string
+    network?: string
+    year?: string
+    sort?: string
+  }
+}) {
+  // Fetch data on server - fetch all items for client-side filtering
+  const data = await getOneOfOneData({})
 
   if (data.error) {
     return (

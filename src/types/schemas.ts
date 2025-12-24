@@ -30,6 +30,7 @@ export const ArtworkSchema = z.object({
   imageoptimizedurl: z.url().optional().nullable(),
   video_url: z.url().optional().nullable(),
   blockchain: z.string().optional().nullable(),
+  contract: z.string().optional().nullable(),
   contract_address: z.string().optional().nullable(),
   collection_slug: z.string().optional().nullable(),
 

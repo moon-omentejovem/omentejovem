@@ -103,7 +103,7 @@ export function CalloutParallax({
 
   return (
     <div
-      className="grid w-full select-none place-items-center overflow-visible fixed top-[4rem] right-0 left-0 bottom-0 z-10 h-screen -translate-y-4 md:-translate-y-8"
+      className="grid w-full select-none place-items-center overflow-visible fixed inset-0 z-10 h-[100dvh] -translate-y-12 md:translate-y-0"
       id="logo"
       ref={calloutReference}
     >
@@ -130,7 +130,7 @@ export function CalloutParallax({
               height={900}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 600px"
               alt={'omentejovem'}
-              className="md:h-[32rem] w-auto object-contain invisible 2xl:h-[600px] select-none"
+              className="w-[80vw] h-auto md:w-auto md:h-[32rem] object-contain invisible 2xl:h-[600px] select-none"
               onClick={() =>
                 setCurrentImageIndex(
                   currentImageIndex >= calloutImages.length - 1

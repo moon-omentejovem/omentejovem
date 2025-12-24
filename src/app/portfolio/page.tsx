@@ -7,14 +7,24 @@ interface PortfolioPageProps {
     series?: string
     featured?: 'true'
     slug?: string
+    contract?: string
+    network?: string
+    year?: string
+    sort?: string
   }
 }
 
 export default async function PortfolioPage({
   searchParams
 }: PortfolioPageProps) {
-  // Server-side data fetching with simplified structure
-  const data = await getPortfolioData(searchParams)
+  // Pass only essential params (slug, type, series, featured) to server fetcher
+  // Filter params (contract, network, year, sort) are handled client-side
+  const data = await getPortfolioData({
+    slug: searchParams.slug,
+    type: searchParams.type,
+    series: searchParams.series,
+    featured: searchParams.featured
+  })
 
   if (data.error) {
     return (

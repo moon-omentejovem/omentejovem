@@ -1,9 +1,18 @@
 import { getEditionsData } from '@/lib/server-data'
 import EditionsContent from './content'
 
-export default async function EditionsPage() {
-  // Server-side data fetching with simplified structure
-  const data = await getEditionsData()
+export default async function EditionsPage({
+  searchParams
+}: {
+  searchParams: {
+    contract?: string
+    network?: string
+    year?: string
+    sort?: string
+  }
+}) {
+  // Server-side data fetching - fetch all items for client-side filtering
+  const data = await getEditionsData({})
 
   if (data.error) {
     return (

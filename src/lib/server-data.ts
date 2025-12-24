@@ -51,9 +51,32 @@ export async function getHomepageData(): Promise<PortfolioPageData> {
 /**
  * Get one-of-one artworks
  */
-export async function getOneOfOneData(): Promise<PortfolioPageData> {
+export async function getOneOfOneData(searchParams?: {
+  contract?: string
+  network?: string
+  year?: string
+  sort?: string
+}): Promise<PortfolioPageData> {
   try {
-    const result = await ArtworkService.getPublishedOneOfOne()
+    const filters: any = {
+      oneOfOne: true,
+      type: 'single'
+    }
+
+    // Filter params are handled client-side to ensure all filter options are available
+    // We only filter by collection type here
+
+    if (searchParams?.sort) {
+      if (searchParams.sort === 'oldest') {
+        filters.ascending = true
+        filters.orderBy = 'creation_date'
+      } else if (searchParams.sort === 'latest') {
+        filters.ascending = false
+        filters.orderBy = 'creation_date'
+      }
+    }
+
+    const result = await ArtworkService.getPublishedArtworks(filters)
 
     if (result.error) {
       return {
@@ -81,9 +104,30 @@ export async function getOneOfOneData(): Promise<PortfolioPageData> {
 /**
  * Get editions artworks
  */
-export async function getEditionsData(): Promise<PortfolioPageData> {
+export async function getEditionsData(searchParams?: {
+  contract?: string
+  network?: string
+  year?: string
+  sort?: string
+}): Promise<PortfolioPageData> {
   try {
-    const result = await ArtworkService.getPublishedEditions()
+    const filters: any = {
+      type: 'edition'
+    }
+
+    // Filter params are handled client-side
+
+    if (searchParams?.sort) {
+      if (searchParams.sort === 'oldest') {
+        filters.ascending = true
+        filters.orderBy = 'creation_date'
+      } else if (searchParams.sort === 'latest') {
+        filters.ascending = false
+        filters.orderBy = 'creation_date'
+      }
+    }
+
+    const result = await ArtworkService.getPublishedArtworks(filters)
 
     if (result.error) {
       return {
@@ -116,6 +160,10 @@ export async function getPortfolioData(searchParams?: {
   series?: string
   featured?: string
   slug?: string
+  contract?: string
+  network?: string
+  year?: string
+  sort?: string
 }): Promise<PortfolioPageData> {
   try {
     const filters: any = {}
@@ -130,6 +178,18 @@ export async function getPortfolioData(searchParams?: {
 
     if (searchParams?.featured === 'true') {
       filters.featured = true
+    }
+
+    // Filter params are handled client-side
+
+    if (searchParams?.sort) {
+      if (searchParams.sort === 'oldest') {
+        filters.ascending = true
+        filters.orderBy = 'creation_date'
+      } else if (searchParams.sort === 'latest') {
+        filters.ascending = false
+        filters.orderBy = 'creation_date'
+      }
     }
 
     const result = await ArtworkService.getPublishedArtworks(filters)

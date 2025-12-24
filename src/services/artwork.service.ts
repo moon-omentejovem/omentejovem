@@ -25,6 +25,9 @@ export interface ArtworkFilters {
   ascending?: boolean
   status?: 'draft' | 'published' | 'all'
   includesDrafts?: boolean
+  contract?: string
+  network?: string
+  year?: number
 }
 
 export interface ArtworkWithRelations extends DatabaseArtwork {
@@ -67,6 +70,27 @@ export class ArtworkService extends BaseService {
         `)
 
         // Apply filters
+        if (filters.contract) {
+          query = query.eq('contract', filters.contract)
+        }
+
+        if (filters.network) {
+          // Map network filter to blockchain field
+          let blockchain = filters.network.toLowerCase()
+          if (blockchain === 'eth') blockchain = 'ethereum'
+          else if (blockchain === 'xtz') blockchain = 'tezos'
+          
+          query = query.eq('blockchain', blockchain)
+        }
+
+        if (filters.year) {
+          // Filter by year using mint_date (primary)
+          // We assume mint_date is the primary source of truth for the artwork year
+          const startDate = `${filters.year}-01-01`
+          const endDate = `${filters.year}-12-31`
+          query = query.gte('mint_date', startDate).lte('mint_date', endDate)
+        }
+
         if (filters.featured !== undefined) {
           query = query.eq('is_featured', filters.featured)
         }
