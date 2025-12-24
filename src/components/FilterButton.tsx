@@ -68,8 +68,9 @@ export function FilterButton({
           <div className="space-y-4">
             {/* Sort */}
             <div className="space-y-1">
-              <label className="text-xs text-gray-500 uppercase">Sort By</label>
+              <label htmlFor="filter-sort" className="text-xs text-gray-500 uppercase">Sort By</label>
               <select 
+                id="filter-sort"
                 value={filters.sort}
                 onChange={(e) => onFilterChange('sort', e.target.value)}
                 className="w-full bg-transparent border border-gray-300 dark:border-gray-700 rounded p-2 text-sm font-mono"
@@ -81,8 +82,9 @@ export function FilterButton({
 
             {/* Contract */}
             <div className="space-y-1">
-              <label className="text-xs text-gray-500 uppercase">Contract</label>
+              <label htmlFor="filter-contract" className="text-xs text-gray-500 uppercase">Contract</label>
               <select 
+                id="filter-contract"
                 value={filters.contract}
                 onChange={(e) => onFilterChange('contract', e.target.value)}
                 className="w-full bg-transparent border border-gray-300 dark:border-gray-700 rounded p-2 text-sm font-mono"
@@ -106,8 +108,9 @@ export function FilterButton({
 
             {/* Blockchain (formerly Network) */}
             <div className="space-y-1">
-              <label className="text-xs text-gray-500 uppercase">Blockchain</label>
+              <label htmlFor="filter-blockchain" className="text-xs text-gray-500 uppercase">Blockchain</label>
               <select 
+                id="filter-blockchain"
                 value={filters.network}
                 onChange={(e) => onFilterChange('network', e.target.value)}
                 className="w-full bg-transparent border border-gray-300 dark:border-gray-700 rounded p-2 text-sm font-mono"
@@ -134,8 +137,9 @@ export function FilterButton({
 
             {/* Year */}
             <div className="space-y-1">
-              <label className="text-xs text-gray-500 uppercase">Year</label>
+              <label htmlFor="filter-year" className="text-xs text-gray-500 uppercase">Year</label>
               <select 
+                id="filter-year"
                 value={filters.year}
                 onChange={(e) => onFilterChange('year', e.target.value)}
                 className="w-full bg-transparent border border-gray-300 dark:border-gray-700 rounded p-2 text-sm font-mono"
