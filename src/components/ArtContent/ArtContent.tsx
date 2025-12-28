@@ -170,15 +170,43 @@ export function ArtContent({
   )
 
   const handleSelectArtwork = useCallback(
-    (index: number) => {
+    (index: number, replace?: boolean) => {
       if (index < 0 || index >= filteredArtworks.length) {
         setSelectedSlug(null)
         return
       }
 
-      setSelectedSlug(filteredArtworks[index].slug)
+      const artwork = filteredArtworks[index]
+      const newSlug = artwork.slug
+
+      if (!newSlug) {
+        setSelectedSlug(null)
+        return
+      }
+
+      setSelectedSlug(newSlug)
+
+      if (typeof window !== 'undefined') {
+        const currentPath = pathname || window.location.pathname
+        const search = window.location.search
+
+        let newPath = currentPath
+        const lastSlashIndex = currentPath.lastIndexOf('/')
+
+        if (lastSlashIndex > 0) {
+          newPath = `${currentPath.slice(0, lastSlashIndex + 1)}${newSlug}`
+        }
+
+        const nextUrl = `${newPath}${search}`
+
+        if (replace) {
+          window.history.replaceState(null, '', nextUrl)
+        } else {
+          window.history.pushState(null, '', nextUrl)
+        }
+      }
     },
-    [filteredArtworks]
+    [filteredArtworks, pathname]
   )
 
   const handleFilterChange = (key: keyof FilterState, value: string) => {
@@ -304,7 +332,7 @@ export function ArtContent({
   }
 
   return (
-    <main className="p-8 md:px-12 lg:px-20 pb-8 md:pb-10 flex flex-col 2xl:pb-10 2xl:px-20 xl:h-screenMinusHeader overflow-visible xl.overflow-auto">
+    <main className="p-8 md:px-12 lg:px-20 pb-8 md:pb-10 flex flex-col 2xl:pb-10 2xl:px-20 xl:h-screenMinusHeader overflow-visible xl:overflow-auto xl:justify-end">
       <VerticalCarousel
         slideIndex={selectedIndex}
         slides={slides}
