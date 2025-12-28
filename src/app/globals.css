@@ -11,7 +11,7 @@ html {
 }
 
  :root {
-  --header-logo-color: #f7ea4d;
+  --header-logo-color: #000000;
 }
 
 body {
@@ -111,6 +111,61 @@ div.line:has(.bio-link) {
 
 .lazy-load-img.loaded {
   opacity: 1;
+}
+
+.custom-cursor {
+  width: 40px;
+  height: 40px;
+  transform: translate3d(0, 0, 0);
+  will-change: left, top, transform;
+  color: theme('colors.primary.50');
+}
+
+.custom-cursor__core,
+.custom-cursor__pulse,
+.custom-cursor__ripple {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 9999px;
+  box-sizing: border-box;
+  transform: translate3d(-50%, -50%, 0);
+  backface-visibility: hidden;
+  border: 1px solid currentColor;
+}
+
+.custom-cursor__core {
+  width: 8px;
+  height: 8px;
+  background: currentColor;
+}
+
+.custom-cursor__pulse {
+  width: 26px;
+  height: 26px;
+  opacity: 0.35;
+  animation: cursorPulse 1.35s ease-out infinite;
+}
+
+.custom-cursor__ripple {
+  width: 26px;
+  height: 26px;
+  opacity: 0;
+  transform: translate3d(-50%, -50%, 0) scale(0.2);
+}
+
+@keyframes cursorPulse {
+  0% {
+    transform: translate3d(-50%, -50%, 0) scale(0.8);
+    opacity: 0.38;
+  }
+  60% {
+    opacity: 0.12;
+  }
+  100% {
+    transform: translate3d(-50%, -50%, 0) scale(1.9);
+    opacity: 0;
+  }
 }
 
 /* @media (min-width: 768px) {

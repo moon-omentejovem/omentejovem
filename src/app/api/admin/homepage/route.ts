@@ -94,7 +94,7 @@ export async function PUT(request: NextRequest) {
       background_color:
         rawBackgroundColor !== '' ? rawBackgroundColor : '#000000',
       header_logo_color:
-        rawHeaderLogoColor !== '' ? rawHeaderLogoColor : '#f7ea4d',
+        rawHeaderLogoColor !== '' ? rawHeaderLogoColor : '#000000',
       updated_at: now
     }
 

@@ -4,9 +4,9 @@ import { headerAnimations } from '@/animations/client'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useSelectedLayoutSegment } from 'next/navigation'
+import { usePathname, useSelectedLayoutSegment } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { logo } from '@/assets/images'
+import { logo, logoOrange } from '@/assets/images'
 import { Icons } from './Icons'
 
 const tabs = [
@@ -34,14 +34,55 @@ const tabs = [
 
 export function Header() {
   const segment = useSelectedLayoutSegment()
-  const isArtifactsPage = segment === 'artifacts'
-  const isHomepage = segment === null || segment === 'home'
+  const [mounted, setMounted] = useState(false)
+  const activeSegment = mounted ? segment : null
+  const pathname = usePathname()
+  const isHomepage = pathname === '/' || pathname === '/home'
+  const isArtifactsRoute = pathname?.startsWith('/artifacts') ?? false
+  const isArtifactsListing =
+    pathname === '/artifacts' || pathname === '/artifacts/'
+  const isArtifactsDetail = isArtifactsRoute && !isArtifactsListing
 
   const [showMobileMenu, setShowMobileMenu] = useState<boolean>(false)
+  const [homepageLogoVariant, setHomepageLogoVariant] = useState<
+    'black' | 'orange'
+  >('black')
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   useEffect(() => {
     headerAnimations()
   }, [])
+
+  useEffect(() => {
+    if (!isHomepage) return
+
+    const updateFromCssVariable = () => {
+      const raw = getComputedStyle(document.documentElement).getPropertyValue(
+        '--header-logo-color'
+      )
+      const normalized = raw.trim().toLowerCase()
+      setHomepageLogoVariant(normalized === '#f7ea4d' ? 'orange' : 'black')
+    }
+
+    updateFromCssVariable()
+    const timeout = window.setTimeout(updateFromCssVariable, 0)
+
+    const observer = new MutationObserver(() => {
+      updateFromCssVariable()
+    })
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['style']
+    })
+
+    return () => {
+      window.clearTimeout(timeout)
+      observer.disconnect()
+    }
+  }, [isHomepage])
 
   return (
     <header className="sticky top-0 flex w-full justify-between bg-transparent z-30 md:bg-transparent p-8 md:px-12 lg:px-20 md:py-10 md:gap-16">
@@ -53,21 +94,31 @@ export function Header() {
         }}
       >
         {isHomepage ? (
-          <p
-            className="font-heading text-[16px] leading-none underline"
-            style={{ color: 'var(--header-logo-color, #B1B1B1)' }}
-          >
-            omentejovem
-          </p>
-        ) : isArtifactsPage ? (
-          <p className="font-heading text-[16px] leading-none text-[#B1B1B1] underline">
-            omentejovem
-          </p>
+          <Image
+            src={homepageLogoVariant === 'orange' ? logoOrange : logo}
+            alt="omentejovem logo"
+            className="h-[23px] w-auto"
+            priority
+          />
+        ) : isArtifactsListing ? (
+          <Image
+            src={logoOrange}
+            alt="omentejovem logo"
+            className="h-[23px] w-auto"
+            priority
+          />
+        ) : isArtifactsDetail ? (
+          <Image
+            src={logo}
+            alt="omentejovem logo"
+            className="h-[23px] w-auto"
+            priority
+          />
         ) : (
           <div
             className={cn(
               'opacity-20 hover:opacity-100',
-              !segment && 'opacity-100'
+              !activeSegment && 'opacity-100'
             )}
             style={{ color: 'var(--header-logo-color)' }}
           >
@@ -114,7 +165,7 @@ export function Header() {
             <p
               className={cn(
                 'font-heading text-secondary-100 hover:text-secondary-200 hover:underline',
-                tab.link.startsWith(`/${segment}`) &&
+                tab.link.startsWith(`/${activeSegment}`) &&
                   'text-secondary-200 underline'
               )}
             >
@@ -132,7 +183,7 @@ export function Header() {
         <p
           className={cn(
             'font-heading  text-secondary-100 hover:text-secondary-200 hover:underline',
-            segment === 'about' && 'text-secondary-200 underline'
+            activeSegment === 'about' && 'text-secondary-200 underline'
           )}
         >
           about
@@ -176,7 +227,7 @@ export function Header() {
                 <p
                   className={cn(
                     'font-heading text-secondary-100',
-                    tab.link.startsWith(`/${segment}`) &&
+                    tab.link.startsWith(`/${activeSegment}`) &&
                       'text-secondary-200 underline'
                   )}
                 >
@@ -188,7 +239,7 @@ export function Header() {
               <p
                 className={cn(
                   ' font-heading text-secondary-100',
-                  segment === 'about' && 'text-secondary-200 underline'
+                  activeSegment === 'about' && 'text-secondary-200 underline'
                 )}
               >
                 about

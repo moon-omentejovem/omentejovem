@@ -2,67 +2,69 @@
 
 import { gsap } from 'gsap'
 import type { ReactElement } from 'react'
-import { useCallback, useEffect, useRef, useState } from 'react'
-
-import { cursorClick, cursorLoop } from '@/assets/cursor'
-import Image from 'next/image'
+import { useCallback, useEffect, useRef } from 'react'
 
 export function Cursor(): ReactElement {
   const cursor = useRef<HTMLDivElement>(null)
-  const [mouseX, setMouseX] = useState(0)
-  const [mouseY, setMouseY] = useState(0)
-  const [imageSource, setImageSource] = useState(cursorLoop)
+  const core = useRef<HTMLDivElement>(null)
+  const ripple = useRef<HTMLDivElement>(null)
 
-  const changeCursor = useCallback((event: MouseEvent): void => {
-    setMouseX(event.clientX)
-    setMouseY(event.clientY)
-  }, [])
+  const handleMouseClick = useCallback((): void => {
+    if (!core.current || !ripple.current) return
 
-  const handleMouseClick = useCallback((event: MouseEvent): void => {
-    gsap.to(cursor.current, {
-      onStart: () => {
-        setImageSource(cursorClick)
-      },
-      onComplete: () => {
-        setImageSource(cursorLoop)
-      }
+    gsap.killTweensOf([core.current, ripple.current])
+
+    gsap.fromTo(
+      core.current,
+      { scale: 1 },
+      { scale: 0.75, duration: 0.08, ease: 'power2.out', yoyo: true, repeat: 1 }
+    )
+
+    gsap.set(ripple.current, { opacity: 0.65, scale: 0.2 })
+    gsap.to(ripple.current, {
+      opacity: 0,
+      scale: 3.2,
+      duration: 0.55,
+      ease: 'power2.out'
     })
   }, [])
 
   useEffect(() => {
+    if (!cursor.current) return
+
     gsap.set(cursor.current, { xPercent: -50, yPercent: -50 })
 
-    gsap.to(cursor.current, {
-      duration: 0.0016,
-      css: {
-        left: mouseX,
-        top: mouseY
-      }
+    const moveX = gsap.quickTo(cursor.current, 'left', {
+      duration: 0.16,
+      ease: 'power3.out'
+    })
+    const moveY = gsap.quickTo(cursor.current, 'top', {
+      duration: 0.16,
+      ease: 'power3.out'
     })
 
-    window.addEventListener('mousemove', changeCursor)
+    const changeCursor = (event: MouseEvent): void => {
+      moveX(event.clientX)
+      moveY(event.clientY)
+    }
+
+    window.addEventListener('mousemove', changeCursor, { passive: true })
     window.addEventListener('click', handleMouseClick)
 
     return () => {
       window.removeEventListener('mousemove', changeCursor)
       window.removeEventListener('click', handleMouseClick)
     }
-  }, [changeCursor, handleMouseClick, mouseX, mouseY])
+  }, [handleMouseClick])
 
   return (
     <div
       ref={cursor}
-      className="cursor pointer-events-none fixed z-[999] invisible lg:visible"
+      className="custom-cursor pointer-events-none fixed z-[999] invisible lg:visible"
     >
-      <Image
-        width={32}
-        height={32}
-        alt={'Animated cursor'}
-        src={imageSource}
-        className="min-h-fit min-w-fit select-none"
-        unoptimized
-        priority
-      />
+      <div className="custom-cursor__pulse" />
+      <div ref={ripple} className="custom-cursor__ripple" />
+      <div ref={core} className="custom-cursor__core" />
     </div>
   )
 }
