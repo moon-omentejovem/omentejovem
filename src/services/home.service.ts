@@ -46,7 +46,7 @@ export class HomeService extends BaseService {
         featured_artifact_slug: null,
         featured_artwork_slug: null,
         background_color: '#000000',
-        header_logo_color: '#f7ea4d',
+        header_logo_color: '#000000',
         created_at: null,
         updated_at: null
       }
@@ -90,7 +90,7 @@ export class HomeService extends BaseService {
         typeof anyResult.header_logo_color === 'string' &&
         anyResult.header_logo_color.trim() !== ''
           ? anyResult.header_logo_color.trim()
-          : '#f7ea4d',
+          : '#000000',
       created_at: anyResult.created_at ?? null,
       updated_at: anyResult.updated_at ?? null
     }

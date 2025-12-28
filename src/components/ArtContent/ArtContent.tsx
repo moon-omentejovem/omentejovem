@@ -267,9 +267,6 @@ export function ArtContent({
         />
 
         <div className="flex flex-col items-center justify-center py-4 gap-4">
-          <div className="text-sm text-gray-400">
-            Showing {filteredArtworks.length} artworks
-          </div>
           <Suspense fallback={null}>
             <FilterButton 
               filters={filters}

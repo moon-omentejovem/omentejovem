@@ -132,8 +132,8 @@ export default async function ArtifactSlugPage({
   return (
     <main className="min-h-screenMinusHeader bg-background text-neutral-900">
       <div className="xl:h-screenMinusHeader xl:flex xl:items-center">
-        <div className="px-6 xl:px-20 py-10 md:py-12 xl:py-16 flex flex-col xl:flex-row gap-10 xl:gap-16 items-start xl:items-end w-full">
-          <div className="flex-1 max-w-[800px] w-full">
+        <div className="relative px-6 xl:px-20 pt-6 md:pt-8 xl:pt-0 pb-10 md:pb-12 xl:pb-16 flex flex-col xl:flex-row gap-10 xl:gap-16 items-start xl:items-end w-full">
+          <div className="flex-1 max-w-[800px] w-full xl:self-start">
             <ArtifactInternalGallery title={page.title} images={images} />
           </div>
           <div className="w-full md:w-[471px] flex flex-col justify-end text-secondary-100 h-full xl:mt-0">
@@ -146,13 +146,17 @@ export default async function ArtifactSlugPage({
               )}
             </div>
           </div>
+        <div className="hidden xl:block absolute top-0 right-[10vw] h-[580px]">
+          <VerticalCarousel
+            slideIndex={slideIndex}
+            slides={slides}
+            redirectSource="artifacts"
+            isFixed={false}
+              className="h-full"
+            />
+          </div>
         </div>
       </div>
-      <VerticalCarousel
-        slideIndex={slideIndex}
-        slides={slides}
-        redirectSource="artifacts"
-      />
     </main>
   )
 }

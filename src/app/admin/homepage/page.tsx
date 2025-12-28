@@ -29,7 +29,7 @@ export default function HomepageAdminPage() {
     featured_artifact_slug: null,
     featured_artwork_slug: null,
     background_color: '#000000',
-    header_logo_color: '#f7ea4d'
+    header_logo_color: '#000000'
   })
   const [loading, setLoading] = useState(false)
   const [fetchLoading, setFetchLoading] = useState(true)
@@ -50,6 +50,14 @@ export default function HomepageAdminPage() {
         const response = await fetch('/api/admin/homepage')
         if (response.ok) {
           const result = await response.json()
+          const rawHeaderLogoColor =
+            typeof result.header_logo_color === 'string'
+              ? result.header_logo_color.trim()
+              : ''
+          const normalizedHeaderLogoColor =
+            rawHeaderLogoColor.toLowerCase() === '#f7ea4d'
+              ? '#f7ea4d'
+              : '#000000'
           setData({
             title: result.title || 'Thales Machado',
             subtitle: result.subtitle || 'omentejovem',
@@ -81,11 +89,7 @@ export default function HomepageAdminPage() {
               result.background_color.trim() !== ''
                 ? result.background_color.trim()
                 : '#000000',
-            header_logo_color:
-              typeof result.header_logo_color === 'string' &&
-              result.header_logo_color.trim() !== ''
-                ? result.header_logo_color.trim()
-                : '#f7ea4d',
+            header_logo_color: normalizedHeaderLogoColor,
             updated_at: result.updated_at
           })
           setLastSaved(result.updated_at ?? null)
@@ -321,21 +325,26 @@ export default function HomepageAdminPage() {
             >
               Header Logo Color (Homepage only)
             </label>
-            <input
+            <select
               id="homepage-logo-color"
-              type="text"
-              value={data.header_logo_color}
+              value={
+                data.header_logo_color.toLowerCase() === '#f7ea4d'
+                  ? '#f7ea4d'
+                  : '#000000'
+              }
               onChange={(event) =>
                 setData((previous) => ({
                   ...previous,
                   header_logo_color: event.target.value
                 }))
               }
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 font-mono"
-              placeholder="#f7ea4d"
-            />
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 bg-white"
+            >
+              <option value="#f7ea4d">Orange</option>
+              <option value="#000000">Black</option>
+            </select>
             <p className="text-xs text-gray-500">
-              Hex color applied to the header logo only on the homepage.
+              Chooses which logo asset is shown in the homepage header.
             </p>
           </div>
 

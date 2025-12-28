@@ -8,6 +8,7 @@ import { cn, getProxiedImageUrl } from '@/lib/utils'
 import { addLoadedClass } from '@/utils/lazyLoading'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 import { Mousewheel, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Swiper as SwiperType } from 'swiper/types'
@@ -27,15 +28,37 @@ export function VerticalCarousel({
   slideIndex,
   slides,
   redirectSource,
-  onSelect
-}: VerticalCarouselProperties) {
+  onSelect,
+  className,
+  isFixed = true,
+  offsetTopClass
+}: VerticalCarouselProperties & {
+  className?: string
+  isFixed?: boolean
+  offsetTopClass?: string
+}) {
+  const [swiper, setSwiper] = useState<SwiperType | null>(null)
+
+  const fixedClasses = isFixed
+    ? cn(
+        'hidden xl:flex fixed h-screen right-0 z-40 2xl:h-[100vh] xl:right-[10vw]',
+        offsetTopClass ?? 'top-0 2xl:top-0'
+      )
+    : 'hidden xl:flex'
+
+  useEffect(() => {
+    if (!swiper) return
+    if (typeof slideIndex !== 'number') return
+    if (slideIndex < 0 || slideIndex >= slides.length) return
+    if (swiper.destroyed) return
+    if (swiper.realIndex === slideIndex) return
+
+    swiper.slideTo(slideIndex)
+  }, [slideIndex, slides.length, swiper])
+
   return (
     <div
-      className={cn(
-        'hidden fixed h-screen top-0 right-0 z-40',
-        'xl:flex',
-        '2xl:h-[100vh] 2xl:top-0 xl:right-[10vw]'
-      )}
+      className={cn(fixedClasses, className)}
     >
       <Swiper
         direction="vertical"
@@ -50,7 +73,8 @@ export function VerticalCarousel({
         slideToClickedSlide={true}
         initialSlide={slideIndex}
         className="vertical-slider"
-        centeredSlides={false}
+        centeredSlides={true}
+        onSwiper={(instance: SwiperType) => setSwiper(instance)}
         onSlideChangeTransitionEnd={(e: SwiperType) => {
           const newIndex = e.realIndex % slides.length
           onSelect?.(newIndex, true)
