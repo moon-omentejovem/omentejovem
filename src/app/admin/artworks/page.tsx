@@ -2,10 +2,12 @@
 
 import AdminLayout from '@/components/admin/AdminLayout'
 import AdminTable from '@/components/admin/AdminTable'
+import type { ListColumn } from '@/types/descriptors'
 import { artworksDescriptor } from '@/types/descriptors'
 import type { Database } from '@/types/supabase'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { Button, TextInput } from 'flowbite-react'
 import { toast } from 'sonner'
 import { useConfirm } from '@/hooks/useConfirm'
 
@@ -21,6 +23,58 @@ export default function ArtworksPage() {
   const [search, setSearch] = useState('')
   const router = useRouter()
   const confirm = useConfirm()
+  const [savingDisplayOrderId, setSavingDisplayOrderId] = useState<string | null>(
+    null
+  )
+
+  const handleDisplayOrderChange = (id: string, value: string) => {
+    const parsedValue =
+      value.trim() === '' ? null : Number.parseInt(value, 10) || null
+
+    setArtworks((prev) =>
+      prev.map((artwork) =>
+        artwork.id === id ? { ...artwork, display_order: parsedValue } : artwork
+      )
+    )
+  }
+
+  const handleDisplayOrderSave = async (id: string) => {
+    if (savingDisplayOrderId === id) return
+
+    const artwork = artworks.find((item) => item.id === id)
+    if (!artwork) return
+
+    try {
+      setSavingDisplayOrderId(id)
+
+      const response = await fetch(`/api/admin/artworks/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          display_order: artwork.display_order ?? null
+        })
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        console.error('Error updating display order:', error)
+        toast.error(
+          'Failed to update display order: ' + (error.error || 'Unknown error')
+        )
+        return
+        }
+
+        toast.success('Display order updated')
+        fetchArtworks(page, statusFilter, search)
+      } catch (error) {
+        console.error('Error updating display order:', error)
+        toast.error('Failed to update display order')
+      } finally {
+        setSavingDisplayOrderId(null)
+      }
+  }
 
   const fetchArtworks = async (
     targetPage = 1,
@@ -156,6 +210,43 @@ export default function ArtworksPage() {
         descriptor={artworksDescriptor}
         data={artworks}
         loading={loading}
+        renderCell={(item: ArtworkRow, column: ListColumn) => {
+          if (column.key === 'display_order') {
+            const value =
+              item.display_order === null || item.display_order === undefined
+                ? ''
+                : String(item.display_order)
+
+            return (
+              <div className="flex items-center gap-2">
+                <TextInput
+                  type="number"
+                  sizing="sm"
+                  className="w-24"
+                  value={value}
+                  onChange={(e) =>
+                    handleDisplayOrderChange(item.id, e.target.value)
+                  }
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+                      handleDisplayOrderSave(item.id)
+                    }
+                  }}
+                />
+                <Button
+                  size="xs"
+                  color="light"
+                  disabled={savingDisplayOrderId === item.id}
+                  onClick={() => handleDisplayOrderSave(item.id)}
+                >
+                  {savingDisplayOrderId === item.id ? 'Salvando...' : 'OK'}
+                </Button>
+              </div>
+            )
+          }
+          return undefined
+        }}
         onEdit={handleEdit}
         onDuplicate={handleDuplicate}
         page={page}
