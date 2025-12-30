@@ -39,12 +39,9 @@ export function Header() {
   const pathname = usePathname()
   const isHomepage = pathname === '/' || pathname === '/home'
   const isArtifactsRoute = pathname?.startsWith('/artifacts') ?? false
-  const isArtifactsListing =
-    pathname === '/artifacts' || pathname === '/artifacts/'
-  const isArtifactsDetail = isArtifactsRoute && !isArtifactsListing
 
   const [showMobileMenu, setShowMobileMenu] = useState<boolean>(false)
-  const [homepageLogoVariant, setHomepageLogoVariant] = useState<
+  const [headerLogoVariant, setHeaderLogoVariant] = useState<
     'black' | 'orange'
   >('black')
 
@@ -57,14 +54,14 @@ export function Header() {
   }, [])
 
   useEffect(() => {
-    if (!isHomepage) return
+    if (!isHomepage && !isArtifactsRoute) return
 
     const updateFromCssVariable = () => {
       const raw = getComputedStyle(document.documentElement).getPropertyValue(
         '--header-logo-color'
       )
       const normalized = raw.trim().toLowerCase()
-      setHomepageLogoVariant(normalized === '#f7ea4d' ? 'orange' : 'black')
+      setHeaderLogoVariant(normalized === '#f7ea4d' ? 'orange' : 'black')
     }
 
     updateFromCssVariable()
@@ -82,7 +79,7 @@ export function Header() {
       window.clearTimeout(timeout)
       observer.disconnect()
     }
-  }, [isHomepage])
+  }, [isHomepage, isArtifactsRoute])
 
   return (
     <header className="sticky top-0 flex w-full justify-between bg-transparent z-30 md:bg-transparent p-8 md:px-12 lg:px-20 md:py-10 md:gap-16">
@@ -93,23 +90,9 @@ export function Header() {
           document.cookie = 'newsletter_dismissed=true; path=/; max-age=3600'
         }}
       >
-        {isHomepage ? (
+        {isHomepage || isArtifactsRoute ? (
           <Image
-            src={homepageLogoVariant === 'orange' ? logoOrange : logo}
-            alt="omentejovem logo"
-            className="h-[23px] w-auto"
-            priority
-          />
-        ) : isArtifactsListing ? (
-          <Image
-            src={logoOrange}
-            alt="omentejovem logo"
-            className="h-[23px] w-auto"
-            priority
-          />
-        ) : isArtifactsDetail ? (
-          <Image
-            src={logo}
+            src={headerLogoVariant === 'orange' ? logoOrange : logo}
             alt="omentejovem logo"
             className="h-[23px] w-auto"
             priority

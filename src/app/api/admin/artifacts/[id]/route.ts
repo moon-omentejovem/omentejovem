@@ -35,6 +35,11 @@ export async function PUT(
 
     const body = {
       ...raw,
+      header_logo_color:
+        typeof raw.header_logo_color === 'string' &&
+        raw.header_logo_color.trim() === ''
+          ? null
+          : raw.header_logo_color,
       page_link_url:
         typeof raw.page_link_url === 'string' &&
         raw.page_link_url.trim() === ''

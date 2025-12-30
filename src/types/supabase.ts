@@ -86,6 +86,7 @@ export type Database = {
           imageurl: string | null
           link_url: string | null
           page_link_url: string | null
+          header_logo_color: string | null
           status: string
           title: string
           updated_at: string | null
@@ -100,6 +101,7 @@ export type Database = {
           imageurl?: string | null
           link_url?: string | null
           page_link_url?: string | null
+          header_logo_color?: string | null
           status?: string
           title: string
           updated_at?: string | null
@@ -114,6 +116,7 @@ export type Database = {
           imageurl?: string | null
           link_url?: string | null
           page_link_url?: string | null
+          header_logo_color?: string | null
           status?: string
           title?: string
           updated_at?: string | null
@@ -136,6 +139,7 @@ export type Database = {
           status: string
           created_at: string | null
           updated_at: string | null
+          header_logo_color: string | null
         }
         Insert: {
           id?: string
@@ -152,6 +156,7 @@ export type Database = {
           status?: string
           created_at?: string | null
           updated_at?: string | null
+          header_logo_color?: string | null
         }
         Update: {
           id?: string
@@ -168,6 +173,7 @@ export type Database = {
           status?: string
           created_at?: string | null
           updated_at?: string | null
+          header_logo_color?: string | null
         }
         Relationships: []
       }

@@ -2,6 +2,7 @@ import { ArtifactService } from '@/services'
 import { getProxiedImageUrl } from '@/lib/utils'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
+import { SetHeaderLogoColor } from '@/components/SetHeaderLogoColor'
 
 interface ArtifactInternalPageProps {
   params: {
@@ -64,6 +65,7 @@ export default async function ArtifactInternalPage({
 
   return (
     <main className="min-h-screen bg-neutral-950 text-secondary-100">
+      <SetHeaderLogoColor color={page.header_logo_color} />
       <div className="h-screenMinusHeader px-6 xl:px-20 py-10 flex flex-col md:flex-row gap-10">
         <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
           {images.map((src, index) => (

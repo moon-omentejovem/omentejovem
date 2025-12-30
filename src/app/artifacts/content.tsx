@@ -112,6 +112,20 @@ export function ArtifactsContent({
   const hasVideo = !!currentArtifact?.highlight_video_url
 
   useEffect(() => {
+    if (!currentArtifact) return
+
+    const raw = currentArtifact.header_logo_color
+    const trimmed = typeof raw === 'string' ? raw.trim() : ''
+    const normalized =
+      trimmed.toLowerCase() === '#f7ea4d' ? '#f7ea4d' : '#000000'
+
+    document.documentElement.style.setProperty(
+      '--header-logo-color',
+      normalized
+    )
+  }, [currentArtifact])
+
+  useEffect(() => {
     if (!currentArtifact) {
       setIsForegroundLoading(false)
       setIsBackgroundLoading(false)

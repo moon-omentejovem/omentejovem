@@ -99,6 +99,11 @@ export async function POST(request: NextRequest) {
           ? null
           : raw.image4_url,
       display_order: displayOrder,
+      header_logo_color:
+        typeof raw.header_logo_color === 'string' &&
+        raw.header_logo_color.trim() === ''
+          ? null
+          : raw.header_logo_color,
       status: raw.status || 'draft'
     }
 
