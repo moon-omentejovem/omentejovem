@@ -160,7 +160,9 @@ export function CalloutParallax({
               fill
               sizes="100vw"
               alt={'omentejovem'}
-              className="object-cover invisible select-none"
+              className={`object-cover select-none transition-opacity duration-1000 ${
+                isLoading ? 'opacity-0' : 'opacity-100'
+              }`}
               priority
               onLoadingComplete={() => setIsLoading(false)}
             />
@@ -180,11 +182,15 @@ export function CalloutParallax({
               className="relative w-full h-full select-none"
             >
               <Image
-                src={getProxiedImageUrl(calloutImages[currentImageIndex].imageUrl)}
+                src={getProxiedImageUrl(
+                  calloutImages[currentImageIndex].imageUrl
+                )}
                 fill
                 sizes="100vw"
                 alt={'omentejovem'}
-                className="object-cover invisible select-none"
+                className={`object-cover select-none transition-opacity duration-1000 ${
+                  isLoading ? 'opacity-0' : 'opacity-100'
+                }`}
                 priority
                 onLoadingComplete={() => setIsLoading(false)}
                 onClick={() =>
