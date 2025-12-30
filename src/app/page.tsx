@@ -61,7 +61,7 @@ export default async function Home() {
     featuredTitle = featuredArtwork.title
     featuredHref = `/portfolio/${featuredArtwork.slug}`
     const imageUrl =
-      featuredArtwork.imageoptimizedurl || featuredArtwork.imageurl || ''
+      featuredArtwork.imageurl || featuredArtwork.imageoptimizedurl || ''
     images = [
       {
         title: featuredArtwork.title || '',
@@ -77,7 +77,7 @@ export default async function Home() {
 
     images = featuredArtworks.map((artwork: any) => {
       const imageUrl =
-        artwork.imageoptimizedurl || artwork.imageurl || ''
+        artwork.imageurl || artwork.imageoptimizedurl || ''
 
       return {
         title: artwork.title || '',

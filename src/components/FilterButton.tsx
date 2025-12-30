@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import { ChevronDownIcon } from 'lucide-react'
 
 export interface FilterState {
   sort: string
@@ -27,149 +28,263 @@ export function FilterButton({
   availableNetworks
 }: FilterButtonProps) {
   const [isOpen, setIsOpen] = useState(false)
+  const [openDropdown, setOpenDropdown] = useState<'sort' | 'contract' | 'network' | 'year' | null>(null)
 
-  // Close on click outside handling
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as HTMLElement
-      if (isOpen && !target.closest('.filter-container')) {
-        setIsOpen(false)
-      }
-    }
+  const contractOptions =
+    availableContracts && availableContracts.length > 0
+      ? availableContracts
+      : ['Manifold', 'Transient Labs', 'SuperRare', 'OpenSea', 'Rarible']
 
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [isOpen])
+  const networkOptions =
+    availableNetworks && availableNetworks.length > 0
+      ? availableNetworks
+      : ['ethereum', 'tezos']
+
+  const yearOptions =
+    availableYears && availableYears.length > 0
+      ? availableYears
+      : [2025, 2024, 2023, 2022, 2021]
+
+  const sortLabel = filters.sort === 'oldest' ? 'Oldest' : 'Latest'
+  const contractLabel = filters.contract || 'All Contracts'
+  const networkLabel = filters.network
+    ? filters.network.charAt(0).toUpperCase() + filters.network.slice(1)
+    : 'All Blockchains'
+  const yearLabel = filters.year || 'All Years'
 
   return (
     <div className="relative inline-block filter-container">
       <button 
-        onClick={() => setIsOpen(!isOpen)}
-        className="p-2 hover:opacity-70 transition-opacity"
-        aria-label="Filters"
+        onClick={() => {
+          if (isOpen) {
+            setIsOpen(false)
+            setOpenDropdown(null)
+          } else {
+            setIsOpen(true)
+            setOpenDropdown(null)
+          }
+        }}
+        className="flex h-[42px] w-[42px] items-center justify-center text-[#B1B1B1] hover:text-[#000000] transition-colors"
+        aria-label={isOpen ? 'Close filters' : 'Filters'}
       >
-        {/* Horizontal lines icon (riscos horizontais) */}
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M4 6H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-          <path d="M4 12H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-          <path d="M4 18H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-        </svg>
+        {isOpen ? (
+          <span className="text-[42px] leading-none">
+            ×
+          </span>
+        ) : (
+          <svg
+            className="h-6 w-6"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M4 6H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            <path d="M4 12H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            <path d="M4 18H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+        )}
       </button>
 
       {isOpen && (
-        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-64 bg-white dark:bg-black border border-gray-200 dark:border-gray-800 p-4 rounded-lg shadow-xl z-50">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="font-mono text-sm uppercase font-bold">Filters</h3>
-            <button onClick={() => setIsOpen(false)} className="text-sm hover:underline">Close</button>
-          </div>
-          
-          <div className="space-y-4">
-            {/* Sort */}
-            <div className="space-y-1">
-              <label htmlFor="filter-sort" className="text-xs text-gray-500 uppercase">Sort By</label>
-              <select 
-                id="filter-sort"
-                value={filters.sort}
-                onChange={(e) => onFilterChange('sort', e.target.value)}
-                className="w-full bg-transparent border border-gray-300 dark:border-gray-700 rounded p-2 text-sm font-mono"
-              >
-                <option value="latest">Latest</option>
-                <option value="oldest">Oldest</option>
-              </select>
-            </div>
+        <div className="mb-4 bg-transparent text-black dark:text-white z-50 w-full md:w-auto md:absolute md:bottom-full md:left-1/2 md:-translate-x-1/2">
+          <div className="flex flex-col items-center gap-6">
+            <div className="flex flex-col md:flex-row items-stretch md:items-start justify-center gap-4 md:gap-8 w-full max-w-[900px] mx-auto px-4 md:px-0">
+              <div className="flex flex-col gap-1">
+                <span className="text-[12px] leading-[120%] uppercase tracking-[0] font-normal text-gray-400">
+                  Sort By
+                </span>
+                <div className="relative w-full">
+                  <button
+                    type="button"
+                    className="flex w-full md:w-48 items-center justify-between border border-transparent bg-gray-200 px-4 py-2 text-[16px] leading-[120%] font-normal text-gray-900 focus:outline-none"
+                    onClick={() =>
+                      setOpenDropdown((prev) => (prev === 'sort' ? null : 'sort'))
+                    }
+                  >
+                    <span>{sortLabel}</span>
+                    <ChevronDownIcon
+                      className={`h-4 w-4 text-[#B1B1B1] transition-transform ${
+                        openDropdown === 'sort' ? 'rotate-180' : ''
+                      }`}
+                    />
+                  </button>
+                  {openDropdown === 'sort' ? (
+                    <div className="absolute left-0 right-0 mt-1 max-h-60 overflow-y-auto rounded-md border border-transparent bg-transparent shadow-none z-50">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          onFilterChange('sort', 'latest')
+                          setOpenDropdown(null)
+                        }}
+                        className="block w-full px-4 py-2 text-left text-[16px] leading-[120%] font-normal bg-white text-gray-800 hover:bg-gray-100 dark:bg-neutral-900 dark:text-gray-100 dark:hover:bg-neutral-800"
+                      >
+                        Latest
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          onFilterChange('sort', 'oldest')
+                          setOpenDropdown(null)
+                        }}
+                        className="block w-full px-4 py-2 text-left text-[16px] leading-[120%] font-normal bg-white text-gray-800 hover:bg-gray-100 dark:bg-neutral-900 dark:text-gray-100 dark:hover:bg-neutral-800"
+                      >
+                        Oldest
+                      </button>
+                    </div>
+                  ) : null}
+                </div>
+              </div>
 
-            {/* Contract */}
-            <div className="space-y-1">
-              <label htmlFor="filter-contract" className="text-xs text-gray-500 uppercase">Contract</label>
-              <select 
-                id="filter-contract"
-                value={filters.contract}
-                onChange={(e) => onFilterChange('contract', e.target.value)}
-                className="w-full bg-transparent border border-gray-300 dark:border-gray-700 rounded p-2 text-sm font-mono"
-              >
-                <option value="">All Contracts</option>
-                {availableContracts ? (
-                  availableContracts.map(contract => (
-                    <option key={contract} value={contract}>{contract}</option>
-                  ))
-                ) : (
-                  <>
-                    <option value="Manifold">Manifold</option>
-                    <option value="Transient Labs">Transient Labs</option>
-                    <option value="SuperRare">SuperRare</option>
-                    <option value="OpenSea">OpenSea</option>
-                    <option value="Rarible">Rarible</option>
-                  </>
-                )}
-              </select>
-            </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-[12px] leading-[120%] uppercase tracking-[0] font-normal text-gray-400">
+                  Contract
+                </span>
+                <div className="relative w-full">
+                  <button
+                    type="button"
+                    className="flex w-full md:w-56 items-center justify-between border border-transparent bg-gray-200 px-4 py-2 text-[16px] leading-[120%] font-normal text-gray-900 focus:outline-none"
+                    onClick={() =>
+                      setOpenDropdown((prev) => (prev === 'contract' ? null : 'contract'))
+                    }
+                  >
+                    <span>{contractLabel}</span>
+                    <ChevronDownIcon
+                      className={`h-4 w-4 text-[#B1B1B1] transition-transform ${
+                        openDropdown === 'contract' ? 'rotate-180' : ''
+                      }`}
+                    />
+                  </button>
+                  {openDropdown === 'contract' ? (
+                    <div className="absolute left-0 right-0 mt-1 max-h-60 overflow-y-auto rounded-md border border-transparent bg-transparent shadow-none z-50">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          onFilterChange('contract', '')
+                          setOpenDropdown(null)
+                        }}
+                        className="block w-full px-4 py-2 text-left text-[16px] leading-[120%] font-normal bg-white text-gray-800 hover:bg-gray-100 dark:bg-neutral-900 dark:text-gray-100 dark:hover:bg-neutral-800"
+                      >
+                        All Contracts
+                      </button>
+                      {contractOptions.map((contract) => (
+                        <button
+                          key={contract}
+                          type="button"
+                          onClick={() => {
+                            onFilterChange('contract', contract)
+                            setOpenDropdown(null)
+                          }}
+                          className="block w-full px-4 py-2 text-left text-[16px] leading-[120%] font-normal bg-white text-gray-800 hover:bg-gray-100 dark:bg-neutral-900 dark:text-gray-100 dark:hover:bg-neutral-800"
+                        >
+                          {contract}
+                        </button>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
+              </div>
 
-            {/* Blockchain (formerly Network) */}
-            <div className="space-y-1">
-              <label htmlFor="filter-blockchain" className="text-xs text-gray-500 uppercase">Blockchain</label>
-              <select 
-                id="filter-blockchain"
-                value={filters.network}
-                onChange={(e) => onFilterChange('network', e.target.value)}
-                className="w-full bg-transparent border border-gray-300 dark:border-gray-700 rounded p-2 text-sm font-mono"
-              >
-                <option value="">All Blockchains</option>
-                {availableNetworks ? (
-                  availableNetworks.map(network => {
-                    // Helper to format network/blockchain label
-                    // network value is expected to be lowercase 'ethereum', 'tezos', etc. from ArtContent normalization
-                    let label = network.charAt(0).toUpperCase() + network.slice(1)
-                    
-                    return (
-                      <option key={network} value={network}>{label}</option>
-                    )
-                  })
-                ) : (
-                  <>
-                    <option value="ethereum">Ethereum</option>
-                    <option value="tezos">Tezos</option>
-                  </>
-                )}
-              </select>
-            </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-[12px] leading-[120%] uppercase tracking-[0] font-normal text-gray-400">
+                  Blockchain
+                </span>
+                <div className="relative w-full">
+                  <button
+                    type="button"
+                    className="flex w-full md:w-56 items-center justify-between border border-transparent bg-gray-200 px-4 py-2 text-[16px] leading-[120%] font-normal text-gray-900 focus:outline-none"
+                    onClick={() =>
+                      setOpenDropdown((prev) => (prev === 'network' ? null : 'network'))
+                    }
+                  >
+                    <span>{networkLabel}</span>
+                    <ChevronDownIcon
+                      className={`h-4 w-4 text-[#B1B1B1] transition-transform ${
+                        openDropdown === 'network' ? 'rotate-180' : ''
+                      }`}
+                    />
+                  </button>
+                  {openDropdown === 'network' ? (
+                    <div className="absolute left-0 right-0 mt-1 max-h-60 overflow-y-auto rounded-md border border-transparent bg-transparent shadow-none z-50">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          onFilterChange('network', '')
+                          setOpenDropdown(null)
+                        }}
+                        className="block w-full px-4 py-2 text-left text-[16px] leading-[120%] font-normal bg-white text-gray-800 hover:bg-gray-100 dark:bg-neutral-900 dark:text-gray-100 dark:hover:bg-neutral-800"
+                      >
+                        All Blockchains
+                      </button>
+                      {networkOptions.map((network) => {
+                        const label = network.charAt(0).toUpperCase() + network.slice(1)
+                        return (
+                          <button
+                          key={network}
+                          type="button"
+                          onClick={() => {
+                            onFilterChange('network', network)
+                            setOpenDropdown(null)
+                          }}
+                          className="block w-full px-4 py-2 text-left text-[16px] leading-[120%] font-normal bg-white text-gray-800 hover:bg-gray-100 dark:bg-neutral-900 dark:text-gray-100 dark:hover:bg-neutral-800"
+                          >
+                            {label}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  ) : null}
+                </div>
+              </div>
 
-            {/* Year */}
-            <div className="space-y-1">
-              <label htmlFor="filter-year" className="text-xs text-gray-500 uppercase">Year</label>
-              <select 
-                id="filter-year"
-                value={filters.year}
-                onChange={(e) => onFilterChange('year', e.target.value)}
-                className="w-full bg-transparent border border-gray-300 dark:border-gray-700 rounded p-2 text-sm font-mono"
-              >
-                <option value="">All Years</option>
-                {availableYears ? (
-                  availableYears.map(year => (
-                    <option key={year} value={year}>{year}</option>
-                  ))
-                ) : (
-                  <>
-                    <option value="2025">2025</option>
-                    <option value="2024">2024</option>
-                    <option value="2023">2023</option>
-                    <option value="2022">2022</option>
-                    <option value="2021">2021</option>
-                  </>
-                )}
-              </select>
+              <div className="flex flex-col gap-1">
+                <span className="text-[12px] leading-[120%] uppercase tracking-[0] font-normal text-gray-400">
+                  Year
+                </span>
+                <div className="relative w-full">
+                  <button
+                    type="button"
+                    className="flex w-full md:w-40 items-center justify-between border border-transparent bg-gray-200 px-4 py-2 text-[16px] leading-[120%] font-normal text-gray-900 focus:outline-none"
+                    onClick={() =>
+                      setOpenDropdown((prev) => (prev === 'year' ? null : 'year'))
+                    }
+                  >
+                    <span>{yearLabel}</span>
+                    <ChevronDownIcon
+                      className={`h-4 w-4 text-[#B1B1B1] transition-transform ${
+                        openDropdown === 'year' ? 'rotate-180' : ''
+                      }`}
+                    />
+                  </button>
+                  {openDropdown === 'year' ? (
+                    <div className="absolute left-0 right-0 mt-1 max-h-60 overflow-y-auto rounded-md border border-transparent bg-transparent shadow-none z-50">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          onFilterChange('year', '')
+                          setOpenDropdown(null)
+                        }}
+                        className="block w-full px-4 py-2 text-left text-[16px] leading-[120%] font-normal bg-white text-gray-800 hover:bg-gray-100 dark:bg-neutral-900 dark:text-gray-100 dark:hover:bg-neutral-800"
+                      >
+                        All Years
+                      </button>
+                      {yearOptions.map((year) => (
+                        <button
+                          key={year}
+                          type="button"
+                          onClick={() => {
+                            onFilterChange('year', String(year))
+                            setOpenDropdown(null)
+                          }}
+                          className="block w-full px-4 py-2 text-left text-[16px] leading-[120%] font-normal bg-white text-gray-800 hover:bg-gray-100 dark:bg-neutral-900 dark:text-gray-100 dark:hover:bg-neutral-800"
+                          >
+                          {year}
+                          </button>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
+              </div>
             </div>
-            
-            <button 
-              onClick={() => {
-                onClearFilters()
-                setIsOpen(false)
-              }}
-              className="w-full mt-2 text-xs text-gray-500 hover:text-black dark:hover:text-white underline"
-            >
-              Clear All Filters
-            </button>
           </div>
         </div>
       )}

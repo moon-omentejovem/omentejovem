@@ -287,14 +287,16 @@ export function ArtContent({
 
   if (showGrid) {
     return (
-      <main className="flex flex-col pt-6 h-screenMinusHeader justify-center">
-        <HorizontalCarousel
-          slides={slides}
-          redirectSource={source}
-          // onSelect={handleSelectArtwork} // Assuming HorizontalCarousel uses links or internal selection
-        />
+      <main className="flex flex-col h-screenMinusHeader pt-6 pb-8">
+        <div className="flex-1 flex items-center justify-center">
+          <HorizontalCarousel
+            slides={slides}
+            redirectSource={source}
+            // onSelect={handleSelectArtwork} // Assuming HorizontalCarousel uses links or internal selection
+          />
+        </div>
 
-        <div className="flex flex-col items-center justify-center py-4 gap-4">
+        <div className="flex flex-col items-center justify-end gap-4">
           <Suspense fallback={null}>
             <FilterButton 
               filters={filters}

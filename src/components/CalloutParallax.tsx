@@ -3,6 +3,7 @@
 import { calloutAnimation } from '@/animations/client'
 import { getProxiedImageUrl } from '@/lib/utils'
 import { HomeImage } from '@/types/home'
+import { LoadingSpinner } from '@/components/ui/Skeleton'
 import Image from 'next/image'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
@@ -53,6 +54,7 @@ export function CalloutParallax({
   const calloutReference = useRef<HTMLDivElement>(null)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const imageObjects = useRef<(HTMLImageElement | null)[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
   if (calloutReference.current) {
     calloutReference.current.onclick = () => {
@@ -101,13 +103,17 @@ export function CalloutParallax({
     }
   }, [calloutImages, shiftBackground])
 
+  useEffect(() => {
+    setIsLoading(true)
+  }, [currentImageIndex, calloutImages])
+
   return (
     <div
       className="grid w-full select-none place-items-center overflow-visible fixed inset-0 z-10 h-[100dvh] -translate-y-12 md:translate-y-0"
       id="logo"
       ref={calloutReference}
     >
-      <div className="relative flex flex-col items-center px-12 select-none">
+      <div className="relative flex flex-col items-center w-full h-full select-none">
         {showTitle && (
           <div
             id="callout-element"
@@ -122,15 +128,16 @@ export function CalloutParallax({
         {calloutImages[currentImageIndex] && (
           <div
             id="callout-element"
-            className="relative flex flex-col items-center select-none"
+            className="relative w-full h-full select-none"
           >
             <Image
               src={getProxiedImageUrl(calloutImages[currentImageIndex].imageUrl)}
-              width={800}
-              height={900}
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 600px"
+              fill
+              sizes="100vw"
               alt={'omentejovem'}
-              className="w-[80vw] h-auto md:w-auto md:h-[32rem] object-contain invisible 2xl:h-[600px] select-none"
+              className="object-cover invisible select-none"
+              priority
+              onLoadingComplete={() => setIsLoading(false)}
               onClick={() =>
                 setCurrentImageIndex(
                   currentImageIndex >= calloutImages.length - 1
@@ -139,6 +146,14 @@ export function CalloutParallax({
                 )
               }
             />
+            {isLoading ? (
+              <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center bg-background">
+                <LoadingSpinner size="md" className="text-primary-50 mb-1" />
+                <p className="text-xs uppercase tracking-[0.2em] text-secondary-200">
+                  Loading
+                </p>
+              </div>
+            ) : null}
           </div>
         )}
         {showSubtitle && (

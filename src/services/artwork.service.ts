@@ -140,7 +140,7 @@ export class ArtworkService extends BaseService {
           nullsFirst: false
         })
 
-        const orderBy = filters.orderBy || 'posted_at'
+        const orderBy = filters.orderBy || 'mint_date'
         const ascending = filters.ascending ?? false
         query = query.order(orderBy, { ascending })
 
@@ -170,8 +170,8 @@ export class ArtworkService extends BaseService {
             const ao = a.display_order as number
             const bo = b.display_order as number
             if (ao === bo) {
-              const ad = a.posted_at || a.created_at || ''
-              const bd = b.posted_at || b.created_at || ''
+              const ad = a.mint_date || a.posted_at || a.created_at || ''
+              const bd = b.mint_date || b.posted_at || b.created_at || ''
               if (ad < bd) return 1
               if (ad > bd) return -1
               return 0
@@ -182,8 +182,8 @@ export class ArtworkService extends BaseService {
         const withoutOrder = rawArtworks
           .filter((artwork) => artwork.display_order === null || artwork.display_order === undefined)
           .sort((a, b) => {
-            const ad = a.posted_at || a.created_at || ''
-            const bd = b.posted_at || b.created_at || ''
+            const ad = a.mint_date || a.posted_at || a.created_at || ''
+            const bd = b.mint_date || b.posted_at || b.created_at || ''
             if (ad < bd) return 1
             if (ad > bd) return -1
             return 0
