@@ -118,7 +118,7 @@ div.line:has(.bio-link) {
   height: 40px;
   transform: translate3d(0, 0, 0);
   will-change: left, top, transform;
-  color: theme('colors.primary.50');
+  color: #f7ea4d;
 }
 
 .custom-cursor__core,
