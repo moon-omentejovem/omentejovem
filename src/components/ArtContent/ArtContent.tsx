@@ -135,8 +135,8 @@ export function ArtContent({
 
     // Sort
     result.sort((a, b) => {
-      const dateA = new Date(a.creation_date || a.created_at || 0).getTime()
-      const dateB = new Date(b.creation_date || b.created_at || 0).getTime()
+      const dateA = new Date(a.mint_date || a.creation_date || a.created_at || 0).getTime()
+      const dateB = new Date(b.mint_date || b.creation_date || b.created_at || 0).getTime()
       
       if (filters.sort === 'oldest') {
         return dateA - dateB
