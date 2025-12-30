@@ -11,6 +11,8 @@ export interface HomepageSettings {
   featured_artwork_slug: string | null
   background_color: string
   header_logo_color: string
+  background_image_url: string | null
+  background_video_url: string | null
   created_at: string | null
   updated_at: string | null
 }
@@ -47,6 +49,8 @@ export class HomeService extends BaseService {
         featured_artwork_slug: null,
         background_color: '#000000',
         header_logo_color: '#000000',
+        background_image_url: null,
+        background_video_url: null,
         created_at: null,
         updated_at: null
       }
@@ -91,6 +95,16 @@ export class HomeService extends BaseService {
         anyResult.header_logo_color.trim() !== ''
           ? anyResult.header_logo_color.trim()
           : '#000000',
+      background_image_url:
+        typeof anyResult.background_image_url === 'string' &&
+        anyResult.background_image_url.trim() !== ''
+          ? anyResult.background_image_url.trim()
+          : null,
+      background_video_url:
+        typeof anyResult.background_video_url === 'string' &&
+        anyResult.background_video_url.trim() !== ''
+          ? anyResult.background_video_url.trim()
+          : null,
       created_at: anyResult.created_at ?? null,
       updated_at: anyResult.updated_at ?? null
     }

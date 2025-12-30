@@ -98,6 +98,8 @@ export default async function HomePage() {
         featuredHref={featuredHref}
         headerLogoColor={homepageSettings.header_logo_color}
         backgroundColor={homepageSettings.background_color}
+        backgroundImageUrl={homepageSettings.background_image_url}
+        backgroundVideoUrl={homepageSettings.background_video_url}
       />
     </div>
   )

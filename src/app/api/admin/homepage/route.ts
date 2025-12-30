@@ -48,6 +48,16 @@ export async function PUT(request: NextRequest) {
         ? body.header_logo_color.trim()
         : ''
 
+    const rawBackgroundImageUrl =
+      typeof body.background_image_url === 'string'
+        ? body.background_image_url.trim()
+        : ''
+
+    const rawBackgroundVideoUrl =
+      typeof body.background_video_url === 'string'
+        ? body.background_video_url.trim()
+        : ''
+
     let artifactSlugForSave: string | null = null
     let artworkSlugForSave: string | null = null
 
@@ -70,6 +80,17 @@ export async function PUT(request: NextRequest) {
     }
 
     const now = new Date().toISOString()
+
+    let backgroundImageUrlForSave: string | null = null
+    let backgroundVideoUrlForSave: string | null = null
+
+    if (rawBackgroundVideoUrl !== '') {
+      backgroundVideoUrlForSave = rawBackgroundVideoUrl
+      backgroundImageUrlForSave = null
+    } else if (rawBackgroundImageUrl !== '') {
+      backgroundImageUrlForSave = rawBackgroundImageUrl
+      backgroundVideoUrlForSave = null
+    }
 
     const { data: existing } = await supabaseAdmin
       .from('homepage_settings' as any)
@@ -95,6 +116,10 @@ export async function PUT(request: NextRequest) {
         rawBackgroundColor !== '' ? rawBackgroundColor : '#000000',
       header_logo_color:
         rawHeaderLogoColor !== '' ? rawHeaderLogoColor : '#000000',
+      background_image_url:
+        backgroundImageUrlForSave !== null ? backgroundImageUrlForSave : null,
+      background_video_url:
+        backgroundVideoUrlForSave !== null ? backgroundVideoUrlForSave : null,
       updated_at: now
     }
 

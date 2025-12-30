@@ -142,19 +142,7 @@ export function aboutAnimations() {
 
 export function calloutAnimation() {
   gsap.fromTo(
-    '#callout-element img',
-    {
-      y: 120
-    },
-    {
-      y: 0,
-      duration: 2.5,
-      ease: 'custom',
-      autoAlpha: 1
-    }
-  )
-  gsap.fromTo(
-    '#callout-element p',
+    '.parallax-text p',
     {
       y: 120
     },
