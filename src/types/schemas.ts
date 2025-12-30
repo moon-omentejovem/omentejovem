@@ -74,6 +74,7 @@ export const ArtifactSchema = z.object({
   highlight_video_url: z.url().optional().nullable(),
   link_url: WebsiteUrlSchema.optional().nullable(),
   page_link_url: WebsiteUrlSchema.optional().nullable(),
+  header_logo_color: z.string().optional().nullable(),
 
   filename: z.string().optional().nullable(),
   imageurl: z.url().optional().nullable(),
@@ -96,6 +97,7 @@ export const ArtifactInternalPageSchema = z.object({
   image4_url: z.string().url().optional().nullable(),
   inside_internal: z.array(z.string().uuid()).optional().nullable(),
   display_order: z.number().int().nullable().optional(),
+  header_logo_color: z.string().optional().nullable(),
   status: z.enum(['draft', 'published']).default('draft'),
   created_at: z.string().optional(),
   updated_at: z.string().optional()

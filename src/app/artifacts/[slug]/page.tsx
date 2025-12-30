@@ -1,4 +1,5 @@
 import { ArtifactInternalGallery } from '@/components/ArtifactInternalGallery'
+import { SetHeaderLogoColor } from '@/components/SetHeaderLogoColor'
 import { ArtifactService } from '@/services'
 import { VerticalCarousel } from '@/components/VerticalCarousel/VerticalCarousel'
 import { notFound } from 'next/navigation'
@@ -131,6 +132,7 @@ export default async function ArtifactSlugPage({
 
   return (
     <main className="min-h-screenMinusHeader bg-background text-neutral-900">
+      <SetHeaderLogoColor color={page.header_logo_color} />
       <div className="xl:h-screenMinusHeader xl:flex xl:items-center">
         <div className="relative px-6 xl:px-20 pt-6 md:pt-8 xl:pt-0 pb-10 md:pb-12 xl:pb-16 flex flex-col xl:flex-row gap-10 xl:gap-16 items-start xl:items-end w-full">
           <div className="flex-1 max-w-[800px] w-full xl:self-start">

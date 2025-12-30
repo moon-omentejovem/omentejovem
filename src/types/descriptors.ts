@@ -390,6 +390,15 @@ export const artifactsDescriptor: ResourceDescriptor = {
       }
     },
     {
+      key: 'header_logo_color',
+      label: 'Logo Color',
+      type: 'select',
+      options: [
+        { value: '#000000', label: 'Black' },
+        { value: '#f7ea4d', label: 'Orange' }
+      ]
+    },
+    {
       key: 'link_url',
       label: 'Watch More Link',
       type: 'url',
@@ -474,6 +483,15 @@ export const artifactInternalPagesDescriptor: ResourceDescriptor = {
       type: 'image-multi',
       required: true,
       placeholder: 'Upload up to 4 images'
+    },
+    {
+      key: 'header_logo_color',
+      label: 'Logo Color',
+      type: 'select',
+      options: [
+        { value: '#000000', label: 'Black' },
+        { value: '#f7ea4d', label: 'Orange' }
+      ]
     },
     {
       key: 'display_order',
