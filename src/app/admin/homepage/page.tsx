@@ -1,6 +1,7 @@
 'use client'
 
 import AdminLayout from '@/components/admin/AdminLayout'
+import ImageUploadField from '@/components/admin/ImageUploadField'
 import { LoadingSpinner } from '@/components/ui/Skeleton'
 import { SaveIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
@@ -16,6 +17,8 @@ interface HomepageSettings {
   featured_artwork_slug: string | null
   background_color: string
   header_logo_color: string
+  background_image_url: string | null
+  background_video_url: string | null
   updated_at?: string | null
 }
 
@@ -29,7 +32,9 @@ export default function HomepageAdminPage() {
     featured_artifact_slug: null,
     featured_artwork_slug: null,
     background_color: '#000000',
-    header_logo_color: '#000000'
+    header_logo_color: '#000000',
+    background_image_url: null,
+    background_video_url: null
   })
   const [loading, setLoading] = useState(false)
   const [fetchLoading, setFetchLoading] = useState(true)
@@ -58,6 +63,14 @@ export default function HomepageAdminPage() {
             rawHeaderLogoColor.toLowerCase() === '#f7ea4d'
               ? '#f7ea4d'
               : '#000000'
+          const rawBackgroundImageUrl =
+            typeof result.background_image_url === 'string'
+              ? result.background_image_url.trim()
+              : ''
+          const rawBackgroundVideoUrl =
+            typeof result.background_video_url === 'string'
+              ? result.background_video_url.trim()
+              : ''
           setData({
             title: result.title || 'Thales Machado',
             subtitle: result.subtitle || 'omentejovem',
@@ -90,6 +103,10 @@ export default function HomepageAdminPage() {
                 ? result.background_color.trim()
                 : '#000000',
             header_logo_color: normalizedHeaderLogoColor,
+            background_image_url:
+              rawBackgroundImageUrl !== '' ? rawBackgroundImageUrl : null,
+            background_video_url:
+              rawBackgroundVideoUrl !== '' ? rawBackgroundVideoUrl : null,
             updated_at: result.updated_at
           })
           setLastSaved(result.updated_at ?? null)
@@ -189,7 +206,9 @@ export default function HomepageAdminPage() {
           featured_artifact_slug: data.featured_artifact_slug,
           featured_artwork_slug: data.featured_artwork_slug,
           background_color: data.background_color,
-          header_logo_color: data.header_logo_color
+          header_logo_color: data.header_logo_color,
+          background_image_url: data.background_image_url,
+          background_video_url: data.background_video_url
         })
       })
 
@@ -316,6 +335,62 @@ export default function HomepageAdminPage() {
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 font-mono"
               placeholder="#000000"
             />
+          </div>
+
+          <div className="space-y-2">
+            <p className="block text-sm font-medium text-gray-700">
+              Homepage Background Media
+            </p>
+            <p className="text-xs text-gray-500">
+              Se você enviar uma imagem ou um vídeo aqui, o background da
+              homepage passa a usar esse media em vez da artwork destacada.
+              Imagem e vídeo são mutuamente exclusivos.
+            </p>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="space-y-1">
+                <ImageUploadField
+                  supabase={null}
+                  defaultValue={data.background_image_url}
+                  onChange={(value) =>
+                    setData((previous) => ({
+                      ...previous,
+                      background_image_url: value,
+                      background_video_url: value ? null : previous.background_video_url
+                    }))
+                  }
+                  label="Background Image"
+                  placeholder="Upload homepage background image"
+                  disabled={!!data.background_video_url}
+                />
+                {data.background_video_url && (
+                  <p className="text-xs text-gray-400">
+                    Desabilitado porque um vídeo de background está definido.
+                  </p>
+                )}
+              </div>
+              <div className="space-y-1">
+                <ImageUploadField
+                  supabase={null}
+                  defaultValue={data.background_video_url}
+                  onChange={(value) =>
+                    setData((previous) => ({
+                      ...previous,
+                      background_video_url: value,
+                      background_image_url: value ? null : previous.background_image_url
+                    }))
+                  }
+                  label="Background Video"
+                  placeholder="Upload homepage background video"
+                  mode="video"
+                  disabled={!!data.background_image_url}
+                />
+                {data.background_image_url && (
+                  <p className="text-xs text-gray-400">
+                    Desabilitado porque uma imagem de background está definida.
+                  </p>
+                )}
+              </div>
+            </div>
           </div>
 
           <div className="space-y-2">

@@ -15,6 +15,8 @@ interface HomeContentProperties {
   featuredHref?: string | null
   headerLogoColor?: string
   backgroundColor?: string
+  backgroundImageUrl?: string | null
+  backgroundVideoUrl?: string | null
 }
 
 export default function HomeContent({
@@ -27,7 +29,9 @@ export default function HomeContent({
   featuredTitle,
   featuredHref,
   headerLogoColor,
-  backgroundColor
+  backgroundColor,
+  backgroundImageUrl,
+  backgroundVideoUrl
 }: HomeContentProperties): ReactElement {
   useEffect(() => {
     if (headerLogoColor && headerLogoColor.trim() !== '') {
@@ -64,6 +68,8 @@ export default function HomeContent({
         featuredTitle={featuredTitle}
         featuredHref={featuredHref}
         calloutImages={initialImages}
+        backgroundImageUrl={backgroundImageUrl}
+        backgroundVideoUrl={backgroundVideoUrl}
       />
 
       {featuredTitle && (

@@ -16,6 +16,8 @@ interface CalloutParallaxProperties {
   featuredTitle?: string
   featuredHref?: string | null
   calloutImages: HomeImage[]
+  backgroundImageUrl?: string | null
+  backgroundVideoUrl?: string | null
 }
 
 function shiftElement(
@@ -30,7 +32,7 @@ function shiftElement(
   const currentTranslation = isText
     ? `${maxTranslation * rangeX}% ${maxTranslation * rangeY * 2}%`
     : `${(maxTranslation * rangeX) / 2}% ${(maxTranslation * rangeY) / 2}%`
-  const scale = 1
+  const scale = isText ? 1 : 1.1
 
   element.animate(
     {
@@ -49,14 +51,18 @@ export function CalloutParallax({
   featuredLabel,
   featuredTitle,
   featuredHref,
-  calloutImages
+  calloutImages,
+  backgroundImageUrl,
+  backgroundVideoUrl
 }: CalloutParallaxProperties) {
   const calloutReference = useRef<HTMLDivElement>(null)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const imageObjects = useRef<(HTMLImageElement | null)[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const hasBackgroundVideo = !!backgroundVideoUrl
+  const hasBackgroundImage = !hasBackgroundVideo && !!backgroundImageUrl
 
-  if (calloutReference.current) {
+  if (calloutReference.current && !hasBackgroundVideo && !hasBackgroundImage) {
     calloutReference.current.onclick = () => {
       setCurrentImageIndex(
         (prevIndex) => (prevIndex + 1) % calloutImages.length
@@ -80,6 +86,9 @@ export function CalloutParallax({
 
       for (const [index, element] of elements.entries()) {
         const isText = element.classList[0] === 'parallax-text'
+        if (!isText) {
+          continue
+        }
         shiftElement(element, index, rangeX, rangeY, isText)
       }
     }
@@ -125,26 +134,35 @@ export function CalloutParallax({
           </div>
         )}
 
-        {calloutImages[currentImageIndex] && (
+        {hasBackgroundVideo ? (
+          <div
+            id="callout-element"
+            className="relative w-full h-full select-none"
+          >
+            <video
+              src={getProxiedImageUrl(backgroundVideoUrl as string)}
+              className="w-full h-full object-cover"
+              autoPlay
+              muted
+              loop
+              playsInline
+            >
+              <track kind="captions" />
+            </video>
+          </div>
+        ) : hasBackgroundImage ? (
           <div
             id="callout-element"
             className="relative w-full h-full select-none"
           >
             <Image
-              src={getProxiedImageUrl(calloutImages[currentImageIndex].imageUrl)}
+              src={getProxiedImageUrl(backgroundImageUrl as string)}
               fill
               sizes="100vw"
               alt={'omentejovem'}
               className="object-cover invisible select-none"
               priority
               onLoadingComplete={() => setIsLoading(false)}
-              onClick={() =>
-                setCurrentImageIndex(
-                  currentImageIndex >= calloutImages.length - 1
-                    ? 0
-                    : currentImageIndex + 1
-                )
-              }
             />
             {isLoading ? (
               <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center bg-background">
@@ -155,6 +173,38 @@ export function CalloutParallax({
               </div>
             ) : null}
           </div>
+        ) : (
+          calloutImages[currentImageIndex] && (
+            <div
+              id="callout-element"
+              className="relative w-full h-full select-none"
+            >
+              <Image
+                src={getProxiedImageUrl(calloutImages[currentImageIndex].imageUrl)}
+                fill
+                sizes="100vw"
+                alt={'omentejovem'}
+                className="object-cover invisible select-none"
+                priority
+                onLoadingComplete={() => setIsLoading(false)}
+                onClick={() =>
+                  setCurrentImageIndex(
+                    currentImageIndex >= calloutImages.length - 1
+                      ? 0
+                      : currentImageIndex + 1
+                  )
+                }
+              />
+              {isLoading ? (
+                <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center bg-background">
+                  <LoadingSpinner size="md" className="text-primary-50 mb-1" />
+                  <p className="text-xs uppercase tracking-[0.2em] text-secondary-200">
+                    Loading
+                  </p>
+                </div>
+              ) : null}
+            </div>
+          )
         )}
         {showSubtitle && (
           <div

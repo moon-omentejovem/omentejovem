@@ -16,6 +16,7 @@ interface ImageUploadFieldProps {
   accept?: string
   maxSizeMB?: number
   fieldKey?: string
+  disabled?: boolean
 }
 
 export default function ImageUploadField({
@@ -29,7 +30,8 @@ export default function ImageUploadField({
   mode = 'image',
   accept,
   maxSizeMB,
-  fieldKey
+  fieldKey,
+  disabled
 }: ImageUploadFieldProps) {
   const inputRef = React.useRef<HTMLInputElement>(null)
 
@@ -157,7 +159,7 @@ export default function ImageUploadField({
             placeholder ||
             (isVideoMode ? 'Upload a video' : 'Upload an image')
           }
-          disabled={isUploading}
+          disabled={isUploading || !!disabled}
           value={undefined}
           ref={inputRef}
         />
