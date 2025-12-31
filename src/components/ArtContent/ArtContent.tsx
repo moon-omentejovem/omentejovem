@@ -163,7 +163,7 @@ export function ArtContent({
     () =>
       filteredArtworks.map((artwork) => ({
         name: artwork.title || '',
-        imageUrl: artwork.imageoptimizedurl || null,
+        imageUrl: artwork.imageoptimizedurl || artwork.imageurl || null,
         slug: artwork.slug
       })),
     [filteredArtworks]
