@@ -353,9 +353,40 @@ export class ArtworkService extends BaseService {
         }
       }
 
+      const getSeriesSortKey = (artwork: ArtworkWithRelations): number => {
+        const anyArtwork = artwork as any
+        const date =
+          anyArtwork.mint_date ||
+          anyArtwork.creation_date ||
+          anyArtwork.posted_at ||
+          anyArtwork.created_at
+
+        if (!date) return 0
+
+        const rawHour = anyArtwork.mint_hour as string | null | undefined
+        const hour =
+          typeof rawHour === 'string' && rawHour.length === 5
+            ? rawHour
+            : '00:00'
+
+        const isoString = `${date}T${hour}:00Z`
+        const timestamp = Date.parse(isoString)
+
+        if (!Number.isNaN(timestamp)) {
+          return timestamp
+        }
+
+        const fallbackTimestamp = Date.parse(date)
+        return Number.isNaN(fallbackTimestamp) ? 0 : fallbackTimestamp
+      }
+
+      const sortedArtworks = [...artworksResult.artworks].sort(
+        (a, b) => getSeriesSortKey(b) - getSeriesSortKey(a)
+      )
+
       let selectedIndex = 0
       if (selectedArtworkSlug) {
-        const index = artworksResult.artworks.findIndex(
+        const index = sortedArtworks.findIndex(
           (artwork) => artwork.slug === selectedArtworkSlug
         )
         if (index !== -1) {
@@ -364,7 +395,7 @@ export class ArtworkService extends BaseService {
       }
 
       return {
-        artworks: artworksResult.artworks,
+        artworks: sortedArtworks,
         selectedIndex,
         error: null
       }
