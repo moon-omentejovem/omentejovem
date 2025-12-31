@@ -21,6 +21,11 @@ export const ArtworkSchema = z.object({
 
   token_id: z.string().min(1).optional().nullable(),
   mint_date: z.string().optional().nullable(),
+  mint_hour: z
+    .string()
+    .regex(/^([01]\d|2[0-3]):([0-5]\d)$/)
+    .optional()
+    .nullable(),
   mint_link: z.url().optional().nullable(),
   external_platforms: z.any().optional().nullable(),
   type: z.string().min(1), // Changed from enum to match DB

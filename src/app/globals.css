@@ -139,6 +139,7 @@ div.line:has(.bio-link) {
   height: 8px;
   background: currentColor;
   border-color: #000;
+  border-width: 3px;
 }
 
 .custom-cursor__pulse {

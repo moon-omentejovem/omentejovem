@@ -244,7 +244,7 @@ export class ArtifactService extends BaseService {
         .select('*')
         .eq('slug', slug)
         .eq('status', 'published')
-        .single()
+        .limit(1)
 
       if (error) {
         console.error(
@@ -254,7 +254,13 @@ export class ArtifactService extends BaseService {
         return null
       }
 
-      return data as ArtifactInternalPageData
+      const first = Array.isArray(data) ? data[0] : null
+
+      if (!first) {
+        return null
+      }
+
+      return first as ArtifactInternalPageData
     }, 'getInternalPageBySlug')
   }
 

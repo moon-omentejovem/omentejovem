@@ -111,19 +111,16 @@ export function ArtContent({
     if (filters.year) {
       const filterYear = parseInt(filters.year)
       result = result.filter(a => {
-        // 1. Check mint_date
         if (a.mint_date) {
           const mintYear = new Date(a.mint_date).getFullYear()
           if (mintYear === filterYear) return true
         }
 
-        // 2. Check creation_date
         if (a.creation_date) {
           const creationYear = new Date(a.creation_date).getFullYear()
           if (creationYear === filterYear) return true
         }
-        
-        // 3. Fallback to created_at
+
         if (a.created_at) {
           const createdYear = new Date(a.created_at).getFullYear()
           if (createdYear === filterYear) return true
@@ -133,15 +130,38 @@ export function ArtContent({
       })
     }
 
-    // Sort
+    const getSortKey = (artwork: Artwork) => {
+      const anyArtwork = artwork as any
+      const date =
+        anyArtwork.mint_date ||
+        anyArtwork.creation_date ||
+        anyArtwork.posted_at ||
+        anyArtwork.created_at
+
+      if (!date) return 0
+
+      const rawHour = anyArtwork.mint_hour as string | null | undefined
+      const hour =
+        typeof rawHour === 'string' && rawHour.length === 5 ? rawHour : '00:00'
+
+      const isoString = `${date}T${hour}:00Z`
+      const timestamp = Date.parse(isoString)
+
+      if (!Number.isNaN(timestamp)) {
+        return timestamp
+      }
+
+      const fallbackTimestamp = Date.parse(date)
+      return Number.isNaN(fallbackTimestamp) ? 0 : fallbackTimestamp
+    }
+
     result.sort((a, b) => {
-      const dateA = new Date(a.mint_date || a.creation_date || a.created_at || 0).getTime()
-      const dateB = new Date(b.mint_date || b.creation_date || b.created_at || 0).getTime()
+      const dateA = getSortKey(a)
+      const dateB = getSortKey(b)
       
       if (filters.sort === 'oldest') {
         return dateA - dateB
       }
-      // Default latest
       return dateB - dateA
     })
 
@@ -163,7 +183,7 @@ export function ArtContent({
     () =>
       filteredArtworks.map((artwork) => ({
         name: artwork.title || '',
-        imageUrl: artwork.imageoptimizedurl || null,
+        imageUrl: artwork.imageoptimizedurl || artwork.imageurl || null,
         slug: artwork.slug
       })),
     [filteredArtworks]

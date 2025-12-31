@@ -109,7 +109,7 @@ export function FilterButton({
                     />
                   </button>
                   {openDropdown === 'sort' ? (
-                    <div className="absolute left-0 right-0 mt-1 max-h-60 overflow-y-auto rounded-md border border-transparent bg-transparent shadow-none z-50">
+                    <div className="absolute left-0 right-0 bottom-full mb-1 max-h-60 overflow-y-auto rounded-md border border-transparent bg-transparent shadow-none z-50">
                       <button
                         type="button"
                         onClick={() => {
@@ -155,7 +155,7 @@ export function FilterButton({
                     />
                   </button>
                   {openDropdown === 'contract' ? (
-                    <div className="absolute left-0 right-0 mt-1 max-h-60 overflow-y-auto rounded-md border border-transparent bg-transparent shadow-none z-50">
+                    <div className="absolute left-0 right-0 bottom-full mb-1 max-h-60 overflow-y-auto rounded-md border border-transparent bg-transparent shadow-none z-50">
                       <button
                         type="button"
                         onClick={() => {
@@ -204,7 +204,7 @@ export function FilterButton({
                     />
                   </button>
                   {openDropdown === 'network' ? (
-                    <div className="absolute left-0 right-0 mt-1 max-h-60 overflow-y-auto rounded-md border border-transparent bg-transparent shadow-none z-50">
+                    <div className="absolute left-0 right-0 bottom-full mb-1 max-h-60 overflow-y-auto rounded-md border border-transparent bg-transparent shadow-none z-50">
                       <button
                         type="button"
                         onClick={() => {
@@ -256,7 +256,7 @@ export function FilterButton({
                     />
                   </button>
                   {openDropdown === 'year' ? (
-                    <div className="absolute left-0 right-0 mt-1 max-h-60 overflow-y-auto rounded-md border border-transparent bg-transparent shadow-none z-50">
+                    <div className="absolute left-0 right-0 bottom-full mb-1 max-h-60 overflow-y-auto rounded-md border border-transparent bg-transparent shadow-none z-50">
                       <button
                         type="button"
                         onClick={() => {

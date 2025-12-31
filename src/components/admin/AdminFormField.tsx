@@ -44,6 +44,12 @@ export default function AdminFormField({
     case 'text':
     case 'email':
     case 'url':
+      const formatMintHour = (raw: string) => {
+        const digits = raw.replace(/\D/g, '').slice(0, 4)
+        if (digits.length <= 2) return digits
+        return `${digits.slice(0, 2)}:${digits.slice(2)}`
+      }
+
       return (
         <div className="space-y-2">
           <Label htmlFor={field.key} value={field.label || field.key} />
@@ -57,7 +63,14 @@ export default function AdminFormField({
                   : 'text'
             }
             value={value || ''}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={(e) => {
+              const next = e.target.value
+              if (field.key === 'mint_hour') {
+                onChange(formatMintHour(next))
+              } else {
+                onChange(next)
+              }
+            }}
             placeholder={field.placeholder}
             color={error ? 'failure' : undefined}
             helperText={error}

@@ -132,6 +132,15 @@ export const artworksDescriptor: ResourceDescriptor = {
       type: 'date'
     },
     {
+      key: 'mint_hour',
+      label: 'Mint Hour',
+      type: 'text',
+      placeholder: 'HH:MM',
+      validation: {
+        pattern: /^([01]\d|2[0-3]):([0-5]\d)$/
+      }
+    },
+    {
       key: 'contract',
       label: 'Contract',
       type: 'select',
