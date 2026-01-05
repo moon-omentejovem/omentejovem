@@ -37,7 +37,7 @@
 /* Custom scrollbar for description - more visible and always shown */
 .description-scroll {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.05);
+  scrollbar-color: rgba(177, 177, 177, 0.4) rgba(177, 177, 177, 0.08);
 }
 
 .description-scroll::-webkit-scrollbar {
@@ -45,20 +45,20 @@
 }
 
 .description-scroll::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(177, 177, 177, 0.1);
   border-radius: 3px;
 }
 
 .description-scroll::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.35);
+  background: rgba(177, 177, 177, 0.4);
   border-radius: 3px;
   transition: background 0.3s ease;
 }
 
 .description-scroll::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(177, 177, 177, 0.6);
 }
 
 .description-scroll::-webkit-scrollbar-thumb:active {
-  background: rgba(255, 255, 255, 0.6);
+  background: #B1B1B1;
 }

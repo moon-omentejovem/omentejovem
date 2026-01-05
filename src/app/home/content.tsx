@@ -80,17 +80,17 @@ export default function HomeContent({
           {featuredHref ? (
             <a
               href={featuredHref}
-              className="group flex items-end justify-center gap-2 md:gap-4 text-secondary-100 hover:text-primary-50 transition-colors whitespace-nowrap"
+              className="group flex items-end justify-center gap-2 md:gap-4 text-white/70 hover:text-white transition-colors whitespace-nowrap"
             >
               <span className="font-body font-normal text-[24px] leading-[120%] tracking-[0] align-bottom">
                 {featuredTitle}
               </span>
-              <span className="text-secondary-100/80 text-[24px] group-hover:text-primary-50 transition-transform group-hover:translate-x-1 align-bottom">
+              <span className="text-white/70 text-[24px] group-hover:text-white transition-transform group-hover:translate-x-1 align-bottom">
                 &#8594;
               </span>
             </a>
           ) : (
-            <span className="text-secondary-100 font-body font-normal text-[24px] leading-[120%] tracking-[0] text-center whitespace-nowrap">
+            <span className="text-white/70 font-body font-normal text-[24px] leading-[120%] tracking-[0] text-center whitespace-nowrap">
               {featuredTitle}
             </span>
           )}
