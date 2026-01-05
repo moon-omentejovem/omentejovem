@@ -87,8 +87,8 @@ export function ArtInfo({
     }
   }, [artwork.id])
 
-  const detailedImage = artwork.imageurl || artwork.imageoptimizedurl
-  const displayImage = artwork.imageurl || artwork.imageoptimizedurl || '/placeholder.png'
+  const detailedImage = artwork.imageoptimizedurl || artwork.imageurl
+  const displayImage = artwork.imageoptimizedurl || artwork.imageurl || '/placeholder.png'
 
   return (
     <>
@@ -230,7 +230,7 @@ function MintedArtworkDetails({
         'gap-2 transition-all max-h-[calc(100vh-8rem)] xl:h-full w-full sm:w-auto md:w-[400px] flex-shrink-0 flex flex-col justify-end xl:justify-end ml-auto md:order-2'
       )}
     >
-      <div className={cn('overflow-hidden', showDetails ? 'overflow-y-auto' : '')}>
+      <div className={cn('overflow-hidden', showDetails || isDescriptionExpanded ? 'overflow-y-auto description-scroll' : '')}>
         <div
           id="art-description"
           className={cn(

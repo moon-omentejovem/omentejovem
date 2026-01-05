@@ -51,7 +51,7 @@ export function ArtworkThumbnailCarousel({
             >
               <Image
                 src={getProxiedImageUrl(
-                  artwork.imageurl || '/placeholder.png'
+                  artwork.imageoptimizedurl || artwork.imageurl || '/placeholder.png'
                 )}
                 alt={artwork.title || ''}
                 width={100}
