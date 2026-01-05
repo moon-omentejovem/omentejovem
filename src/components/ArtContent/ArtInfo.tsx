@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactElement, useCallback, useEffect, useMemo, useState } from 'react'
+import React, { ReactElement, useCallback, useEffect, useMemo, useState } from 'react'
 
 import {
   artInfoButtonAnimation,
@@ -40,6 +40,7 @@ export function ArtInfo({
   const [isAnimating, setIsAnimating] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
+  const descriptionScrollRef = React.useRef<HTMLDivElement>(null)
 
   const hasVideo = Boolean(artwork.video_url)
   const isMinted = useMemo(() => isArtworkMinted(artwork), [artwork])
@@ -87,8 +88,8 @@ export function ArtInfo({
     }
   }, [artwork.id])
 
-  const detailedImage = artwork.imageurl || artwork.imageoptimizedurl
-  const displayImage = artwork.imageurl || artwork.imageoptimizedurl || '/placeholder.png'
+  const detailedImage = artwork.imageoptimizedurl || artwork.imageurl
+  const displayImage = artwork.imageoptimizedurl || artwork.imageurl || '/placeholder.png'
 
   return (
     <>
@@ -125,6 +126,7 @@ export function ArtInfo({
             isDescriptionExpanded={isDescriptionExpanded}
             mintedOn={mintedOn}
             hasVideo={hasVideo}
+            descriptionScrollRef={descriptionScrollRef}
             onToggleDescription={() =>
               setIsDescriptionExpanded((previous) => !previous)
             }
@@ -202,8 +204,9 @@ interface MintedArtworkDetailsProps {
   onToggleDetails: () => Promise<void>
   showDetails: boolean
   truncateDescription: (value: string) => string
-   hasVideo: boolean
-   onOpenVideo?: () => void
+  hasVideo: boolean
+  onOpenVideo?: () => void
+  descriptionScrollRef: React.RefObject<HTMLDivElement>
 }
 
 function MintedArtworkDetails({
@@ -219,7 +222,8 @@ function MintedArtworkDetails({
   showDetails,
   truncateDescription,
   hasVideo,
-  onOpenVideo
+  onOpenVideo,
+  descriptionScrollRef
 }: MintedArtworkDetailsProps) {
   const hasLongDescription = description.length > 600
 
@@ -230,7 +234,13 @@ function MintedArtworkDetails({
         'gap-2 transition-all max-h-[calc(100vh-8rem)] xl:h-full w-full sm:w-auto md:w-[400px] flex-shrink-0 flex flex-col justify-end xl:justify-end ml-auto md:order-2'
       )}
     >
-      <div className={cn('overflow-hidden', showDetails ? 'overflow-y-auto' : '')}>
+      <div 
+        ref={descriptionScrollRef}
+        className={cn(
+          'overflow-hidden transition-all',
+          showDetails || isDescriptionExpanded ? 'overflow-y-scroll description-scroll max-h-[50vh]' : ''
+        )}
+      >
         <div
           id="art-description"
           className={cn(
@@ -242,7 +252,15 @@ function MintedArtworkDetails({
             {isDescriptionExpanded ? description : truncateDescription(description)}
             {hasLongDescription ? (
               <button
-                onClick={onToggleDescription}
+                onClick={() => {
+                  onToggleDescription()
+                  // Scroll to top when expanding
+                  setTimeout(() => {
+                    if (descriptionScrollRef.current) {
+                      descriptionScrollRef.current.scrollTop = 0
+                    }
+                  }, 50)
+                }}
                 className="text-primary-50 font-extrabold ml-1"
               >
                 {isDescriptionExpanded ? '-' : '+'}

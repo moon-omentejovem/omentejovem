@@ -148,6 +148,7 @@ export function Header() {
             <p
               className={cn(
                 'font-heading text-secondary-100 hover:text-secondary-200 hover:underline',
+                isHomepage && 'text-white/70 hover:text-white',
                 tab.link.startsWith(`/${activeSegment}`) &&
                   'text-secondary-200 underline'
               )}
@@ -166,6 +167,7 @@ export function Header() {
         <p
           className={cn(
             'font-heading  text-secondary-100 hover:text-secondary-200 hover:underline',
+            isHomepage && 'text-white/70 hover:text-white',
             activeSegment === 'about' && 'text-secondary-200 underline'
           )}
         >

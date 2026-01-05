@@ -123,6 +123,22 @@ export function CalloutParallax({
       ref={calloutReference}
     >
       <div className="relative flex flex-col items-center w-full h-full select-none">
+        {/* Gradiente superior (header) */}
+        <div 
+          className="absolute top-0 left-0 right-0 h-32 z-20 pointer-events-none"
+          style={{
+            background: 'linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0))'
+          }}
+        />
+        
+        {/* Gradiente inferior (metade inferior da tela) */}
+        <div 
+          className="absolute bottom-0 left-0 right-0 h-[50vh] z-20 pointer-events-none"
+          style={{
+            background: 'linear-gradient(to top, rgba(0,0,0,0.5), rgba(0,0,0,0))'
+          }}
+        />
+
         {showTitle && (
           <div
             id="callout-element"
