@@ -88,7 +88,7 @@ export function ArtInfo({
     }
   }, [artwork.id])
 
-  const detailedImage = artwork.imageoptimizedurl || artwork.imageurl
+  const detailedImage = artwork.imageurl || artwork.imageoptimizedurl
   const displayImage = artwork.imageoptimizedurl || artwork.imageurl || '/placeholder.png'
 
   return (
