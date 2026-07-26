@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
     }
 
     if (featured === 'true') {
-      query = query.eq('featured', true)
+      query = query.eq('is_featured', true)
     }
 
     if (search) {
