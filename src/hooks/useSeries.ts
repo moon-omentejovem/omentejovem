@@ -302,17 +302,26 @@ export function useSeriesArtworks(options: {
     queryKey: ['series', options.seriesSlug, 'artworks'],
     queryFn: async () => {
       const { data, error } = await client
-        .from('series_artworks')
+        .from('artworks')
         .select(
           `
-          artwork:artworks(*)
+          *,
+          series_artworks(
+            series(
+              slug
+            )
+          )
         `
         )
-        .eq('series_slug', options.seriesSlug)
+        .eq('status', 'published')
 
       if (error) throw error
 
-      return (data || []).map((item: any) => item.artwork).filter(Boolean)
+      return (data || []).filter((artwork: any) =>
+        artwork.series_artworks?.some(
+          (sa: any) => sa.series?.slug === options.seriesSlug
+        )
+      )
     },
     enabled: (options.enabled ?? true) && !!options.seriesSlug,
     staleTime: 5 * 60 * 1000

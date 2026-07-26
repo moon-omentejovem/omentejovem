@@ -51,7 +51,7 @@ export function useArtworks(options?: {
       }
 
       if (options?.oneOfOne) {
-        query = query.eq('one_of_one', true)
+        query = query.eq('is_one_of_one', true)
       }
 
       if (options?.limit) {
@@ -138,7 +138,7 @@ export function useOneOfOneArtworks(limit?: number) {
       let query = client
         .from('artworks')
         .select('*')
-        .eq('one_of_one', true)
+        .eq('is_one_of_one', true)
         .order('display_order', { ascending: true, nullsFirst: false })
         .order('posted_at', { ascending: false })
 
@@ -167,17 +167,26 @@ export function useArtworksBySeries(seriesSlug: string, enabled = true) {
     queryKey: artworkKeys.list({ seriesSlug }),
     queryFn: async () => {
       const { data, error } = await client
-        .from('series_artworks')
+        .from('artworks')
         .select(
           `
-          artwork:artworks(*)
+          *,
+          series_artworks(
+            series(
+              slug
+            )
+          )
         `
         )
-        .eq('series_slug', seriesSlug)
+        .eq('status', 'published')
 
       if (error) throw error
 
-      return (data || []).map((item: any) => item.artwork).filter(Boolean)
+      return (data || []).filter((artwork: any) =>
+        artwork.series_artworks?.some(
+          (sa: any) => sa.series?.slug === seriesSlug
+        )
+      )
     },
     enabled: enabled && !!seriesSlug,
     staleTime: 5 * 60 * 1000,
@@ -294,7 +303,7 @@ export function useArtworksPaginated(
       }
 
       if (filters?.oneOfOne) {
-        query = query.eq('one_of_one', true)
+        query = query.eq('is_one_of_one', true)
       }
 
       if (filters?.seriesSlug) {
