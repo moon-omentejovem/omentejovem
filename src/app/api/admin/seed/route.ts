@@ -170,7 +170,7 @@ function getCoreArtifacts() {
       title: 'The Cycle Collection',
       description: 'A meditation on cycles of nature and existence',
       collection_label: 'Collection',
-      highlight_video_url: null,
+      highlight_video_url: null as string | null,
       link_url: 'https://opensea.io/collection/the3cycle'
     }
   ]
