@@ -11,8 +11,6 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '20')
     const from = (page - 1) * limit
     const to = from + limit - 1
-    const status = searchParams.get('status')
-
     let query = supabaseAdmin
       .from('series')
       .select(
@@ -25,10 +23,6 @@ export async function GET(request: NextRequest) {
         { count: 'exact' }
       )
       .order('created_at', { ascending: false })
-
-    if (status && status !== 'all') {
-      query = query.eq('status', status)
-    }
 
     const { data, count, error } = await query.range(from, to)
 
